@@ -33,8 +33,11 @@ $presentation-h2-font-size: 1.45em;
 // _brand.yml's "Source Sans 3" reaches the CSS unquoted, which browsers reject
 // (a font name can't end in a bare number), so text fell back to a serif font.
 // Set it again here, quoted.
-:root { --r-main-font: "Source Sans 3", "Noto Sans SC", sans-serif;
-        --r-heading-font: "Poppins", "Source Sans 3", "Noto Sans SC", sans-serif; }
+:root { --r-main-font: "Source Sans 3", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Sans SC", sans-serif;
+        --r-heading-font: "Poppins", "Source Sans 3", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Sans SC", sans-serif; }
+// (Color emoji fonts come before the Chinese font, which has plain black-and-white copies of some emoji.
+// The browser uses the first font in the list that has the character, so emoji that Source Sans 3 itself
+// contains (🤖 💩 🔒) always come out black and white: use other emoji.)
 
 // Title slide: white text on the navy background.
 #title-slide {

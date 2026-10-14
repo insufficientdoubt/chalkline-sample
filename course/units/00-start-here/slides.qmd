@@ -68,18 +68,18 @@ Everything in this sample was made this way. Open any slide deck or worksheet fi
 ## Athens and Sparta
 
 - Athens was a democracy.
-- Citizens voted on the laws.
+- Citizens could {{</* vocab "vote" */>}}.
 - Sparta trained soldiers.
 ```
 
 ::: {.small-note}
-`##` starts a new slide. `-` makes a bullet point. That's most of it.
+`##` starts a new slide. `-` makes a bullet point. `{{</* vocab "vote" */>}}` adds a vocab pop-up, with 中文 and 🔊. That's most of it.
 :::
 :::
 ::: {.column width="54%"}
 ::: {style="font-size: 0.82em"}
 - ✏️ **Edit it like a document.** Change a word, save, and the slide updates.
-- 🤖 **Or ask an AI to edit it.** *"Add a bullet about the navy."* Plain text is easy for AI to change correctly.
+- 💬 **Or ask an AI to edit it.** *"Add a bullet about the navy."* Plain text is easy for AI to change correctly.
 - 🎨 **It can't look messy.** Fonts, colors and layout come from the school style, on every slide.
 - 🔁 **Write once.** The same words become the slides, the web page and the PDF.
 :::

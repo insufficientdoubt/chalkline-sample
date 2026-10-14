@@ -12,7 +12,7 @@ $web-font-path: false;   // the cosmo theme would import a Google font we don't 
 // (a font name can't end in a bare number), so text fell back to a serif font.
 // Set it again here, quoted.
 :root {
-  --bs-body-font-family: "Source Sans 3", "Noto Sans SC", sans-serif;
+  --bs-body-font-family: "Source Sans 3", "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Noto Sans SC", sans-serif;   // color emoji before the Chinese font (see revealjs.scss)
   --mermaid-font-family: "Source Sans 3", sans-serif;
 }
 .tooltip, .popover { font-family: "Source Sans 3", sans-serif; }

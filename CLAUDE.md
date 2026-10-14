@@ -37,3 +37,4 @@ This repo has two kinds of files:
 ```
 
 Never delete or rewrite earlier entries. These logs are collected as design feedback and may become improvements to Chalkline for everyone, so the reasons matter as much as the changes.
+- **Emoji:** avoid 🤖, 💩 and 🔒 in slides and pages. The brand font (Source Sans 3) has its own black-and-white versions of them, so they never show in color. Other common emoji are fine.

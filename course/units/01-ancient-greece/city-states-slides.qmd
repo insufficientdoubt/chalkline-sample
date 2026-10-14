@@ -97,6 +97,34 @@ print(card_grid(pick(terms, "city-state", "citizen", "democracy", "assembly"), z
 Both were city-states, only a few days' walk apart, but life was very different. They fought each other in the Peloponnesian War (431–404 BC), which Sparta won.
 :::
 
+## Athens or Sparta?
+
+Guess first, then click to see each answer.
+
+::: {.quiz-list}
+Boys left home at age 7 to train as soldiers. [Sparta 斯巴达]{.fragment .reveal-answer .sparta}
+
+Citizens voted on laws in the Assembly. [Athens 雅典]{.fragment .reveal-answer .athens}
+
+Famous for plays, art and philosophers. [Athens 雅典]{.fragment .reveal-answer .athens}
+
+Two kings ruled at the same time. [Sparta 斯巴达]{.fragment .reveal-answer .sparta}
+:::
+
+```{=html}
+<style>
+  .reveal .quiz-list p { display: flex; justify-content: space-between; align-items: center; gap: 1em;
+                         margin: 0; padding: 0.4em 0.6em; border-bottom: 2px solid #e3e6ea; }
+  .reveal .reveal-answer { flex: none; padding: 0.1em 0.8em; border-radius: 999px; font-weight: 700; color: #003477; }
+  .reveal .reveal-answer.athens { background: #d6efff; }
+  .reveal .reveal-answer.sparta { background: #ffe0bd; }
+</style>
+```
+
+::: notes
+**Fragments:** each answer is hidden until you press → (or click). Ask for a show of hands first: "Athens or Sparta?", then reveal. In the source, an answer is just `[Sparta]{.fragment}`.
+:::
+
 ## How democracy worked in Athens
 
 - The {{< vocab "assembly" >}} met about 40 times a year on a hill called the Pnyx.
