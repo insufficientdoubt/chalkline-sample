@@ -1,0 +1,13 @@
+# Teacher profile. Used only when you run:  quarto render --profile teacher
+# These settings are layered on top of _quarto.yml.
+#
+# Anything wrapped in  ::: {.content-visible when-profile="teacher"}  shows up
+# only in this build (answer keys, teacher notes).
+
+project:
+  output-dir: _site-teacher  # keep teacher files separate so they never get mixed up
+
+website:
+  title: "Chalkline Sample (TEACHER)"
+
+edition: Teacher Edition       # printed on the corner tab of teacher PDFs

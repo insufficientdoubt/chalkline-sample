@@ -1,0 +1,72 @@
+{
+  // Shortcuts for common commands.
+  // Run one with:  Terminal menu > Run Task...  (or Ctrl/Cmd+Shift+P, then "Run Task")
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Render: student",
+      "type": "shell",
+      "command": "quarto render",
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "Render: teacher",
+      "type": "shell",
+      "command": "quarto render --profile teacher",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      // Runs before the preview: a full build if anything changed since the last one, so pages open fast.
+      "label": "Build site if needed",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/build_if_needed.py",
+      "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
+      "windows": {
+        "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\build_if_needed.py",
+        "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}\\.venv\\Scripts\\python.exe" } }
+      },
+      "problemMatcher": []
+    },
+    {
+      // Starts by itself when you open this folder (VS Code asks once: "Allow automatic tasks").
+      // The site is at http://localhost:4100 (port set in _quarto.yml).
+      "label": "Preview site (live reload)",
+      "type": "shell",
+      "command": "quarto preview",
+      "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
+      "windows": { "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}\\.venv\\Scripts\\python.exe" } } },
+      "isBackground": true,
+      "dependsOn": "Build site if needed",
+      "runOptions": { "runOn": "folderOpen" },
+      "problemMatcher": []
+    },
+    {
+      // Builds the family site if anything changed, then serves it at http://localhost:4102
+      "label": "Open family site (parents)",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/open_site.py parent",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\open_site.py parent" },
+      "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      // Builds the teacher site if anything changed, then serves it at http://localhost:4101
+      "label": "Open teacher site",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/open_site.py teacher",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\open_site.py teacher" },
+      "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "Export vocab (Quizlet, Kahoot, Anki)",
+      "type": "shell",
+      "command": "python scripts/export_vocab.py",
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  // Run Python cells from the repo root, the same way `quarto render` does
+  // (matches `execute-dir: project` in _quarto.yml).
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+
+  // Turn on the project's .venv automatically in new terminals.
+  "python.terminal.activateEnvironment": true,
+
+  // Wrap long lines of prose instead of scrolling sideways.
+  "[quarto]": {
+    "editor.wordWrap": "on"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on"
+  },
+
+  // Hide build output from the file list and search results.
+  "files.exclude": {
+    "**/.quarto": true,
+    "**/__pycache__": true
+  },
+  "search.exclude": {
+    "_site": true,
+    "_site-teacher": true,
+    ".venv": true,
+    "exports": true
+  }
+}

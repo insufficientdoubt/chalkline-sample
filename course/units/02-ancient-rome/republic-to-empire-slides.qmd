@@ -1,0 +1,117 @@
+---
+title: "From Republic to Empire"
+subtitle: "古罗马：从共和国到帝国 · Ancient Rome, part 1"
+type: slides
+description: "The founding legend, the Roman Republic (senate and consuls), Julius Caesar, Augustus and the empire, and the legions."
+order: 1
+audience: [teacher, student]
+format: revealjs
+title-slide-attributes:
+  data-background-color: "#003477"
+---
+
+```{python}
+import sys; sys.path.append("scripts")
+from vocab import load_unit, pick, card_grid
+terms = load_unit(2)
+```
+
+## Rome on a timeline
+
+::: {.timeline}
+- **753 BC** · Legend says Romulus founds the city of Rome.
+- **509 BC** · Romans remove their last king. Rome becomes a {{< vocab "republic" >}}.
+- **44 BC** · Julius Caesar is killed.
+- **27 BC** · Augustus becomes the first {{< vocab "emperor" >}}. The {{< vocab "empire" >}} begins.
+- **AD 80** · The {{< vocab "Colosseum" >}} is finished.
+- **AD 476** · The western half of the empire falls.
+:::
+
+::: {.small-note}
+AD years count *up* from year 1: AD 80 came before AD 476.
+:::
+
+## A city on seven hills
+
+- The legend: twin brothers **Romulus and Remus** were raised by a wolf. Romulus founded Rome and named it after himself.
+- What historians think: villages on seven hills slowly joined into one city.
+- Rome was near the middle of Italy, close to the sea, on the River Tiber: good for farming and trade.
+
+::: notes
+The wolf story is a myth, like the Greek myths in Unit 1. Ask: why would a city want an exciting founding story?
+:::
+
+## The Republic: no more kings
+
+```{python}
+#| output: asis
+print(card_grid(pick(terms, "republic", "senate", "consul"), zh=True))
+```
+
+::: notes
+Two consuls, chosen for one year, could each block the other. Romans had had a bad king and never wanted one person to hold all the power again.
+:::
+
+## Athens and Rome: who decides?
+
+:::: {.columns}
+::: {.column width="50%"}
+::: {.callout-note title="Athens: democracy 民主" icon=false}
+Citizens vote on the **laws themselves**, in the Assembly.
+:::
+:::
+::: {.column width="50%"}
+::: {.callout-tip title="Rome: republic 共和国" icon=false}
+Citizens **elect leaders** ({{< vocab "consul" text="consuls" >}}), who make decisions with the {{< vocab "senate" >}}.
+:::
+:::
+::::
+
+::: {.small-note}
+Many countries today are republics: people elect leaders to decide for them.
+:::
+
+## Julius Caesar
+
+- A famous general who won wars in Gaul (today's France).
+- He took control of Rome and made himself dictator for life.
+- In **44 BC**, a group of senators killed him. They wanted to save the {{< vocab "republic" >}}…
+- …but after years of civil war, Rome got an {{< vocab "emperor" >}} anyway.
+
+## Augustus and the empire
+
+:::: {.columns}
+::: {.column width="55%"}
+- Caesar's adopted son Octavian won the civil war.
+- In **27 BC** he took the name **Augustus** and became the first emperor.
+- About 200 years of peace followed: the *Pax Romana*, "Roman peace".
+:::
+::: {.column width="45%"}
+```{python}
+#| output: asis
+print(card_grid(pick(terms, "emperor", "empire"), zh=True))
+```
+:::
+::::
+
+## The Roman army
+
+- A {{< vocab "legion" >}} had about 5,000 soldiers, all Roman citizens.
+- Soldiers marched with heavy packs and built a camp every night.
+- They also built roads, bridges and walls across the {{< vocab "empire" >}}.
+
+::: notes
+The roads the army built are part of the next deck: Roman engineering.
+:::
+
+## Sort it out
+
+On your **Republic or Empire?** worksheet, sort the cards with a partner.
+
+{{< timer 5 >}}
+
+## Exit ticket
+
+::: {.poll type="choice" options="Two consuls, elected each year | An emperor, for life | A king" correct="A"}
+Who led the Roman Republic?
+:::

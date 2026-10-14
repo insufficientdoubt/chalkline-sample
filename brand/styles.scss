@@ -1,0 +1,216 @@
+/*-- scss:defaults --*/
+// Brand colors and fonts come from brand/_brand.yml automatically.
+// This file only adds layout touches so web pages match the PDF style.
+// Color roles: navy = text; blue = stripes; orange = highlights and teacher-only; sky = panels.
+
+$callout-border-width: 4px;
+
+/*-- scss:rules --*/
+
+// _brand.yml's "Source Sans 3" reaches the CSS unquoted, which browsers reject
+// (a font name can't end in a bare number), so text fell back to a serif font.
+// Set it again here, quoted.
+:root {
+  --bs-body-font-family: "Source Sans 3", "Noto Sans SC", sans-serif;
+  --mermaid-font-family: "Source Sans 3", sans-serif;
+}
+.tooltip, .popover { font-family: "Source Sans 3", sans-serif; }
+
+// Section headings: blue edge on a soft sky band, like the PDF.
+#quarto-document-content h2 {
+  background: var(--brand-sky, #ebf7fd);
+  border-left: 5px solid var(--brand-blue, #0087ff);
+  border-bottom: none;
+  padding: 0.35em 0.6em;
+  border-radius: 0 6px 6px 0;
+  margin-top: 1.8em;
+}
+
+// Title banner: navy with an orange underline (the sun in the logo).
+#title-block-header {
+  background: var(--brand-navy, #003477);
+  color: #fff;
+  padding: 1.2em 1.4em 1em;
+  border-radius: 8px;
+  margin-bottom: 1.5em;
+
+  // Breadcrumbs (Unit > Page) above the title: light text on the navy banner.
+  .breadcrumb-item, .breadcrumb-item a, .breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .title {
+    color: #fff;
+    margin: 0;
+  }
+  .title::after {
+    content: "";
+    display: block;
+    width: 6em;
+    height: 4px;
+    margin-top: 0.4em;
+    background: var(--brand-orange, #ff8c0f);
+  }
+}
+
+// Word bank and other tip boxes: blue stripe, navy label.
+.callout.callout-style-default.callout-tip {
+  border-left-color: var(--brand-blue, #0087ff) !important;
+  .callout-header {
+    background: var(--brand-sky, #ebf7fd);
+    color: var(--brand-navy, #003477);
+  }
+}
+
+// Answer-key boxes (teacher build): orange stripe, navy label.
+.callout.callout-style-default.callout-note {
+  border-left-color: var(--brand-orange, #ff8c0f) !important;
+  .callout-header {
+    background: #fff1e2;
+    color: var(--brand-navy, #003477);
+  }
+  .callout-icon::before { filter: sepia(1) saturate(5) hue-rotate(-10deg); }
+}
+
+// ---- Printable pieces on web pages (from the classroom shortcodes) ----------
+
+// {{< lines 3 >}}
+.answer-lines {
+  height: calc(var(--lines, 3) * 2.2em);
+  margin: 0.4em 0 1em;
+  background: repeating-linear-gradient(transparent 0 calc(2.2em - 1px), #b9c3cf calc(2.2em - 1px) 2.2em);
+}
+
+// {{< lesson-nav >}}
+.lesson-nav {
+  margin: 0 0 1.5em;
+  padding: 0.6em 1em;
+  border-left: 4px solid var(--brand-blue, #0087ff);
+  background: var(--brand-sky, #ebf7fd);
+  border-radius: 0 6px 6px 0;
+  p { margin: 0.2em 0; }
+}
+
+// {{< blank 1.5in >}}
+.blank {
+  display: inline-block;
+  height: 0.8em;
+  border-bottom: 1px solid #8a9bb0;
+}
+
+// {{< drawing-box >}}
+.drawing-box {
+  position: relative;
+  height: 18em;
+  margin: 0.6em 0 1em;
+  border: 2px solid var(--brand-navy, #003477);
+  border-radius: 10px;
+  background-color: #fff;
+  background-image: radial-gradient(#b9c3cf 1.2px, transparent 1.3px);
+  background-size: 1.2em 1.2em;
+}
+.drawing-box-label {
+  position: absolute;
+  top: 0.5em;
+  left: 0.7em;
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand-navy, #003477);
+  background: #fff;
+  padding: 0 0.3em;
+}
+
+// Write-in tables: room to write.
+.write-in table td { height: 2.4em; }
+
+// ---- Posters on web pages ---------------------------------------------------
+
+.value {
+  display: grid;
+  grid-template-columns: 38% 1fr;
+  margin: 0.8em 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--brand-sky, #ebf7fd);
+  > .value-head {
+    grid-row: 1 / span 20;
+    background: var(--brand-navy, #003477);
+    color: #fff;
+    padding: 0.8em 1em;
+  }
+  > :not(.value-head) { margin: 0.5em 1em; }
+}
+.value-word { display: block; font-size: 1.8em; font-weight: 700; line-height: 1.1; }
+.value-letter { color: var(--brand-orange, #ff8c0f); }
+.value-zh { font-size: 1.3em; font-weight: 700; }
+.value-pinyin { opacity: 0.8; }
+
+.big-quote {
+  font-size: 2.4em;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--brand-navy, #003477);
+  margin: 0.4em 0 0.6em;
+  &::after {
+    content: attr(data-zh);
+    display: block;
+    font-size: 0.7em;
+    margin-top: 0.3em;
+  }
+}
+
+.steps ol {
+  display: flex;
+  gap: 0.8em;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  li {
+    flex: 1;
+    counter-increment: step;
+    background: var(--brand-sky, #ebf7fd);
+    border-radius: 10px;
+    padding: 0.7em 0.9em;
+    &::before {
+      content: counter(step);
+      display: inline-grid;
+      place-items: center;
+      width: 1.7em;
+      height: 1.7em;
+      margin-bottom: 0.3em;
+      border-radius: 50%;
+      background: var(--brand-orange, #ff8c0f);
+      color: var(--brand-navy, #003477);
+      font-weight: 700;
+    }
+  }
+}
+.steps[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--brand-navy, #003477);
+  margin: 0.8em 0 0.3em;
+}
+
+// ---- Overview page ----------------------------------------------------------
+
+.badge {
+  display: inline-block;
+  padding: 0.1em 0.55em;
+  border-radius: 999px;
+  font-size: 0.78em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-type { background: var(--brand-sky, #ebf7fd); color: var(--brand-navy, #003477); }
+.badge-school { background: var(--brand-navy, #003477); color: #fff; }
+.badge-official { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
+
+// Sidebar logo: keep the sailboat icon small.
+.sidebar-logo { max-height: 3.2em; width: auto; }
+
+// Unit pages: show the type label capitalized (slides -> Slides).
+.quarto-listing td.listing-type { text-transform: capitalize; }

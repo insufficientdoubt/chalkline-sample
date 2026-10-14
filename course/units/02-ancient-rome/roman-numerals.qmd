@@ -1,0 +1,45 @@
+---
+title: "Roman Numerals 罗马数字"
+type: reference
+description: "The seven Roman numeral letters, the add and subtract rules, examples, and eight to try. Teacher copy has answers."
+order: 4
+audience: [teacher, student, parent]
+doc-type: Reference
+format:
+  html: default
+  typst: default
+---
+
+{{< vocab "Roman numerals" zh=true >}} use seven letters from the Latin alphabet. You still see them on clocks, in book chapters and at the end of movies.
+
+| Letter | I | V | X | L | C | D | M |
+|---|---|---|---|---|---|---|---|
+| **Value** | 1 | 5 | 10 | 50 | 100 | 500 | 1000 |
+
+## Two rules
+
+::: {.callout-tip title="1. Bigger to smaller: add" icon=false}
+**VI** = 5 + 1 = 6 · **XV** = 10 + 5 = 15 · **CLX** = 100 + 50 + 10 = 160
+:::
+
+::: {.callout-tip title="2. A smaller letter before a bigger one: subtract" icon=false}
+**IV** = 5 − 1 = 4 · **IX** = 10 − 1 = 9 · **XL** = 50 − 10 = 40 · **XC** = 100 − 10 = 90
+:::
+
+Never use the same letter more than three times in a row: 4 is **IV**, not ~~IIII~~.
+
+## Try it
+
+| Roman → number | | Number → Roman | |
+|---|---|---|---|
+| **XII** | ______ | **8** | ______ |
+| **XIX** | ______ | **24** | ______ |
+| **LXV** | ______ | **49** | ______ |
+| **MMXXVI** | ______ | **this year** | ______ |
+: {tbl-colwidths="[25,25,25,25]"}
+
+::: {.content-visible when-profile="teacher"}
+::: {.callout-note title="Answer key"}
+XII = 12 · XIX = 19 · LXV = 65 · MMXXVI = 2026 · 8 = VIII · 24 = XXIV · 49 = XLIX · 2026 = MMXXVI (2027 = MMXXVII)
+:::
+:::

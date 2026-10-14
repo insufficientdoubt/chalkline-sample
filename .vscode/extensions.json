@@ -1,0 +1,8 @@
+{
+  // VS Code will offer to install these when you open this folder.
+  "recommendations": [
+    "quarto.quarto",
+    "ms-python.python",
+    "ms-toolsai.jupyter"
+  ]
+}

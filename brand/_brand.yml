@@ -1,0 +1,62 @@
+# Brand settings: colors, fonts, and logos for every output format at once
+# (web pages, slides, PDF). Quarto reads this through `brand:` in _quarto.yml.
+#
+# Colors: from the school palette, consolidated from 10 swatches to 4 brand
+# colors plus 2 neutrals. Logo: the official emblem. Fonts: still placeholders
+# until marketing confirms the school fonts.
+
+meta:
+  name: Mingwan School
+
+color:
+  palette:
+    # Brand colors
+    navy: "#003477"       # all text accents, headings, banners (the only text color besides ink)
+    blue: "#0087ff"       # logo blue: stripes, rules, buttons, big shapes (too light for small text)
+    turquoise: "#14d7cd"  # logo hills: decoration only, put navy text on top
+    orange: "#ff8c0f"     # logo sun: warm highlight and teacher-only items (answer keys, teacher tab)
+    # Neutrals
+    sky: "#ebf7fd"        # pale blue panels: section headings, word banks, table stripes
+    ink: "#1F2933"        # body text
+    # Extra colors for charts and polls only (when more than 4 colors are needed)
+    yellow: "#fbc400"
+    cyan: "#0abee6"
+  primary: navy
+  secondary: blue
+  tertiary: orange
+  foreground: ink
+  background: "#ffffff"
+
+logo:
+  images:
+    full:
+      path: logos/logo-emblem.png
+      alt: Mingwan School emblem
+    mark:
+      path: logos/icon-sailboat.svg
+      alt: Mingwan School sailboat icon
+  small: mark      # favicons, slide corners, page headers, website navbar
+  medium: full
+  large: full
+
+typography:
+  fonts:
+    - family: Source Sans 3
+      source: google
+      weight: [400, 600, 700]
+      style: [normal, italic]
+    - family: Poppins
+      source: google
+      weight: [600, 700]
+    - family: Noto Sans SC     # Chinese text in PDFs (fallback after the fonts above)
+      source: google
+      weight: [400, 700]
+  base:
+    family: Source Sans 3
+    size: 11pt
+  headings:
+    family: Poppins
+    weight: 700
+    color: navy
+  link:
+    color: navy

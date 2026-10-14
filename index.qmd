@@ -1,0 +1,78 @@
+---
+title: "Overview"
+freeze: false               # always rerun: lists every file and counts down to events
+format: html
+toc: false
+page-layout: full
+listing:
+  - id: everything               # in the family site, only items marked for parents (scripts/catalog.py)
+    contents: generated/catalog.yml
+    type: table
+    fields: [title, type, unit, source, formats, description]
+    field-display-names:
+      type: Type
+      unit: Unit
+      source: Source
+      formats: Formats
+      description: What it is
+    sort: false
+    sort-ui: [title, type, unit, source]
+    filter-ui: true
+    categories: true
+    page-size: 200
+---
+
+```{python}
+#| output: asis
+import sys; sys.path.append("scripts")
+from catalog import markdown_season, markdown_by_unit, markdown_by_type, markdown_learning
+print(markdown_season())
+```
+
+::: {.content-visible when-profile="teacher"}
+::: {.callout-warning}
+**Teacher build.** Worksheets here include answer keys and teacher notes. Don't share this version with students.
+:::
+:::
+
+::: {.content-visible when-profile="parent"}
+Welcome, families! This is where you can follow what your child is learning: the slides we use in class, the **vocabulary** (English with 中文) and the goals for each unit.
+
+::: {#everything}
+:::
+
+## What we're learning
+
+```{python}
+#| output: asis
+print(markdown_learning())
+```
+:::
+
+::: {.content-hidden when-profile="parent"}
+Every slide deck, printable and poster for the course. **Search** with the box below (or the sidebar search), **filter** by type, unit or source with the categories on the right, or browse **by unit** or **by type**. Inside any page, use the previous/next buttons at the bottom to flip through.
+
+::: {.panel-tabset}
+
+## Everything
+
+::: {#everything}
+:::
+
+## By unit
+
+```{python}
+#| output: asis
+print(markdown_by_unit())
+```
+
+## By type
+
+```{python}
+#| output: asis
+print(markdown_by_type())
+```
+
+:::
+
+:::

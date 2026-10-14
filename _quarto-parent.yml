@@ -1,0 +1,26 @@
+# Parent profile: the family site, built only when you run
+#   quarto render --profile parent        (into _site-parent/)
+#   quarto preview --profile parent       (http://localhost:4102)
+# Layered on top of _quarto.yml. It shows only pages whose labels include  audience: [..., parent],
+# plus the unit pages (objectives), the overview and the vocab app. Everything else is a "draft"
+# and is left out of the site, its sidebar and its search (scripts/parent_site.py tidies up after).
+#
+# Inside a page, hide something from families with  ::: {.content-hidden when-profile="parent"}
+# (activity instructions on a slide, say), or show something only to them with .content-visible.
+
+project:
+  output-dir: _site-parent
+  preview:
+    port: 4102
+
+website:
+  title: "Chalkline Sample (Families)"
+  draft-mode: gone
+  # ---- Everything below is written by scripts/catalog.py before each render. Don't edit by hand. ----
+  drafts:
+  - course/units/01-ancient-greece/athens-vs-sparta.qmd
+  - course/units/01-ancient-greece/class-vote.qmd
+  - course/units/01-ancient-greece/greek-ideas-slides.qmd
+  - course/units/02-ancient-rome/aqueduct-challenge.qmd
+  - course/units/02-ancient-rome/republic-or-empire.qmd
+  - course/units/02-ancient-rome/republic-to-empire-slides.qmd

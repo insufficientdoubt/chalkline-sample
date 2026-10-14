@@ -1,0 +1,10 @@
+# Python packages for this project. Install with:
+#   pip install -r requirements.txt
+jupyter      # lets Quarto run the Python code in .qmd files
+pyyaml       # reads the vocab .yml files
+openpyxl     # writes the Kahoot .xlsx spreadsheet
+genanki      # writes the Anki deck (optional)
+qrcode       # QR codes in the printable vocab PDF (vocab/tools/print_pdf.py)
+pymupdf      # PDF page counts and checks (vocab PDF, packets)
+pillow       # images for the vocab PDF
+playwright   # prints slide decks to PDF with the Chrome or Edge already installed (scripts/slides_pdf.py)

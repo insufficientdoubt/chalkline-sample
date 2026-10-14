@@ -1,0 +1,25 @@
+# Outside resources for the overview. They appear in the overview only, not on unit pages.
+# `source` is shown as a badge; anything that isn't "School" is treated as an outside source.
+
+- title: Ancient Greece (Simple English Wikipedia)
+  url: https://simple.wikipedia.org/wiki/Ancient_Greece
+  type: reference
+  unit: 01-ancient-greece
+  source: Wikipedia
+  audience: [teacher, student, parent]
+  description: An easy-English overview of ancient Greece, for reading at home.
+
+- title: Ancient Rome (Simple English Wikipedia)
+  url: https://simple.wikipedia.org/wiki/Ancient_Rome
+  type: reference
+  unit: 02-ancient-rome
+  source: Wikipedia
+  audience: [teacher, student, parent]
+  description: An easy-English overview of ancient Rome, for reading at home.
+
+- title: History vocab (English / 中文)
+  url: vocab/app/
+  type: vocab
+  source: School
+  audience: [teacher, student, parent]
+  description: All 25 words from both units, with pictures and Chinese.

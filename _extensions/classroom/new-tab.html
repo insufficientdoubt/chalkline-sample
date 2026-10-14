@@ -1,0 +1,14 @@
+<!-- Slideshows open in a new tab, so the overview stays open behind them.
+     A link counts as a slideshow when its file name ends in "slides.html"
+     (slides.qmd, review-slides.qmd, ...). Turn off with  slides-new-tab: false. -->
+<script>
+document.addEventListener("click", function (e) {
+  var a = e.target.closest && e.target.closest("a[href]");
+  if (!a || a.target) return;
+  var path = a.getAttribute("href").split("#")[0].split("?")[0];
+  if (/slides\.html$/.test(path)) {
+    a.target = "_blank";
+    a.rel = "noopener";
+  }
+}, true);
+</script>

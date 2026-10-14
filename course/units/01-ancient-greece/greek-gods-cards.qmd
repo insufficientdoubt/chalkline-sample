@@ -1,0 +1,57 @@
+---
+title: "Greek Gods Fact Cards 希腊诸神"
+type: reference
+description: "Six of the Olympian gods: what each was in charge of and a symbol, with 中文 names, plus a blank card to design your own."
+order: 4
+audience: [teacher, student, parent]
+doc-type: Reference
+format:
+  html: default
+  typst: default
+---
+
+The Greeks believed their most important gods lived on Mount Olympus. Each {{< vocab "myth" zh=true >}} told stories about them.
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Zeus 宙斯" icon=false}
+**King of the gods.** In charge of the sky and thunder.\
+**Symbol:** a thunderbolt ⚡
+:::
+
+::: {.callout-note title="Hera 赫拉" icon=false}
+**Queen of the gods**, Zeus's wife. Goddess of marriage and family.\
+**Symbol:** a peacock 🦚
+:::
+::::
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Poseidon 波塞冬" icon=false}
+**God of the sea**, storms and earthquakes. Zeus's brother.\
+**Symbol:** a trident (three-pointed spear) 🔱
+:::
+
+::: {.callout-note title="Athena 雅典娜" icon=false}
+**Goddess of wisdom** and protector of Athens. The Parthenon was her {{< vocab "temple" zh=true >}}.\
+**Symbol:** an owl 🦉
+:::
+::::
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Apollo 阿波罗" icon=false}
+**God of music**, poetry, light and healing.\
+**Symbol:** a lyre (small harp) 🎵
+:::
+
+::: {.callout-note title="Artemis 阿耳忒弥斯" icon=false}
+**Goddess of hunting**, the wild and the moon. Apollo's twin sister.\
+**Symbol:** a bow and arrow 🏹
+:::
+::::
+
+## Design your own card
+
+Pick a god or goddess from the list on Mount Olympus, or invent one. Draw them with their symbol, and write what they're in charge of.
+
+{{< drawing-box label="My god or goddess" height="3.2in" >}}
+
+**Name:** ______________________ **In charge of:** ______________________________

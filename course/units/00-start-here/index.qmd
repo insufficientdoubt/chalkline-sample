@@ -1,0 +1,26 @@
+---
+title: "Start Here: What Chalkline Does"
+short-title: "Start here"
+unit: 0
+format: html
+description: "A short slide deck about Chalkline: what it makes for you, and how this sample course is put together."
+objectives:
+  - I can find the slides, printables, packets and vocab for a unit.
+  - I can explain what Chalkline makes from one file (slides, web page, PDF).
+  - I know where to start when I make my own unit.
+listing:
+  contents: "*.qmd"
+  type: table
+  fields: [title, type, description]
+  field-display-names:
+    type: Type
+  sort: "order"
+  filter-ui: false
+  sort-ui: false
+---
+
+{{< objectives >}}
+
+{{< packet >}}
+
+## Materials

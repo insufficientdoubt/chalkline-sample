@@ -1,0 +1,204 @@
+---
+title: "Chalkline"
+subtitle: "Write it once. Teach it everywhere. · 一次编写，处处可用"
+type: slides
+description: "What Chalkline makes for you from one file, the classroom tools in every deck, and how to start your own unit."
+order: 1
+audience: [teacher, student, parent]
+format: revealjs
+title-slide-attributes:
+  data-background-color: "#003477"
+---
+
+## The usual way
+
+:::: {.columns}
+::: {.column width="50%"}
+- Slides in one app, worksheets in another
+- Copy the same words into a handout, a website, a packet
+- Fix a typo in one place… and miss the other three
+- Make a separate version for families and an answer key for you
+:::
+::: {.column width="50%"}
+::: {.callout-warning title="The result" icon=false}
+Five copies of everything, slowly drifting apart. Hours every week spent formatting instead of teaching.
+:::
+:::
+::::
+
+::: notes
+Ask the room: how many places does the same lesson live for you right now? Slides, a doc, a shared drive, an LMS page, a printed packet…
+:::
+
+## The Chalkline way: one file, many outputs
+
+:::: {.columns}
+::: {.column width="34%"}
+::: {.callout-note title="You write" icon=false}
+**One plain-text file** per deck or worksheet: words, pictures, and a few labels at the top (title, type, who it's for).
+:::
+:::
+::: {.column width="66%"}
+::: {.callout-tip title="Chalkline makes" icon=false}
+- **Slides** to present, and a **slide PDF**
+- A **web page** and a **printable PDF** of each worksheet
+- A **unit packet**: every printable in one PDF, with a cover and contents
+- A **year packet** with every unit
+- A **student**, a **teacher** and a **family** website
+:::
+:::
+::::
+
+::: notes
+Everything in this sample was made this way. Open any slide deck or worksheet file in VS Code to see how little is in it.
+:::
+
+## Every unit gets a home page
+
+- The unit's **objectives** at the top
+- Every slide deck and printable, with links to the PDFs
+- A **Unit packet (PDF)** button: all the printables, ready to send to the copier
+- Nothing to list by hand: add a file to the unit folder and it appears
+
+::: {.small-note}
+Try it: open **Unit 1: Ancient Greece** in the sidebar.
+:::
+
+## Packets build themselves
+
+:::: {.columns}
+::: {.column width="55%"}
+- Every worksheet, handout and reference in a unit, **in order**
+- A **cover** with the objectives and contents
+- Page numbers running through the whole packet
+- Slides, posters and tests stay out
+- Add an **outside PDF** (a map, an official form) with one line
+:::
+::: {.column width="45%"}
+::: {.callout-note title="Teacher version" icon=false}
+The teacher build makes **teacher packets**: the same pages plus answer keys, with an orange **TEACHER EDITION** tab.
+:::
+:::
+::::
+
+::: notes
+Packets are made fresh from the source files, not glued together, so they always match the latest worksheets.
+:::
+
+## Vocabulary support, built in
+
+Tap or hover a word with a dotted line to see its card: picture, 中文 and a simple definition.
+
+:::: {.columns}
+::: {.column width="50%"}
+- Ancient Athens was a {{< vocab "democracy" >}}.
+- Rome built a huge {{< vocab "empire" >}}.
+- An {{< vocab "aqueduct" >}} carried water to the city.
+:::
+::: {.column width="50%"}
+::: {.callout-tip title="One list, used everywhere" icon=false}
+The words live in one spreadsheet. Slides, worksheets, the **vocab app** and Quizlet/Kahoot exports all read it. **English is the goal; 中文 is support**, and never appears in quizzes.
+:::
+:::
+::::
+
+::: notes
+Try the pop-ups now. Then open "History vocab 词汇" in the sidebar: all 25 words from both units, searchable in English or Chinese.
+:::
+
+## Three websites from the same files
+
+:::: {.columns}
+::: {.column width="33%"}
+::: {.callout-note title="Students" icon=false}
+Slides, worksheets, vocab. No answer keys.
+:::
+:::
+::: {.column width="33%"}
+::: {.callout-warning title="Teachers" icon=false}
+Everything, plus **answer keys**, **speaker notes** and teacher packets.
+:::
+:::
+::: {.column width="33%"}
+::: {.callout-tip title="Families" icon=false}
+The objectives, the **vocab app** and only the slides you choose to share.
+:::
+:::
+::::
+
+One label decides who sees a file: `audience: [teacher, student, parent]`
+
+## Classroom tools in every deck
+
+:::: {.columns}
+::: {.column width="50%"}
+- A **timer** on any slide (press **T**)
+- A **clock** in the corner (press **K**)
+- **Speaker notes** in a second window (press **S**)
+- **Tap-to-vote polls**: no devices, no accounts
+:::
+::: {.column width="50%"}
+{{< timer 2 >}}
+:::
+::::
+
+::: notes
+Start the timer to show it. It keeps running in a small box if you change slides.
+:::
+
+## Try a poll
+
+::: {.poll type="choice" options="Packets | Vocab pop-ups | Family site | Slide PDFs"}
+Which feature will you try first?
+:::
+
+::: notes
+Tap an answer on the board (or press 1–4), then press R or click Show results.
+:::
+
+## It always looks like your school
+
+- Colors, fonts and logos are set **once**, in `brand/`
+- Slides, web pages, PDFs and the vocab app all follow
+- Change the brand file and **everything** updates
+
+::: {.small-note}
+No more fixing fonts slide by slide.
+:::
+
+## Editing with an AI assistant
+
+- The files are plain text, so tools like Claude can read and edit them
+- `CLAUDE.md` tells the assistant the rules for this course
+- While you work on one worksheet, only that file is rebuilt: quick to check
+- When it's done: save, and rebuild that unit's packet
+
+::: notes
+Example request: "Add a 5-question exit ticket to the Rome republic deck, with Chinese glosses on the key words."
+:::
+
+## How this sample is organized
+
+```text
+course/units/01-ancient-greece/
+  index.qmd                   the unit page: title, objectives
+  city-states-slides.qmd      a slide deck
+  athens-vs-sparta.qmd        a worksheet (web + PDF)
+  images/                     pictures for this unit
+vocab/data/vocab.csv          the 25 vocab words
+brand/                        colors, fonts, logos
+```
+
+## Make your own unit
+
+1. Copy a unit folder, for example `01-ancient-greece`, and rename it
+2. In its `index.qmd`, change the title and objectives
+3. Edit or replace the slides and worksheets, keeping a `type:` label on each
+4. Add your words to `vocab/data/vocab.csv`
+5. Double-click **Start Chalkline**: your unit is on the site
+
+## Exit ticket
+
+::: {.poll type="smileys"}
+How ready do you feel to make your first unit?
+:::
