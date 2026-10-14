@@ -2,6 +2,8 @@
 
 **Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and three websites (students, teachers, families), all in your school's style. This is a **sample course** to try it with: two history units (Ancient Greece and Ancient Rome), a 25-word bilingual vocab list, and a slide deck about Chalkline itself.
 
+**See it online:** https://insufficientdoubt.github.io/chalkline-sample/ (the teacher version, rebuilt on every push).
+
 > **Beta.** You're one of the first teachers to use this. Note anything confusing or broken, and tell John.
 
 ## What's in here
