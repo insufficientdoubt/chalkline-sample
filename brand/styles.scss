@@ -228,7 +228,20 @@ tr.row-packet .type-cell::before { content: "📦 "; }
 tr.row-slides .badge-type { background: var(--brand-turquoise, #14d7cd); color: var(--brand-navy, #003477); }
 tr.row-packet .badge-type { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
 .sidebar-slides .menu-text::before { content: "🖥 "; }
-// The packet buttons on unit pages, in packet orange.
+// Packets on unit pages. The teacher site shows two cards that must never be confused:
+// the teacher edition (solid orange, 🔑) and the student copy (white, orange outline, 🎒).
 a.btn[href$="-packet.pdf"] { background: var(--brand-orange, #ff8c0f); border-color: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); font-weight: 600; }
-a.btn[href$="-student-packet.pdf"] { background: #fff1e2; }
 a.btn[href$="-packet.pdf"]:hover { filter: brightness(0.95); color: var(--brand-navy, #003477); }
+.packet-cards { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 0.6rem 0 1.2rem; }
+.packet-card { flex: 1 1 15rem; border-radius: 10px; padding: 0.7rem 0.9rem 0.2rem; border: 2px solid var(--brand-orange, #ff8c0f); }
+.packet-card p { margin-bottom: 0.5rem; }
+.packet-card p:last-child { font-size: 0.9em; }
+.packet-card .btn { font-size: 1.05rem; }
+.packet-teacher { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
+.packet-teacher .btn { background: var(--brand-navy, #003477) !important; border-color: var(--brand-navy, #003477) !important; color: #fff !important; }
+.packet-student { background: #fff; border-style: dashed; }
+.packet-student .btn { background: #fff !important; color: var(--brand-navy, #003477) !important; border: 2px solid var(--brand-orange, #ff8c0f) !important; }
+// In tables: the teacher edition row is darker and marked 🔑; the student copy is marked 🎒.
+tr.row-packet-teacher > td { background: #ffd9ad !important; }
+tr.row-packet-teacher .type-cell::before { content: "🔑 "; }
+tr.row-packet-student .type-cell::before { content: "🎒 "; }

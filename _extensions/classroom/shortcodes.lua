@@ -17,7 +17,7 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          generated/pdf-pages.json (scripts/catalog.py).
   {{< packet >}}                         on a unit page: a download link for the unit packet (all its
                                          printables in one PDF, made by scripts/packets.py). The teacher
-                                         site shows two: the teacher packet and the student packet.
+                                         site shows two: the teacher edition and the student copy.
                                          Nothing if the unit has no printables.
   {{< vocab "chain wrap" >}}             a VEX term; hovering shows its vocab card (picture, 中文,
                                          definition, link). Name a term, an "also called" name or an
@@ -247,13 +247,16 @@ return {
     local function button(label, file, classes)
       return pandoc.Link({ pandoc.Str(label) }, file, "", pandoc.Attr("", classes))
     end
-    if teacher then   -- both editions (scripts/packets.py writes unit-student-packet.pdf next to it)
-      local student = name:gsub("%-packet%.pdf$", "-student-packet.pdf")
-      return pandoc.Para({
-        button("📄 Teacher packet (PDF)", name, { "btn", "btn-primary" }), pandoc.Space(),
-        button("📄 Student packet (PDF)", student, { "btn", "btn-outline-primary" }),
-        pandoc.Span({ pandoc.Str(" · all " .. count .. "; the teacher one adds answer keys and notes") },
-                    pandoc.Attr("", { "text-muted" })) })
+    if teacher then   -- both editions (scripts/packets.py writes unit-teacher-packet.pdf next to it)
+      local teacher_file = name:gsub("%-packet%.pdf$", "-teacher-packet.pdf")
+      local function card(cls, label, note, file)
+        return pandoc.Div({ pandoc.Para({ button(label, file, { "btn" }) }),
+                            pandoc.Para({ pandoc.Str(note) }) }, pandoc.Attr("", { "packet-card", cls }))
+      end
+      return pandoc.Div({
+        card("packet-teacher", "🔑 Teacher edition (PDF)", "With answer keys and teacher notes. For you, not for students.", teacher_file),
+        card("packet-student", "🎒 Student copy (PDF)", "No answer keys. Print this one for class. All " .. count .. ".", name),
+      }, pandoc.Attr("", { "packet-cards" }))
     end
     return pandoc.Para({ button("📄 Unit packet (PDF)", name, { "btn", "btn-primary" }),
                          pandoc.Span({ pandoc.Str(" · all " .. count .. " in one file, ready to print") },

@@ -96,7 +96,7 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 
 ## Unit packets
 
-Every unit's printables (worksheets, checklists, handouts and references) are also built into one **unit packet** PDF, and all packets into a **year packet**: a cover with the objectives and contents, each printable on a new page, page numbers running through. Slide decks, posters and tests are left out. Add `packet: false` to a printable's labels to leave it out too. The teacher site has **both**: a **Teacher packet** (answer keys, notes, TEACHER EDITION tab) and a **Student packet** to copy for class (`unit-student-packet.pdf`), with a button for each on the unit page. To add an outside PDF to a packet, save it in the unit folder and list it in the unit's `index.qmd`:
+Every unit's printables (worksheets, checklists, handouts and references) are also built into one **unit packet** PDF, and all packets into a **year packet**: a cover with the objectives and contents, each printable on a new page, page numbers running through. Slide decks, posters and tests are left out. Add `packet: false` to a printable's labels to leave it out too. The teacher site has **both**: a 🔑 **Teacher edition** (answer keys, notes, TEACHER EDITION tab; `unit-teacher-packet.pdf`) and a 🎒 **Student copy** to print for class (`unit-packet.pdf`, the same file as on the student site), each with its own card on the unit page. To add an outside PDF to a packet, save it in the unit folder and list it in the unit's `index.qmd`:
 
 ```yaml
 packet-extras:

@@ -68,9 +68,10 @@ PACKET_TYPES = {"worksheet", "checklist", "handout", "reference"}   # printables
 YEAR_PACKET = "year-packet.pdf"       # every unit packet in one PDF, at the site root
 
 
-def student_copy(pdf):
-    """In the teacher site, the student version of a packet: unit-packet.pdf -> unit-student-packet.pdf."""
-    return pdf[: -len("-packet.pdf")] + "-student-packet.pdf" if pdf.endswith("-packet.pdf") else pdf
+def teacher_copy(pdf):
+    """The teacher edition's file name: unit-packet.pdf -> unit-teacher-packet.pdf. (The student copy
+    keeps the plain name, the same as on the student site.)"""
+    return pdf[: -len("-packet.pdf")] + "-teacher-packet.pdf" if pdf.endswith("-packet.pdf") else pdf
 
 
 def front_matter(path):
@@ -220,59 +221,34 @@ def load_catalog():
 
     packets = load_packets()
     teacher = "teacher" in os.environ.get("QUARTO_PROFILE", "").split(",")
+
+    def packet_row(title, pdf, description, unit, order, audience, rank):
+        return {"title": title, "path": pdf, "pdf": pdf, "description": description, "type": "Packet",
+                "unit": unit, "source": "School", "formats": "PDF", "audience": audience, "_sort": (order, 0, rank, "")}
+
+    everyone = ["teacher", "student", "parent"]
     for p in packets:
-        if teacher:   # the teacher site has both editions; this row is the student one
-            items.append({
-                "title": f"{p['short']} student packet",
-                "path": student_copy(p["pdf"]),
-                "pdf": student_copy(p["pdf"]),
-                "description": f"Every printable for {p['title']}, without answer keys, ready to copy for class.",
-                "type": "Packet",
-                "unit": p["short"],
-                "source": "School",
-                "formats": "PDF",
-                "audience": ["teacher"],
-                "_sort": (p["order"], 0, 1, ""),
-            })
-        items.append({
-            "title": f"{p['short']} {'teacher packet' if teacher else 'packet'}",
-            "path": p["pdf"],
-            "pdf": p["pdf"],
-            "description": (f"Every printable for {p['title']}, with answer keys and teacher notes." if teacher
-                            else f"Every printable for {p['title']} in one PDF, in order."),
-            "type": "Packet",
-            "unit": p["short"],
-            "source": "School",
-            "formats": "PDF",
-            "audience": ["teacher", "student", "parent"],
-            "_sort": (p["order"], 0, 0, ""),
-        })
+        if teacher:   # the teacher site has both: the teacher edition first, then the student copy
+            items.append(packet_row(f"🔑 {p['short']} · Teacher edition", teacher_copy(p["pdf"]),
+                                    f"Every printable for {p['title']}, WITH answer keys and teacher notes. For you.",
+                                    p["short"], p["order"], ["teacher"], 0))
+            items.append(packet_row(f"🎒 {p['short']} · Student copy", p["pdf"],
+                                    f"Every printable for {p['title']}, without answer keys. Print this for class.",
+                                    p["short"], p["order"], everyone, 1))
+        else:
+            items.append(packet_row(f"{p['short']} packet", p["pdf"],
+                                    f"Every printable for {p['title']} in one PDF, in order.",
+                                    p["short"], p["order"], everyone, 0))
     if packets and teacher:
-        items.append({
-            "title": "Year student packet: every unit",
-            "path": student_copy(YEAR_PACKET),
-            "pdf": student_copy(YEAR_PACKET),
-            "description": "Every unit packet in one PDF, without answer keys.",
-            "type": "Packet",
-            "unit": SEASON_GROUP[0],
-            "source": "School",
-            "formats": "PDF",
-            "audience": ["teacher"],
-            "_sort": (SEASON_GROUP[1], 0, 1, ""),
-        })
-    if packets:
-        items.append({
-            "title": "Year teacher packet: every unit" if teacher else "Year packet: every unit",
-            "path": YEAR_PACKET,
-            "pdf": YEAR_PACKET,
-            "description": "Every unit packet in one PDF, in unit order.",
-            "type": "Packet",
-            "unit": SEASON_GROUP[0],
-            "source": "School",
-            "formats": "PDF",
-            "audience": ["teacher", "student", "parent"],
-            "_sort": (SEASON_GROUP[1], 0, 0, ""),
-        })
+        items.append(packet_row("🔑 Year packet · Teacher edition", teacher_copy(YEAR_PACKET),
+                                "Every unit packet in one PDF, WITH answer keys and teacher notes.",
+                                SEASON_GROUP[0], SEASON_GROUP[1], ["teacher"], 0))
+        items.append(packet_row("🎒 Year packet · Student copy", YEAR_PACKET,
+                                "Every unit packet in one PDF, without answer keys.",
+                                SEASON_GROUP[0], SEASON_GROUP[1], everyone, 1))
+    elif packets:
+        items.append(packet_row("Year packet: every unit", YEAR_PACKET, "Every unit packet in one PDF, in unit order.",
+                                SEASON_GROUP[0], SEASON_GROUP[1], everyone, 0))
 
     items.sort(key=lambda i: i["_sort"])
     for i in items:
@@ -350,8 +326,17 @@ def _table(items):
     return "\n".join(lines) + "\n"
 
 
+def built_catalog():
+    """The catalog written before this render (generated/catalog.yml), so the overview's tabs match
+    the version being built (teacher, student, family). Code inside a page can't tell which
+    version that is; this script, run as a pre-render step, can."""
+    if OUT.exists():
+        return yaml.safe_load(OUT.read_text(encoding="utf-8")) or []
+    return load_catalog()
+
+
 def markdown_by_unit():
-    items = load_catalog()
+    items = built_catalog()
     out = []
     groups = [(u["short"], u) for u in load_units()] + [(SEASON_GROUP[0], None)]
     for name, unit in groups:
@@ -367,7 +352,7 @@ def markdown_by_unit():
 
 
 def markdown_by_type():
-    items = load_catalog()
+    items = built_catalog()
     out = []
     for label, _ in sorted(TYPES.values(), key=lambda t: t[1]):
         group = [i for i in items if i["type"] == label]
