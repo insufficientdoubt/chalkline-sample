@@ -24,7 +24,7 @@ Things to try once the site is open:
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
 - In the overview, each deck has a **PDF** too.
 - **Terminal > Run Task… > Open family site (parents)**: the version families see.
-- **Terminal > Run Task… > Open teacher site**: with answer keys and teacher notes.
+- **Terminal > Run Task… > Open student site**: what students see, without the answer keys and teacher notes.
 
 ## One-time setup
 
@@ -64,7 +64,7 @@ Things to try once the site is open:
 
 ## Open the site
 
-**Double-click `Start Chalkline.command`** (Mac) or **`Start Chalkline.bat`** (Windows). The site opens at **http://localhost:4100** and updates every time you save a file. Leave the window open while you work; close it to stop. The first time, it installs the Python packages for you and builds the whole site, which takes a few minutes.
+**Double-click `Start Chalkline.command`** (Mac) or **`Start Chalkline.bat`** (Windows). The site opens at **http://localhost:4100**, in the **teacher version** (answer keys and teacher notes showing), and updates every time you save a file. Leave the window open while you work; close it to stop. The first time, it installs the Python packages for you and builds the whole site, which takes a few minutes.
 
 In **VS Code**, the site starts by itself when you open the folder (allow "automatic tasks" the first time).
 
@@ -88,7 +88,7 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 |---|---|
 | Build everything (student site) into `_site/` | `quarto render` |
 | Build the teacher site into `_site-teacher/` | `quarto render --profile teacher` |
-| Open the family site (port 4102) or teacher site (port 4101) | `python scripts/open_site.py parent` / `teacher` |
+| Open the family site (port 4102) or student site (port 4101) | `python scripts/open_site.py parent` / `student` |
 | Rebuild one unit's packet | `python scripts/packets.py --unit 1` |
 | Rebuild slide PDFs | `python scripts/slides_pdf.py` |
 | Check the vocab list | `python vocab/validate.py` |

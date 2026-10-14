@@ -21,20 +21,20 @@
       // Runs before the preview: a full build if anything changed since the last one, so pages open fast.
       "label": "Build site if needed",
       "type": "shell",
-      "command": "${workspaceFolder}/.venv/bin/python scripts/build_if_needed.py",
+      "command": "${workspaceFolder}/.venv/bin/python scripts/build_if_needed.py --profile teacher",
       "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
       "windows": {
-        "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\build_if_needed.py",
+        "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\build_if_needed.py --profile teacher",
         "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}\\.venv\\Scripts\\python.exe" } }
       },
       "problemMatcher": []
     },
     {
       // Starts by itself when you open this folder (VS Code asks once: "Allow automatic tasks").
-      // The site is at http://localhost:4100 (port set in _quarto.yml).
+      // The teacher version (answer keys and notes) at http://localhost:4100 (port set in _quarto.yml).
       "label": "Preview site (live reload)",
       "type": "shell",
-      "command": "quarto preview",
+      "command": "quarto preview --profile teacher",
       "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
       "windows": { "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}\\.venv\\Scripts\\python.exe" } } },
       "isBackground": true,
@@ -53,11 +53,11 @@
       "problemMatcher": []
     },
     {
-      // Builds the teacher site if anything changed, then serves it at http://localhost:4101
-      "label": "Open teacher site",
+      // Builds the student site (no answer keys) if anything changed, then serves it at http://localhost:4101
+      "label": "Open student site",
       "type": "shell",
-      "command": "${workspaceFolder}/.venv/bin/python scripts/open_site.py teacher",
-      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\open_site.py teacher" },
+      "command": "${workspaceFolder}/.venv/bin/python scripts/open_site.py student",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe scripts\\open_site.py student" },
       "options": { "env": { "QUARTO_PYTHON": "${workspaceFolder}/.venv/bin/python" } },
       "isBackground": true,
       "problemMatcher": []

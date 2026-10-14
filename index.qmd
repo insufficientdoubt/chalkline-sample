@@ -50,14 +50,9 @@ print(markdown_learning())
 :::
 
 ::: {.content-hidden when-profile="parent"}
-Every slide deck, printable and poster for the course. **Search** with the box below (or the sidebar search), **filter** by type, unit or source with the categories on the right, or browse **by unit** or **by type**. Inside any page, use the previous/next buttons at the bottom to flip through.
+Every slide deck, printable and poster for the course, **by unit** below. The **Everything** tab has a search box and filters (type, unit, source) on the right; **By type** groups them by kind. The sidebar search looks inside every page. Inside any page, use the previous/next buttons at the bottom to flip through.
 
 ::: {.panel-tabset}
-
-## Everything
-
-::: {#everything}
-:::
 
 ## By unit
 
@@ -65,6 +60,11 @@ Every slide deck, printable and poster for the course. **Search** with the box b
 #| output: asis
 print(markdown_by_unit())
 ```
+
+## Everything
+
+::: {#everything}
+:::
 
 ## By type
 

@@ -177,6 +177,33 @@ No more fixing fonts slide by slide.
 Example request: "Add a 5-question exit ticket to the Rome republic deck, with Chinese glosses on the key words."
 :::
 
+## Get your own copy
+
+:::: {.columns}
+::: {.column width="52%"}
+1. **Install** (once): VS Code, Quarto, Python 3, Git, and Chrome or Edge. The README has the links.
+2. **Clone:** in VS Code, press **Ctrl+Shift+P** (Mac: **Cmd+Shift+P**), choose **Git: Clone**, paste the address, pick a folder, then **Open**.
+3. **Start:** double-click **Start Chalkline** in the folder. The first time takes a few minutes.
+:::
+::: {.column width="48%"}
+::: {.callout-tip title="The address" icon=false}
+`https://github.com/insufficientdoubt/chalkline-sample`
+:::
+
+::: {.callout-note title="Then" icon=false}
+Your site opens at **localhost:4100**, in the teacher version. Your copy is yours: change anything.
+:::
+:::
+::::
+
+::: {.small-note}
+Just want to look first? The online version: **insufficientdoubt.github.io/chalkline-sample**
+:::
+
+::: notes
+In a terminal instead of VS Code: `git clone https://github.com/insufficientdoubt/chalkline-sample.git`, then open the folder. No GitHub account is needed to clone; you need one only to save changes back to GitHub.
+:::
+
 ## How this sample is organized
 
 ```text
