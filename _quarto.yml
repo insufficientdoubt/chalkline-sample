@@ -63,6 +63,7 @@ website:
 format:
   html:
     theme: [cosmo, brand/styles.scss]
+    include-after-body: brand/type-colors.html   # color-codes slide decks and packets in tables
     toc: true
     format-links:              # names for the download links in the right margin
       - {format: typst, text: PDF, icon: file-pdf}

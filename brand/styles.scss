@@ -208,10 +208,27 @@ $web-font-path: false;   // the cosmo theme would import a Google font we don't 
 }
 .badge-type { background: var(--brand-sky, #ebf7fd); color: var(--brand-navy, #003477); }
 .badge-school { background: var(--brand-navy, #003477); color: #fff; }
-.badge-official { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
+.badge-official { background: #fff; color: var(--brand-navy, #003477); border: 1.5px solid var(--brand-blue, #0087ff); }   // outside sources
 
 // Sidebar logo: keep the sailboat icon small.
 .sidebar-logo { max-height: 3.2em; width: auto; }
 
 // Unit pages: show the type label capitalized (slides -> Slides).
 .quarto-listing td.listing-type { text-transform: capitalize; }
+
+// Color code at a glance (brand/type-colors.html tags the rows):
+// slide decks = turquoise, packets = orange. Everything else stays plain, so these stand out.
+tr.row-slides > td { background: #e3f9f7 !important; }
+tr.row-packet > td { background: #fff1e2 !important; }
+tr.row-slides > td:first-child { box-shadow: inset 5px 0 0 var(--brand-turquoise, #14d7cd); }
+tr.row-packet > td:first-child { box-shadow: inset 5px 0 0 var(--brand-orange, #ff8c0f); }
+tr.row-slides .type-cell, tr.row-packet .type-cell { font-weight: 700; white-space: nowrap; }
+tr.row-slides .type-cell::before { content: "🖥 "; }
+tr.row-packet .type-cell::before { content: "📦 "; }
+tr.row-slides .badge-type { background: var(--brand-turquoise, #14d7cd); color: var(--brand-navy, #003477); }
+tr.row-packet .badge-type { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
+.sidebar-slides .menu-text::before { content: "🖥 "; }
+// The packet buttons on unit pages, in packet orange.
+a.btn[href$="-packet.pdf"] { background: var(--brand-orange, #ff8c0f); border-color: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); font-weight: 600; }
+a.btn[href$="-student-packet.pdf"] { background: #fff1e2; }
+a.btn[href$="-packet.pdf"]:hover { filter: brightness(0.95); color: var(--brand-navy, #003477); }

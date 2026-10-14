@@ -1,0 +1,22 @@
+<!-- Color-code slide decks and packets in tables and the sidebar, so they're easy to spot.
+     Finds each table's "Type" column (the overview, its By unit / By type tabs, unit pages)
+     and tags the row; brand/styles.scss does the coloring. Included on every web page via
+     include-after-body in _quarto.yml. -->
+<script>
+(function () {
+  const kinds = { slides: "row-slides", packet: "row-packet" };
+  document.querySelectorAll("table").forEach(function (table) {
+    const head = [...table.querySelectorAll("thead th")].map(th => th.textContent.trim().toLowerCase());
+    const col = head.indexOf("type");
+    if (col < 0) return;
+    table.querySelectorAll("tbody tr").forEach(function (tr) {
+      const cell = tr.children[col];
+      if (!cell) return;
+      const type = cell.textContent.trim().toLowerCase();
+      if (kinds[type]) { tr.classList.add(kinds[type]); cell.classList.add("type-cell"); }
+    });
+  });
+  // Sidebar: slide decks (files named ...slides.qmd) get a marker.
+  document.querySelectorAll('#quarto-sidebar a.sidebar-link[href$="slides.html"]').forEach(a => a.classList.add("sidebar-slides"));
+})();
+</script>
