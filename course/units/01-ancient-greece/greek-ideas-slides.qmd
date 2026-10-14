@@ -56,7 +56,7 @@ The modern Olympics started in 1896 in Athens, copying the ancient idea. At some
 The Greek Gods fact cards (reference) have three more gods, and a blank card to design your own.
 :::
 
-## The Odyssey: ten years to get home
+## The Odyssey: ten years to get home {transition="zoom"}
 
 :::: {.columns}
 ::: {.column width="70%"}
@@ -101,7 +101,7 @@ The map is a story map: the places come from the poem, and nobody knows exactly 
 ```
 
 ::: {.small-note}
-TED-Ed, *Everything you need to know to read Homer's "Odyssey"* (Jill Dash). YouTube is blocked in mainland China: at school, use a video file you're allowed to show, with `{{</* video odyssey.mp4 */>}}`.
+TED-Ed, *Everything you need to know to read Homer's "Odyssey"* (Jill Dash). If YouTube is blocked where you are, use a video file you're allowed to show instead: `{{</* video odyssey.mp4 */>}}`.
 :::
 
 ::: notes

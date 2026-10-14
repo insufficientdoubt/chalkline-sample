@@ -6,6 +6,10 @@ description: "The founding legend, the Roman Republic (senate and consuls), Juli
 order: 1
 audience: [teacher, student]
 format: revealjs
+resources:
+  - drawio/*.svg          # the draw.io infographic and its hover script
+  - drawio/*.js
+  - drawio/*.css
 title-slide-attributes:
   data-background-color: "#003477"
   data-background-image: images/roman-senate-maccari.jpg
@@ -52,6 +56,22 @@ print(card_grid(pick(terms, "republic", "senate", "consul"), zh=True))
 
 ::: notes
 Two consuls, chosen for one year, could each block the other. Romans had had a bad king and never wanted one person to hold all the power again.
+:::
+
+## How the Republic worked [made in draw.io]{.drawio-label} {#republic-infographic}
+
+```{=html}
+<link rel="stylesheet" href="drawio/drawio-live.css">
+<div class="drawio-live" data-src="drawio/republic.svg"></div>
+<script src="drawio/drawio-live.js"></script>
+```
+
+::: {.small-note}
+Hover (or tap) a box to focus on it.
+:::
+
+::: notes
+**A draw.io infographic.** The source is `drawio/republic.drawio`: open it in draw.io (desktop app or app.diagrams.net), change it, save, then run `python scripts/drawio.py` to update the picture. Ask: who chose the consuls? Who advised them? Why two consuls and not one?
 :::
 
 ## Athens and Rome: who decides?

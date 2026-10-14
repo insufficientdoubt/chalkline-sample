@@ -16,7 +16,7 @@ Labels read from each document's front matter:
 Each unit folder's index.qmd describes the unit (title, unit number, objectives).
 External resources (official VEX posters, manuals, other school sites) are
 listed in course/links.yml. Anything not in a unit folder is grouped as
-"Whole season" (the posters, for example).
+"Whole year" (the posters, for example).
 
 Also writes generated/packets.json: which printables go in each unit packet
 (read by scripts/packets.py and the {{< packet >}} shortcode), and
@@ -63,7 +63,7 @@ TYPES = {  # type -> (label, sort order)
     "vocab": ("Vocab", 7),
 }
 FORMATS = {"revealjs": "Slides", "html": "Web", "typst": "PDF", "docx": "Word", "pptx": "PowerPoint"}
-SEASON_GROUP = ("Whole season", 90)   # posters and references that aren't tied to one unit
+YEAR_GROUP = ("Whole year", 90)   # posters and references that aren't tied to one unit
 PACKET_TYPES = {"worksheet", "checklist", "handout", "reference"}   # printables that go in unit packets
 YEAR_PACKET = "year-packet.pdf"       # every unit packet in one PDF, at the site root
 
@@ -181,7 +181,7 @@ def load_catalog():
             unit = units[rel[1]]
             group, group_order = unit["short"], unit["order"]
         else:
-            group, group_order = SEASON_GROUP
+            group, group_order = YEAR_GROUP
         fmts = formats_of(meta)
         html = path.relative_to(ROOT).with_suffix(".html").as_posix()
         items.append({
@@ -205,7 +205,7 @@ def load_catalog():
             if group in units:
                 group, group_order = units[group]["short"], units[group]["order"]
             else:
-                group, group_order = SEASON_GROUP
+                group, group_order = YEAR_GROUP
             items.append({
                 "title": link["title"],
                 "path": link["url"],
@@ -242,13 +242,13 @@ def load_catalog():
     if packets and teacher:
         items.append(packet_row("🔑 Year packet · Teacher edition", teacher_copy(YEAR_PACKET),
                                 "Every unit packet in one PDF, WITH answer keys and teacher notes.",
-                                SEASON_GROUP[0], SEASON_GROUP[1], ["teacher"], 0))
+                                YEAR_GROUP[0], YEAR_GROUP[1], ["teacher"], 0))
         items.append(packet_row("🎒 Year packet · Student copy", YEAR_PACKET,
                                 "Every unit packet in one PDF, without answer keys.",
-                                SEASON_GROUP[0], SEASON_GROUP[1], everyone, 1))
+                                YEAR_GROUP[0], YEAR_GROUP[1], everyone, 1))
     elif packets:
         items.append(packet_row("Year packet: every unit", YEAR_PACKET, "Every unit packet in one PDF, in unit order.",
-                                SEASON_GROUP[0], SEASON_GROUP[1], everyone, 0))
+                                YEAR_GROUP[0], YEAR_GROUP[1], everyone, 0))
 
     items.sort(key=lambda i: i["_sort"])
     for i in items:
@@ -338,7 +338,7 @@ def built_catalog():
 def markdown_by_unit():
     items = built_catalog()
     out = []
-    groups = [(u["short"], u) for u in load_units()] + [(SEASON_GROUP[0], None)]
+    groups = [(u["short"], u) for u in load_units()] + [(YEAR_GROUP[0], None)]
     for name, unit in groups:
         group = [i for i in items if i["unit"] == name]
         if not group:

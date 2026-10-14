@@ -229,6 +229,45 @@ Maps, timelines, games, simulations: if a web page can do it, a slide can too.
 The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit uses it too. To make your own, describe what you want to an AI assistant (Claude, for example) and ask for a self-contained HTML/JavaScript block for a Quarto reveal.js slide. In the slide PDF the whole route is shown at once.
 :::
 
+## So what else can you do?
+
+Each one is a working example in this course. Click to jump there.
+
+::: {.feature-list}
+:::: {.columns}
+::: {.column width="50%"}
+- 👆 **Fragments:** [reveal answers one click at a time](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)
+- ✨ **Transitions:** [zoom into a slide](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home), or [glide a picture into place](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column) (auto-animate)
+- 🎬 **Embedded videos:** [a TED-Ed video inside a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes)
+- 🧩 **Interactive activities:** [tap-to-match](../01-ancient-greece/greek-ideas-slides.html#/match-it), [a story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home)
+- 📐 **Infographics:** [a draw.io diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic)
+:::
+::: {.column width="50%"}
+- 🗳️ **Polls:** [tap-to-vote on the board](../01-ancient-greece/city-states-slides.html#/exit-ticket)
+- ⏱️ **Timers:** [think, pair, share](../01-ancient-greece/city-states-slides.html#/think-pair-share)
+- 🔊 **Vocab pop-ups:** [with 中文 and read-aloud](../01-ancient-greece/city-states-slides.html#/mountains-and-sea)
+- 🏛️ **Pictures and backdrops:** [a full-screen title](../02-ancient-rome/roman-engineering-slides.html#/title-slide), [photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum)
+- 🗒️ **Speaker notes:** press **S** on any slide
+:::
+::::
+:::
+
+```{=html}
+<style>
+  .reveal .feature-list { font-size: 0.74em; }
+  .reveal .feature-list li { margin-bottom: 0.35em; }
+  .reveal .feature-list a { color: #0068c4; text-decoration: underline; text-underline-offset: 3px; }
+</style>
+```
+
+::: {.small-note}
+These links jump between slide decks, too: any slide can link to any other slide.
+:::
+
+::: notes
+Every link opens the example slide in another deck: press the browser's Back button to return here. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
+:::
+
 ## It always looks like your school
 
 - Colors, fonts and logos are set **once**, in `brand/`

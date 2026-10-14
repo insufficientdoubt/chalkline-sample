@@ -26,6 +26,7 @@ Things to try once the site is open:
 - In the overview, each deck has a **PDF** too.
 - **Terminal > Run Task… > Open family site (parents)**: the version families see.
 - **Terminal > Run Task… > Open student site**: what students see, without the answer keys and teacher notes.
+- In *From Republic to Empire*, hover the boxes of the infographic: it was made in **draw.io** (`drawio/republic.drawio`), and any draw.io diagram can go in a slide the same way.
 
 ## One-time setup
 
@@ -113,6 +114,7 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 | Rebuild slide PDFs | `python scripts/slides_pdf.py` |
 | Check the vocab list | `python vocab/validate.py` |
 | Make Quizlet / Kahoot / Anki files | `python scripts/export_vocab.py` |
+| Update a draw.io diagram's picture after editing it in draw.io | `python scripts/drawio.py` (needs the draw.io app) |
 
 ## Unit packets
 
