@@ -69,7 +69,7 @@
     const controls = document.createElement("div");
     controls.className = "ody-controls";
     controls.innerHTML = '<button data-a="back">◀ Back</button><button class="primary" data-a="next">Next ▶</button>' +
-      '<button data-a="play">⏵ Play the journey</button><button data-a="reset">↺ Start over</button><span class="ody-status"></span>';
+      '<button data-a="play">▶ Play the journey</button><button data-a="reset">↺ Start over</button><span class="ody-status"></span>';
     root.appendChild(controls);
     const status = controls.querySelector(".ody-status");
 

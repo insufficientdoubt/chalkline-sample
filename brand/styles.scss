@@ -217,17 +217,19 @@ $web-font-path: false;   // the cosmo theme would import a Google font we don't 
 .quarto-listing td.listing-type { text-transform: capitalize; }
 
 // Color code at a glance (brand/type-colors.html tags the rows):
+// slide decks = turquoise (📊), packets = orange (📦; 🔑 teacher edition, 🎒 student copy). Only emoji that every
+// system draws in color: 🖥 (U+1F5A5) showed as a box on some computers.
 // slide decks = turquoise, packets = orange. Everything else stays plain, so these stand out.
 tr.row-slides > td { background: #e3f9f7 !important; }
 tr.row-packet > td { background: #fff1e2 !important; }
 tr.row-slides > td:first-child { box-shadow: inset 5px 0 0 var(--brand-turquoise, #14d7cd); }
 tr.row-packet > td:first-child { box-shadow: inset 5px 0 0 var(--brand-orange, #ff8c0f); }
 tr.row-slides .type-cell, tr.row-packet .type-cell { font-weight: 700; white-space: nowrap; }
-tr.row-slides .type-cell::before { content: "🖥 "; }
+tr.row-slides .type-cell::before { content: "📊 "; }
 tr.row-packet .type-cell::before { content: "📦 "; }
 tr.row-slides .badge-type { background: var(--brand-turquoise, #14d7cd); color: var(--brand-navy, #003477); }
 tr.row-packet .badge-type { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
-.sidebar-slides .menu-text::before { content: "🖥 "; }
+.sidebar-slides .menu-text::before { content: "📊 "; }
 // Packets on unit pages. The teacher site shows two cards that must never be confused:
 // the teacher edition (solid orange, 🔑) and the student copy (white, orange outline, 🎒).
 a.btn[href$="-packet.pdf"] { background: var(--brand-orange, #ff8c0f); border-color: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); font-weight: 600; }
