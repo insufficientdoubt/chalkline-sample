@@ -8,6 +8,8 @@ audience: [teacher, student, parent]
 format: revealjs
 title-slide-attributes:
   data-background-color: "#003477"
+  data-background-image: images/acropolis-parthenon.jpg
+  data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
 ```{python}
@@ -18,12 +20,21 @@ terms = load_unit(1)
 
 ## Ancient Greece on a timeline
 
+:::: {.columns}
+::: {.column width="58%"}
 ::: {.timeline}
 - **776 BC** · The first recorded {{< vocab "Olympic Games" >}} at Olympia.
 - **About 508 BC** · Athens starts a {{< vocab "democracy" >}}.
 - **447–432 BC** · The Parthenon {{< vocab "temple" >}} is built in Athens.
 - **399 BC** · The {{< vocab "philosopher" >}} Socrates dies in Athens.
 :::
+:::
+::: {.column width="42%"}
+![](images/parthenon-west.jpg){.photo fig-alt="The Parthenon, a ruined marble temple with rows of columns, under a blue sky"}
+
+[The Parthenon in Athens today, about 2,450 years old.]{.photo-caption}
+:::
+::::
 
 ::: {.small-note}
 BC means "before Christ": the years count *down* toward year 1. So 776 BC came before 508 BC.
@@ -141,3 +152,9 @@ Use a sentence frame:
 ::: {.poll type="choice" options="All adults living in Athens | Free men who were citizens | Only the king" correct="B"}
 Who could vote in the Athenian Assembly?
 :::
+
+## Picture credits {.credits}
+
+- **Title:** the Acropolis of Athens, photo by Jebulon, CC0, via Wikimedia Commons.
+- **The Parthenon:** photo by User:Mountain, public domain, via Wikimedia Commons.
+- Drawings: original, made for this course. Full list: `images/CREDITS.md`.

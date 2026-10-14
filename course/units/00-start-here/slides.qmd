@@ -8,8 +8,11 @@ audience: [teacher, student, parent]
 format: revealjs
 resources:
   - ../01-ancient-greece/odyssey/*   # the interactive story map (it lives with the Greece unit)
+  - ../01-ancient-greece/images/school-of-athens.jpg   # the title backdrop
 title-slide-attributes:
   data-background-color: "#003477"
+  data-background-image: ../01-ancient-greece/images/school-of-athens.jpg
+  data-background-opacity: "0.35"      # the picture, dimmed, so the title stays readable
 ---
 
 ## The usual way
@@ -73,11 +76,13 @@ Everything in this sample was made this way. Open any slide deck or worksheet fi
 `##` starts a new slide. `-` makes a bullet point. That's most of it.
 :::
 :::
-::: {.column width="54%" style="font-size: 0.82em"}
+::: {.column width="54%"}
+::: {style="font-size: 0.82em"}
 - ✏️ **Edit it like a document.** Change a word, save, and the slide updates.
 - 🤖 **Or ask an AI to edit it.** *"Add a bullet about the navy."* Plain text is easy for AI to change correctly.
 - 🎨 **It can't look messy.** Fonts, colors and layout come from the school style, on every slide.
 - 🔁 **Write once.** The same words become the slides, the web page and the PDF.
+:::
 :::
 ::::
 
@@ -297,3 +302,8 @@ brand/                        colors, fonts, logos
 ::: {.poll type="smileys"}
 How ready do you feel to make your first unit?
 :::
+
+## Picture credits {.credits}
+
+- **Title:** *The School of Athens*, Raphael (about 1510), public domain, via Wikimedia Commons.
+- Everything else: original, made for this course. Unit picture credits: each unit's `images/CREDITS.md`.

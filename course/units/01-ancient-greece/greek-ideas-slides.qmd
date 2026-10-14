@@ -10,6 +10,8 @@ resources:
   - odyssey/*             # the interactive Odyssey map
 title-slide-attributes:
   data-background-color: "#003477"
+  data-background-image: images/ulysses-sirens.jpg
+  data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
 ```{python}
@@ -28,15 +30,14 @@ terms = load_unit(1)
 - The oldest event was a running race, about 190 meters.
 :::
 ::: {.column width="45%"}
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "Olympic Games"), zh=True, notes=True))
-```
+![](images/runners-amphora.jpg){.photo fig-alt="A Greek vase painted with black figures of runners"}
+
+[Runners painted on a Greek vase, about 500 BC.]{.photo-caption}
 :::
 ::::
 
 ::: notes
-The modern Olympics started in 1896 in Athens, copying the ancient idea.
+The modern Olympics started in 1896 in Athens, copying the ancient idea. At some Greek games, winners got prize jars of olive oil painted with their sport.
 :::
 
 ## Gods and myths
@@ -83,6 +84,8 @@ The map is a story map: the places come from the poem, and nobody knows exactly 
 
 ## Thinkers who asked big questions
 
+:::: {.columns}
+::: {.column width="50%"}
 ::: {.timeline}
 - **Socrates** · Taught by asking questions: *What is fair? What is a good life?*
 - **Plato** · Socrates' student. Wrote down his teacher's ideas and started a school.
@@ -90,19 +93,26 @@ The map is a story map: the places come from the poem, and nobody knows exactly 
 :::
 
 A {{< vocab "philosopher" >}} is a thinker who asks big questions about life and truth.
+:::
+::: {.column width="50%"}
+![](images/school-of-athens.jpg){.photo fig-alt="Raphael's painting The School of Athens: philosophers gathered in a grand hall"}
+
+[*The School of Athens*, painted by Raphael in about 1510. Plato and Aristotle stand in the middle.]{.photo-caption}
+:::
+::::
 
 ## Temples and columns
 
 :::: {.columns}
-::: {.column width="45%"}
+::: {.column width="50%"}
 - The Parthenon is a {{< vocab "temple" >}} to Athena, on the Acropolis hill in Athens.
 - Its roof rested on rows of a {{< vocab "column" >}} style called Doric.
-- Greek {{< vocab "column" text="columns" >}} came in three styles.
+- Greek {{< vocab "column" text="columns" >}} came in three styles: Doric, Ionic and Corinthian.
 :::
-::: {.column width="55%"}
+::: {.column width="50%"}
 ```{python}
 #| output: asis
-print(card_grid(pick(terms, "temple", "column"), zh=True))
+print(card_grid(pick(terms, "column"), zh=True))
 ```
 :::
 ::::
@@ -113,9 +123,18 @@ Ask: where in our city have you seen columns like these? (Banks, museums, govern
 
 ## Theater
 
+:::: {.columns}
+::: {.column width="48%"}
 - Greek plays were tragedies (sad endings) or comedies (funny).
 - Actors wore masks, so one actor could play many characters.
 - The {{< vocab "theater" >}} was built into a hillside: everyone could see and hear.
+:::
+::: {.column width="52%"}
+![](images/epidaurus-theatre.jpg){.photo fig-alt="The ancient stone theater of Epidaurus, rows of seats in a half circle on a hillside"}
+
+[The theater at Epidaurus seats about 14,000 people. Photo: Olecorre, CC BY-SA 3.0.]{.photo-caption}
+:::
+::::
 
 ::: {.small-note}
 English words from Greek theater: *drama*, *scene*, *chorus*, *comedy*, *tragedy*.
@@ -136,3 +155,11 @@ False: they were held at Olympia. The first *modern* Olympics, in 1896, were in 
 ::: {.poll type="smileys"}
 How well can you name three Greek ideas we still use?
 :::
+
+## Picture credits {.credits}
+
+- **Title:** *Ulysses and the Sirens*, John William Waterhouse (1891), public domain, via Wikimedia Commons.
+- **Runners vase:** photo by Daderot, CC0, via Wikimedia Commons.
+- ***The School of Athens*:** Raphael, public domain, via Wikimedia Commons.
+- **Theater of Epidaurus:** photo by Olecorre, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0), via Wikimedia Commons.
+- Drawings and the Odyssey map: original, made for this course. Full list: `images/CREDITS.md`.

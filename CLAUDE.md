@@ -17,3 +17,23 @@ Keep the edit loop quick:
 3. A full render (`quarto render`) or the launcher's startup check rebuilds everything else (the year packet, slide PDFs).
 
 If `quarto preview` is running, don't run a full `quarto render` at the same time: it empties `_site/` while the preview is serving it.
+
+## Changing the tool (not the content): keep a log
+
+This repo has two kinds of files:
+
+- **Content** (lessons, worksheets, vocab words, pictures): everything in `course/`, plus `vocab/data/` and `vocab/images/`. Change these freely. No log needed.
+- **The tool** (how Chalkline works and looks): `_extensions/`, `scripts/`, `brand/`, `vocab/app/`, `vocab/config.js`, `vocab/tools/`, `vocab/validate.py`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
+
+**Whenever you change a tool file, add an entry to the top of `TOOL-CHANGES.md`** (create it if it's missing), in the same change. Use this form:
+
+```markdown
+## YYYY-MM-DD: short title
+- **Asked for:** what the teacher wanted, in their words if they gave them.
+- **Why:** the reason they gave, or "not given".
+- **Changed:** each file and what changed in it, in a line or two.
+- **Who it helps:** this course only, or probably every Chalkline course.
+- **AI assistant:** which one made the change (Claude, Gemini, WorkBuddy, …).
+```
+
+Never delete or rewrite earlier entries. These logs are collected as design feedback and may become improvements to Chalkline for everyone, so the reasons matter as much as the changes.

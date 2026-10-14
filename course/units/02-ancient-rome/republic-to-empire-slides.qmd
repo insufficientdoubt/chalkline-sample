@@ -8,6 +8,8 @@ audience: [teacher, student]
 format: revealjs
 title-slide-attributes:
   data-background-color: "#003477"
+  data-background-image: images/roman-senate-maccari.jpg
+  data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
 ```{python}
@@ -83,22 +85,30 @@ Many countries today are republics: people elect leaders to decide for them.
 :::: {.columns}
 ::: {.column width="55%"}
 - Caesar's adopted son Octavian won the civil war.
-- In **27 BC** he took the name **Augustus** and became the first emperor.
-- About 200 years of peace followed: the *Pax Romana*, "Roman peace".
+- In **27 BC** he took the name **Augustus** and became the first {{< vocab "emperor" >}}.
+- About 200 years of peace followed across the {{< vocab "empire" >}}: the *Pax Romana*, "Roman peace".
 :::
 ::: {.column width="45%"}
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "emperor", "empire"), zh=True))
-```
+![](images/augustus-prima-porta.jpg){.photo .tall fig-alt="A marble statue of Augustus in armor, one arm raised"}
+
+[A marble statue of Augustus, about 2,000 years old.]{.photo-caption}
 :::
 ::::
 
 ## The Roman army
 
+:::: {.columns}
+::: {.column width="50%"}
 - A {{< vocab "legion" >}} had about 5,000 soldiers, all Roman citizens.
 - Soldiers marched with heavy packs and built a camp every night.
 - They also built roads, bridges and walls across the {{< vocab "empire" >}}.
+:::
+::: {.column width="50%"}
+![](images/trajans-column-legion.jpg){.photo fig-alt="A stone carving of Roman soldiers with shields, from Trajan's Column"}
+
+[Roman soldiers carved on Trajan's Column in Rome, about AD 113.]{.photo-caption}
+:::
+::::
 
 ::: notes
 The roads the army built are part of the next deck: Roman engineering.
@@ -115,3 +125,10 @@ On your **Republic or Empire?** worksheet, sort the cards with a partner.
 ::: {.poll type="choice" options="Two consuls, elected each year | An emperor, for life | A king" correct="A"}
 Who led the Roman Republic?
 :::
+
+## Picture credits {.credits}
+
+- **Title:** *Cicero Denounces Catiline in the Roman Senate*, Cesare Maccari (1880s), public domain, via Wikimedia Commons.
+- **Augustus of Prima Porta:** photo by Till Niermann, public domain, via Wikimedia Commons.
+- **Trajan's Column:** photo by Joe Mabel, public domain, via Wikimedia Commons.
+- Drawings: original, made for this course. Full list: `images/CREDITS.md`.

@@ -16,6 +16,7 @@
 | **Vocab** | `vocab/` | 25 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
 | **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
+| **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |
 
 Things to try once the site is open:
 
@@ -69,6 +70,25 @@ Things to try once the site is open:
 In **VS Code**, the site starts by itself when you open the folder (allow "automatic tasks" the first time).
 
 Slide PDFs need **Google Chrome** or **Microsoft Edge** on your computer.
+
+## Editing with an AI assistant
+
+You can do almost everything here by asking an AI assistant: Claude, Gemini, ChatGPT/Codex, Copilot, Cursor, Tencent WorkBuddy or another one that can open files in a folder.
+
+**First, point it at the rules.** Open this folder in the assistant and start with:
+
+> *Read CLAUDE.md first and follow it.*
+
+`CLAUDE.md` holds the instructions for this course: how the files are organized, the vocab rules (English first, 中文 as support, no Chinese in quizzes), and how to keep editing quick. Many assistants find it on their own; `AGENTS.md` and `GEMINI.md` point there too.
+
+**Then just ask**, in plain words:
+
+- *"Add a slide to the Rome engineering deck about Roman baths, with Chinese glosses on the key words."*
+- *"Make the Athens vs Sparta worksheet easier for beginners: shorter questions and a word bank."*
+- *"Add 'senator' to the vocab list, with a picture and Chinese."*
+- *"Make an interactive timeline of the Roman kings for the Rome deck."*
+
+**If it changes the tool, it keeps a log.** Changing lessons, worksheets and vocab is content: no log. Changing how Chalkline works or looks (its code, styles or settings) is a *tool* change, and the assistant records what it changed and why in `TOOL-CHANGES.md`. Please send that file to John from time to time: it's design feedback, and good ideas can become part of Chalkline for everyone.
 
 ## Make your own unit
 
@@ -259,4 +279,4 @@ VS Code's **Source Control** panel (the branch icon on the left) does all of thi
 
 ## Credits
 
-Unit content is written for this sample in simple English, with facts from Wikipedia ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)); each vocab word links to the article it's based on. Pictures are original drawings made by `vocab/tools/draw_icons.py`.
+Unit content is written for this sample in simple English, with facts from Wikipedia ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)); each vocab word links to the article it's based on. Vocab pictures are original drawings made by `vocab/tools/draw_icons.py`. Photos and paintings in the slides come from Wikimedia Commons (public domain, CC0 or CC BY-SA); each unit's `images/CREDITS.md` lists them, and each deck ends with a picture-credits slide.

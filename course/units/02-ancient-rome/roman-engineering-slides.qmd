@@ -8,6 +8,8 @@ audience: [teacher, student, parent]
 format: revealjs
 title-slide-attributes:
   data-background-color: "#003477"
+  data-background-image: images/pont-du-gard.jpg
+  data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
 ```{python}
@@ -18,9 +20,18 @@ terms = load_unit(2)
 
 ## All roads lead to Rome
 
+:::: {.columns}
+::: {.column width="52%"}
 - Romans built tens of thousands of kilometers of stone-paved roads.
 - Roads were straight where possible, with a curved top so rain ran off.
 - A {{< vocab "legion" >}} could march fast, and traders and letters moved across the {{< vocab "empire" >}}.
+:::
+::: {.column width="48%"}
+![](images/via-appia.jpg){.photo fig-alt="The Via Appia, an old stone road lined with tall cypress trees"}
+
+[The Via Appia, a Roman road started in 312 BC. You can still walk on it.]{.photo-caption}
+:::
+::::
 
 ::: notes
 "All roads lead to Rome" is still a saying in many languages, meaning "there are many ways to reach the same goal". Ask: is there a similar saying in Chinese?
@@ -46,10 +57,9 @@ The Pont du Gard in France carried water about 50 km to the city of Nîmes and s
 - Crowds watched a {{< vocab "gladiator" >}} fight there.
 :::
 ::: {.column width="55%"}
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "Colosseum", "gladiator"), zh=True))
-```
+![](images/colosseum-forum.jpg){.photo fig-alt="The Colosseum in Rome, a huge oval stone arena, with trees in front"}
+
+[The Colosseum today. Earthquakes and stone robbers took part of its outer wall.]{.photo-caption}
 :::
 ::::
 
@@ -100,3 +110,10 @@ X = 10, then IV = 4 (I before V subtracts), so 14.
 ::: {.poll type="smileys"}
 How well can you explain how an aqueduct works?
 :::
+
+## Picture credits {.credits}
+
+- **Title:** the Pont du Gard, photo by Benh LIEU SONG, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0), via Wikimedia Commons.
+- **Via Appia:** photo by Nicolò Musmeci, public domain, via Wikimedia Commons.
+- **Colosseum:** photo by Wilfredor, CC0, via Wikimedia Commons.
+- Drawings: original, made for this course. Full list: `images/CREDITS.md`.

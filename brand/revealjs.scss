@@ -385,3 +385,12 @@ $presentation-h2-font-size: 1.45em;
 .reveal div.callout.callout-style-default div.callout-body,
 .reveal div.callout.callout-style-simple div.callout-body { font-weight: 400; }
 .reveal pre { font-size: 0.72em; }
+
+// Photos on slides (![](images/x.jpg){.photo}): rounded, shadowed, never taller than the slide.
+.reveal img.photo { border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18); max-height: 420px; width: auto; max-width: 100%; object-fit: cover; margin: 0.2em 0 0.3em; }
+.reveal img.photo.tall { max-height: 520px; }
+.reveal .photo-caption { display: block; font-size: 0.5em; color: #52606d; line-height: 1.3; }
+// A deck's last slide listing picture credits: small print.
+.reveal .credits ul { font-size: 0.55em; }
+// Title slides with a picture backdrop: a soft shadow keeps the words readable over busy images.
+#title-slide .title, #title-slide .subtitle { text-shadow: 0 2px 14px rgba(0, 20, 50, 0.65); }
