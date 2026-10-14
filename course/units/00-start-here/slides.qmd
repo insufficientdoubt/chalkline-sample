@@ -7,7 +7,7 @@ order: 1
 audience: [teacher, student, parent]
 format: revealjs
 resources:
-  - odyssey/*             # the interactive story map
+  - ../01-ancient-greece/odyssey/*   # the interactive story map (it lives with the Greece unit)
 title-slide-attributes:
   data-background-color: "#003477"
 ---
@@ -55,45 +55,43 @@ Ask the room: how many places does the same lesson live for you right now? Slide
 Everything in this sample was made this way. Open any slide deck or worksheet file in VS Code to see how little is in it.
 :::
 
-## Type this, get this
+## A slide is just text you can read
 
 :::: {.columns}
-::: {.column width="58%"}
-**You type** (a plain-text `.qmd` file):
+::: {.column width="46%"}
+**This is a whole slide.** Open the file and you see:
 
-```{.markdown code-line-numbers="false"}
+```{.markdown .friendly-text code-line-numbers="false"}
 ## Athens and Sparta
 
-::: {.callout-note title="Athens"}
-- A {{</* vocab "democracy" */>}}
-- Plays, art, philosophers
-:::
-
-::: {.callout-warning title="Sparta"}
-- Life built around the army
-:::
+- Athens was a democracy.
+- Citizens voted on the laws.
+- Sparta trained soldiers.
 ```
-:::
-::: {.column width="42%"}
-**You get** (this is that text, rendered):
-
-::: {.callout-note title="Athens" icon=false}
-- A {{< vocab "democracy" >}}
-- Plays, art, philosophers
-:::
-
-::: {.callout-warning title="Sparta" icon=false}
-- Life built around the army
-:::
 
 ::: {.small-note}
-Fonts, colors, layout, the vocab pop-up, the slide PDF: all automatic.
+`##` starts a new slide. `-` makes a bullet point. That's most of it.
 :::
+:::
+::: {.column width="54%" style="font-size: 0.82em"}
+- ✏️ **Edit it like a document.** Change a word, save, and the slide updates.
+- 🤖 **Or ask an AI to edit it.** *"Add a bullet about the navy."* Plain text is easy for AI to change correctly.
+- 🎨 **It can't look messy.** Fonts, colors and layout come from the school style, on every slide.
+- 🔁 **Write once.** The same words become the slides, the web page and the PDF.
 :::
 ::::
 
+```{=html}
+<style>
+  /* This slide's example reads like plain text, not code: the slide font, bigger, on a soft panel. */
+  .reveal div.sourceCode:has(pre.friendly-text), .reveal pre.friendly-text { border: none; background: #ebf7fd; border-radius: 10px; }
+  .reveal pre.friendly-text, .reveal pre.friendly-text code { font-family: "Source Sans 3", sans-serif; font-size: 0.95em; line-height: 1.5; color: #1F2933; background: #ebf7fd; }
+  .reveal pre.friendly-text code span { color: inherit !important; font-weight: inherit; }
+</style>
+```
+
 ::: notes
-Every slide in this sample is written like this: a heading starts a new slide, `:::` blocks make boxes and columns, and shortcodes like `{{</* vocab */>}}` add the interactive parts. No dragging boxes around, no fixing fonts. Hover "democracy" on the right to show the pop-up.
+For teachers new to this: you don't need to learn a language. Most slides are headings and bullet points, exactly as they look here. When you want something fancier (two columns, a box, a vocab pop-up, a poll), copy it from an existing slide, or ask an AI assistant to add it. Then show the real "Athens and Sparta" slide in Unit 1 to compare.
 :::
 
 ## Every unit gets a home page
@@ -204,9 +202,9 @@ Tap an answer on the board (or press 1–4), then press R or click Show results.
 :::: {.columns}
 ::: {.column width="68%"}
 ```{=html}
-<link rel="stylesheet" href="odyssey/odyssey.css">
+<link rel="stylesheet" href="../01-ancient-greece/odyssey/odyssey.css">
 <div class="odyssey"></div>
-<script src="odyssey/odyssey.js"></script>
+<script src="../01-ancient-greece/odyssey/odyssey.js"></script>
 ```
 :::
 ::: {.column .ody-side width="32%"}
@@ -223,7 +221,7 @@ Maps, timelines, games, simulations: if a web page can do it, a slide can too.
 ::::
 
 ::: notes
-The code lives in `odyssey/` next to this deck. To make your own, describe what you want to an AI assistant (Claude, for example) and ask for a self-contained HTML/JavaScript block for a Quarto reveal.js slide. In the slide PDF the whole route is shown at once.
+The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit uses it too. To make your own, describe what you want to an AI assistant (Claude, for example) and ask for a self-contained HTML/JavaScript block for a Quarto reveal.js slide. In the slide PDF the whole route is shown at once.
 :::
 
 ## It always looks like your school

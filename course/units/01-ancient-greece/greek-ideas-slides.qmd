@@ -6,6 +6,8 @@ description: "The Olympic Games, gods and myths, philosophers, temples and colum
 order: 2
 audience: [teacher, student]
 format: revealjs
+resources:
+  - odyssey/*             # the interactive Odyssey map
 title-slide-attributes:
   data-background-color: "#003477"
 ---
@@ -50,6 +52,33 @@ The modern Olympics started in 1896 in Athens, copying the ancient idea.
 
 ::: notes
 The Greek Gods fact cards (reference) have three more gods, and a blank card to design your own.
+:::
+
+## The Odyssey: ten years to get home
+
+:::: {.columns}
+::: {.column width="70%"}
+```{=html}
+<link rel="stylesheet" href="odyssey/odyssey.css">
+<div class="odyssey"></div>
+<script src="odyssey/odyssey.js"></script>
+```
+:::
+::: {.column .ody-side width="30%"}
+The *Odyssey* is a long poem by **Homer**, about 2,700 years old. It's a {{< vocab "myth" >}} about the hero **Odysseus**.
+
+After the Trojan War, his trip home takes **ten years**: monsters, a witch, a giant, and the gods against him.
+
+**Press Play**, or hover a stop.
+
+::: {.callout-tip title="Think" icon=false}
+Which stop would scare you the most? Why?
+:::
+:::
+::::
+
+::: notes
+The map is a story map: the places come from the poem, and nobody knows exactly where they were. Ask students to pick a stop and retell it in two sentences, then share with a partner.
 :::
 
 ## Thinkers who asked big questions

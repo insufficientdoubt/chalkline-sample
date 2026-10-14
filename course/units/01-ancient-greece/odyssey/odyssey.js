@@ -1,6 +1,6 @@
 // The Odyssey story map: Odysseus's ten-year journey home from Troy, stop by stop.
 // Next / Back step through it, Play sails the whole route, and hovering (or tapping) a stop shows
-// its story. Written with an AI assistant from a one-paragraph request. A story map, not real
+// its story in the strip above the map. Written with an AI assistant from a one-paragraph request. A story map, not real
 // geography: the places in Homer's poem are legendary.
 // In a slide PDF (?print-pdf) it shows the whole route at once.
 (function () {
@@ -63,9 +63,9 @@
     const ship = el("text", { class: "ship", x: STOPS[0].x - 15, y: STOPS[0].y + 10 }, svg);
     ship.textContent = "⛵";
 
-    const card = document.createElement("div");
+    const card = document.createElement("div");   // the story strip, above the map
     card.className = "ody-card";
-    root.appendChild(card);
+    root.insertBefore(card, svg);
     const controls = document.createElement("div");
     controls.className = "ody-controls";
     controls.innerHTML = '<button data-a="back">◀ Back</button><button class="primary" data-a="next">Next ▶</button>' +
@@ -77,11 +77,7 @@
 
     function showCard(i) {
       const s = STOPS[i];
-      card.innerHTML = `<b>${i + 1}. ${s.name}</b><span class="zh">${s.zh}</span><br>${s.text}`;
-      card.style.left = Math.min(80, Math.max(20, s.x / 800 * 100)) + "%";   // keep the card inside the map
-      card.style.top = (s.y / 450 * 100) + "%";
-      card.classList.toggle("below", s.y < 140);
-      card.classList.add("show");
+      card.innerHTML = `<b>${i + 1}. ${s.name}</b><span class="zh">${s.zh}</span> · ${s.text}`;
     }
     function draw() {
       stopEls.forEach((g, i) => { g.classList.toggle("visited", i < at); g.classList.toggle("current", i === at); });
@@ -139,6 +135,8 @@
       stopEls.forEach(g => g.classList.add("visited"));
       placeShip(STOPS[at].x, STOPS[at].y);
       controls.style.display = "none";
+      card.innerHTML = "<b>Ten years, ten stops:</b> Troy, the Cyclops, Aeolus, Circe, the Underworld, the Sirens, " +
+        "Scylla and Charybdis, Calypso, the Phaeacians, and home to Ithaca.";
       return;
     }
     draw(); showCard(0);

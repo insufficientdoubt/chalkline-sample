@@ -14,14 +14,12 @@
 .odyssey .stop .ody-label { font-size: 13px; font-weight: 600; fill: #1F2933; }
 .odyssey .ship { font-size: 30px; pointer-events: none; }
 .odyssey .ody-note { font: italic 13px "Source Sans 3", sans-serif; fill: #52606d; }
+/* The story card sits in a strip above the map, so it never covers it. */
 .odyssey .ody-card {
-  position: absolute; width: 16em; font-size: 1.15em; padding: 0.6em 0.8em; background: #fff; color: #1F2933;
-  border: 2px solid #003477; border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 52, 119, .25);
-  pointer-events: none; opacity: 0; transition: opacity 0.15s; transform: translate(-50%, calc(-100% - 22px)); z-index: 5;
+  min-height: 3.6em; margin-bottom: 0.5em; padding: 0.45em 0.8em; background: #fff8ee; color: #1F2933;
+  border-left: 6px solid #ff8c0f; border-radius: 8px; font-size: 1.15em;
 }
-.odyssey .ody-card.below { transform: translate(-50%, 22px); }
-.odyssey .ody-card.show { opacity: 1; }
-.odyssey .ody-card b { color: #003477; font-size: 1.15em; }
+.odyssey .ody-card b { color: #003477; font-size: 1.1em; }
 .odyssey .ody-card .zh { color: #52606d; margin-left: 0.3em; }
 .odyssey .ody-controls { display: flex; gap: 0.5em; align-items: center; margin-top: 0.5em; flex-wrap: wrap; }
 .odyssey button {
