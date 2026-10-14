@@ -6,6 +6,8 @@ description: "What Chalkline makes for you from one file, the classroom tools in
 order: 1
 audience: [teacher, student, parent]
 format: revealjs
+resources:
+  - odyssey/*             # the interactive story map
 title-slide-attributes:
   data-background-color: "#003477"
 ---
@@ -51,6 +53,47 @@ Ask the room: how many places does the same lesson live for you right now? Slide
 
 ::: notes
 Everything in this sample was made this way. Open any slide deck or worksheet file in VS Code to see how little is in it.
+:::
+
+## Type this, get this
+
+:::: {.columns}
+::: {.column width="58%"}
+**You type** (a plain-text `.qmd` file):
+
+```{.markdown code-line-numbers="false"}
+## Athens and Sparta
+
+::: {.callout-note title="Athens"}
+- A {{</* vocab "democracy" */>}}
+- Plays, art, philosophers
+:::
+
+::: {.callout-warning title="Sparta"}
+- Life built around the army
+:::
+```
+:::
+::: {.column width="42%"}
+**You get** (this is that text, rendered):
+
+::: {.callout-note title="Athens" icon=false}
+- A {{< vocab "democracy" >}}
+- Plays, art, philosophers
+:::
+
+::: {.callout-warning title="Sparta" icon=false}
+- Life built around the army
+:::
+
+::: {.small-note}
+Fonts, colors, layout, the vocab pop-up, the slide PDF: all automatic.
+:::
+:::
+::::
+
+::: notes
+Every slide in this sample is written like this: a heading starts a new slide, `:::` blocks make boxes and columns, and shortcodes like `{{</* vocab */>}}` add the interactive parts. No dragging boxes around, no fixing fonts. Hover "democracy" on the right to show the pop-up.
 :::
 
 ## Every unit gets a home page
@@ -154,6 +197,33 @@ Which feature will you try first?
 
 ::: notes
 Tap an answer on the board (or press 1–4), then press R or click Show results.
+:::
+
+## Slides can do anything a web page can
+
+:::: {.columns}
+::: {.column width="68%"}
+```{=html}
+<link rel="stylesheet" href="odyssey/odyssey.css">
+<div class="odyssey"></div>
+<script src="odyssey/odyssey.js"></script>
+```
+:::
+::: {.column .ody-side width="32%"}
+**The Odyssey 奥德赛:** ten years, ten stops, one hero trying to get home.
+
+Press **Play**, or hover a stop for its story.
+
+::: {.callout-tip title="Made with AI" icon=false}
+This map is about 150 lines of code. An AI assistant wrote it from one paragraph: *"Make an interactive map of Odysseus's journey home: numbered stops, a ship that sails the route, and the story of each stop on hover."*
+
+Maps, timelines, games, simulations: if a web page can do it, a slide can too.
+:::
+:::
+::::
+
+::: notes
+The code lives in `odyssey/` next to this deck. To make your own, describe what you want to an AI assistant (Claude, for example) and ask for a self-contained HTML/JavaScript block for a Quarto reveal.js slide. In the slide PDF the whole route is shown at once.
 :::
 
 ## It always looks like your school
