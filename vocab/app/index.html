@@ -101,6 +101,11 @@
   header .home img { height: 28px; }
   header .back { color: var(--muted); font-size: 14px; text-decoration: none; white-space: nowrap; }
   header .back:hover { color: var(--accent); }
+  .say { border: 1px solid var(--line); background: var(--panel); border-radius: 999px; cursor: pointer;
+         font-size: 0.6em; padding: 2px 8px; vertical-align: middle; }
+  .say:hover { border-color: var(--accent); }
+  .zh .say { font-size: 0.75em; }
+  .no-speech .say { display: none; }
 </style>
 <!-- Colors and fonts from brand/_brand.yml (made by scripts/vocab_brand.py when the course site builds). -->
 <link rel="stylesheet" href="brand.css">
@@ -232,6 +237,37 @@ function showGrid(title, items) {
   drawBlocks(document.getElementById("main"));
 }
 
+// 🔊 buttons on a term's page: read the word aloud in English or 中文 with the computer's voices.
+const sayBtn = (text, lang, label) =>
+  `<button type="button" class="say" data-say="${esc(text)}" data-lang="${lang}" aria-label="${label}" title="${label}">🔊</button>`;
+  // Read a word aloud with the computer's own voices (Web Speech API): no internet needed.
+  // Picks a voice for the language if one is installed (e.g. Tingting on a Mac, Huihui on Windows).
+  // Natural-sounding voices first (macOS, Windows, Chrome), and never the novelty ones
+  // (macOS has Bubbles, Zarvox, Grandpa…), then anything else in the right language.
+  const GOOD = /^(Samantha|Tingting|Li-Mu|Yu-shu|Microsoft (Aria|Jenny|Guy|Zira|David|Xiaoxiao|Yunxi|Huihui|Kangkang|Yaoyao)|Google (US English|普通话))/;
+  const NOVELTY = /^(Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Albert|Fred|Junior|Ralph|Kathy|Nicky)\b/;
+  function pickVoice(voices, lang) {
+    const want = lang.toLowerCase(), base = want.split("-")[0];
+    const fits = voices.filter(v => !NOVELTY.test(v.name) && v.lang.toLowerCase().replace("_", "-").startsWith(base));
+    const exact = fits.filter(v => v.lang.toLowerCase().replace("_", "-") === want);
+    return exact.find(v => GOOD.test(v.name)) || fits.find(v => GOOD.test(v.name)) || exact[0] || fits[0] || null;
+  }
+  function say(text, lang) {
+    const s = window.speechSynthesis;
+    if (!s || !text) return;
+    s.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.9;
+    u.voice = pickVoice(s.getVoices(), lang);
+    s.speak(u);
+  }
+  if (!window.speechSynthesis) document.documentElement.classList.add("no-speech");
+document.getElementById("main").addEventListener("click", e => {
+  const b = e.target.closest(".say");
+  if (b) { e.preventDefault(); say(b.dataset.say, b.dataset.lang); }
+});
+
 function showDetail(r) {
   const refs = list(r.confused_with).map(id => byId[id]).filter(Boolean)
     .map(x => `<a class="chip" href="#id=${x.id}">${esc(x.term_en)}</a>`).join("");
@@ -240,8 +276,8 @@ function showDetail(r) {
     <a class="back" href="#${r.domain}/${r.subdomain}">← ${esc(DOMAIN_NAMES[r.domain] || r.domain)} / ${esc(titleSub(r.subdomain))}</a>
     <div class="detail">${thumb(r)}
       <div>
-        <h2>${esc(r.term_en)} <span class="lvl lvl-${r.level}">L${r.level}</span></h2>
-        <div class="zh zh-text">${esc(r.zh)}</div>
+        <h2>${esc(r.term_en)} ${sayBtn(r.term_en, "en-US", "Say it in English")} <span class="lvl lvl-${r.level}">L${r.level}</span></h2>
+        <div class="zh zh-text">${esc(r.zh)} ${r.zh ? sayBtn(r.zh, "zh-CN", "Say it in Chinese") : ""}</div>
         <p class="short">${esc(r.short_def)}</p>
         ${r.explanation ? `<p>${esc(r.explanation)}</p>` : ""}
         ${r.example ? `<p><em>“${esc(r.example)}”</em></p>` : ""}

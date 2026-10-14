@@ -15,10 +15,37 @@
 .vocab-card .vc-term { display: block; font-weight: 700; color: #003477; font-size: 17px; }
 .vocab-card .vc-zh { font-weight: 500; color: #52606d; font-size: 15px; margin-left: 4px; }
 .vocab-card .vc-def { display: block; margin-top: 3px; }
+.vocab-card .vc-say { border: none; background: none; padding: 0 2px; margin-left: 2px; cursor: pointer; font-size: 15px; line-height: 1; vertical-align: middle; opacity: 0.75; }
+.vocab-card .vc-say:hover, .vocab-card .vc-say:focus { opacity: 1; }
+.no-speech .vc-say { display: none; }
 .vocab-card .vc-link { display: inline-block; margin-top: 6px; font-size: 13px; color: #0068c4; font-weight: 600; text-decoration: none; }
 </style>
 <script>
 (function () {
+  // Read a word aloud with the computer's own voices (Web Speech API): no internet needed.
+  // Picks a voice for the language if one is installed (e.g. Tingting on a Mac, Huihui on Windows).
+  // Natural-sounding voices first (macOS, Windows, Chrome), and never the novelty ones
+  // (macOS has Bubbles, Zarvox, Grandpa…), then anything else in the right language.
+  const GOOD = /^(Samantha|Tingting|Li-Mu|Yu-shu|Microsoft (Aria|Jenny|Guy|Zira|David|Xiaoxiao|Yunxi|Huihui|Kangkang|Yaoyao)|Google (US English|普通话))/;
+  const NOVELTY = /^(Eddy|Flo|Grandma|Grandpa|Reed|Rocko|Sandy|Shelley|Bad News|Bahh|Bells|Boing|Bubbles|Cellos|Good News|Jester|Organ|Superstar|Trinoids|Whisper|Wobble|Zarvox|Albert|Fred|Junior|Ralph|Kathy|Nicky)\b/;
+  function pickVoice(voices, lang) {
+    const want = lang.toLowerCase(), base = want.split("-")[0];
+    const fits = voices.filter(v => !NOVELTY.test(v.name) && v.lang.toLowerCase().replace("_", "-").startsWith(base));
+    const exact = fits.filter(v => v.lang.toLowerCase().replace("_", "-") === want);
+    return exact.find(v => GOOD.test(v.name)) || fits.find(v => GOOD.test(v.name)) || exact[0] || fits[0] || null;
+  }
+  function say(text, lang) {
+    const s = window.speechSynthesis;
+    if (!s || !text) return;
+    s.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = 0.9;
+    u.voice = pickVoice(s.getVoices(), lang);
+    s.speak(u);
+  }
+  if (!window.speechSynthesis) document.documentElement.classList.add("no-speech");
+
   // Show the card below the word when there's no room above it, and keep it on screen sideways.
   function place(term) {
     var card = term.querySelector(".vocab-card");
@@ -40,6 +67,8 @@
   // Touch screens: tap a term to open its card, tap anywhere else to close it.
   document.addEventListener("click", function (e) {
     if (e.target.closest(".vc-link")) return;
+    const sayBtn = e.target.closest(".vc-say");
+    if (sayBtn) { e.preventDefault(); say(sayBtn.dataset.say, sayBtn.dataset.lang); return; }
     var t = e.target.closest(".vocab-term");
     document.querySelectorAll(".vocab-term.open").forEach(function (o) { if (o !== t) o.classList.remove("open"); });
     if (t) { t.classList.toggle("open"); requestAnimationFrame(function () { place(t); }); }

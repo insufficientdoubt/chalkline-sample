@@ -194,11 +194,16 @@ return {
     -- Picture and link paths are from the site root; add the "../" this page needs.
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
     local img = t.image ~= "" and ('<img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy">') or ""
-    local zh = t.zh ~= "" and (' <span class="vc-zh">' .. html_escape(t.zh) .. '</span>') or ""
+    -- 🔊 buttons read the word aloud (English, then 中文) with the computer's voices (vocab-card.html).
+    local function say(text, lang, label)
+      return '<button type="button" class="vc-say" data-lang="' .. lang .. '" data-say="' .. html_escape(text) ..
+             '" aria-label="' .. label .. '" title="' .. label .. '">🔊</button>'
+    end
+    local zh = t.zh ~= "" and (' <span class="vc-zh">' .. html_escape(t.zh) .. say(t.zh, "zh-CN", "Say it in Chinese") .. '</span>') or ""
     return pandoc.RawInline("html",
       '<span class="vocab-term" tabindex="0">' .. html_escape(shown) ..
       '<span class="vocab-card" role="tooltip">' .. img ..
-      '<span class="vc-term">' .. html_escape(t.term) .. zh .. '</span>' ..
+      '<span class="vc-term">' .. html_escape(t.term) .. say(t.term, "en-US", "Say it in English") .. zh .. '</span>' ..
       '<span class="vc-def">' .. html_escape(t.definition) .. '</span>' ..
       '<a class="vc-link" href="' .. html_escape(up .. t.url) .. '" target="_blank" rel="noopener">' .. html_escape(str(meta and meta["vocab-title"], "Vocab")) .. ' ↗</a>' ..
       '</span></span>')
