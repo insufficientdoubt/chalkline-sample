@@ -16,8 +16,9 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          download link and a viewer. Page counts come from
                                          generated/pdf-pages.json (scripts/catalog.py).
   {{< packet >}}                         on a unit page: a download link for the unit packet (all its
-                                         printables in one PDF, made by scripts/packets.py). Nothing
-                                         if the unit has no printables.
+                                         printables in one PDF, made by scripts/packets.py). The teacher
+                                         site shows two: the teacher packet and the student packet.
+                                         Nothing if the unit has no printables.
   {{< vocab "chain wrap" >}}             a VEX term; hovering shows its vocab card (picture, 中文,
                                          definition, link). Name a term, an "also called" name or an
                                          ID (ENG-078). text="chain wraps" changes the words shown;
@@ -233,20 +234,30 @@ return {
   end,
 
   ["packet"] = function()
+    local teacher = false
     for _, profile in ipairs(quarto.project.profile or {}) do
       if profile == "parent" then return pandoc.Null() end   -- the family site has no packets
+      if profile == "teacher" then teacher = true end
     end
     local p = packet_for_this_page()
-    if not p then return pandoc.Null() end
+    if not p or not quarto.doc.is_format("html") then return pandoc.Null() end
     local name = p.pdf:match("[^/]+$")
     local n = #p.files + #(p.extras or {})
-    local label = "Unit packet (PDF)"
-    local note = " · all " .. n .. " printable" .. (n == 1 and "" or "s") .. " in one file, ready to print"
-    if quarto.doc.is_format("html") then
-      return pandoc.Para({ pandoc.Link({ pandoc.Str("📄 " .. label) }, name, "", pandoc.Attr("", { "btn", "btn-primary" })),
-                           pandoc.Span({ pandoc.Str(note) }, pandoc.Attr("", { "text-muted" })) })
+    local count = n .. " printable" .. (n == 1 and "" or "s")
+    local function button(label, file, classes)
+      return pandoc.Link({ pandoc.Str(label) }, file, "", pandoc.Attr("", classes))
     end
-    return pandoc.Null()
+    if teacher then   -- both editions (scripts/packets.py writes unit-student-packet.pdf next to it)
+      local student = name:gsub("%-packet%.pdf$", "-student-packet.pdf")
+      return pandoc.Para({
+        button("📄 Teacher packet (PDF)", name, { "btn", "btn-primary" }), pandoc.Space(),
+        button("📄 Student packet (PDF)", student, { "btn", "btn-outline-primary" }),
+        pandoc.Span({ pandoc.Str(" · all " .. count .. "; the teacher one adds answer keys and notes") },
+                    pandoc.Attr("", { "text-muted" })) })
+    end
+    return pandoc.Para({ button("📄 Unit packet (PDF)", name, { "btn", "btn-primary" }),
+                         pandoc.Span({ pandoc.Str(" · all " .. count .. " in one file, ready to print") },
+                                     pandoc.Attr("", { "text-muted" })) })
   end,
 
   ["lines"] = function(args, kwargs)

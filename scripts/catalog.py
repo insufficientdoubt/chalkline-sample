@@ -68,6 +68,11 @@ PACKET_TYPES = {"worksheet", "checklist", "handout", "reference"}   # printables
 YEAR_PACKET = "year-packet.pdf"       # every unit packet in one PDF, at the site root
 
 
+def student_copy(pdf):
+    """In the teacher site, the student version of a packet: unit-packet.pdf -> unit-student-packet.pdf."""
+    return pdf[: -len("-packet.pdf")] + "-student-packet.pdf" if pdf.endswith("-packet.pdf") else pdf
+
+
 def front_matter(path):
     """The YAML block between the first two --- lines of a .qmd file."""
     text = path.read_text(encoding="utf-8")
@@ -214,12 +219,27 @@ def load_catalog():
             })
 
     packets = load_packets()
+    teacher = "teacher" in os.environ.get("QUARTO_PROFILE", "").split(",")
     for p in packets:
+        if teacher:   # the teacher site has both editions; this row is the student one
+            items.append({
+                "title": f"{p['short']} student packet",
+                "path": student_copy(p["pdf"]),
+                "pdf": student_copy(p["pdf"]),
+                "description": f"Every printable for {p['title']}, without answer keys, ready to copy for class.",
+                "type": "Packet",
+                "unit": p["short"],
+                "source": "School",
+                "formats": "PDF",
+                "audience": ["teacher"],
+                "_sort": (p["order"], 0, 1, ""),
+            })
         items.append({
-            "title": f"{p['short']} packet",
+            "title": f"{p['short']} {'teacher packet' if teacher else 'packet'}",
             "path": p["pdf"],
             "pdf": p["pdf"],
-            "description": f"Every printable for {p['title']} in one PDF, in order.",
+            "description": (f"Every printable for {p['title']}, with answer keys and teacher notes." if teacher
+                            else f"Every printable for {p['title']} in one PDF, in order."),
             "type": "Packet",
             "unit": p["short"],
             "source": "School",
@@ -227,9 +247,22 @@ def load_catalog():
             "audience": ["teacher", "student", "parent"],
             "_sort": (p["order"], 0, 0, ""),
         })
+    if packets and teacher:
+        items.append({
+            "title": "Year student packet: every unit",
+            "path": student_copy(YEAR_PACKET),
+            "pdf": student_copy(YEAR_PACKET),
+            "description": "Every unit packet in one PDF, without answer keys.",
+            "type": "Packet",
+            "unit": SEASON_GROUP[0],
+            "source": "School",
+            "formats": "PDF",
+            "audience": ["teacher"],
+            "_sort": (SEASON_GROUP[1], 0, 1, ""),
+        })
     if packets:
         items.append({
-            "title": "Year packet: every unit",
+            "title": "Year teacher packet: every unit" if teacher else "Year packet: every unit",
             "path": YEAR_PACKET,
             "pdf": YEAR_PACKET,
             "description": "Every unit packet in one PDF, in unit order.",

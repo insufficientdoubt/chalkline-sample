@@ -8,7 +8,7 @@ out-of-date packets when they start (scripts/build_if_needed.py).
     python scripts/packets.py                  every packet and the year packet, into _site/
     python scripts/packets.py --unit 5         one unit's packet (unit number or folder name)
     python scripts/packets.py --stale          only packets older than one of their printables
-    python scripts/packets.py --teacher ...    teacher packets (answer keys), into _site-teacher/
+    python scripts/packets.py --teacher ...    teacher and student packets, into _site-teacher/
     python scripts/packets.py --unit 5 --keep  keep the scratch folder (and Typst source) to debug a packet
 
 Which printables go in each packet comes from scripts/catalog.py (generated/packets.json):
@@ -26,6 +26,9 @@ unit's objectives and what's in the packet; each printable starts on a new page.
 Writes (in the site folder):
     course/units/<unit>/<unit>-packet.pdf
     year-packet.pdf
+The teacher build also writes the student versions next to them, so teachers can print either:
+    course/units/<unit>/<unit>-student-packet.pdf
+    year-student-packet.pdf
 """
 
 import os
@@ -41,7 +44,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
-from catalog import YEAR_PACKET, load_packets  # noqa: E402
+from catalog import YEAR_PACKET, load_packets, student_copy  # noqa: E402
 
 COPY = ["course", "brand", "_extensions", "scripts", "generated", "_freeze"]
 WORKERS = max(1, min(4, (os.cpu_count() or 2) // 2))   # packets built at once (each Quarto run uses ~0.5 GB)
@@ -166,9 +169,9 @@ def render_in(build, cfg, cover_text):
     return pdf
 
 
-def is_stale(packet, out_dir):
-    """True if the packet's PDF is missing or older than one of its printables."""
-    pdf = out_dir / packet["pdf"]
+def is_stale(packet, out_dir, name=lambda pdf: pdf):
+    """True if the packet's PDF (named by `name`) is missing or older than one of its printables."""
+    pdf = out_dir / name(packet["pdf"])
     if not pdf.exists():
         return True
     built = pdf.stat().st_mtime
@@ -185,7 +188,6 @@ def main():
     teacher = ("--teacher" in sys.argv or "teacher" in os.environ.get("QUARTO_PROFILE", "").split(",")
                or "teacher" in os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", ""))
     out_dir = ROOT / os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", "_site-teacher" if teacher else "_site")
-    edition = "Teacher packet" if teacher else "Packet"
 
     packets = load_packets()
     if "parent" in os.environ.get("QUARTO_PROFILE", "").split(",") or "parent" in str(out_dir.name):
@@ -193,37 +195,40 @@ def main():
     if in_quarto and not os.environ.get("QUARTO_PROJECT_RENDER_ALL"):
         return   # a save in the preview: packets wait (see the notes at the top)
     unit = arg("--unit")
-    if unit:
-        todo = [p for p in packets if unit in (p["id"], str(p["number"]))]
-        if not todo:
-            sys.exit(f"packets: no unit packet for {unit!r} (units with printables: "
-                     + ", ".join(p["id"] for p in packets) + ")")
-    elif "--stale" in sys.argv:
-        todo = [p for p in packets if is_stale(p, out_dir)]
-    else:
-        todo = packets
-    # The year packet: with a full rebuild, or with --stale when it's older than any printable.
-    # Never with --unit, which is meant to be quick.
+    if unit and not any(unit in (p["id"], str(p["number"])) for p in packets):
+        sys.exit(f"packets: no unit packet for {unit!r} (units with printables: "
+                 + ", ".join(p["id"] for p in packets) + ")")
+
+    # (is it the teacher edition, how its files are named). The teacher site gets both editions.
+    editions = [(True, lambda pdf: pdf), (False, student_copy)] if teacher else [(False, lambda pdf: pdf)]
     year_all = {"pdf": YEAR_PACKET, "files": [f for p in packets for f in p["files"]],
                 "extras": [e for p in packets for e in p.get("extras", [])]}
-    year = bool(packets) and not unit and ("--stale" not in sys.argv or is_stale(year_all, out_dir))
-
     jobs = []
-    for p in todo:
-        paths, extra_files = chapter_files(p["chapters"])
-        jobs.append((book_config(teacher, p["title"], edition, ["index.qmd"] + paths),
-                     cover(p["objectives"], p["chapters"]), out_dir / p["pdf"], extra_files))
-    if year:
-        parts, all_extra, all_chapters = [], {}, []
-        for p in packets:
+    for is_teacher, name in editions:
+        label = "Teacher packet" if is_teacher else "Packet"
+        if unit:
+            todo = [p for p in packets if unit in (p["id"], str(p["number"]))]
+        elif "--stale" in sys.argv:
+            todo = [p for p in packets if is_stale(p, out_dir, name)]
+        else:
+            todo = packets
+        for p in todo:
             paths, extra_files = chapter_files(p["chapters"])
-            parts.append({"part": p["title"], "chapters": paths})
-            all_extra.update(extra_files)
-            all_chapters += p["chapters"]
-        season = yaml.safe_load((ROOT / "course" / "season.yml").read_text(encoding="utf-8"))
-        cfg = book_config(teacher, f"{season['name']} {season['season']}", f"Year {edition.lower()}",
-                          ["index.qmd"] + parts)
-        jobs.insert(0, (cfg, cover([], all_chapters), out_dir / YEAR_PACKET, all_extra))  # longest first
+            jobs.append((book_config(is_teacher, p["title"], label, ["index.qmd"] + paths),
+                         cover(p["objectives"], p["chapters"]), out_dir / name(p["pdf"]), extra_files))
+        # The year packet: with a full rebuild, or with --stale when it's older than any printable.
+        # Never with --unit, which is meant to be quick.
+        if packets and not unit and ("--stale" not in sys.argv or is_stale(year_all, out_dir, name)):
+            parts, all_extra, all_chapters = [], {}, []
+            for p in packets:
+                paths, extra_files = chapter_files(p["chapters"])
+                parts.append({"part": p["title"], "chapters": paths})
+                all_extra.update(extra_files)
+                all_chapters += p["chapters"]
+            season = yaml.safe_load((ROOT / "course" / "season.yml").read_text(encoding="utf-8"))
+            cfg = book_config(is_teacher, f"{season['name']} {season['season']}", f"Year {label.lower()}",
+                              ["index.qmd"] + parts)
+            jobs.insert(0, (cfg, cover([], all_chapters), out_dir / name(YEAR_PACKET), all_extra))  # longest first
     with ThreadPoolExecutor(WORKERS) as pool:
         list(pool.map(lambda job: render(*job), jobs))
 
