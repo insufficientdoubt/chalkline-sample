@@ -10,14 +10,31 @@ $orange: #ff8c0f;
 $sky: #ebf7fd;
 
 $presentation-font-size-root: 34px;
+$presentation-heading-font: "Poppins", "Source Sans 3", "Noto Sans SC", sans-serif;   // as in _brand.yml
+$presentation-heading-text-transform: none;
 $presentation-h2-font-size: 1.45em;
 
 /*-- scss:rules --*/
 
+// Brand fonts for slides, from brand/fonts/ (copied to the site by `resources:` in _quarto.yml).
+// Quarto copies _brand.yml's font files for web pages but not for slides, so slides load them
+// here. This stylesheet ends up in site_libs/revealjs/dist/theme/, four folders below the site root.
+@each $file, $family, $weight, $style in
+  ("SourceSans3-Regular", "Source Sans 3", 400, normal), ("SourceSans3-It", "Source Sans 3", 400, italic),
+  ("SourceSans3-Semibold", "Source Sans 3", 600, normal), ("SourceSans3-SemiboldIt", "Source Sans 3", 600, italic),
+  ("SourceSans3-Bold", "Source Sans 3", 700, normal), ("SourceSans3-BoldIt", "Source Sans 3", 700, italic),
+  ("Poppins-SemiBold", "Poppins", 600, normal), ("Poppins-Bold", "Poppins", 700, normal) {
+  @font-face {
+    font-family: $family; font-weight: $weight; font-style: $style; font-display: swap;
+    src: url("../../../../brand/fonts/#{$file}.ttf");
+  }
+}
+
 // _brand.yml's "Source Sans 3" reaches the CSS unquoted, which browsers reject
 // (a font name can't end in a bare number), so text fell back to a serif font.
 // Set it again here, quoted.
-:root { --r-main-font: "Source Sans 3", "Noto Sans SC", sans-serif; }
+:root { --r-main-font: "Source Sans 3", "Noto Sans SC", sans-serif;
+        --r-heading-font: "Poppins", "Source Sans 3", "Noto Sans SC", sans-serif; }
 
 // Title slide: white text on the navy background.
 #title-slide {

@@ -67,4 +67,4 @@ Type `☐` anywhere for a drawn checkbox.
 
 Any callout whose title contains "Answer" or "Teacher" (like `::: {.callout-note title="Answer key"}`) gets the orange teacher style. Every other callout gets the blue style.
 
-Chinese text uses Noto Sans SC automatically (listed in `_brand.yml`).
+Chinese text in PDFs uses Noto Sans SC automatically (`brand/fonts/print/`); web pages use the computer's own Chinese font. All font files are in `brand/fonts/`, so builds work without the internet.

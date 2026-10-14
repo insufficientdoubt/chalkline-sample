@@ -15,7 +15,7 @@
 #let worksheet-heading-font = state("worksheet-heading-font", none)
 #let poster-dark = state("poster-dark", false)
 
-// Chinese text: fall back to Noto Sans SC (downloaded via brand/_brand.yml).
+// Chinese text: fall back to Noto Sans SC (brand/fonts/print/, found through font-paths in _quarto.yml).
 #let with-cjk(f) = if f == none { none } else if type(f) == array { (..f, "Noto Sans SC") } else { (f, "Noto Sans SC") }
 
 // Colors for the helpers below (fallbacks match brand/_brand.yml).

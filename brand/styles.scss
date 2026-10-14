@@ -4,6 +4,7 @@
 // Color roles: navy = text; blue = stripes; orange = highlights and teacher-only; sky = panels.
 
 $callout-border-width: 4px;
+$web-font-path: false;   // the cosmo theme would import a Google font we don't use (blocked in some places)
 
 /*-- scss:rules --*/
 

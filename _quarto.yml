@@ -30,6 +30,7 @@ project:
     - /vocab/data/*.csv
     - /vocab/config.js       # the vocab app's settings for this course
     - /vocab/images/**
+    - /brand/fonts/*.ttf     # web fonts, for the vocab app (not brand/fonts/print/: those are for PDFs only)
   preview:
     port: 4100               # the site is always at http://localhost:4100 (teacher 4101, parent 4102 later)
     browser: true            # open it in the browser when the preview starts
@@ -68,12 +69,13 @@ format:
       - docx                   # (at least one plain name, or Quarto lists every format twice)
   typst:
     papersize: a4              # posters override this with papersize: a3
+    font-paths: [brand/fonts/print]   # Noto Sans SC for Chinese in PDFs (the other fonts come from _brand.yml)
     template-partials:         # branded page layouts (see brand/README.md)
       - brand/typst/typst-template.typ
       - brand/typst/typst-show.typ
   docx: default
   revealjs:
-    theme: [simple, brand/revealjs.scss]
+    theme: [default, brand/revealjs.scss]   # "default": no Google Fonts imports ("simple" pulls in two)
     logo: /brand/logos/icon-sailboat.svg
     slide-number: true
     transition: fade                 # none, fade, slide, convex, concave or zoom

@@ -40,17 +40,25 @@ logo:
   large: full
 
 typography:
+  # Font files live in brand/fonts/ (SIL Open Font License, see the OFL-*.txt files there), so
+  # builds never need the internet. Google Fonts is often blocked or slow in mainland China.
+  # Chinese in PDFs uses Noto Sans SC from brand/fonts/print/ (font-paths in _quarto.yml); web pages
+  # use the computer's own Chinese font instead, because Noto Sans SC is 8 MB per weight.
   fonts:
     - family: Source Sans 3
-      source: google
-      weight: [400, 600, 700]
-      style: [normal, italic]
+      source: file
+      files:
+        - {path: fonts/SourceSans3-Regular.ttf,    weight: 400, style: normal}
+        - {path: fonts/SourceSans3-It.ttf,         weight: 400, style: italic}
+        - {path: fonts/SourceSans3-Semibold.ttf,   weight: 600, style: normal}
+        - {path: fonts/SourceSans3-SemiboldIt.ttf, weight: 600, style: italic}
+        - {path: fonts/SourceSans3-Bold.ttf,       weight: 700, style: normal}
+        - {path: fonts/SourceSans3-BoldIt.ttf,     weight: 700, style: italic}
     - family: Poppins
-      source: google
-      weight: [600, 700]
-    - family: Noto Sans SC     # Chinese text in PDFs (fallback after the fonts above)
-      source: google
-      weight: [400, 700]
+      source: file
+      files:
+        - {path: fonts/Poppins-SemiBold.ttf, weight: 600, style: normal}
+        - {path: fonts/Poppins-Bold.ttf,     weight: 700, style: normal}
   base:
     family: Source Sans 3
     size: 11pt
