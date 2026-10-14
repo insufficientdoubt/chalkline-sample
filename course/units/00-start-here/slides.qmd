@@ -318,14 +318,15 @@ In a terminal instead of VS Code: `git clone https://github.com/insufficientdoub
 
 ## How this sample is organized
 
-```text
+```{.text code-line-numbers="false"}
 course/units/01-ancient-greece/
-  index.qmd                   the unit page: title, objectives
-  city-states-slides.qmd      a slide deck
-  athens-vs-sparta.qmd        a worksheet (web + PDF)
-  images/                     pictures for this unit
-vocab/data/vocab.csv          the 25 vocab words
-brand/                        colors, fonts, logos
+  index.qmd               the unit page: title, objectives
+  city-states-slides.qmd  a slide deck
+  athens-vs-sparta.qmd    a worksheet (web + PDF)
+  images/                 photos for this unit's slides
+vocab/data/vocab.csv      the 25 vocab words
+vocab/images/             vocab pictures (GRC-003.svg = democracy)
+brand/                    colors, fonts, logos
 ```
 
 ## Make your own unit
