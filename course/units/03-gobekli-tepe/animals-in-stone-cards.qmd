@@ -1,0 +1,55 @@
+---
+title: "Animals in Stone Fact Cards 石头上的动物"
+type: reference
+description: "Six wild animals carved on the pillars of Göbekli Tepe, with 中文 names, where to find them, and a question to think about."
+order: 4
+audience: [teacher, student, parent]
+doc-type: Reference
+format:
+  html: default
+  typst: default
+---
+
+The builders of Göbekli Tepe carved animals on their pillars as {{< vocab "relief" text="reliefs" zh=true >}}. Almost all are **wild** animals, and many are dangerous. Here are six of them.
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Fox 狐狸" icon=false}
+**One of the most common animals** at Göbekli Tepe. One of the two giant pillars in Enclosure D seems to wear a fox skin on its belt. 🦊
+:::
+
+::: {.callout-note title="Wild boar 野猪" icon=false}
+**A wild pig** with sharp tusks. Many boars are carved in Enclosure C, and there is a boar statue too. 🐗
+:::
+::::
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Snake 蛇" icon=false}
+**Often carved in groups**, sliding down a pillar, head first. 🐍
+:::
+
+::: {.callout-note title="Vulture 秃鹫" icon=false}
+**A big bird** that eats dead animals. Pillar 43 in Enclosure D is called the "Vulture Stone". 🪶
+:::
+::::
+
+:::: {layout-ncol=2}
+::: {.callout-note title="Aurochs 原牛" icon=false}
+**Wild cattle**, much bigger and stronger than cows today. Cows come from aurochs. The last aurochs died in 1627. 🐂
+:::
+
+::: {.callout-note title="Scorpion 蝎子" icon=false}
+**A small animal with a stinger** in its tail. Scorpions, spiders and insects are carved on several pillars. 🦂
+:::
+::::
+
+## Think about it
+
+The builders hunted gazelle every year, but gazelles are rare in the carvings. Why do you think they carved dangerous animals instead?
+
+{{< lines 3 >}}
+
+::: {.content-visible when-profile="teacher"}
+::: {.callout-note title="Teacher notes"}
+There is no agreed answer: this is a question of interpretation, not evidence. Ideas students may offer: the animals were protectors or symbols of groups (like team mascots), they appeared in stories or myths, they stood for danger and death, or they showed power. Praise answers that say "maybe" and point to something they can see on the pillars.
+:::
+:::

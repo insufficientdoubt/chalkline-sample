@@ -149,7 +149,7 @@ The words live in one spreadsheet. Slides, worksheets, the **vocab app** and Qui
 ::::
 
 ::: notes
-Try the pop-ups now. Then open "History vocab 词汇" in the sidebar: all 25 words from both units, searchable in English or Chinese.
+Try the pop-ups now. Then open "History vocab 词汇" in the sidebar: all 37 words from the three units, searchable in English or Chinese.
 :::
 
 ## Three websites from the same files
@@ -324,7 +324,7 @@ course/units/01-ancient-greece/
   city-states-slides.qmd  a slide deck
   athens-vs-sparta.qmd    a worksheet (web + PDF)
   images/                 photos for this unit's slides
-vocab/data/vocab.csv      the 25 vocab words
+vocab/data/vocab.csv      the 37 vocab words
 vocab/images/             vocab pictures (GRC-003.svg = democracy)
 brand/                    colors, fonts, logos
 ```

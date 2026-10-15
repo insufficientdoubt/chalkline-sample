@@ -7,6 +7,7 @@ Original drawings, so there's no image license to worry about, and they work off
 keep the file name, or change the `image` column in data/vocab.csv.
 """
 
+import math
 from pathlib import Path
 
 OUT = Path(__file__).resolve().parent.parent / "images"
@@ -187,6 +188,108 @@ ICONS = {
         f'<path d="M120,22 l-22,-6 l10,12 l-14,2 l26,8 l26,-8 l-14,-2 l10,-12 Z" fill="{GOLD}"/>'),
 }
 
+
+def t_pillar(x, base, h, w, fill=STONE, line=STONE_DK, arms=False):
+    """A Göbekli Tepe T-pillar seen from the side: a narrow body with a wide head on top, base at (x, base)."""
+    head_h, head_w = h * 0.26, w * 1.9
+    out = (f'<rect x="{x - w / 2:.1f}" y="{base - h + head_h:.1f}" width="{w:.1f}" height="{h - head_h:.1f}" fill="{fill}" stroke="{line}" stroke-width="2"/>'
+           f'<rect x="{x - head_w / 2:.1f}" y="{base - h:.1f}" width="{head_w:.1f}" height="{head_h:.1f}" rx="{w * 0.08:.1f}" fill="{fill}" stroke="{line}" stroke-width="2"/>')
+    if arms:   # carved arms down the sides, hands meeting just above a belt
+        top, belt = base - h + head_h + h * 0.08, base - h * 0.32
+        sw = max(2, w * 0.07)
+        for side in (-1, 1):
+            out += (f'<path d="M{x + side * w * 0.38:.1f},{top:.1f} L{x + side * w * 0.38:.1f},{belt - h * 0.1:.1f} '
+                    f'Q{x + side * w * 0.36:.1f},{belt - h * 0.03:.1f} {x + side * w * 0.05:.1f},{belt - h * 0.04:.1f}" '
+                    f'fill="none" stroke="{line}" stroke-width="{sw:.1f}" stroke-linecap="round"/>')
+        out += f'<rect x="{x - w / 2:.1f}" y="{belt:.1f}" width="{w:.1f}" height="{h * 0.035:.1f}" fill="{line}"/>'
+    return out
+
+
+def fox(x, y, s=1.0, color=STONE_DK):
+    """A leaping fox facing right, about 92*s wide, its back starting at (x, y)."""
+    return (f'<path transform="translate({x},{y}) scale({s})" fill="{color}" d="M0,10 Q20,-6 40,4 L60,2 L72,-10 L76,-2 L92,2 L78,10 L64,14'
+            f' L70,30 L62,30 L56,18 L36,18 L26,30 L18,30 L24,16 Q10,18 0,10 Z"/>')
+
+
+def ring_pillars(cx, cy, r, n):
+    """Small pillars standing in a round wall, seen from above."""
+    return "".join(f'<rect x="-4" y="-11" width="8" height="22" fill="{STONE}" stroke="{INK}" stroke-width="1.5" '
+                   f'transform="translate({cx + r * math.cos(2 * math.pi * k / n):.1f},{cy + r * math.sin(2 * math.pi * k / n):.1f}) rotate({360 * k / n:.0f})"/>'
+                   for k in range(n))
+
+
+ICONS.update({
+    "GBT-001": svg(  # archaeologist: kneeling with a brush beside a pillar top in the ground
+        f'<rect x="0" y="128" width="240" height="52" rx="14" fill="{STONE_DK}"/>'
+        f'<rect x="132" y="96" width="60" height="22" rx="3" fill="{STONE}" stroke="{INK}" stroke-width="1.5"/>'
+        f'<rect x="150" y="118" width="24" height="12" fill="{STONE}" stroke="{INK}" stroke-width="1.5"/>'
+        f'<circle cx="82" cy="70" r="11" fill="{NAVY}"/><ellipse cx="82" cy="61" rx="22" ry="5" fill="{GOLD}"/><path d="M72,61 q10,-16 20,0" fill="{GOLD}"/>'
+        f'<path d="M70,128 L72,86 Q82,80 92,86 L96,110 L80,128 Z" fill="{BLUE}"/>'
+        f'<line x1="92" y1="92" x2="124" y2="104" stroke="{NAVY}" stroke-width="5" stroke-linecap="round"/>'
+        f'<line x1="124" y1="104" x2="136" y2="108" stroke="{ORANGE}" stroke-width="6" stroke-linecap="round"/>'),
+    "GBT-002": svg(  # excavation: a square pit through layers of soil, a string grid and a trowel
+        f'<rect x="0" y="60" width="240" height="120" rx="14" fill="#d8c29a"/>'
+        f'<rect x="0" y="60" width="240" height="14" fill="{GRASS}"/>'
+        f'<path d="M0,104 H240 M0,136 H240" stroke="{STONE_DK}" stroke-width="3" stroke-dasharray="14 6"/>'
+        f'<rect x="60" y="74" width="120" height="86" fill="#b89a6c" stroke="{INK}" stroke-width="2"/>'
+        f'<path d="M100,74 V160 M140,74 V160 M60,117 H180" stroke="{WHITE}" stroke-width="1.5"/>'
+        f'<rect x="108" y="138" width="24" height="14" fill="{STONE}" stroke="{INK}"/>'
+        f'<path d="M172,30 l26,26 l-14,4 Z" fill="{STONE_DK}" stroke="{INK}" stroke-width="2"/>'
+        f'<line x1="172" y1="30" x2="158" y2="16" stroke="{ORANGE}" stroke-width="7" stroke-linecap="round"/>'),
+    "GBT-003": svg(  # artifact: a flint blade with a museum label
+        f'<path d="M50,120 L120,40 L190,62 L150,140 Z" fill="#8a8f98" stroke="{INK}" stroke-width="2"/>'
+        f'<path d="M80,104 L126,56 M104,116 L150,66 M128,126 L170,74" stroke="#b9bec6" stroke-width="3"/>'
+        f'<rect x="132" y="128" width="84" height="34" rx="4" fill="{WHITE}" stroke="{NAVY}" stroke-width="2"/>'
+        f'<text x="174" y="150" text-anchor="middle" font-family="sans-serif" font-size="13" font-weight="700" fill="{NAVY}">flint, 9000 BC</text>'),
+    "GBT-004": svg(  # evidence: a magnifying glass over seeds and a bone
+        f'<rect x="20" y="120" width="200" height="44" rx="8" fill="{STONE}"/>'
+        f'<path d="M40,146 h60" stroke="{WHITE}" stroke-width="10" stroke-linecap="round"/>'
+        + "".join(f'<circle cx="{x}" cy="{y}" r="7" fill="{WHITE}"/>' for x in (40, 100) for y in (142, 151))
+        + "".join(f'<ellipse cx="{x}" cy="{y}" rx="6" ry="3.5" fill="{GOLD}" stroke="{ORANGE}"/>' for x, y in [(140, 140), (156, 150), (170, 138), (186, 148), (150, 132)]) +
+        f'<circle cx="162" cy="86" r="40" fill="{WHITE}" fill-opacity="0.55" stroke="{NAVY}" stroke-width="8"/>'
+        f'<line x1="134" y1="114" x2="108" y2="140" stroke="{NAVY}" stroke-width="12" stroke-linecap="round"/>'
+        f'<text x="162" y="98" text-anchor="middle" font-family="serif" font-size="36" font-weight="700" fill="{ORANGE}">?</text>'),
+    "GBT-005": svg(  # hunter-gatherer: a hunter with a spear, a gazelle, and wild grain
+        f'<rect x="0" y="146" width="240" height="34" rx="14" fill="{GRASS}"/>'
+        + person(60, 150, NAVY, 1.6) +
+        f'<line x1="44" y1="150" x2="88" y2="44" stroke="{INK}" stroke-width="4"/><polygon points="88,44 82,60 92,58" fill="#8a8f98"/>'
+        f'<path d="M140,112 q20,-12 44,-4 l8,-12 l4,-4 l10,6 l-6,6 l-6,10 v32 h-4 v-26 h-30 v26 h-4 v-30 Z" fill="#c8955a"/>'
+        f'<path d="M140,112 h-4 v38 h4 Z M184,112 h4 v38 h-4 Z" fill="#c8955a"/>'
+        f'<path d="M194,94 q-4,-22 10,-32 M198,94 q2,-20 16,-26" stroke="{INK}" stroke-width="2.5" fill="none" stroke-linecap="round"/>'
+        f'<path d="M146,112 q14,6 34,0" stroke="{WHITE}" stroke-width="3" fill="none"/>'
+        + "".join(f'<path d="M{x},150 q-2,-30 4,-46" stroke="{GOLD}" stroke-width="3" fill="none"/><ellipse cx="{x + 4}" cy="102" rx="4" ry="9" fill="{GOLD}"/>' for x in (206, 222))),
+    "GBT-006": svg(  # Neolithic: a stone axe and a stalk of grain, "New Stone Age"
+        f'<line x1="70" y1="150" x2="120" y2="50" stroke="#8b5a2b" stroke-width="10" stroke-linecap="round"/>'
+        f'<path d="M96,58 l40,-18 q14,10 6,28 l-38,10 Z" fill="#8a8f98" stroke="{INK}" stroke-width="2"/>'
+        f'<path d="M180,150 q-4,-50 4,-94" stroke="{GOLD}" stroke-width="4" fill="none"/>'
+        + "".join(f'<ellipse cx="{184 + d}" cy="{y}" rx="5" ry="9" fill="{GOLD}" transform="rotate({d * 4} {184 + d} {y})"/>' for y in (60, 76, 92) for d in (-7, 7)) +
+        f'<text x="120" y="172" text-anchor="middle" font-family="sans-serif" font-size="15" font-weight="700" fill="{NAVY}">New Stone Age</text>'),
+    "GBT-007": svg(  # farming: rows of grain in a field under the sun
+        f'<circle cx="190" cy="40" r="18" fill="{GOLD}"/>'
+        f'<path d="M0,96 H240 V166 a14,14 0 0 1 -14,14 H14 a14,14 0 0 1 -14,-14 Z" fill="#a8763e"/>'
+        + "".join(f'<path d="M{x},{y} v-26" stroke="{GRASS}" stroke-width="3"/><ellipse cx="{x}" cy="{y - 30}" rx="4" ry="8" fill="{GOLD}"/>'
+                  for i, y in enumerate((126, 150, 174)) for x in range(22 + 12 * (i % 2), 232, 24))),
+    "GBT-008": svg(  # megalith: a huge stone next to a small person, for scale
+        f'<rect x="0" y="150" width="240" height="30" rx="14" fill="{GRASS}"/>'
+        f'<path d="M70,152 L76,36 Q110,22 150,34 L162,152 Z" fill="{STONE}" stroke="{STONE_DK}" stroke-width="3"/>'
+        + person(196, 152, NAVY, 0.9)),
+    "GBT-009": svg(t_pillar(120, 168, 152, 46, arms=True)),  # T-pillar: carved arms, hands and a belt
+    "GBT-010": svg(  # enclosure: from above, a round wall with pillars in it and two in the middle
+        f'<circle cx="120" cy="90" r="70" fill="#d8c29a" stroke="{STONE_DK}" stroke-width="14"/>' + ring_pillars(120, 90, 70, 12) +
+        f'<rect x="98" y="76" width="12" height="28" fill="{STONE}" stroke="{INK}" stroke-width="2"/>'
+        f'<rect x="130" y="76" width="12" height="28" fill="{STONE}" stroke="{INK}" stroke-width="2"/>'),
+    "GBT-011": svg(  # relief: a fox standing out from a stone slab (a shadow underneath)
+        f'<rect x="24" y="30" width="192" height="120" rx="6" fill="{STONE}" stroke="{STONE_DK}" stroke-width="3"/>'
+        + fox(64, 70, 1.3, "#a8916a") + fox(59, 65, 1.3, "#f6efe0")),
+    "GBT-012": svg(  # quarry: a pillar shape being cut out of the rock layers, with a flint pick
+        f'<rect x="10" y="40" width="220" height="130" rx="10" fill="{STONE}"/>'
+        f'<path d="M10,82 H230 M10,128 H230" stroke="{STONE_DK}" stroke-width="3"/>'
+        f'<path d="M30,92 h120 v-10 h30 v44 h-30 v-10 h-120 Z" fill="#f6efe0" stroke="{INK}" stroke-width="2.5" stroke-dasharray="7 4"/>'
+        f'<line x1="196" y1="158" x2="212" y2="108" stroke="#8b5a2b" stroke-width="6" stroke-linecap="round"/>'
+        f'<polygon points="196,110 226,104 214,96" fill="#8a8f98" stroke="{INK}"/>'),
+})
+
+
 def slope_bridge(x0=130, x1=520, y0=100, y1=216, ground=268, n=8):
     """An aqueduct bridge whose top follows a channel sloping from (x0, y0) down to (x1, y1)."""
     y = lambda x: y0 + (x - x0) * (y1 - y0) / (x1 - x0)
@@ -203,9 +306,55 @@ def slope_bridge(x0=130, x1=520, y0=100, y1=216, ground=268, n=8):
     return out
 
 
-# Bigger diagrams for slides and printables (course/units/*/images/)
+def how_old():
+    """A to-scale timeline from 9600 BC to today: Göbekli Tepe, then famous things from Units 1 and 2."""
+    x0, x1, y = 40, 600, 120
+    X = lambda year: x0 + (year + 9600) / (2026 + 9600) * (x1 - x0)
+    out = (f'<line x1="{x0}" y1="{y}" x2="{x1}" y2="{y}" stroke="{NAVY}" stroke-width="6" stroke-linecap="round"/>'
+           f'<rect x="{X(-9600):.1f}" y="{y - 11}" width="{X(-8200) - X(-9600):.1f}" height="22" rx="4" fill="{ORANGE}"/>')
+    for year in range(-9000, 2001, 1000):   # a tick every 1,000 years
+        out += f'<line x1="{X(year):.1f}" y1="{y - 3}" x2="{X(year):.1f}" y2="{y + 3}" stroke="{WHITE}" stroke-width="2"/>'
+    # year, label, where the label sits: negative = above the line, positive = below
+    events = [(-9500, "Göbekli Tepe", -58), (-3200, "first writing", -58), (-3000, "Stonehenge", 48),
+              (-2560, "Great Pyramid", 92), (-447, "Parthenon", -58), (80, "Colosseum", 48), (2026, "today", 92)]
+    for year, label, dy in events:
+        x = X(year)
+        anchor = {-9500: "start", -3000: "end", -2560: "start", 2026: "end"}.get(year, "middle")
+        date = f"{-year} BC" if year < 0 else f"AD {year}" if year < 2000 else str(year)
+        tip = y + dy + 22 if dy < 0 else y + dy - 16
+        out += (f'<line x1="{x:.1f}" y1="{y}" x2="{x:.1f}" y2="{tip}" stroke="{INK}" stroke-width="1.5"/>'
+                f'<circle cx="{x:.1f}" cy="{y}" r="5" fill="{INK}"/>'
+                f'<text x="{x:.1f}" y="{y + dy}" text-anchor="{anchor}" font-family="sans-serif" font-size="16" font-weight="700" fill="{NAVY}">{label}</text>'
+                f'<text x="{x:.1f}" y="{y + dy + 17}" text-anchor="{anchor}" font-family="sans-serif" font-size="13" fill="{INK}">{date}</text>')
+    return out
+
+
+def pillar_parts():
+    """A big T-pillar with its parts labeled, next to a person drawn to the same scale."""
+    base, h = 300, 260           # 260 px = 5.5 m, so a 1.7 m person is about 80 px
+    out = t_pillar(250, base, h, 66, arms=True) + fox(222, 236, 0.6, "#a8916a")
+    out += (f'<path d="M140,{base - h} v{h} M134,{base - h} h12 M134,{base} h12" stroke="{ORANGE}" stroke-width="2.5"/>'
+            f'<text x="128" y="{base - h / 2}" text-anchor="end" font-family="sans-serif" font-size="15" font-weight="700" fill="{INK}">up to 5.5 m</text>')
+    out += person(470, base, NAVY, 1.74) + (f'<path d="M496,{base - 80} v80 M490,{base - 80} h12 M490,{base} h12" stroke="{ORANGE}" stroke-width="2.5"/>'
+                                            f'<text x="506" y="{base - 36}" font-family="sans-serif" font-size="15" font-weight="700" fill="{INK}">1.7 m</text>')
+    for x, y, label in [(300, 74, "head"), (272, 120, "arm"), (262, 196, "hands"), (278, 213, "belt"), (276, 248, "animal relief"), (276, 284, "body")]:
+        out += (f'<line x1="{x}" y1="{y}" x2="354" y2="{y}" stroke="{INK}" stroke-width="1.5"/><circle cx="{x}" cy="{y}" r="3" fill="{INK}"/>'
+                f'<text x="360" y="{y + 5}" font-family="sans-serif" font-size="16" font-weight="700" fill="{NAVY}">{label}</text>')
+    return out
+
+
+# Bigger diagrams for slides and printables: name -> (unit folder, svg)
 DIAGRAMS = {
-    "aqueduct-slope": (
+    "how-old": ("03-gobekli-tepe",
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 270" width="640" height="270">'
+        f'<rect width="640" height="270" rx="16" fill="{SKY}"/>{how_old()}'
+        f'<text x="40" y="256" font-family="sans-serif" font-size="13" fill="{INK}">Drawn to scale. Each white tick is 1,000 years.</text>'
+        '</svg>\n'),
+    "pillar-parts": ("03-gobekli-tepe",
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" width="640" height="320">'
+        f'<rect width="640" height="320" rx="16" fill="{SKY}"/><rect x="0" y="300" width="640" height="20" fill="{STONE_DK}"/>'
+        f'{pillar_parts()}</svg>\n'),
+    "aqueduct-slope": ("02-ancient-rome",
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 300" width="640" height="300">'
         f'<rect width="640" height="300" rx="16" fill="{SKY}"/>'
         f'<path d="M0,120 Q60,90 110,96 L130,250 H0 Z" fill="{GRASS}"/>'
@@ -226,8 +375,8 @@ def main():
     for name, text in ICONS.items():
         (OUT / f"{name}.svg").write_text(text, encoding="utf-8")
     units = OUT.parent.parent / "course" / "units"
-    for name, text in DIAGRAMS.items():
-        folder = units / "02-ancient-rome" / "images"
+    for name, (unit, text) in DIAGRAMS.items():
+        folder = units / unit / "images"
         folder.mkdir(parents=True, exist_ok=True)
         (folder / f"{name}.svg").write_text(text, encoding="utf-8")
     print(f"draw_icons: {len(ICONS)} icons, {len(DIAGRAMS)} diagrams")

@@ -1,6 +1,6 @@
 # Chalkline sample course
 
-**Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and three websites (students, teachers, families), all in your school's style. This is a **sample course** to try it with: two history units (Ancient Greece and Ancient Rome), a 25-word bilingual vocab list, and a slide deck about Chalkline itself.
+**Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and three websites (students, teachers, families), all in your school's style. This is a **sample course** to try it with: three history units (Ancient Greece, Ancient Rome and Göbekli Tepe), a 37-word bilingual vocab list, and a slide deck about Chalkline itself.
 
 **See it online:** https://insufficientdoubt.github.io/chalkline-sample/ (the teacher version, rebuilt on every push).
 
@@ -13,7 +13,8 @@
 | **Start here** | `course/units/00-start-here/` | A short slide deck: what Chalkline does and how to make your own unit |
 | **Unit 1: Ancient Greece** | `course/units/01-ancient-greece/` | 2 slide decks, 3 printables (a worksheet, fact cards, a class vote) |
 | **Unit 2: Ancient Rome** | `course/units/02-ancient-rome/` | 2 slide decks, 3 printables (a sorting worksheet, Roman numerals, an aqueduct design challenge) |
-| **Vocab** | `vocab/` | 25 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
+| **Unit 3: Göbekli Tepe** | `course/units/03-gobekli-tepe/` | 2 slide decks, 3 printables (an evidence-or-guess worksheet, animal fact cards, a T-pillar design challenge) |
+| **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
 | **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
 | **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |

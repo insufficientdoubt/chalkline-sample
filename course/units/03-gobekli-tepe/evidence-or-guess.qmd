@@ -1,0 +1,90 @@
+---
+title: "Evidence or Guess? 证据还是猜测？"
+type: worksheet
+description: "Sort ten statements about Göbekli Tepe into evidence or guesses, put five monuments from three units in time order, and explain why archaeologists changed their minds. Teacher copy has an answer key."
+order: 3
+audience: [teacher, student]
+doc-type: Worksheet
+name-box: true
+format:
+  html: default
+  typst: default
+---
+
+```{python}
+import sys; sys.path.append("scripts")
+from vocab import load_unit, pick, word_bank
+terms = load_unit(3)
+```
+
+```{python}
+#| output: asis
+print(word_bank({
+    "Archaeology": pick(terms, "archaeologist", "excavation", "artifact", "evidence"),
+    "Göbekli Tepe": pick(terms, "T-pillar", "enclosure", "relief", "hunter-gatherer"),
+}))
+```
+
+## 1. Evidence or guess?
+
+{{< vocab "evidence" text="Evidence" zh=true >}} is something archaeologists found and can check. A guess is an idea about what it means. Write each letter in the right column.
+
+:::: {layout-ncol=2}
+::: {}
+**A.** The tallest pillars are 5.5 m high.\
+**B.** The pillars show the builders' gods.\
+**C.** Archaeologists found more than 7,000 grinding stones.\
+**D.** Nobody ever lived on the hill.\
+**E.** A fox is carved on a pillar in Enclosure D.
+:::
+::: {}
+**F.** The builders carved dangerous animals to show they were brave.\
+**G.** Gazelle bones were found in the rubbish.\
+**H.** It was the world's first temple.\
+**I.** There are tanks cut in the rock to collect rainwater.\
+**J.** People came from far away for big feasts.
+:::
+::::
+
+:::: {layout-ncol=2}
+::: {}
+**Evidence 证据**
+{{< lines 2 >}}
+:::
+::: {}
+**Guess 猜测**
+{{< lines 2 >}}
+:::
+::::
+
+## 2. Put them in order
+
+Number from 1 (oldest) to 5 (newest).
+
+☐ The Colosseum is finished in Rome\
+☐ Göbekli Tepe is built\
+☐ The Parthenon is built in Athens\
+☐ The Great Pyramid is built in Egypt\
+☐ Rome becomes a republic
+
+{{< pagebreak >}}
+
+## 3. Explain the change
+
+At first, archaeologists said Göbekli Tepe was a temple where nobody lived. Now most think people lived there too. What new evidence changed their minds? Name **two** things.
+
+*Archaeologists changed their minds because they found …*
+
+{{< lines 5 >}}
+
+::: {.content-visible when-profile="teacher"}
+{{< pagebreak >}}
+
+::: {.callout-note title="Answer key"}
+**1.** Evidence: A, C, E, G, I. Guess: B, D, F, H, J. (D was the first team's idea; the houses and water tanks found later count against it.)
+
+**2.** 1 Göbekli Tepe (about 9500 BC); 2 the Great Pyramid (about 2560 BC); 3 Rome becomes a republic (509 BC); 4 the Parthenon (447–432 BC); 5 the Colosseum (AD 80).
+
+**3.** Any two of: remains of houses; rainwater tanks (cisterns) holding at least 150,000 liters; thousands of grinding stones and tools for preparing food every day. Strong answers say *why* it matters: people need water and food where they live.
+:::
+:::

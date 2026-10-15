@@ -17,9 +17,33 @@
   audience: [teacher, student, parent]
   description: An easy-English overview of ancient Rome, for reading at home.
 
+- title: Göbekli Tepe (UNESCO World Heritage)
+  url: https://whc.unesco.org/en/list/1572/
+  type: reference
+  unit: 03-gobekli-tepe
+  source: UNESCO
+  audience: [teacher, student, parent]
+  description: The official World Heritage listing, a short and clear description of the site and why it matters.
+
+- title: Göbekli Tepe (Wikipedia)
+  url: https://en.wikipedia.org/wiki/G%C3%B6bekli_Tepe
+  type: reference
+  unit: 03-gobekli-tepe
+  source: Wikipedia
+  audience: [teacher]
+  description: The long version, with the newest research (houses, water cisterns, how many builders). Harder English; for teachers.
+
+- title: Tepe Telegrams (the excavation team's blog)
+  url: https://www.dainst.blog/the-tepe-telegrams/
+  type: reference
+  unit: 03-gobekli-tepe
+  source: German Archaeological Institute
+  audience: [teacher]
+  description: News and interviews from the archaeologists who dig at Göbekli Tepe, including why they stopped calling it a "temple".
+
 - title: History vocab (English / 中文)
   url: vocab/app/
   type: vocab
   source: School
   audience: [teacher, student, parent]
-  description: All 25 words from both units, with pictures and Chinese.
+  description: All 37 words from the three units, with pictures and Chinese.

@@ -1,0 +1,51 @@
+---
+title: "Design Challenge: Carve a T-Pillar 设计T形石柱"
+type: worksheet
+description: "Design a T-pillar for our class, with arms, a belt and animal reliefs that tell something about us, then plan how to cut and move it without metal or machines."
+order: 5
+audience: [teacher, student]
+doc-type: Design Challenge
+name-box: true
+format:
+  html: default
+  typst: default
+---
+
+The builders of Göbekli Tepe carved each {{< vocab "T-pillar" zh=true >}} to look like a person, with animals on it. Now design a pillar for **our class**.
+
+![](images/pillar-parts.svg){fig-alt="A T-shaped pillar labeled head, arm, hands, belt, animal relief and body, next to a 1.7 m person" width="80%"}
+
+## 1. Plan
+
+☐ Draw the **head** (the top of the T) and the **body**\
+☐ Add **arms** down the sides and **hands** that meet in front\
+☐ Add a **belt**\
+☐ Add **two or three animals** as reliefs. Choose animals that say something about our class.
+
+## 2. Draw your pillar
+
+Draw the side view. Label: **head**, **body**, **arms**, **hands**, **belt** and each **animal**.
+
+{{< drawing-box label="My T-pillar, side view" >}}
+
+{{< pagebreak >}}
+
+## 3. Explain
+
+**a.** Which animals did you choose, and what do they say about our class?
+
+{{< lines 3 >}}
+
+**b.** You have no metal and no machines. How will you cut your pillar out of the {{< vocab "quarry" zh=true >}}? (Think: flint, natural layers in the rock.)
+
+{{< lines 3 >}}
+
+**c.** Your pillar weighs 10 tonnes. How will you move it 500 m to the building, and how many people do you need?
+
+{{< lines 3 >}}
+
+::: {.content-visible when-profile="teacher"}
+::: {.callout-note title="Answer key"}
+**a.** Any animal with a reason. **b.** Cut grooves around the pillar shape with flint picks, down to a natural crack between rock layers, then lift it out with wooden beams and wedges. **c.** Ropes, wooden rollers or a sledge, a smooth or wet track, levers, ramps. Recent tests suggest about 7 to 14 people with ropes could move a pillar; accept any reasoned number.
+:::
+:::

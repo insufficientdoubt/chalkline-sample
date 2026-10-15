@@ -1,0 +1,27 @@
+---
+title: "Unit 3: Göbekli Tepe"
+short-title: "Unit 3 · Göbekli Tepe"
+unit: 3
+format: html
+description: "The oldest known monument in the world: giant carved stones raised by hunter-gatherers 11,500 years ago, and how archaeologists use evidence to work out what it was."
+objectives:
+  - I can say where and when Göbekli Tepe was built, and how old it is compared with Greece and Rome.
+  - I can describe the T-pillars, the enclosures and the animal carvings.
+  - I can explain how hunter-gatherers could cut and move huge stones without metal tools.
+  - I can tell evidence from a guess, and explain why archaeologists changed their minds about Göbekli Tepe.
+listing:
+  contents: "*.qmd"
+  type: table
+  fields: [title, type, description]
+  field-display-names:
+    type: Type
+  sort: "order"
+  filter-ui: false
+  sort-ui: false
+---
+
+{{< objectives >}}
+
+{{< packet >}}
+
+## Materials
