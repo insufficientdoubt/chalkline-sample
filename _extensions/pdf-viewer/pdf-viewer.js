@@ -77,6 +77,7 @@ const ICONS = {
   big: '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
   open: '<path d="M14 4h6v6M20 4L10 14"/><path d="M18 14v6H4V6h6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  download: '<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>',
   text: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
   zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6M10.5 7.5v6"/>',
   zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6"/>',
@@ -386,7 +387,7 @@ class Viewer {
     const nav = el("div", "pdfv-bar");
     nav.append(this.prev, this.count, this.next, zoomBar(this), el("span", "pdfv-title", this.title),
       button("big", "Open large", () => popup.open(this.url, this.title, this.n)),
-      openLink(() => this.url));
+      downloadButton(() => this.url), openLink(() => this.url));
     root.replaceChildren(...(root.dataset.ink === "false" ? [] : [penBar(this)]), this.stage, nav);
   }
   async start() {
@@ -406,7 +407,93 @@ class Viewer {
 }
 
 function openLink(getUrl) {
-  return button("open", "Open the PDF in a new tab", () => window.open(getUrl(), "_blank", "noopener"));
+  return button("open", "Open the PDF in a new tab", () => window.open(getUrl(), "_blank", "noopener"), "pdfv-openlink");
+}
+
+function downloadButton(getUrl) {
+  const b = button("download", "Download the PDF with your ink", async () => {
+    b.disabled = true;
+    try { await downloadWithInk(getUrl()); } catch (e) {
+      console.warn("pdf-viewer: download", e);
+      alert("Sorry, this PDF couldn't be saved with the ink: " + e.message);
+    }
+    b.disabled = false;
+  });
+  return b;
+}
+
+// ---- Download: the PDF with the ink added to its pages, made in the browser by pdf-lib (MIT,
+// pdf-lib.esm.min.js), which loads only when someone presses Download. Lines stay lines and
+// typed English stays text; typed text the PDF fonts can't show (Chinese) goes in as a picture. ----
+
+const hex = (c, lib) => lib.rgb(parseInt(c.slice(1, 3), 16) / 255, parseInt(c.slice(3, 5), 16) / 255, parseInt(c.slice(5, 7), 16) / 255);
+
+async function downloadWithInk(url) {
+  const lib = await import("./pdf-lib.esm.min.js");
+  const bytes = await (await fetch(url)).arrayBuffer();
+  const pdf = await lib.PDFDocument.load(bytes, { ignoreEncryption: true });
+  const font = await pdf.embedFont(lib.StandardFonts.HelveticaBold);
+  const pages = pdf.getPages();
+  for (let i = 0; i < pages.length; i++) {
+    const strokes = readInk(url, i + 1);
+    if (strokes.length) await inkOnPage(pdf, pages[i], strokes, font, lib);
+  }
+  const blob = new Blob([await pdf.save()], { type: "application/pdf" });
+  const a = el("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = decodeURIComponent(new URL(url).pathname.split("/").pop()).replace(/\.pdf$/i, "") + "-annotated.pdf";
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+}
+
+// The ink is stored as fractions of the page as shown (pdf.js shows the crop box, turned by the page's
+// rotation). Draw it in "shown" points: start at the shown top-left corner, turn with the page, y down.
+async function inkOnPage(pdf, page, strokes, font, lib) {
+  const box = page.getCropBox(), rot = ((page.getRotation().angle % 360) + 360) % 360;
+  const W = rot % 180 ? box.height : box.width, H = rot % 180 ? box.width : box.height;
+  const [ox, oy] = { 0: [box.x, box.y + box.height], 90: [box.x, box.y], 180: [box.x + box.width, box.y],
+                     270: [box.x + box.width, box.y + box.height] }[rot] || [box.x, box.y + box.height];
+  const t = rot * Math.PI / 180, cos = Math.cos(t), sin = Math.sin(t);
+  const at = (u, v) => ({ x: ox + u * cos + v * sin, y: oy + u * sin - v * cos });   // shown point -> PDF point
+  page.pushOperators(lib.pushGraphicsState(), lib.setLineJoin(lib.LineJoinStyle.Round));
+  for (const s of strokes) {
+    if (s.s != null) {   // typed text
+      const size = s.f * W, x = s.p[0] * W, y = s.p[1] * H;
+      let fits = true;
+      try { font.encodeText(s.s); } catch (e) { fits = false; }
+      if (fits) {
+        page.drawText(s.s, { ...at(x, y + font.heightAtSize(size, { descender: false })), size, font,
+                             color: hex(s.c, lib), rotate: lib.degrees(rot) });
+      } else {
+        const png = await pdf.embedPng(textPicture(s.s, s.c, size * 4));
+        const h = size * 1.25, w = h * png.width / png.height;
+        page.drawImage(png, { ...at(x, y + h), width: w, height: h, rotate: lib.degrees(rot) });
+      }
+      continue;
+    }
+    let path = "M" + (s.p[0] * W).toFixed(2) + " " + (s.p[1] * H).toFixed(2);
+    if (s.p.length === 2) path += "l0.01 0";   // a dot
+    for (let k = 2; k < s.p.length; k += 2) path += "L" + (s.p[k] * W).toFixed(2) + " " + (s.p[k + 1] * H).toFixed(2);
+    page.drawSvgPath(path, { ...at(0, 0), rotate: lib.degrees(rot), borderColor: hex(s.c, lib), borderWidth: s.w * W,
+                             borderOpacity: s.a || 1, borderLineCap: lib.LineCapStyle.Round });
+  }
+  page.pushOperators(lib.popGraphicsState());
+}
+
+// Typed text as a PNG, for letters the built-in PDF fonts don't have
+function textPicture(text, color, px) {
+  const c = el("canvas"), ctx = c.getContext("2d");
+  const font = "600 " + px + "px " + getComputedStyle(document.querySelector(".reveal") || document.body).fontFamily;
+  ctx.font = font;
+  c.width = Math.ceil(ctx.measureText(text).width) + 4;
+  c.height = Math.ceil(px * 1.25);
+  ctx.font = font;
+  ctx.fillStyle = color;
+  ctx.textBaseline = "top";
+  ctx.fillText(text, 2, px * 0.1);
+  return c.toDataURL("image/png");
 }
 
 // ---- Gallery: every page as a thumbnail ----
@@ -419,7 +506,7 @@ class Gallery {
     this.thumbs = [];
     const head = el("div", "pdfv-bar");
     this.count = el("span", "pdfv-count");
-    head.append(el("span", "pdfv-title", this.title), this.count, openLink(() => this.url));
+    head.append(el("span", "pdfv-title", this.title), this.count, downloadButton(() => this.url), openLink(() => this.url));
     root.replaceChildren(this.strip, head);
   }
   async start() {
@@ -462,6 +549,7 @@ const popup = {
     this.page = new PageView(null, this);
     this.stage.append(this.page.el);
     head.insertBefore(zoomBar(this), head.lastChild);
+    head.insertBefore(downloadButton(() => this.url), head.lastChild);
     const grip = el("div", "pdfv-grip");
     grip.title = "Drag to resize";
     root.append(head, penBar(this), this.stage, grip);

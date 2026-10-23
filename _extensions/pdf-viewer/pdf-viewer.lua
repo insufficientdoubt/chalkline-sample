@@ -24,6 +24,8 @@ when it is built, so it can be a PDF that the same render makes (a worksheet's o
 Pens: pen, highlighter, text (tap the page, type, Enter), eraser, undo and Clear. Ink stays on
 the page in this browser until Clear. Zoom: − 100% + (or Ctrl/⌘ + scroll, a trackpad pinch, and
 + − 0 in the large window); when zoomed in, scroll or drag to move around.
+⬇ downloads the PDF with the ink added (pdf-lib 1.17.1, pdf-lib.esm.min.js, MIT: LICENSE-pdf-lib.txt;
+it loads only when someone presses it).
 In other formats (PDF, Word) you get a plain link.
 ]]
 
@@ -51,7 +53,7 @@ return {
       version = "1.0.0",
       scripts = { { path = "pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
       stylesheets = { "pdf-viewer.css" },
-      resources = { "pdf.min.mjs", "pdf.worker.min.mjs" },
+      resources = { "pdf.min.mjs", "pdf.worker.min.mjs", "pdf-lib.esm.min.js" },
     })
     local prefer = str(meta and meta["pdf-viewer"] and meta["pdf-viewer"]["prefer"], nil)
     if prefer and str(kwargs["prefer"], "true") ~= "false" then
