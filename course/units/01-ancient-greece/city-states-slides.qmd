@@ -171,7 +171,7 @@ Ideas to look for: both were Greek city-states, spoke Greek, honored the same go
 ## Worksheet: Athens vs Sparta {#worksheet-on-a-slide}
 
 :::: {.columns}
-::: {.column width="36%"}
+::: {.column width="60%"}
 **Work with a partner.**
 
 1. Part 1: fill in the chart. Use the slides.
@@ -179,7 +179,7 @@ Ideas to look for: both were Greek city-states, spoke Greek, honored the same go
 3. Part 3: circle the people who could {{< vocab "vote" >}}.
 4. Part 4: give **two** reasons.
 :::
-::: {.column width="64%"}
+::: {.column width="40%"}
 {{< pdf-viewer "athens-vs-sparta.pdf" title="Athens vs Sparta" >}}
 :::
 ::::
