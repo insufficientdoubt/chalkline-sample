@@ -1,0 +1,88 @@
+---
+title: "Garden Times Tables!"
+subtitle: "Solve the garden sums, then color the garden in!"
+type: worksheet
+description: "A playful, kid-friendly worksheet with a nature theme: 12 times-table facts with flower numbers, three garden story problems with room to draw, and a garden to color. Handwriting fonts and line-art doodles (layout: playful, playful-theme: nature). Change the seed for a new version. Teacher copy has answers."
+order: 7
+audience: [teacher, student, parent]
+doc-type: Worksheet
+name-box: true
+layout: playful
+playful-theme: nature
+format:
+  html: default
+  typst: default
+resources:
+  - fonts/*
+---
+
+```{python}
+#| output: asis
+# Change SEED for a new set of problems (the answer key changes with it).
+SEED = 3
+import sys; sys.path.append("course/units/04-stem")
+from playful import facts, stories, facts_typst, stories_typst, facts_html, stories_html, WEB
+fact_list, story_list = facts(SEED), stories(SEED)
+print(WEB)
+```
+
+```{=typst}
+#grid(columns: (1fr, auto), column-gutter: 12pt, align: horizon,
+  [*Ready, set, multiply!* Write each answer in the dashed box.],
+  grid(columns: 2, column-gutter: 6pt, align: bottom, doodle("bee", width: 0.85in), doodle("flower", width: 0.6in)))
+#v(4pt)
+```
+
+::: {.content-visible when-format="html"}
+[**Ready, set, multiply!** Write each answer in the dashed box.]{.pl .nature}
+:::
+
+```{python}
+#| output: asis
+print(facts_typst(fact_list))
+print(facts_html(fact_list))
+```
+
+```{=typst}
+#v(1fr)
+#align(center, grid(columns: 5, column-gutter: 18pt, align: bottom,
+  doodle("flower", width: 0.6in), doodle("butterfly", width: 0.85in), doodle("flower", width: 0.6in), doodle("mushroom", width: 0.7in), doodle("flower", width: 0.6in)))
+#align(center, text(size: 13pt, fill: rgb("#5b6b80"))[Color a flower petal for every answer you got right!])
+```
+
+{{< pagebreak >}}
+
+# Garden stories
+
+```{python}
+#| output: asis
+print(stories_typst(story_list))
+print(stories_html(story_list))
+```
+
+```{=typst}
+#v(1fr)
+#grid(columns: (1fr, auto), column-gutter: 16pt, align: horizon,
+  [#text(font: playful-round, size: 20pt, weight: 700, fill: rgb("#2c6e33"))[All done?] \
+   Color in the garden! \
+   Name the bee: #box(width: 1.1in, stroke: (bottom: 1.3pt + rgb("#1F2933")))[#v(1.1em)]],
+  grid(columns: 4, column-gutter: 6pt, align: bottom,
+    doodle("flower", width: 0.55in),
+    doodle("tree", width: 1.6in),
+    stack(spacing: 10pt, doodle("butterfly", width: 0.85in), align(center, doodle("ladybug", width: 0.55in))),
+    stack(spacing: 14pt, doodle("bee", width: 0.75in), doodle("mushroom", width: 0.75in))))
+```
+
+::: {.content-visible when-profile="teacher"}
+{{< pagebreak >}}
+
+# Answer key
+
+```{python}
+#| output: asis
+print(facts_typst(fact_list, answers=True))
+print(facts_html(fact_list, answers=True))
+print(stories_typst(story_list, answers=True))
+print(stories_html(story_list, answers=True))
+```
+:::
