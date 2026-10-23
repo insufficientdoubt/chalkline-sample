@@ -33,7 +33,7 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< trivia unit=1 >}}                  word: {{< snowman "Parthenon" hint="..." image="..." >}}.
                                          Your own Jeopardy and quick-fire questions: a ::: div
                                          (see filter.lua). Options: tiles=16 (picture-reveal),
-                                         rows=4 (jeopardy), count=5 seconds=10 title="..." (trivia).
+                                         rows=4 teams=2 (jeopardy), count=5 seconds=10 title="..." (trivia).
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
 ]]
@@ -396,6 +396,7 @@ return {
     if not quarto.doc.is_format("revealjs") then return games.placeholder("Jeopardy") end
     local c = game_config({}, kwargs, "jeopardy")
     c.rows = tonumber(str(kwargs["rows"], "4")) or 4
+    c.teams = tonumber(str(kwargs["teams"], "2")) or 2   -- 2 to 4 teams take turns; teams=0: no teams
     return games.div("jeopardy", c)
   end,
 

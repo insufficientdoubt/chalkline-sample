@@ -4,6 +4,7 @@ this file turns them into the right thing for each output format.
 
 Slides (reveal.js):
   - adds the corner clock to every deck (turn off with `clock: false`)
+  - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
@@ -79,7 +80,8 @@ end
 --   - **People**
 --     - ...
 --   :::
--- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values.
+-- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values;
+-- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
 
 local function list_items(blocks)
@@ -110,7 +112,8 @@ local function game_from_div(el)
     end
     local points = {}
     for n in (el.attributes["points"] or ""):gmatch("%d+") do table.insert(points, tonumber(n)) end
-    return games.div("jeopardy", { categories = categories, points = points, random = false })
+    return games.div("jeopardy", { categories = categories, points = points, random = false,
+      teams = tonumber(el.attributes["teams"] or "2") or 2 })
   end
   local questions = {}
   for _, item in ipairs(list_items(el.content)) do table.insert(questions, clue(item)) end
@@ -145,6 +148,10 @@ local function Meta(meta)
   local clock = meta.clock
   local off = clock ~= nil and pandoc.utils.stringify(clock) == "false"
   if quarto.doc.is_format("revealjs") and not off then include_once("clock.html") end
+  -- Slides: a ↓ when a slide has another below it (turn off with `down-arrow: false`).
+  local down = meta["down-arrow"]
+  local down_off = down ~= nil and pandoc.utils.stringify(down) == "false"
+  if quarto.doc.is_format("revealjs") and not down_off then include_once("down-arrow.html") end
   -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"

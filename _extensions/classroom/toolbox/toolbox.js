@@ -876,6 +876,60 @@
       menu.append(h("button", { class: "ct-menu-item ct-menu-close", text: "Close all",
         onclick: function () { Object.keys(open).forEach(closeTool); toggleMenu(false); } }));
     }
+    menu.append(h("button", { class: "ct-menu-item ct-menu-reset", onclick: function () { toggleMenu(false); showReset(); } },
+      h("span", { class: "ct-menu-icon", text: "↺" }), h("span", { text: "Reset for the next class…" })));
+  }
+
+  /* ---------------- Reset for the next class ----------------
+     Starts this deck's games, polls and timers again (and, if ticked, clears the pen marks on its
+     PDFs and the toolbox scores). Each part listens for the "chalkline:reset" event and resets
+     itself; event.detail says which parts: { games, polls, timers, ink }. */
+
+  function showReset() {
+    const has = function (sel) { return !!document.querySelector(sel); };
+    const items = [
+      { key: "games", label: "Games: Snowman, Jeopardy, quick-fire…", on: true, show: has(".cg-game") },
+      { key: "polls", label: "Poll votes", on: true, show: has(".poll") },
+      { key: "timers", label: "Timers", on: true, show: has(".countdown") },
+      { key: "ink", label: "Pen marks on this deck's PDFs (worksheets)", on: false, show: has(".pdfv") },
+      { key: "tools", label: "Toolbox: scores, noise count, stopwatch, picked names", on: false, show: true },
+      { key: "first", label: "Go back to the first slide", on: true, show: !!window.Reveal },
+    ].filter(function (i) { return i.show; });
+    const boxes = {};
+    const dialog = h("div", { class: "ct-reset", role: "dialog", "aria-label": "Reset for the next class" },
+      h("div", { class: "ct-reset-title", text: "Reset for the next class" }),
+      h("p", { class: "ct-reset-hint", text: "Start this deck again, fresh for a new class." }),
+      ...items.map(function (i) {
+        boxes[i.key] = h("input", { type: "checkbox" });
+        boxes[i.key].checked = i.on;
+        return h("label", { class: "ct-reset-item" }, boxes[i.key], h("span", { text: i.label }));
+      }),
+      h("div", { class: "ct-foot" },
+        h("button", { class: "ct-btn ct-primary", text: "↺ Reset", onclick: function () {
+          const pick = {};
+          items.forEach(function (i) { pick[i.key] = boxes[i.key].checked; });
+          resetAll(pick);
+          close();
+        } }),
+        h("button", { class: "ct-btn", text: "Cancel", onclick: close })));
+    const shade = h("div", { class: "ct-shade", onclick: function (e) { if (e.target === shade) close(); } }, dialog);
+    function close() { shade.remove(); }
+    layer.append(shade);
+  }
+
+  function resetAll(pick) {
+    document.dispatchEvent(new CustomEvent("chalkline:reset", { detail: pick }));
+    if (pick.tools) {
+      const scores = load("scores", null);
+      if (scores) { scores.teams.forEach(function (t) { t.score = 0; }); save("scores", scores); }
+      save("noise-count", 0);
+      save("stopwatch", { since: 0, done: 0 });
+      const c = loadClasses();
+      c.classes.forEach(function (k) { k.picked = []; k.groups = null; });
+      save("classes", c);
+      ["scores", "noise-count", "stopwatch", "classes"].forEach(refreshTools);
+    }
+    if (pick.first && window.Reveal) Reveal.slide(0, 0);
   }
   function toggleMenu(show) {
     menu.hidden = show === undefined ? !menu.hidden : !show;

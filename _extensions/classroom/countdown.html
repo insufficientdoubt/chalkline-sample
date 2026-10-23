@@ -153,6 +153,10 @@
     el.querySelector(".cd-reset").addEventListener("click", function () {
       stop(); left = total; full = total; paint();
     });
+    // The toolbox's "Reset for the next class".
+    document.addEventListener("chalkline:reset", function (e) {
+      if (e.detail && e.detail.timers) { stop(); left = total; full = total; paint(); }
+    });
     el.querySelector(".cd-add").addEventListener("click", function () {
       left += 60; full = Math.max(full, left);
       if (timer) endAt += 60000;

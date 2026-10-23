@@ -147,7 +147,7 @@
   text-align: center;
 }
 .reveal .cg-cell {
-  height: 88px;
+  height: 78px;
   border: 0;
   border-radius: 12px;
   background: var(--cg-navy);
@@ -190,6 +190,33 @@
 }
 .reveal .cg-clue .cg-btn { border-color: #fff; }
 .reveal .cg-clue .cg-btn.cg-primary { background: var(--cg-gold); border-color: var(--cg-gold); color: var(--cg-navy); }
+
+/* Jeopardy teams: the team whose turn it is is filled in and a little bigger. */
+.reveal .cg-teams { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding: 0 8px; }
+.reveal .cg-board-wrap { position: relative; }
+.reveal .cg-team {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 16px;
+  border: 3px solid var(--team);
+  border-radius: 14px;
+  background: #fff;
+  color: var(--team);
+  font-size: 22px;
+  font-weight: 700;
+  transition: transform 0.25s, background 0.25s, box-shadow 0.25s;
+}
+.reveal .cg-team.cg-turn { background: var(--team); color: #fff; transform: scale(1.04); box-shadow: 0 6px 18px rgba(0, 20, 60, 0.25); }
+.reveal .cg-team-score { font-family: var(--r-heading-font, inherit); font-size: 30px; font-weight: 800; }
+.reveal .cg-team-tools { display: flex; gap: 6px; }
+.reveal .cg-btn.cg-small { padding: 4px 12px; font-size: 18px; border-width: 2px; }
+.reveal .cg-clue.cg-team-card { box-shadow: inset 0 0 0 8px var(--team); }
+.reveal .cg-winner { font-size: 56px; color: var(--cg-gold); }
+.reveal .cg-final { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.reveal .cg-final-team { padding: 4px 18px; border-radius: 999px; background: var(--team); color: #fff; font-size: 26px; font-weight: 700; }
 
 /* ---- Quick-fire ---- */
 .reveal .cg-quiz-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }

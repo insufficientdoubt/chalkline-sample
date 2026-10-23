@@ -65,6 +65,27 @@ function writeInk(url, n, strokes) {
   for (const view of pageViews) if (view.url === url && view.n === n) view.drawInk();
 }
 
+// The classroom toolbox's "Reset for the next class" (with "pen marks" ticked) clears the ink on
+// every page of the PDFs this deck shows, not only the pages on screen.
+document.addEventListener("chalkline:reset", (e) => {
+  if (!e.detail || !e.detail.ink) return;
+  const prefixes = new Set([...pageViews].map((v) => STORE + new URL(v.url).pathname + "#"));
+  for (const el of document.querySelectorAll(".pdfv")) {   // viewers on slides not shown yet
+    for (const src of [el.dataset.src, el.dataset.prefer]) {
+      if (src) prefixes.add(STORE + new URL(src, location.href).pathname + "#");
+    }
+  }
+  const mine = (key) => [...prefixes].some((p) => key.startsWith(p));
+  for (const key of [...inkMemory.keys()]) if (mine(key)) inkMemory.set(key, []);
+  try {
+    for (let i = localStorage.length - 1; i >= 0; i--) {
+      const key = localStorage.key(i);
+      if (key && mine(key)) localStorage.removeItem(key);
+    }
+  } catch (err) { /* blocked: memory is cleared */ }
+  for (const view of pageViews) view.drawInk();
+});
+
 // ---- Icons (simple line drawings, so they match on every computer) ----
 
 const ICONS = {

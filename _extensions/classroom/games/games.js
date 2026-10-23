@@ -179,6 +179,7 @@
       return true;
     } });
     start();
+    return start;   // reset: a fresh game (a new word if it's random)
   }
 
   /* ---------------- Picture reveal ---------------- */
@@ -226,6 +227,7 @@
       cheer();
     }
     start();
+    return start;
   }
 
   /* ---------------- Jeopardy ---------------- */
@@ -258,10 +260,42 @@
     });
   }
 
+  // Teams (2 to 4, or teams=0 for none) take turns: the team whose turn it is chooses a square,
+  // answers, and the teacher marks it right (the points go to that team) or wrong (no points).
+  // Either way the turn passes to the next team. Tap a team to give it the turn.
+  const TEAM_COLORS = ["#0087ff", "#ff8c0f", "#2e9e4f", "#7b4fc9"];
+
   function jeopardy(root, cfg) {
+    const useTeams = cfg.teams !== 0;
+    let teams = [], turn = 0, cells = 0, used = 0;
+    const bar = h("div", { class: "cg-teams" });
     const board = h("div", { class: "cg-board" });
     const card = h("div", { class: "cg-clue", hidden: true });
-    root.append(board, card, cfg.random ? h("div", { class: "cg-tools" }, button("🔀 New board", start, "cg-new")) : "");
+    root.append(useTeams ? bar : "", h("div", { class: "cg-board-wrap" }, board, card),   // the clue covers the board, not the teams
+      !useTeams && cfg.random ? h("div", { class: "cg-tools" }, button("🔀 New board", start, "cg-new")) : "");
+
+    function setTeams(n) {
+      n = Math.max(2, Math.min(4, n));
+      while (teams.length < n) teams.push({ name: "Team " + (teams.length + 1), score: 0 });
+      teams.length = n;
+      turn = turn % n;
+      paintTeams();
+    }
+    function paintTeams() {
+      if (!useTeams) return;
+      bar.textContent = "";
+      const top = Math.max.apply(null, teams.map(function (t) { return t.score; }));
+      teams.forEach(function (t, i) {
+        bar.append(h("button", { class: "cg-team" + (i === turn ? " cg-turn" : ""), style: "--team:" + TEAM_COLORS[i],
+          title: "Give this team the turn", onclick: function () { turn = i; paintTeams(); } },
+          h("span", { class: "cg-team-name", text: (i === turn ? "▶ " : "") + t.name + (top > 0 && t.score === top ? " 👑" : "") }),
+          h("span", { class: "cg-team-score", text: t.score })));
+      });
+      bar.append(h("span", { class: "cg-team-tools" },
+        h("button", { class: "cg-btn cg-small", text: "−", title: "Fewer teams", onclick: function () { setTeams(teams.length - 1); } }),
+        h("button", { class: "cg-btn cg-small", text: "+", title: "More teams", onclick: function () { setTeams(teams.length + 1); } }),
+        cfg.random ? button("🔀", start, "cg-new cg-small") : ""));
+    }
     function start() {
       const cats = cfg.random ? vocabBoard(list(cfg.words), cfg.rows) : list(cfg.categories);
       const rows = Math.max.apply(null, cats.map(function (c) { return list(c.clues).length; }).concat([0]));
@@ -269,29 +303,71 @@
       board.textContent = "";
       board.style.setProperty("--cols", Math.max(cats.length, 1));
       cats.forEach(function (c, i) { board.append(h("div", { class: "cg-cat", style: "--cat:" + COLORS[i % COLORS.length], text: c.name })); });
+      cells = 0; used = 0;
       for (let r = 0; r < rows; r++) {
         cats.forEach(function (c, i) {
           const clue = list(c.clues)[r];
           const value = points[r] || (r + 1) * 100;
+          if (clue) cells++;
           board.append(clue
             ? h("button", { class: "cg-cell", style: "--cat:" + COLORS[i % COLORS.length], text: value,
-                onclick: function (e) { e.currentTarget.classList.add("cg-done"); open(c.name, value, clue); } })
+                onclick: function (e) { open(e.currentTarget, c.name, value, clue); } })
             : h("div", { class: "cg-cell cg-empty" }));
         });
       }
+      teams.forEach(function (t) { t.score = 0; });
+      turn = 0;
       card.hidden = true;
+      paintTeams();
     }
-    function open(cat, value, clue) {
+    function open(cell, cat, value, clue) {
+      const team = teams[turn];
       const answer = h("div", { class: "cg-clue-answer", hidden: true, text: clue.a });
-      const show = button("Show the answer", function () { answer.hidden = false; show.hidden = true; cheer(); }, "cg-primary");
+      const marking = h("div", { class: "cg-tools", hidden: true },
+        button("✓ Right  +" + value, function () { done(cell, true, value); }, "cg-right-btn"),
+        button("✗ Wrong", function () { done(cell, false, value); }, "cg-wrong-btn"));
+      const tools = h("div", { class: "cg-tools" });
+      const show = button("Show the answer", function () {
+        answer.hidden = false; show.hidden = true; cheer();
+        if (useTeams) { marking.hidden = false; tools.hidden = true; }
+        else cell.classList.add("cg-done");
+      }, "cg-primary");
+      tools.append(show, button("Back to the board", function () { card.hidden = true; }));
       card.textContent = "";
-      card.append(h("div", { class: "cg-clue-head", text: cat + " · " + value }),
+      card.style.setProperty("--team", useTeams ? TEAM_COLORS[turn] : "transparent");
+      card.append(h("div", { class: "cg-clue-head", text: (useTeams ? team.name + " · " : "") + cat + " · " + value }),
         clue.image ? h("img", { class: "cg-clue-img", src: clue.image, alt: "" }) : "",
-        h("div", { class: "cg-clue-q", text: clue.q }), answer,
-        h("div", { class: "cg-tools" }, show, button("Back to the board", function () { card.hidden = true; })));
+        h("div", { class: "cg-clue-q", text: clue.q }), answer, tools, marking);
+      card.classList.toggle("cg-team-card", useTeams);
       card.hidden = false;
     }
+    function done(cell, right, value) {
+      if (!cell.classList.contains("cg-done")) used++;
+      cell.classList.add("cg-done");
+      if (right) { teams[turn].score += value; beep(880, 0.15, 0.12); } else beep(196, 0.25, 0.12);
+      turn = (turn + 1) % teams.length;
+      card.hidden = true;
+      paintTeams();
+      if (used >= cells) finish();
+    }
+    function finish() {
+      const top = Math.max.apply(null, teams.map(function (t) { return t.score; }));
+      const winners = teams.filter(function (t) { return t.score === top; });
+      card.textContent = "";
+      card.style.setProperty("--team", winners.length === 1 ? TEAM_COLORS[teams.indexOf(winners[0])] : "#ffc61a");
+      card.append(h("div", { class: "cg-clue-head", text: "Game over" }),
+        h("div", { class: "cg-clue-q cg-winner", text: winners.length === 1 ? winners[0].name + " wins! 🏆" : "It's a tie! 🤝" }),
+        h("div", { class: "cg-final" }, ...teams.map(function (t, i) {
+          return h("span", { class: "cg-final-team", style: "--team:" + TEAM_COLORS[i], text: t.name + ": " + t.score });
+        })),
+        h("div", { class: "cg-tools" }, button("Play again", start, "cg-primary"), button("Back to the board", function () { card.hidden = true; })));
+      card.classList.add("cg-team-card");
+      card.hidden = false;
+      cheer();
+    }
+    if (useTeams) setTeams(cfg.teams || 2);
     start();
+    return start;   // reset: scores to 0, turn to team 1, every square back (a new board if it's random)
   }
 
   /* ---------------- Quick-fire (trivia) ---------------- */
@@ -393,14 +469,20 @@
       if (right === qs.length) cheer();
     }
     begin(true);
+    return function () { begin(!!cfg.random); };   // reset: back to Start (new questions if random)
   }
 
   /* ---------------- Start every game on the page ---------------- */
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia };
+  const resets = [];
   document.querySelectorAll(".cg-game").forEach(function (el) {
     let cfg = {};
     try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
-    if (GAMES[el.dataset.game]) GAMES[el.dataset.game](el, cfg);
+    if (GAMES[el.dataset.game]) resets.push(GAMES[el.dataset.game](el, cfg));
+  });
+  // The toolbox's "Reset for the next class" starts every game in the deck again.
+  document.addEventListener("chalkline:reset", function (e) {
+    if (e.detail && e.detail.games) resets.forEach(function (r) { if (r) r(); });
   });
 })();

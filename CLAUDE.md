@@ -6,7 +6,8 @@
 - **Gloss key vocab:** on slides, write key words as `{{< vocab "democracy" >}}` (a pop-up with picture and 中文). On printables, use `{{< vocab "democracy" zh=true >}}` so the 中文 is printed too, except on quizzes and tests.
 - Write for middle-school English learners: short sentences, simple words, one idea per bullet.
 - Teacher-only content (answer keys, look-fors) goes inside `::: {.content-visible when-profile="teacher"}`.
-- Use original drawings or files with a clear license; credit outside sources in `course/links.yml`.
+- **Pictures:** use files with a clear license, or original drawings. Credit every outside picture in the `CREDITS.md` next to it (`images/CREDITS.md` in a unit, `vocab/images/CREDITS.md` for vocab). Outside *links* (websites, articles) go in `course/links.yml`.
+- **Vocab pictures: a real photo first, a drawing only when a photo can't show it.** When you add or replace a vocab word's picture, first look for a high-quality real image with an open license: Wikimedia Commons, Unsplash, Pexels, Openverse, or museum open-access collections (the Met, Smithsonian, Rijksmuseum). Most concrete words (temple, aqueduct, gladiator, quarry) are clearer and more memorable as a real photo. Make an original drawing only when no open image shows the idea clearly and distinctly: abstract ideas, or when the photos are blurry, busy or watermarked. The steps and quality checks are in `vocab/README.md` ("Pictures").
 
 ## Editing printables and slides
 

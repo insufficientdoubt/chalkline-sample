@@ -547,3 +547,28 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   .ct-plus { grid-area: plus; }
   .ct-foot { gap: 4px; padding: 4px 4px 0; font-size: 13px; }
 }
+
+/* ---- Reset for the next class ---- */
+.ct-menu-reset { margin-top: 4px; border-top: 1px solid rgba(0, 52, 119, 0.12); border-radius: 0 0 10px 10px; }
+.ct-shade {
+  position: fixed;
+  inset: 0;
+  z-index: 100001;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 20, 60, 0.35);
+}
+.ct-reset {
+  width: min(460px, 92vw);
+  padding: 22px 24px 18px;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 20, 60, 0.35);
+  font-size: 18px;
+}
+.ct-reset-title { font-size: 24px; font-weight: 700; }
+.ct-reset-hint { margin: 4px 0 12px; opacity: 0.75; }
+.ct-reset-item { display: flex; align-items: center; gap: 10px; padding: 7px 4px; border-radius: 8px; cursor: pointer; }
+.ct-reset-item:hover { background: rgba(0, 135, 255, 0.08); }
+.ct-reset-item input { width: 20px; height: 20px; accent-color: var(--ct-navy); }
+.ct-reset .ct-foot { justify-content: flex-end; padding: 14px 0 0; font-size: 18px; }
