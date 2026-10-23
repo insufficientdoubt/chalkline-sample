@@ -21,7 +21,9 @@ The viewer tries that file first and falls back to the one named in the shortcod
 
 The path is relative to this file, like a link. The PDF is loaded when the page is shown, not
 when it is built, so it can be a PDF that the same render makes (a worksheet's own PDF).
-Pens: pen, highlighter, eraser and Clear. Ink stays on the page in this browser until Clear.
+Pens: pen, highlighter, text (tap the page, type, Enter), eraser, undo and Clear. Ink stays on
+the page in this browser until Clear. Zoom: − 100% + (or Ctrl/⌘ + scroll, a trackpad pinch, and
++ − 0 in the large window); when zoomed in, scroll or drag to move around.
 In other formats (PDF, Word) you get a plain link.
 ]]
 
