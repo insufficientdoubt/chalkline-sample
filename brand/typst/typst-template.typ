@@ -200,8 +200,9 @@
 // ---- Playful kit (layout: playful): for younger students ---------------------------------------
 // Line-art doodles to color in, star number badges and roomy work boxes. Use them in a .qmd file:
 //   ```{=typst}
-//   #doodle("robot", width: 1.2in)     robot, pencil, star, gear, sun, cloud, sparkle
-//   #star-num(3)                       a star with a number in it
+//   #doodle("robot", width: 1.2in)     robot, pencil, star, gear, sun, cloud, sparkle, and for the
+//                                      nature theme: leaf, flower, tree, ladybug, butterfly, mushroom, bee, snail
+//   #star-num(3)  #flower-num(3)        a number in a star, or in a flower
 //   #work-box(height: 1.4in)[Draw it!] a dashed box with room to work
 //   ```
 // The doodles are simple outlines drawn for Chalkline (no outside artwork), white inside so they
@@ -216,6 +217,14 @@
   sun: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"80.0\" y1=\"50.0\" x2=\"94.0\" y2=\"50.0\"/><line x1=\"71.2\" y1=\"71.2\" x2=\"81.1\" y2=\"81.1\"/><line x1=\"50.0\" y1=\"80.0\" x2=\"50.0\" y2=\"94.0\"/><line x1=\"28.8\" y1=\"71.2\" x2=\"18.9\" y2=\"81.1\"/><line x1=\"20.0\" y1=\"50.0\" x2=\"6.0\" y2=\"50.0\"/><line x1=\"28.8\" y1=\"28.8\" x2=\"18.9\" y2=\"18.9\"/><line x1=\"50.0\" y1=\"20.0\" x2=\"50.0\" y2=\"6.0\"/><line x1=\"71.2\" y1=\"28.8\" x2=\"81.1\" y2=\"18.9\"/><circle cx=\"50\" cy=\"50\" r=\"22\"/><circle cx=\"42\" cy=\"46\" r=\"3\" fill=\"#1F2933\"/><circle cx=\"58\" cy=\"46\" r=\"3\" fill=\"#1F2933\"/><path d=\"M40 56 Q50 64 60 56\" fill=\"none\"/></svg>",
   cloud: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 80\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M28 68 A18 18 0 0 1 30 32 A26 26 0 0 1 78 22 A20 20 0 0 1 100 46 A16 16 0 0 1 96 68 Z\"/></svg>",
   sparkle: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 60 60\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M30 4 Q34 26 56 30 Q34 34 30 56 Q26 34 4 30 Q26 26 30 4 Z\"/></svg>",
+  leaf: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 88 C14 40 44 12 90 10 C88 58 60 86 12 88 Z\"/><path d=\"M12 88 L70 30\" fill=\"none\"/><path d=\"M36 64 L30 46 M50 50 L46 32 M36 64 L54 70 M50 50 L68 54\" fill=\"none\"/></svg>",
+  flower: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 124\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M50 62 L50 120\" fill=\"none\"/><path d=\"M50 100 C40 84 22 86 18 94 C28 104 44 104 50 100 Z\"/><path d=\"M50 88 C60 72 78 74 82 82 C72 92 56 92 50 88 Z\"/><circle cx=\"50.0\" cy=\"19.0\" r=\"14\"/><circle cx=\"68.2\" cy=\"29.5\" r=\"14\"/><circle cx=\"68.2\" cy=\"50.5\" r=\"14\"/><circle cx=\"50.0\" cy=\"61.0\" r=\"14\"/><circle cx=\"31.8\" cy=\"50.5\" r=\"14\"/><circle cx=\"31.8\" cy=\"29.5\" r=\"14\"/><circle cx=\"50\" cy=\"40\" r=\"13\"/><circle cx=\"45.2\" cy=\"39.4\" r=\"2.1\" fill=\"#1F2933\" stroke=\"none\"/><circle cx=\"54.8\" cy=\"39.4\" r=\"2.1\" fill=\"#1F2933\" stroke=\"none\"/><path d=\"M45.2 44.2 Q50 49.0 54.8 44.2\" fill=\"none\"/></svg>",
+  tree: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 144\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M50 142 L54 94 L66 94 L70 142 Z\"/><path d=\"M20 80 A20 20 0 0 1 26 46 A24 24 0 0 1 60 18 A24 24 0 0 1 96 44 A20 20 0 0 1 100 82 A18 18 0 0 1 80 98 L40 98 A18 18 0 0 1 20 80 Z\"/><path d=\"M34 58 q6 -7 12 0 M62 40 q6 -7 12 0 M74 70 q6 -7 12 0 M44 82 q6 -7 12 0\" fill=\"none\"/><path d=\"M54 120 L44 112 M66 112 L76 104\" fill=\"none\"/></svg>",
+  ladybug: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 96\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 50 L8 44 M18 66 L6 68 M24 80 L14 90 M80 50 L92 44 M82 66 L94 68 M76 80 L86 90\" fill=\"none\"/><path d=\"M44 12 Q38 2 30 4 M56 12 Q62 2 70 4\" fill=\"none\"/><ellipse cx=\"50\" cy=\"60\" rx=\"33\" ry=\"30\"/><circle cx=\"50\" cy=\"24\" r=\"14\"/><circle cx=\"45.8\" cy=\"22.6\" r=\"1.8\" fill=\"#1F2933\" stroke=\"none\"/><circle cx=\"54.2\" cy=\"22.6\" r=\"1.8\" fill=\"#1F2933\" stroke=\"none\"/><path d=\"M45.8 26.8 Q50 31.0 54.2 26.8\" fill=\"none\"/><path d=\"M50 38 L50 90\" fill=\"none\"/><circle cx=\"36\" cy=\"52\" r=\"6\" fill=\"#1F2933\"/><circle cx=\"64\" cy=\"52\" r=\"6\" fill=\"#1F2933\"/><circle cx=\"34\" cy=\"72\" r=\"5\" fill=\"#1F2933\"/><circle cx=\"66\" cy=\"72\" r=\"5\" fill=\"#1F2933\"/></svg>",
+  butterfly: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M58 46 C42 8 8 8 10 34 C12 54 40 56 58 50 Z\"/><path d=\"M62 46 C78 8 112 8 110 34 C108 54 80 56 62 50 Z\"/><path d=\"M58 56 C38 60 22 80 34 90 C46 98 56 76 58 62 Z\"/><path d=\"M62 56 C82 60 98 80 86 90 C74 98 64 76 62 62 Z\"/><circle cx=\"32\" cy=\"32\" r=\"7\"/><circle cx=\"88\" cy=\"32\" r=\"7\"/><circle cx=\"42\" cy=\"78\" r=\"5\"/><circle cx=\"78\" cy=\"78\" r=\"5\"/><path d=\"M56 30 Q46 12 40 10 M64 30 Q74 12 80 10\" fill=\"none\"/><rect x=\"55\" y=\"28\" width=\"10\" height=\"58\" rx=\"5\"/></svg>",
+  mushroom: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M36 58 C34 80 32 92 40 94 L60 94 C68 92 66 80 64 58 Z\"/><path d=\"M8 60 C8 24 92 24 92 60 Q50 70 8 60 Z\"/><circle cx=\"30\" cy=\"44\" r=\"6\"/><circle cx=\"52\" cy=\"36\" r=\"7\"/><circle cx=\"74\" cy=\"46\" r=\"6\"/><circle cx=\"45.8\" cy=\"74.6\" r=\"1.8\" fill=\"#1F2933\" stroke=\"none\"/><circle cx=\"54.2\" cy=\"74.6\" r=\"1.8\" fill=\"#1F2933\" stroke=\"none\"/><path d=\"M45.8 78.8 Q50 83.0 54.2 78.8\" fill=\"none\"/></svg>",
+  bee: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 112 92\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><ellipse cx=\"46\" cy=\"24\" rx=\"13\" ry=\"18\"/><ellipse cx=\"68\" cy=\"24\" rx=\"13\" ry=\"18\"/><path d=\"M90 56 L106 56 L92 64 Z\"/><ellipse cx=\"56\" cy=\"58\" rx=\"36\" ry=\"25\"/><path d=\"M54 34 Q48 58 54 82 M70 36 Q64 58 70 80\" fill=\"none\" stroke-width=\"7\"/><circle cx=\"29.2\" cy=\"54.4\" r=\"2.1\" fill=\"#1F2933\" stroke=\"none\"/><circle cx=\"38.8\" cy=\"54.4\" r=\"2.1\" fill=\"#1F2933\" stroke=\"none\"/><path d=\"M29.2 59.2 Q34 64.0 38.8 59.2\" fill=\"none\"/></svg>",
+  snail: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 124 92\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M92 72 L96 40 M96 40 L90 22 M96 40 L106 24\" fill=\"none\"/><circle cx=\"90\" cy=\"20\" r=\"4\" fill=\"#1F2933\"/><circle cx=\"107\" cy=\"22\" r=\"4\" fill=\"#1F2933\"/><path d=\"M6 84 Q8 72 22 72 L102 72 Q116 74 112 84 Z\"/><circle cx=\"52\" cy=\"46\" r=\"30\"/><path d=\"M52 46 a5 5 0 1 1 6 4 a11 11 0 1 1 -14 -12 a17 17 0 1 1 22 20\" fill=\"none\"/></svg>",
 )
 #let doodle(name, width: 1in) = image(bytes(doodle-svg.at(name)), format: "svg", width: width)
 #let star-num(n, size: 30pt, fill: rgb("#ffe08a")) = box(width: size, height: size, {
@@ -226,6 +235,16 @@
   })
   place(polygon(fill: fill, stroke: (paint: rgb("#1F2933"), thickness: 1.4pt, join: "round"), ..pts))
   place(center + horizon, dy: 1.5pt, text(font: playful-round, size: size * 0.4, weight: 700, fill: rgb("#1F2933"))[#n])
+})
+#let flower-num(n, size: 32pt, fill: rgb("#ffc9de")) = box(width: size, height: size, {
+  let ink = rgb("#1F2933")
+  for i in range(6) {
+    let a = -90deg + i * 60deg
+    place(dx: size / 2 + size * 0.27 * calc.cos(a) - size * 0.19, dy: size / 2 + size * 0.27 * calc.sin(a) - size * 0.19,
+      circle(radius: size * 0.19, fill: fill, stroke: 1.3pt + ink))
+  }
+  place(center + horizon, circle(radius: size * 0.21, fill: rgb("#fff3b0"), stroke: 1.3pt + ink))
+  place(center + horizon, text(font: playful-round, size: size * 0.32, weight: 700, fill: ink)[#n])
 })
 #let work-box(height: 1.2in, body) = block(width: 100%, height: height, inset: 10pt, radius: 14pt,
   stroke: (paint: rgb("#8a97a8"), thickness: 1.5pt, dash: "dashed"), body)
@@ -247,6 +266,7 @@
   layout: none,           // "poster" for posters; "playful" for younger students; anything else is a worksheet
   poster-theme: none,     // "dark" for a navy poster with white text
   poster-title: true,     // false: don't print the title (when a big quote is the headline)
+  playful-theme: none,    // layout: playful only: "nature" for green leafy frames (none: blue)
   poster-center: false,   // true: center the content vertically
   doc,
 ) = {
@@ -310,6 +330,11 @@
   // a big Name line, and room to work. Teacher copies still get the orange corner tab.
   } else if layout == "playful" {
     let k = brand-colors(colors)
+    let nature = playful-theme == "nature"
+    let line-color = if nature { rgb("#3f8f46") } else { k.blue.lighten(30%) }   // the inner dashed frame
+    let title-fill = if nature { rgb("#eaf6e3") } else { k.sky }
+    let title-ink = if nature { rgb("#2c6e33") } else { navy }
+    let mark = if nature { "leaf" } else { "sparkle" }                            // beside each heading
     let tab = if is-teacher {
       place(top + right, dx: -0.42in, dy: 0.42in,
         block(fill: orange, inset: (x: 12pt, y: 6pt), radius: (bottom-left: 10pt, top-right: 14pt))[
@@ -322,7 +347,11 @@
         rect(width: 100% - 0.64in, height: 100% - 0.64in, radius: 22pt, stroke: 2.4pt + ink))
       place(top + left, dx: 0.42in, dy: 0.42in,
         rect(width: 100% - 0.84in, height: 100% - 0.84in, radius: 16pt,
-          stroke: (paint: k.blue.lighten(30%), thickness: 1.2pt, dash: "dashed")))
+          stroke: (paint: line-color, thickness: 1.2pt, dash: "dashed")))
+      if nature {   // leaves tucked into two corners of the frame
+        place(top + left, dx: 0.16in, dy: 0.12in, rotate(-25deg, doodle("leaf", width: 0.5in)))
+        place(bottom + right, dx: -0.14in, dy: -0.12in, rotate(160deg, doodle("leaf", width: 0.5in)))
+      }
       tab
     }
     set page(
@@ -337,24 +366,24 @@
     )
     set text(font: playful-hand, size: 15pt, fill: ink)
     set par(leading: 0.65em, spacing: 1em)
-    show heading: set text(font: playful-round, fill: navy, weight: 700)
+    show heading: set text(font: playful-round, fill: title-ink, weight: 700)
     show heading.where(level: 1): it => block(above: 1.1em, below: 0.6em, sticky: true)[
-      #box(baseline: 20%, doodle("sparkle", width: 16pt)) #h(4pt) #text(size: 1.3em, it.body)]
+      #box(baseline: 20%, doodle(mark, width: 18pt)) #h(4pt) #text(size: 1.3em, it.body)]
     show heading.where(level: 2): it => block(above: 0.9em, below: 0.5em, sticky: true, text(size: 1.1em, it.body))
-    show strong: set text(fill: navy)
+    show strong: set text(fill: title-ink)
 
     // the title, in a dashed cloud-shaped box, and the Name line
-    block(width: 100%, fill: k.sky, radius: 30pt, inset: (x: 20pt, y: 12pt),
-      stroke: (paint: navy, thickness: 2pt, dash: "dashed"))[
+    block(width: 100%, fill: title-fill, radius: 30pt, inset: (x: 20pt, y: 12pt),
+      stroke: (paint: title-ink, thickness: 2pt, dash: "dashed"))[
       #set text(font: playful-round)
-      #text(size: 26pt, weight: 700, fill: navy)[#title]
-      #if subtitle != none { linebreak(); text(size: 13pt, fill: navy.lighten(15%))[#subtitle] }
+      #text(size: 26pt, weight: 700, fill: title-ink)[#title]
+      #if subtitle != none { linebreak(); text(size: 13pt, fill: title-ink.lighten(15%))[#subtitle] }
     ]
     if name-box {
       v(4pt)
       grid(columns: (auto, 1fr, auto, 0.55fr), column-gutter: 8pt, align: bottom,
-        text(font: playful-round, size: 14pt, fill: navy)[Name:], line(length: 100%, stroke: 1.3pt + ink),
-        text(font: playful-round, size: 14pt, fill: navy)[Date:], line(length: 100%, stroke: 1.3pt + ink))
+        text(font: playful-round, size: 14pt, fill: title-ink)[Name:], line(length: 100%, stroke: 1.3pt + ink),
+        text(font: playful-round, size: 14pt, fill: title-ink)[Date:], line(length: 100%, stroke: 1.3pt + ink))
     }
     v(6pt)
     doc

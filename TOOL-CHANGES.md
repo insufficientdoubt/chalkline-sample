@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: A nature theme for playful worksheets
+- **Asked for:** "Give the playful worksheet a nature theme."
+- **Why:** not given.
+- **Changed:** `brand/typst/typst-template.typ`: `playful-theme: nature` (a green frame and title, leaves in two corners of the frame and beside headings), eight more doodles to color (leaf, flower, tree, ladybug, butterfly, mushroom, bee, snail) and `flower-num()` (a number in a flower). `brand/typst/typst-show.typ`: passes `playful-theme` through. `brand/README.md` and README updated. The example worksheet became `course/units/04-stem/garden-times-tables.qmd` ("Garden Times Tables!", garden story problems, a garden to color).
+- **Who it helps:** probably every Chalkline course with younger students.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: A playful worksheet layout for younger students
 - **Asked for:** worksheets that look "more like" Teachers Pay Teachers primary worksheets: "a certain kind of chalky style", "little line drawings that can be colored", "lots of space for the kids to work", "handwritten style fonts". "Make a playful worksheet. I want to see what it would look like as something more kid friendly."
 - **Why:** to make printables more child friendly than the clean, professional worksheet style.
