@@ -22,6 +22,8 @@ listing:
     page-size: 200
 ---
 
+:::: {.overview}
+
 ```{python}
 #| output: asis
 import sys; sys.path.append("scripts")
@@ -50,7 +52,7 @@ print(markdown_learning())
 :::
 
 ::: {.content-hidden when-profile="parent"}
-Every slide deck, printable and poster for the course, **by unit** below. The **Everything** tab has a search box and filters (type, unit, source) on the right; **By type** groups them by kind. The sidebar search looks inside every page. Inside any page, use the previous/next buttons at the bottom to flip through.
+[Every slide deck, printable and poster for the course, **by unit** below. The **Everything** tab has a search box and filters (type, unit, source) on the right; **By type** groups them by kind. The sidebar search looks inside every page. Inside any page, use the previous/next buttons at the bottom to flip through.]{.ov-intro}
 
 ::: {.panel-tabset}
 
@@ -76,3 +78,21 @@ print(markdown_by_type())
 :::
 
 :::
+
+::::
+
+```{=html}
+<script>
+// The Categories filter (right margin) filters the Everything tab only: show it on that tab.
+document.addEventListener("DOMContentLoaded", function () {
+  const tabs = document.querySelector(".overview .panel-tabset");
+  if (!tabs) return;   // the family site has no tabs: the list and its filter are always shown
+  function update() {
+    const on = tabs.querySelector(".nav-link.active");
+    document.body.classList.toggle("ov-filters-off", !on || on.textContent.trim() !== "Everything");
+  }
+  tabs.addEventListener("shown.bs.tab", update);
+  update();
+});
+</script>
+```

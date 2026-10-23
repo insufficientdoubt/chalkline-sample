@@ -40,6 +40,7 @@ Also importable from .qmd files:
 import json
 import os
 import re
+from html import escape
 from pathlib import Path
 
 import yaml
@@ -222,30 +223,33 @@ def load_catalog():
     packets = load_packets()
     teacher = "teacher" in os.environ.get("QUARTO_PROFILE", "").split(",")
 
-    def packet_row(title, pdf, description, unit, order, audience, rank):
-        return {"title": title, "path": pdf, "pdf": pdf, "description": description, "type": "Packet",
-                "unit": unit, "source": "School", "formats": "PDF", "audience": audience, "_sort": (order, 0, rank, "")}
+    def packet_row(title, pdf, description, unit, order, audience, rank, edition=None):
+        row = {"title": title, "path": pdf, "pdf": pdf, "description": description, "type": "Packet",
+               "unit": unit, "source": "School", "formats": "PDF", "audience": audience, "_sort": (order, 0, rank, "")}
+        if edition:   # "teacher" or "student": the overview marks them with a key or a backpack
+            row["edition"] = edition
+        return row
 
     everyone = ["teacher", "student", "parent"]
     for p in packets:
         if teacher:   # the teacher site has both: the teacher edition first, then the student copy
-            items.append(packet_row(f"🔑 {p['short']} · Teacher edition", teacher_copy(p["pdf"]),
+            items.append(packet_row(f"{p['short']} · Teacher edition", teacher_copy(p["pdf"]),
                                     f"Every printable for {p['title']}, WITH answer keys and teacher notes. For you.",
-                                    p["short"], p["order"], ["teacher"], 0))
-            items.append(packet_row(f"🎒 {p['short']} · Student copy", p["pdf"],
+                                    p["short"], p["order"], ["teacher"], 0, "teacher"))
+            items.append(packet_row(f"{p['short']} · Student copy", p["pdf"],
                                     f"Every printable for {p['title']}, without answer keys. Print this for class.",
-                                    p["short"], p["order"], everyone, 1))
+                                    p["short"], p["order"], everyone, 1, "student"))
         else:
             items.append(packet_row(f"{p['short']} packet", p["pdf"],
                                     f"Every printable for {p['title']} in one PDF, in order.",
                                     p["short"], p["order"], everyone, 0))
     if packets and teacher:
-        items.append(packet_row("🔑 Year packet · Teacher edition", teacher_copy(YEAR_PACKET),
+        items.append(packet_row("Year packet · Teacher edition", teacher_copy(YEAR_PACKET),
                                 "Every unit packet in one PDF, WITH answer keys and teacher notes.",
-                                YEAR_GROUP[0], YEAR_GROUP[1], ["teacher"], 0))
-        items.append(packet_row("🎒 Year packet · Student copy", YEAR_PACKET,
+                                YEAR_GROUP[0], YEAR_GROUP[1], ["teacher"], 0, "teacher"))
+        items.append(packet_row("Year packet · Student copy", YEAR_PACKET,
                                 "Every unit packet in one PDF, without answer keys.",
-                                YEAR_GROUP[0], YEAR_GROUP[1], everyone, 1))
+                                YEAR_GROUP[0], YEAR_GROUP[1], everyone, 1, "student"))
     elif packets:
         items.append(packet_row("Year packet: every unit", YEAR_PACKET, "Every unit packet in one PDF, in unit order.",
                                 YEAR_GROUP[0], YEAR_GROUP[1], everyone, 0))
@@ -307,23 +311,84 @@ if __name__ == "__main__":
 
 
 # ---------------------------------------------------------------------------
-# Markdown builders for the overview page (print from a cell marked  #| output: asis)
+# Builders for the overview page (print from a cell marked  #| output: asis).
+# They write HTML: a card for each unit, a row for each document, line icons instead of emoji.
+# The look is in brand/styles.scss ("Overview"), with the same design values as the classroom tools.
 # ---------------------------------------------------------------------------
 
-def _row(item):
-    title = f"[{item['title']}]({item['path']})"
-    links = []
-    if item["pdf"]:
-        links.append(f"[PDF]({item['pdf']})")
-    source = "[School]{.badge .badge-school}" if item["source"] == "School" else f"[{item['source']}]{{.badge .badge-official}}"
-    kind = f"[{item['type']}]{{.badge .badge-type}}"
-    return f"| {kind} | {title} | {item['description']} | {' '.join(links)} | {source} |"
+ICONS = {  # Lucide line icons (ISC licence: _extensions/classroom/ui/LUCIDE-LICENSE.txt), drawn inline
+    "presentation": '<path d="M2 3h20" /> <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" /> <path d="m7 21 5-5 5 5" />',
+    "file-pen-line": '<path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" /> <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /> <path d="M8 18h1" />',
+    "list-checks": '<path d="m3 17 2 2 4-4" /> <path d="m3 7 2 2 4-4" /> <path d="M13 6h8" /> <path d="M13 12h8" /> <path d="M13 18h8" />',
+    "newspaper": '<path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2" /> <path d="M18 14h-8" /> <path d="M15 18h-5" /> <path d="M10 6h8v4h-8V6Z" />',
+    "book-open": '<path d="M12 7v14" /> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />',
+    "image": '<rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />',
+    "languages": '<path d="m5 8 6 6" /> <path d="m4 14 6-6 2-3" /> <path d="M2 5h12" /> <path d="M7 2h1" /> <path d="m22 22-5-10-5 10" /> <path d="M14 18h6" />',
+    "package": '<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7" /> <path d="m7.5 4.27 9 5.15" />',
+    "key-round": '<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /> <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />',
+    "backpack": '<path d="M4 10a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /> <path d="M8 10h8" /> <path d="M8 18h8" /> <path d="M8 22v-6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v6" /> <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2" />',
+    "file-down": '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" /> <path d="M14 2v4a2 2 0 0 0 2 2h4" /> <path d="M12 18v-6" /> <path d="m9 15 3 3 3-3" />',
+    "external-link": '<path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />',
+    "calendar-days": '<path d="M8 2v4" /> <path d="M16 2v4" /> <rect width="18" height="18" x="3" y="4" rx="2" /> <path d="M3 10h18" /> <path d="M8 14h.01" /> <path d="M12 14h.01" /> <path d="M16 14h.01" /> <path d="M8 18h.01" /> <path d="M12 18h.01" /> <path d="M16 18h.01" />',
+}
+
+TYPE_ICONS = {"Packet": "package", "Slides": "presentation", "Worksheet": "file-pen-line",
+              "Checklist": "list-checks", "Handout": "newspaper", "Poster": "image",
+              "Reference": "book-open", "Vocab": "languages"}
+EDITIONS = {"teacher": ("key-round", "Teacher edition"), "student": ("backpack", "Student copy")}
+YEAR_DESCRIPTION = "For the whole course: every unit packet in one PDF, review games for any unit, and more."
 
 
-def _table(items):
-    lines = ["| Type | Title | What it is | Print | Source |", "|---|---|---|---|---|"]
-    lines += [_row(i) for i in items]
-    return "\n".join(lines) + "\n"
+def _icon(name):
+    return ('<svg class="ov-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" '
+            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONS[name]}</svg>')
+
+
+def _html(s):
+    """Raw HTML in the page (Pandoc would otherwise read the indentation as code)."""
+    return "\n```{=html}\n" + s + "\n```\n"
+
+
+def _outside(item):
+    return item["path"].startswith(("http://", "https://"))
+
+
+def _link(item, cls, inner):
+    extra = ' target="_blank" rel="noopener"' if _outside(item) else ""
+    return f'<a class="{cls}" href="{escape(item["path"])}"{extra}>{inner}</a>'
+
+
+def _item(item, show_unit=False):
+    """One document: its icon, title and description, then what it is and a PDF button."""
+    kind = item["type"]
+    icon = EDITIONS[item["edition"]][0] if item.get("edition") else TYPE_ICONS.get(kind, "book-open")
+    label = escape(item["unit"] if show_unit else kind)
+    acts = []
+    if _outside(item):
+        acts.append(_link(item, "ov-source", escape(item["source"]) + _icon("external-link")))
+    elif item["pdf"] and item["pdf"] != item["path"]:
+        acts.append(f'<a class="ov-btn" href="{escape(item["pdf"])}" title="Download the PDF">{_icon("file-down")}PDF</a>')
+    return (f'<li class="ov-item ov-t-{kind.lower()}">'
+            f'<span class="ov-badge">{_icon(icon)}</span>'
+            f'<span class="ov-main">{_link(item, "ov-title", escape(item["title"]))}'
+            f'<span class="ov-desc">{escape(item["description"])}</span></span>'
+            f'<span class="ov-kind">{label}</span>'
+            f'<span class="ov-acts">{"".join(acts)}</span></li>')
+
+
+def _packet_button(item):
+    edition = item.get("edition")
+    icon, text = EDITIONS[edition] if edition else ("package", "Unit packet")
+    cls = "ov-pack ov-pack-teacher" if edition == "teacher" else "ov-pack"
+    return (f'<a class="{cls}" href="{escape(item["pdf"])}" title="{escape(item["description"])}">'
+            f'{_icon(icon)}<span>{text}<small>PDF</small></span></a>')
+
+
+def _number(unit):
+    n = unit.get("number") if unit else None
+    if n:
+        return f'<span class="ov-num">{n}</span>'
+    return f'<span class="ov-num ov-num-icon">{_icon("book-open" if unit else "calendar-days")}</span>'
 
 
 def built_catalog():
@@ -343,11 +408,15 @@ def markdown_by_unit():
         group = [i for i in items if i["unit"] == name]
         if not group:
             continue
-        heading = f"[{unit['title']}]({unit['path']})" if unit else name
-        out.append(f"### {heading}\n")
-        if unit and unit["description"]:
-            out.append(f"{unit['description']}\n")
-        out.append(_table(group))
+        packets = [i for i in group if i["type"] == "Packet"]
+        rest = [i for i in group if i["type"] != "Packet"]
+        title = f'<a href="{escape(unit["path"])}">{escape(unit["title"])}</a>' if unit else escape(name)
+        about = unit["description"] if unit else YEAR_DESCRIPTION
+        head = (f'<header class="ov-unit-head">{_number(unit)}'
+                f'<div class="ov-unit-text"><h3>{title}</h3><p>{escape(about)}</p></div>'
+                f'<div class="ov-packs">{"".join(_packet_button(p) for p in packets)}</div></header>')
+        rows = f'<ul class="ov-list">{"".join(_item(i) for i in rest)}</ul>' if rest else ""
+        out.append(_html(f'<section class="ov-unit">{head}{rows}</section>'))
     return "\n".join(out)
 
 
@@ -357,8 +426,10 @@ def markdown_by_type():
     for label, _ in sorted(TYPES.values(), key=lambda t: t[1]):
         group = [i for i in items if i["type"] == label]
         if group:
-            out.append(f"### {label}\n")
-            out.append(_table(group))
+            head = (f'<header class="ov-type-head ov-t-{label.lower()}"><span class="ov-badge">{_icon(TYPE_ICONS[label])}</span>'
+                    f'<h3>{label}</h3><span class="ov-count">{len(group)}</span></header>')
+            out.append(_html(f'<section class="ov-unit">{head}<ul class="ov-list">'
+                             + "".join(_item(i, show_unit=True) for i in group) + "</ul></section>"))
     return "\n".join(out)
 
 
@@ -366,8 +437,11 @@ def markdown_learning():
     """For families: each unit and its objectives, in order."""
     out = []
     for u in load_units():
-        out.append(f"**[{u['title']}]({u['path']})**  \n{u['description']}\n")
-        out += [f"- {o}" for o in u["objectives"]] + [""]
+        goals = "".join(f"<li>{escape(o)}</li>" for o in u["objectives"])
+        out.append(_html(f'<section class="ov-unit"><header class="ov-unit-head">{_number(u)}'
+                         f'<div class="ov-unit-text"><h3><a href="{escape(u["path"])}">{escape(u["title"])}</a></h3>'
+                         f'<p>{escape(u["description"])}</p></div></header>'
+                         + (f'<ul class="ov-goals">{goals}</ul>' if goals else "") + "</section>"))
     return "\n".join(out)
 
 
@@ -378,11 +452,15 @@ def markdown_season():
     today = datetime.date.today()
     upcoming = [e for e in season.get("events", []) if e["date"] >= today]
     # Optional keys: a course without teams or a game just leaves them out of season.yml.
-    first = " ".join(x for x in [f"**{season.get('name', '')}", f"{season.get('name_zh', '')}**"] if x.strip("*"))
+    name = " ".join(escape(x) for x in [season.get("name", ""), season.get("name_zh", "")] if x)
     rest = [season.get("season"), season.get("game"),
             f"Teams {season['team_numbers']}" if season.get("team_numbers") else None]
-    lines = [" · ".join([first] + [x for x in rest if x]) + "\n"]
-    if upcoming:   # ("%-d" for the day doesn't work on Windows, so the day number is added separately)
-        nxt = ", ".join(f"**{e['name']}** ({e['date']:%b} {e['date'].day}, {(e['date'] - today).days} days)" for e in upcoming[:2])
-        lines.append(f"Coming up: {nxt}\n")
-    return "\n".join(lines)
+    facts = "".join(f"<span>{escape(str(x))}</span>" for x in rest if x)
+    events = ""
+    for e in upcoming[:2]:   # ("%-d" for the day doesn't work on Windows, so the day number is added separately)
+        days = (e["date"] - today).days
+        when = "today" if days == 0 else "tomorrow" if days == 1 else f"in {days} days"
+        events += (f'<div class="ov-event">{_icon("calendar-days")}<span><b>{escape(e["name"])}</b>'
+                   f'<small>{e["date"]:%b} {e["date"].day} · {when}</small></span></div>')
+    events = f'<div class="ov-events"><span class="ov-events-label">Coming up</span>{events}</div>' if events else ""
+    return _html(f'<div class="ov-season"><div class="ov-season-name"><b>{name}</b>{facts}</div>{events}</div>')

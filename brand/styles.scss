@@ -247,3 +247,163 @@ a.btn[href$="-packet.pdf"]:hover { filter: brightness(0.95); color: var(--brand-
 tr.row-packet-teacher > td { background: #ffd9ad !important; }
 tr.row-packet-teacher .type-cell::before { content: "🔑 "; }
 tr.row-packet-student .type-cell::before { content: "🎒 "; }
+
+// ---- Overview (index.qmd; built by scripts/catalog.py) ------------------------
+// The same design values as the classroom tools (_extensions/classroom/ui/ui.css): white cards,
+// thin borders, line icons, one quiet color per type. No emoji.
+
+.overview {
+  --ov-ink: var(--ui-ink, #10233f);
+  --ov-muted: var(--ui-muted, #5b6b80);
+  --ov-line: var(--ui-line, #d6dee8);
+  --ov-soft: var(--ui-soft, #f3f5f8);
+  --ov-navy: var(--brand-navy, #003477);
+  --ov-shadow: 0 1px 2px rgba(16, 35, 63, 0.06);
+  color: var(--ov-ink);
+}
+.ov-icon { width: 1em; height: 1em; flex: none; vertical-align: -0.125em; }
+
+// One color per type: the icon's tile and nothing else
+.ov-t-packet { --t: #d97706; }
+.ov-t-slides { --t: #0a9396; }
+.ov-t-worksheet { --t: #0087ff; }
+.ov-t-checklist { --t: #23824a; }
+.ov-t-handout { --t: #7c5cdb; }
+.ov-t-poster { --t: #d6457a; }
+.ov-t-reference { --t: #4b6584; }
+.ov-t-vocab { --t: #c2410c; }
+
+// Season and the next events
+.ov-season {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem 1.5rem;
+  margin: 0 0 1.2rem;
+}
+.ov-season-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.8rem; font-size: 1.05rem; }
+.ov-season-name b { color: var(--ov-navy); font-size: 1.15em; }
+.ov-season-name span { color: var(--ov-muted); }
+.ov-events { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.ov-events-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ov-muted); margin-right: 0.2rem; }
+.ov-event {
+  display: flex; align-items: center; gap: 0.55rem; padding: 0.4rem 0.8rem 0.4rem 0.65rem;
+  border: 1px solid var(--ov-line); border-radius: 10px; background: #fff; box-shadow: var(--ov-shadow);
+  line-height: 1.2;
+  .ov-icon { font-size: 1.25rem; color: var(--brand-orange, #ff8c0f); }
+  b { display: block; font-weight: 600; }
+  small { color: var(--ov-muted); }
+}
+.ov-intro { color: var(--ov-muted); max-width: 52rem; }
+
+// Tabs: a segmented control (a grey track, the chosen tab raised in white)
+.overview .panel-tabset > .nav-tabs {
+  display: inline-flex; width: fit-content; gap: 2px; padding: 3px; margin-bottom: 1rem;
+  border: 0; border-radius: 10px; background: var(--ov-soft);
+  .nav-link {
+    border: 0; border-radius: 8px; padding: 0.35rem 1rem; color: var(--ov-muted); font-weight: 600;
+    &:hover { color: var(--ov-ink); }
+    &.active { background: #fff; color: var(--ov-navy); box-shadow: 0 1px 2px rgba(16, 35, 63, 0.12), 0 0 0 1px rgba(16, 35, 63, 0.06); }
+  }
+}
+.overview .panel-tabset .tab-content { border: 0; padding: 0; }
+
+// A unit: a card with its header (number, title, packet buttons) and its documents
+.ov-unit {
+  margin: 0 0 1.1rem; border: 1px solid var(--ov-line); border-radius: 14px; background: #fff;
+  box-shadow: var(--ov-shadow); overflow: hidden;
+}
+.ov-unit-head, .ov-type-head {
+  display: flex; align-items: center; gap: 0.9rem; padding: 0.9rem 1.1rem;
+  border-bottom: 1px solid var(--ov-line); background: linear-gradient(#fbfcfd, #f6f8fa);
+}
+.ov-unit-head:last-child { border-bottom: 0; }
+.ov-num {
+  flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px;
+  background: var(--ov-navy); color: #fff; font-weight: 700; font-size: 1.15rem;
+  .ov-icon { font-size: 1.2rem; }
+}
+.ov-num-icon { background: var(--brand-orange, #ff8c0f); }
+.ov-unit-text {
+  flex: 1; min-width: 0;
+  // reset the site's banded h3 so it reads as a card title
+  h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.2rem; line-height: 1.25; }
+  h3 a { color: var(--ov-navy); text-decoration: none; }
+  h3 a:hover { text-decoration: underline; }
+  p { margin: 0.15rem 0 0; color: var(--ov-muted); font-size: 0.92rem; }
+}
+.ov-type-head h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.1rem; color: var(--ov-navy); }
+.ov-count {
+  margin-left: -0.4rem; padding: 0 0.45rem; border-radius: 999px; background: var(--ov-soft);
+  color: var(--ov-muted); font-size: 0.78rem; font-weight: 700;
+}
+
+// Packet buttons in a unit's header: the teacher edition solid, the student copy outlined
+.ov-packs { flex: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem; }
+.ov-packs:empty { display: none; }
+.ov-pack {
+  display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem;
+  border: 1px solid var(--ov-line); border-radius: 8px; background: #fff; color: var(--ov-navy);
+  font-size: 0.88rem; font-weight: 600; text-decoration: none; line-height: 1.15; box-shadow: var(--ov-shadow);
+  .ov-icon { font-size: 1.05rem; color: #d97706; }
+  small { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ov-muted); }
+  &:hover { border-color: var(--ui-line-strong, #aebdd0); color: var(--ov-navy); }
+}
+.ov-pack-teacher {
+  background: var(--ov-navy); border-color: var(--ov-navy); color: #fff;
+  .ov-icon { color: var(--brand-orange, #ff8c0f); }
+  small { color: rgba(255, 255, 255, 0.75); }
+  &:hover { background: #0a4389; color: #fff; }
+}
+
+// A document: icon tile, title and description, what it is, PDF button
+.ov-list { list-style: none; margin: 0; padding: 0; }
+.ov-item {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) 7.5rem 5rem; align-items: center; gap: 0.3rem 0.9rem;
+  padding: 0.65rem 1.1rem; border-top: 1px solid #edf1f5;
+  &:first-child { border-top: 0; }
+  &:hover { background: #f8fafc; }
+}
+.ov-badge {
+  display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 8px;
+  color: var(--t, var(--ov-navy)); background: color-mix(in srgb, var(--t, #003477) 11%, #fff);
+  .ov-icon { font-size: 1.15rem; }
+}
+.ov-main { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
+.ov-title { font-weight: 600; color: var(--ov-ink); text-decoration: none; }
+.ov-title:hover { color: var(--brand-blue, #0087ff); text-decoration: underline; }
+.ov-desc { color: var(--ov-muted); font-size: 0.88rem; }
+.ov-kind { color: var(--ov-muted); font-size: 0.82rem; }
+.ov-acts { display: flex; justify-content: flex-end; }
+.ov-btn, .ov-source {
+  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.55rem; border: 1px solid var(--ov-line);
+  border-radius: 8px; background: #fff; color: var(--ov-navy); font-size: 0.8rem; font-weight: 600;
+  text-decoration: none; white-space: nowrap;
+  &:hover { border-color: var(--ui-line-strong, #aebdd0); background: var(--ui-focus-soft, #eaf4ff); color: var(--ov-navy); }
+}
+.ov-source { border-style: dashed; color: var(--ov-muted); .ov-icon { order: 1; } }
+
+// Families: each unit's goals
+.ov-goals {
+  margin: 0; padding: 0.7rem 1.1rem 0.8rem 2.6rem;
+  li { margin: 0.2rem 0; }
+  li::marker { color: #23824a; }
+}
+
+// The Categories filter works on the Everything tab only, so it shows only there (index.qmd's script)
+body.ov-filters-off #quarto-margin-sidebar .quarto-listing-category-title,
+body.ov-filters-off #quarto-margin-sidebar .quarto-listing-category { display: none; }
+
+// Everything tab: Quarto's table and filters, in the same quiet style
+.overview .quarto-listing-table {
+  border: 1px solid var(--ov-line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--ov-shadow);
+  thead th { background: #f6f8fa; color: var(--ov-muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--ov-line); }
+  td { border-color: #edf1f5; }
+}
+.overview tr.row-slides > td, .overview tr.row-packet > td, .overview tr.row-packet-teacher > td { background: none !important; box-shadow: none; }
+.overview tr .type-cell::before { content: none !important; }
+.overview tr .type-cell { font-weight: 600; }
+
+@media (max-width: 760px) {
+  .ov-unit-head { flex-wrap: wrap; }
+  .ov-packs { width: 100%; justify-content: flex-start; }
+  .ov-item { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .ov-kind { display: none; }
+}

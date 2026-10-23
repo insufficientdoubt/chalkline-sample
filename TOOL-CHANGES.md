@@ -8,6 +8,16 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: The overview in the new style
+- **Asked for:** "Rebuild the overview with the new styles."
+- **Why:** not given. (The overview still had the old look: tables, coloured rows and emoji, while the catalogue, tools and games now share one design.)
+- **Changed:**
+  - `scripts/catalog.py`: the overview builders write cards instead of tables. Each unit is a card with its number, title, description and packet buttons (Teacher edition solid, Student copy outlined). Each document is a row with a line icon for its type, its title and description, and a PDF button; outside links show their source with an outside-link icon. "By type" uses the same cards, "Coming up" shows each event as a small card, and the family site's unit goals are cards too. The Lucide icons are drawn inline (no script). The packet titles lose their 🔑/🎒 emoji (the overview shows a key or a backpack icon instead) and get an `edition` field.
+  - `brand/styles.scss`: a new "Overview" section with the same values as `ui.css` (white cards, thin borders, one quiet colour per type). The tabs are a segmented control. The Everything tab's table is restyled, without the coloured rows or emoji.
+  - `index.qmd`: the page is wrapped in `.overview`. A small script shows the Categories filter only on the Everything tab, where it works.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Traffic light shows its lights again
 - **Asked for:** "for a teacher tools the traffic light is broken right now."
 - **Why:** it was broken: the panel opened, but the lights had no shape or colour.
