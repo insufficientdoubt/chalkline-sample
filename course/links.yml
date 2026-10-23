@@ -47,3 +47,43 @@
   source: School
   audience: [teacher, student, parent]
   description: All 37 words from the three units, with pictures and Chinese.
+
+- title: PhET math simulations
+  url: https://phet.colorado.edu/en/simulations/filter?subjects=math
+  type: reference
+  unit: 04-stem
+  source: PhET
+  audience: [teacher, student]
+  description: Free interactive math simulations from the University of Colorado (graphing lines, fractions, area and more). Any of them can go on a slide.
+
+- title: GeoGebra
+  url: https://www.geogebra.org/
+  type: reference
+  unit: 04-stem
+  source: GeoGebra
+  audience: [teacher, student]
+  description: Free graphing, geometry and 3D apps, and thousands of ready-made activities made by teachers.
+
+- title: Blockly Games
+  url: https://blockly.games/
+  type: reference
+  unit: 04-stem
+  source: Google
+  audience: [teacher, student]
+  description: Free block-coding puzzles (Maze, Bird, Turtle, Music) that lead from blocks to JavaScript, at each student's own speed.
+
+- title: PMKS+ (linkage simulator)
+  url: https://pmksplus.com/
+  type: reference
+  unit: 04-stem
+  source: PMKS+
+  audience: [teacher, student]
+  description: Design and test planar linkages in the browser, with paths, speeds and forces.
+
+- title: MotionGen (linkage design)
+  url: https://motiongen.io/
+  type: reference
+  unit: 04-stem
+  source: MotionGen
+  audience: [teacher, student]
+  description: Draw linkages and make them follow a path you choose; free, on the web and on tablets.
