@@ -10,7 +10,13 @@ local function html_escape(s)
   return (s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
 
+-- Chalkline's design values (ui/ui.css), shared by the games and the toolbox (filter.lua).
+function M.ui()
+  quarto.doc.add_html_dependency({ name = "chalkline-ui", version = "1.0.0", stylesheets = { "ui/ui.css" } })
+end
+
 function M.div(kind, config)
+  M.ui()
   quarto.doc.add_html_dependency({
     name = "classroom-games",
     version = "1.0.0",

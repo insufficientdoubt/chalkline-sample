@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: One design for the tools, games and activities; line icons instead of emoji
+- **Asked for:** "go with option 1": after comparing the look with Shoelace and Bootstrap, use Chalkline's own design values and a free icon set, to lose the "vibe coded look".
+- **Why:** "I was thinking about the vibe coded look." In the test, the frameworks' controls were too small for a board, and Bootstrap clashed with reveal.js (it hid the deck and the tool windows); most of the casual look came from emoji icons and small inconsistencies.
+- **Changed:** `_extensions/classroom/ui/ui.css` (new): one set of colors, corners and shadows. `ui/icons.js` (new) and `LUCIDE-LICENSE.txt`: 20 Lucide line icons. `toolbox/toolbox.js`: the menu and the controls (close, check, bell, settings, reset, crown) use the icons; the voice levels keep their emoji (pictures for students). `toolbox.css`, `games/games.css`, `activities.css`, `timeline.css`: buttons, chips, word banks, menus, windows and right/wrong use the shared values. `filter.lua` and `games/games.lua`: load them. README credits and `brand/README.md` updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The clock starts beside the slide, not on it
 - **Asked for:** "move the clock default so it doesn't cover slide content"
 - **Why:** at the bottom left, it covered the bottom of full slides.

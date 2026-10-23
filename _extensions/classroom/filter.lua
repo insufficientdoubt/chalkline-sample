@@ -309,10 +309,14 @@ local function Meta(meta)
     local tags = {}
     if site ~= "" then tags["chalkline-qr-site"] = site end
     if off then tags["chalkline-clock"] = "off" end
+    games.ui()
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",
-      scripts = { { path = "toolbox/toolbox.js", afterBody = true } },
+      scripts = {   -- the icons first: the toolbox uses them as it starts
+        { path = "ui/icons.js", afterBody = true },
+        { path = "toolbox/toolbox.js", afterBody = true },
+      },
       stylesheets = { "toolbox/toolbox.css" },
       resources = { "toolbox/qrcode.js" },
       meta = next(tags) and tags or nil,
