@@ -16,6 +16,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: PDFs on slides (viewer and gallery, with pens), and the chalkboard
+- **Asked for:** "Teachers want to embed the worksheet PDF in the reveal.js presentation, so that they can have slides that show the workbook together with in-class instructions or resources." Two ways: a gallery of pages that opens a large popup (draggable, resizable), and a PDF on the slide with on-screen page controls. Both with ink for touch screens, kept until Clear. Plus an example of the built-in chalkboard.
+- **Why:** to show the worksheet next to in-class instructions, and write on it with the class.
+- **Changed:**
+  - `_extensions/pdf-viewer/` (new, a separate extension that works in any Quarto project): `{{< pdf-viewer "file.pdf" >}}` shortcode (`pdf-viewer.lua`); viewer, gallery, popup and pens (`pdf-viewer.js`, `pdf-viewer.css`); pdf.js 4.10.38, legacy build (`pdf.min.mjs`, `pdf.worker.min.mjs`, Apache-2.0, `LICENSE-pdfjs.txt`). The PDF loads when the slide is shown, so a deck can show a PDF made by the same build. Ink is saved per PDF page in the browser's localStorage. If the PDF isn't there (the family site), it says so.
+  - `scripts/slides_pdf.py`: waits for PDF viewers to finish drawing before printing a deck.
+  - `_extensions/classroom/clock.html`: in decks with the chalkboard on, the clock moves right so it doesn't cover the chalkboard buttons.
+  - `README.md`: the new shortcode and the chalkboard in the shortcuts table.
+- **Who it helps:** probably every Chalkline course. The `pdf-viewer` extension can be copied into any Quarto project.
+- **AI assistant:** Claude.
+
 ## 2026-10-15: Vocab pictures and diagrams for a third unit (Göbekli Tepe)
 - **Asked for:** "a new unit about that ancient site in Turkey … Göbekli Tepe … in the same style as the other two."
 - **Why:** not given.

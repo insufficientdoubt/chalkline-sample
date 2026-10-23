@@ -19,6 +19,8 @@
     pointer-events: none;
   }
   #slide-clock[hidden] { display: none; }
+  /* Decks with the chalkboard on have its two buttons here too: sit to their right. */
+  body:has(.slide-chalkboard-buttons) #slide-clock { left: 136px; }
   /* Hide in print/PDF export. */
   @media print { #slide-clock { display: none; } }
 </style>

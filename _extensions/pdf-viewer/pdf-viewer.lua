@@ -1,0 +1,58 @@
+--[[
+PDF viewer: show a PDF inside a slide or web page, drawn by pdf.js 4.10.38 (pdf.min.mjs and pdf.worker.min.mjs, Apache-2.0: LICENSE-pdfjs.txt).
+Works in any Quarto project: copy this folder into another project's _extensions/.
+
+  {{< pdf-viewer "worksheet.pdf" >}}                  one page at a time, with ‹ › buttons
+  {{< pdf-viewer "packet.pdf" layout="gallery" >}}    every page as a thumbnail; tap one to open
+                                                      it large, in a window you can drag and resize
+
+Options:
+  title="Athens vs Sparta"   the name shown in the toolbar (default: the file name)
+  page=2                     the page to start on (viewer)
+  height="560px"             how tall the viewer is (default: fills its slide column)
+  ink=false                  no pens (default: pens on, for touch screens)
+
+The path is relative to this file, like a link. The PDF is loaded when the page is shown, not
+when it is built, so it can be a PDF that the same render makes (a worksheet's own PDF).
+Pens: pen, highlighter, eraser and Clear. Ink stays on the page in this browser until Clear.
+In other formats (PDF, Word) you get a plain link.
+]]
+
+local function str(x, default)
+  if x == nil then return default end
+  local s = pandoc.utils.stringify(x)
+  if s == "" then return default end
+  return s
+end
+
+local function html_escape(s)
+  return (s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
+end
+
+return {
+  ["pdf-viewer"] = function(args, kwargs)
+    local file = str(args[1], nil)
+    if not file then return pandoc.Null() end
+    local title = str(kwargs["title"], file:match("[^/]+$"))
+    if not quarto.doc.is_format("html") then   -- revealjs counts as html
+      return pandoc.Para({ pandoc.Link({ pandoc.Str("📄 " .. title .. " (PDF)") }, file) })
+    end
+    quarto.doc.add_html_dependency({
+      name = "pdf-viewer",
+      version = "1.0.0",
+      scripts = { { path = "pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
+      stylesheets = { "pdf-viewer.css" },
+      resources = { "pdf.min.mjs", "pdf.worker.min.mjs" },
+    })
+    local layout = str(kwargs["layout"], "viewer") == "gallery" and "gallery" or "viewer"
+    local height = str(kwargs["height"], nil)
+    local style = height and (' style="height:' .. html_escape(height) .. '"') or ""
+    return pandoc.RawBlock("html",
+      '<div class="pdfv pdfv-' .. layout .. '" data-src="' .. html_escape(file) ..
+      '" data-title="' .. html_escape(title) .. '" data-layout="' .. layout ..
+      '" data-page="' .. html_escape(str(kwargs["page"], "1")) ..
+      '" data-ink="' .. (str(kwargs["ink"], "true") == "false" and "false" or "true") ..
+      '" data-prevent-swipe data-pending' .. style .. '>' ..
+      '<a class="pdfv-fallback" href="' .. html_escape(file) .. '">📄 ' .. html_escape(title) .. ' (PDF)</a></div>')
+  end,
+}
