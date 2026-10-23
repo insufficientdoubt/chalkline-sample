@@ -16,6 +16,8 @@ function M.div(kind, config)
     version = "1.0.0",
     scripts = { { path = "games/games.js", afterBody = true } },   -- paths are from _extensions/classroom/
     stylesheets = { "games/games.css" },
+    -- Bingo makes its printable cards in the browser with pdf-lib (the PDF viewer's copy; MIT).
+    resources = { "../pdf-viewer/pdf-lib.esm.min.js" },
   })
   return pandoc.RawBlock("html", '<div class="cg-game cg-' .. kind .. '" data-game="' .. kind ..
     '" data-config="' .. html_escape(quarto.json.encode(config)) .. '" data-prevent-swipe></div>')

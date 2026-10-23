@@ -16,6 +16,22 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Word scramble, Sort it, and Bingo with cards made on demand
+- **Asked for:** "add bingo and sort it. Figure out where bingo would live because the process for that is a little different. The teacher would not do that live in class they would prepare it ahead of time and print the cards. Add word scramble." Then, on bingo: "Bingo cards should not be generated at build time ... Can we just use that [the PDF library] to generate printable PDF cards on demand? ... the teacher could reuse the game without regenerating the site. Change the number of cards the number of items etc."
+- **Why:** more review games. Bingo needs paper cards, prepared before class.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: three new games.
+    - **Word scramble:** tap or type the mixed-up letters in order.
+    - **Sort it:** a word bank and 2–3 groups; tap a word, then its group; Check; from the vocab, by topic (one unit) or by unit (several).
+    - **Bingo**, in two steps. *Make cards*: grid 3–5, free square, number of cards; a PDF made in the browser by pdf-lib when the teacher presses Download (nothing at build time). *Call*: one meaning at a time; check a card by its number for a full line. A game code (unit-grid-free-number) printed on every card makes the same cards again with a repeatable random generator, so any card can be checked on any computer; the game and the words called are saved in the browser.
+    - The Review games page lists nine games in a full-width row, with the unit menu under it.
+  - `games.css`: styles for the three games and the two-row header. `games.lua`: ships `../pdf-viewer/pdf-lib.esm.min.js` next to `games.js`.
+  - `shortcodes.lua`: `{{< scramble >}}`, `{{< sort >}}`, `{{< bingo >}}`; vocab game settings carry the unit list. `filter.lua`: `::: {.sort}` (groups in bold, words under them).
+  - `scripts/vocab_terms.py`: each term's topic (its `subdomain`), for Sort it.
+  - `README.md`; the Greek Word Games deck (Scramble, Sort it and Bingo sections); the Start-here slide. `IDEAS.md` (new): the game ideas not built yet (Heads up / Taboo, Spin the wheel and others), and next steps for Bingo.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The calm style for every game; Matching and Memory
 - **Asked for:** "apply the calmer style to the game slides too. Oh and let's add a matching game, and memory (the card flipping game)."
 - **Why:** to match the Review games page; two more classic review games.

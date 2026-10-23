@@ -80,6 +80,9 @@ end
 --   - **People**
 --     - ...
 --   :::
+--   ::: {.sort}                           groups to sort into, like jeopardy: each group in bold,
+--   - **Athens**                            its words under it (no |)
+--     - democracy
 --   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
 --   - democracy | Citizens vote on laws
 --   :::
@@ -118,6 +121,15 @@ local function game_from_div(el)
     return games.div("jeopardy", { categories = categories, points = points, random = false,
       teams = tonumber(el.attributes["teams"] or "2") or 2 })
   end
+  if el.classes:includes("sort") then   -- groups in bold, their words under them
+    local groups = {}
+    for _, item in ipairs(list_items(el.content)) do
+      local items = {}
+      for _, c in ipairs(list_items(item)) do table.insert(items, pandoc.utils.stringify(c)) end
+      table.insert(groups, { name = item[1] and pandoc.utils.stringify(item[1]) or "", items = items })
+    end
+    return games.div("sort", { groups = groups, random = false })
+  end
   local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
   if kind then
     local pairs = {}
@@ -131,7 +143,7 @@ local function game_from_div(el)
 end
 
 local function Div(el)
-  for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory" }) do
+  for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it" }) do
     if el.classes:includes(cls) then
       if quarto.doc.is_format("revealjs") then return game_from_div(el) end
       return games.placeholder(name)

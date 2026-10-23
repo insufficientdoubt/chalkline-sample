@@ -262,7 +262,7 @@ Open windows, where they are, the scores, the class lists and the settings are r
 
 ## Slide games
 
-Six review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
+Nine review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
 
 To put a game in your own slides, see them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
@@ -273,6 +273,9 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 | 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. The scores are under the board: tap a team's **name** to rename it, its **score** to change it, or anywhere else on it to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
 | 🔗 **Matching** | Words on the left, their meanings (or pictures) on the right, mixed up. Tap a word, then its partner: a right pair locks in, in its own color; a wrong pair shakes. It counts the tries. |
 | 🃏 **Memory** | Cards face down: each word and its picture (or meaning). Turn over two; a pair stays face up, the others turn back. It counts the turns. |
+| 🔤 **Word scramble** | The letters of a word, mixed up. Tap them (or type them) in order; tap a placed letter, or press Backspace, to take it back. **Hint**, **Mix again**, **Show the word**. Words as for Snowman. |
+| 🗂️ **Sort it** | A word bank and 2 or 3 groups. Tap a word, then its group; **Check** colors each word green or red. From the vocab list, one unit's words sort into their topics (geography, government…) and words from several units into their units. |
+| 🎱 **Bingo** | Two steps. **Make cards** (before class): choose the grid (3 × 3 to 5 × 5), a free middle square and the number of cards, then **Download the cards**: a PDF made right there in the browser, two cards on each page, every card different. **Call** (in class): **Next** shows a meaning and its picture; students cross out the word. Type a card's number and **Check** to see whether it really has a full line. A **game code** printed on every card (like `1-3F-7365`) makes the same cards again, on any computer, so you can check cards printed last week; type it into the Call step to bring that game back. Nothing is made when the site is built. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:
@@ -307,7 +310,20 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 :::
 ```
 
-Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game).
+Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game). Sort it is written like Jeopardy, without the `|`: each group in **bold**, its words under it:
+
+```markdown
+::: {.sort}
+- **Athens**
+  - Democracy
+  - Plays and theater
+- **Sparta**
+  - Two kings
+  - Boys trained as soldiers
+:::
+```
+
+`{{< scramble >}}` takes words like `{{< snowman >}}`; `{{< sort unit=1 >}}` and `{{< bingo unit=1 >}}` use a unit's vocab (or every word, with no `unit`). More game ideas, not built yet: `IDEAS.md`.
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
 

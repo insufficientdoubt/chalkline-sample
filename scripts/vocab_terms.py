@@ -5,7 +5,7 @@ match the vocab list. Picture and link paths are relative to the site root; the 
 adds the "../" a page needs.
 
 Each term also gets the units whose word list (course/vocab/*.yml) has it, and its example
-sentence, for the slide games ({{< snowman unit=1 >}} and the others). "units" lists each
+sentence and topic, for the slide games ({{< snowman unit=1 >}} and the others). "units" lists each
 unit's number and title, for the Review games page.
 
 Writes:
@@ -51,6 +51,7 @@ def main():
                 "image": "vocab/images/" + r["image"] if r["image"] else "",
                 "url": "vocab/app/#id=" + r["id"],
                 "example": r["example"],
+                "topic": r["subdomain"].replace("-", " ").capitalize(),   # "daily-life" -> "Daily life" (Sort it groups)
                 "units": units.get(r["term_en"].strip().lower(), []),
             })
     OUT.parent.mkdir(exist_ok=True)
