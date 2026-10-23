@@ -46,6 +46,7 @@ Press **Lift**, or drag the **Lift** slider. Point out:
 - The claw (and the yellow cube) **stays level** the whole time: the two blue bars are a parallelogram.
 - The pink dotted line is the claw's path: an **arc**. The claw moves forward, then back, as it goes up. Ask: *why could that be a problem near a goal?*
 - Change the **bar length**: longer bars lift higher, but need more motor power (or rubber bands to help).
+- **Robot length** (back to front) is measured along the floor, now and at its **widest in the full swing** (the orange "widest" mark). Set the red **size limit** to your competition's rule: a lift can start inside the limit and still swing past it. The 4-bar is widest when its bars are level.
 :::
 
 ## The 6-bar lift {#six-bar-lift}
@@ -58,7 +59,7 @@ Two 4-bars that **share a bar**: 6 bars in all (count them with the class: tower
 - The first 4-bar's **top bar is twice as long** (purple). It keeps going and becomes the second 4-bar's bottom bar.
 - The first 4-bar's **end bar is extra tall** (green). It crosses the purple bar (the X) and is the "tower" for the second 4-bar's top bar (orange).
 
-Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with the same bars, and the claw stays level. But it also reaches **further forward** as it goes up: on a small robot, it can tip over. Lower it all the way: that folded shape is how VEX shows it.
+Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with the same bars, and the claw stays level. But it also reaches **further forward** as it goes up: on a small robot, it can tip over. Lower it all the way: that folded shape is how VEX shows it. Check the **robot length**: with the same bars, the 6-bar swings much wider than the 4-bar, so it's the first to break a size limit.
 :::
 
 ## The DR4B: straight up {#dr4b}
@@ -68,7 +69,7 @@ Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with t
 ::: notes
 **DR4B** = double reverse four-bar. The top 4-bar tilts the **other way**, so the sideways movements cancel out and the claw goes **straight up** ("Claw moves forward: 0 cm"). The purple arrow and the box at the top right show the **extension**: how far the claw has gone up from its lowest point. The ruler on the left is in cm.
 
-Ask: *Make the bars longer: how does the extension change?* (Each stage adds about bar length × the change in height, so two stages double it.) Real DR4Bs use rubber bands to help hold the weight up.
+Ask: *Make the bars longer: how does the extension change?* (Each stage adds about bar length × the change in height, so two stages double it.) Real DR4Bs use rubber bands to help hold the weight up. Compare the **robot length** with the other two: the DR4B is widest when it's folded down, and gets *narrower* as it lifts, so it stays inside a size limit easily.
 :::
 
 ## Lift words

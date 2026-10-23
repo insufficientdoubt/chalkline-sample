@@ -8,11 +8,14 @@
 <style>
   .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 250px; gap: 10px; }
   svg { width: 100%; height: 100%; min-height: 0; border: 1px solid var(--line); border-radius: var(--r); background: #fbfcfe; }
-  .panel { display: flex; flex-direction: column; gap: 8px; padding: 10px; overflow: auto; }
-  .big { font-size: 30px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .panel { display: flex; flex-direction: column; gap: 6px; padding: 8px; overflow: auto; font-size: 15px; }
+  .big { font-size: 25px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .stat { padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
   .stat small { display: block; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
   .ok { color: var(--ok); font-weight: 700; }
+  .over { border-color: var(--bad); background: #fbecec; }
+  #widest { display: block; font-size: 15px; }
+  .over .big, .bad { color: var(--bad); font-weight: 700; }
   label.row { display: grid; gap: 2px; font-weight: 600; }
   #about { font-size: 15px; }
 </style>
@@ -29,9 +32,10 @@
     <svg id="svg" viewBox="0 0 900 600" aria-label="A robot lift"></svg>
     <div class="panel box">
       <div class="stat"><small id="heightLabel">Extension</small><span class="big" id="ext"></span></div>
-      <div class="stat"><small>Claw height off the floor</small><span id="height"></span></div>
-      <div class="stat"><small>Claw moves forward</small><span id="reach"></span></div>
-      <div class="stat"><small>Claw angle</small><span class="ok">Always level ✓</span></div>
+      <div class="stat"><small>The claw</small>Height off the floor: <b id="height"></b><br>Moves forward: <b id="reach"></b></div>
+      <div class="stat" id="lengthBox"><small>Robot length (back to front)</small><span class="big" id="length"></span>
+        <span id="widest"></span></div>
+      <label class="row">Size limit: <span id="limitV"></span><input type="range" id="limit" min="35" max="90" value="55"></label>
       <label class="row">Lift <input type="range" id="lift" min="0" max="100" value="0"></label>
       <label class="row">Bar length: <span id="lenV"></span><input type="range" id="len" min="15" max="40" value="25"></label>
       <div id="about" class="note"></div>
@@ -69,7 +73,8 @@
   }
   el("line", { x1: 40, x2: 40, y1: GROUND, y2: GROUND - 65 * SCALE, stroke: "#8a97a8", "stroke-width": 1.5 });
   el("text", { x: 34, y: GROUND - 65 * SCALE - 10, "font-size": 14, fill: "#5b6b80" }).textContent = "cm";
-  el("rect", { x: TOWER_X - 110, y: GROUND - 6 * SCALE, width: 260, height: 4 * SCALE, rx: 6, fill: "#c3ccd8" });
+  const BACK = TOWER_X - 110, BASE_W = 260;   // the robot's base: its back edge and length
+  el("rect", { x: BACK, y: GROUND - 6 * SCALE, width: BASE_W, height: 4 * SCALE, rx: 6, fill: "#c3ccd8" });
   [TOWER_X - 80, TOWER_X + 120].forEach(function (x) { el("circle", { cx: x, cy: GROUND - 2 * SCALE, r: 2 * SCALE, fill: "#5b6b80" }); });
   el("rect", { x: TOWER_X - 8, y: GROUND - (TOWER_H + 3) * SCALE, width: 16, height: (TOWER_H - 3) * SCALE, rx: 3, fill: "#8a97a8" });
 
@@ -99,6 +104,22 @@
     const E1 = [M1[0] + back * dx, M1[1] + dy], E2 = [M2[0] + back * dx, M2[1] + dy];
     return { stages: [[T1, T2, M1, M2], [M1, M2, E1, E2]], end: [E1, E2] };
   }
+  // How far the robot reaches, front and back, in one pose: the base, every pin, and the claw's fingers.
+  function span(s) {
+    let pts = [].concat.apply([], s.stages).concat(s.end);
+    if (s.six) pts = pts.concat([s.six.T1, s.six.T2, s.six.M1, s.six.M2, s.six.M3]);
+    const xs = pts.map(function (p) { return p[0]; }).concat([BACK, BACK + BASE_W, s.end[1][0] + 46 + 4]);
+    return { back: Math.min.apply(null, xs), front: Math.max.apply(null, xs) };
+  }
+  function length(sp) { return (sp.front - sp.back) / SCALE; }
+  let widest = null;   // the widest pose in the full swing: { len, x, at }
+  function findWidest() {
+    widest = null;
+    for (let p = 0; p <= 100; p += 1) {
+      const sp = span(solve(angle(p))), n = length(sp);
+      if (!widest || n > widest.len) widest = { len: n, x: sp.front, at: p };
+    }
+  }
   function clawPoint(s) { return [s.end[0][0] + 26, s.end[1][1]]; }   // the claw's grip, level with the lower pin
   const angle = function (p) { const m = MODES[mode]; return m.lo + (m.hi - m.lo) * p / 100; };
 
@@ -125,6 +146,22 @@
     // the motor, on the tower's lower pivot
     el("circle", { cx: s.stages[0][1][0], cy: s.stages[0][1][1], r: 13, fill: "none", stroke: "#10233f", "stroke-width": 2, "stroke-dasharray": "4 3" }, g);
 
+    // the robot's length along the floor, the widest point in the swing, and the size limit
+    const sp = span(s), limitCm = +document.getElementById("limit").value, limitX = BACK + limitCm * SCALE, yy = GROUND + 24;
+    el("line", { x1: limitX, x2: limitX, y1: 40, y2: GROUND + 40, stroke: "#c23b3b", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, dim);
+    el("text", { x: limitX + 6, y: 58, "font-size": 16, "font-weight": 700, fill: "#c23b3b" }, dim).textContent = "size limit " + limitCm + " cm";
+    el("line", { x1: sp.back, x2: sp.front, y1: yy, y2: yy, stroke: "#10233f", "stroke-width": 2.5, "marker-start": "url(#arrowDark)", "marker-end": "url(#arrowDark)" }, dim);
+    el("text", { x: (sp.back + sp.front) / 2 - 34, y: yy - 6, "font-size": 15, "font-weight": 700, fill: "#10233f" }, dim).textContent = length(sp).toFixed(0) + " cm";
+    if (widest) {
+      el("line", { x1: widest.x, x2: widest.x, y1: GROUND - 2, y2: GROUND + 36, stroke: "#ff8c0f", "stroke-width": 3 }, dim);
+      el("text", { x: widest.x + 5, y: GROUND + 36, "font-size": 13, "font-weight": 700, fill: "#b85d00" }, dim).textContent = "widest";
+    }
+    const over = length(sp) > limitCm + 0.05, overEver = widest && widest.len > limitCm + 0.05;
+    document.getElementById("length").textContent = length(sp).toFixed(1) + " cm";
+    document.getElementById("lengthBox").classList.toggle("over", over);
+    document.getElementById("widest").innerHTML = widest ? "Widest in the full swing: <b class=\"" + (overEver ? "bad" : "ok") + "\">" +
+      widest.len.toFixed(1) + " cm" + (overEver ? " (over the limit by " + (widest.len - limitCm).toFixed(1) + ")" : " ✓") + "</b>" : "";
+
     // numbers
     const low = clawPoint(solve(angle(0))), now = clawPoint(s);
     const ext = (low[1] - now[1]) / SCALE, height = (GROUND - now[1]) / SCALE, reach = (now[0] - low[0]) / SCALE;
@@ -144,8 +181,11 @@
   const defs = el("defs", {});
   const marker = el("marker", { id: "arrow", viewBox: "0 0 10 10", refX: 5, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse" }, defs);
   el("path", { d: "M0 0 L10 5 L0 10 z", fill: "#7b4fc9" }, marker);
+  const marker2 = el("marker", { id: "arrowDark", viewBox: "0 0 10 10", refX: 5, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse" }, defs);
+  el("path", { d: "M0 0 L10 5 L0 10 z", fill: "#10233f" }, marker2);
 
-  function tracePath() {   // the claw's whole path, from bottom to top
+  function tracePath() {   // the claw's whole path, from bottom to top (and the widest pose)
+    findWidest();
     const pts = [];
     for (let p = 0; p <= 100; p += 2) pts.push(clawPoint(solve(angle(p))).join(","));
     path.setAttribute("points", pts.join(" "));
@@ -161,6 +201,9 @@
   document.querySelectorAll("[data-mode]").forEach(function (b) { b.onclick = function () { setMode(b.dataset.mode); }; });
   const lift = document.getElementById("lift"), len = document.getElementById("len"), play = document.getElementById("play");
   lift.oninput = function () { t = +lift.value; playing = false; play.textContent = "▶ Lift"; draw(); };
+  const limit = document.getElementById("limit");
+  limit.oninput = function () { document.getElementById("limitV").textContent = limit.value + " cm"; draw(); };
+  document.getElementById("limitV").textContent = limit.value + " cm";
   len.oninput = function () { L = +len.value; document.getElementById("lenV").textContent = L + " cm"; tracePath(); draw(); };
   play.onclick = function () { playing = !playing; play.textContent = playing ? "❚❚ Stop" : "▶ Lift"; };
   document.getElementById("lenV").textContent = L + " cm";
