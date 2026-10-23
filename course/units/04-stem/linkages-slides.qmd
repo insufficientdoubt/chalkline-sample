@@ -40,6 +40,45 @@ resources:
 :::
 ::::
 
+## Robot Lift Examples
+"Steal from the best, invent the rest".
+- Step 1: look for robots that are:
+-- Good at the game
+-- Reliable and Simple
+- Step 2: Write down the best ideas. Write down where you see them.
+- Step 3: Combine the best ideas of others with you own ideas.
+- Step 4: Build
+- Step 4: Test
+- Step 6: Improve
+
+### 4-Bar
+:::: {.columns}
+::: {.column width="35%"}
+{{< video  https://www.youtube.com/shorts/m0GJSZ_S-fg>}}
+:::
+::: {.column width="65%"}
+Auton coding + simple 4 bar arm. 
+:::
+::::
+
+### 6-Bar + Catapult + intake
+{{< video https://www.youtube.com/watch?v=PSDdSdEetHc >}}
+
+
+### DR4B in action
+::: {.column width="55%"}
+The GOAT of robot lifts
+::: {.column width="45%"}
+{{< video https://www.youtube.com/shorts/No-Yq9FJkSA >}}
+
+
+### DR4B - Very basic
+{{< video https://www.youtube.com/watch?v=1jujMz1sCGI >}}
+
+### "coaxial virtual 4-bar"
+{{< video https://www.youtube.com/shorts/aeNMAZ5RimI >}}
+... what?
+
 ## Robot lifts {#lifts}
 
 <iframe class="stem-frame" data-src="embeds/lifts.html?mode=four" title="Robot lifts: 4-bar, 6-bar and DR4B"></iframe>
@@ -70,6 +109,9 @@ One simulator, three lifts: use the buttons at the top. Every lift starts with t
 - DR4B | The top 4-bar tilts back: the claw goes straight up and down
 - extension | How far the claw goes up from its lowest point
 :::
+
+## A catapult up close
+{{<video https://www.youtube.com/watch?v=qGepwXSrJiE}}
 
 ## Three ways to launch {#catapult}
 
