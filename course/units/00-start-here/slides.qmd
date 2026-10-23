@@ -233,63 +233,59 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-Each one is a working example in this course. Click to jump there.
+[**42 ready-made features,** all working in this course today. Click one to see it.]{.cat-lead}
 
-::: {.feature-list}
-::: {.new-features}
-[New]{.new-badge} 🎮 **Nine games:** [see them all](../01-ancient-greece/review-games-slides.html) · 🎲 [**Review games:** any game, any unit](../review-games.html)<br>🕰️ **Timelines and labelling:** [a timeline to teach with](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline) · [put it in order](../02-ancient-rome/rome-timeline-slides.html#/put-rome-on-the-timeline) · [label a photo](../02-ancient-rome/rome-timeline-slides.html#/label-the-aqueduct)<br>🧰 **Toolbox** on every slide (press **W**): name picker, scoreboard, noise meter and more
+:::: {.catalog}
+
+::: {.cat-box .cat-games}
+[🎮 Review games]{.cat-head} [12]{.cat-n}
+
+[⛄ Snowman](../01-ancient-greece/review-games-slides.html#/word-1){.chip} [🔤 Word scramble](../01-ancient-greece/review-games-slides.html#/unscramble-it){.chip} [🖼️ Picture reveal](../01-ancient-greece/review-games-slides.html#/what-is-it){.chip} [🔗 Matching](../01-ancient-greece/review-games-slides.html#/greek-gods){.chip} [🃏 Memory](../01-ancient-greece/review-games-slides.html#/find-the-pairs){.chip} [🗂️ Sort it](../01-ancient-greece/review-games-slides.html#/greek-or-roman){.chip} [🏆 Jeopardy, with teams](../01-ancient-greece/review-games-slides.html#/ancient-greece){.chip} [⚡ Quick-fire](../01-ancient-greece/review-games-slides.html#/greece-review){.chip} [🎱 Bingo, printed cards](../01-ancient-greece/review-games-slides.html#/ancient-greece-bingo){.chip} [📅 Put it on the timeline](../02-ancient-rome/rome-timeline-slides.html#/put-rome-on-the-timeline){.chip} [🏷️ Label a photo](../02-ancient-rome/rome-timeline-slides.html#/label-the-aqueduct){.chip} [👆 Tap-to-match](../01-ancient-greece/greek-ideas-slides.html#/match-it){.chip}
+
+[🎲 **Review games page:** any game, any unit](../review-games.html){.chip .chip-wide}
 :::
 
-:::: {.columns}
-::: {.column width="33%"}
-[Present]{.feature-head}
+::: {.cat-box .cat-teach}
+[🧑‍🏫 Teach with it]{.cat-head} [10]{.cat-n}
 
-- 👆 [Fragments](../01-ancient-greece/city-states-slides.html#/athens-or-sparta): step by step
-- ✨ [Zoom](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home) and [glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column) transitions
-- 🎬 [A video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes)
-- 📐 [A diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic)
-- 🏛️ [Titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide) and [photos](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum)
+[🕰️ Timeline: tap to zoom in](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline){.chip} [🧭 Timeline across slides](../02-ancient-rome/rome-timeline-slides.html#/the-first-emperor){.chip} [🗺️ Story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home){.chip} [📐 Diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic){.chip} [🎬 Video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes){.chip} [👆 Step-by-step answers](../01-ancient-greece/city-states-slides.html#/athens-or-sparta){.chip} [✨ Zoom and glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column){.chip} [🏛️ Full-screen titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide){.chip} [📷 Photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum){.chip} [🗒️ Speaker notes: press S]{.chip .chip-key}
 :::
-::: {.column width="34%"}
-[Interact]{.feature-head}
 
-- 🗳️ [Tap-to-vote polls](../01-ancient-greece/city-states-slides.html#/exit-ticket)
-- 🧩 [Tap-to-match](../01-ancient-greece/greek-ideas-slides.html#/match-it), [a story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home)
-- 📑 [A PDF gallery](../01-ancient-greece/city-states-slides.html#/unit-printables): tap a page
-- 📄 [Write on a worksheet](../01-ancient-greece/city-states-slides.html#/worksheet-on-a-slide)
-- 🖍️ [Draw on a slide](../01-ancient-greece/city-states-slides.html#/draw-on-the-slide)
-:::
-::: {.column width="33%"}
-[Support]{.feature-head}
+::: {.cat-box .cat-board}
+[✍️ On the board]{.cat-head} [8]{.cat-n}
 
-- 🔊 [Vocab pop-ups](../01-ancient-greece/city-states-slides.html#/mountains-and-sea) with 中文
-- ⏱️ [Timers](../01-ancient-greece/city-states-slides.html#/think-pair-share): think, pair, share
-- 🕒 A clock: press **K**
-- 🗒️ Notes: press **S**
+[🗳️ Tap-to-vote polls](../01-ancient-greece/city-states-slides.html#/exit-ticket){.chip} [✅ True or false checks](../01-ancient-greece/greek-ideas-slides.html#/quick-check){.chip} [📑 PDF gallery](../01-ancient-greece/city-states-slides.html#/unit-printables){.chip} [📄 Write on a worksheet](../01-ancient-greece/city-states-slides.html#/worksheet-on-a-slide){.chip} [⬇️ Download it with notes](../01-ancient-greece/city-states-slides.html#/worksheet-on-a-slide){.chip} [🖍️ Chalkboard](../01-ancient-greece/city-states-slides.html#/draw-on-the-slide){.chip} [🔊 Vocab pop-ups, 中文, read aloud](../01-ancient-greece/city-states-slides.html#/mountains-and-sea){.chip} [⏱️ Timers](../01-ancient-greece/city-states-slides.html#/think-pair-share){.chip}
 :::
+
+::: {.cat-box .cat-tools}
+[🧰 Toolbox on every slide: press W]{.cat-head} [12]{.cat-n}
+
+[🙋 Name picker]{.chip .chip-key} [🧩 Groups]{.chip .chip-key} [🏆 Scoreboard]{.chip .chip-key} [🤫 Voice level]{.chip .chip-key} [🎙️ Noise meter]{.chip .chip-key} [🚦 Traffic light]{.chip .chip-key} [🔳 QR code]{.chip .chip-key} [⏱️ Stopwatch]{.chip .chip-key} [🎲 Dice]{.chip .chip-key} [📐 Slide size]{.chip .chip-key} [↺ Reset for the next class]{.chip .chip-key} [🕒 Clock: press K]{.chip .chip-key}
+:::
+
 ::::
-:::
 
 ```{=html}
 <style>
-  .reveal .feature-list { font-size: 0.74em; }
-  .reveal .feature-list li { margin-bottom: 0.35em; }
-  .reveal .feature-list a { color: #0068c4; text-decoration: underline; text-underline-offset: 3px; }
-  .reveal .new-features { background: #fff4e5; border: 2px solid #ff8c0f; border-radius: 10px; padding: 0.35em 0.7em; margin-bottom: 0.5em; line-height: 1.6; }
-  .reveal .new-features p { margin: 0; }
-  .reveal .new-badge { background: #ff8c0f; color: #fff; font-weight: 700; border-radius: 999px; padding: 0.05em 0.6em; margin-right: 0.3em; }
-  .reveal .feature-list .columns { gap: 0.6em; }
-  .reveal .feature-list ul { margin-left: 0.9em; }
-  .reveal .feature-head { display: block; margin-bottom: 0.25em; padding-bottom: 0.1em; border-bottom: 3px solid #0087ff; color: #003477; font-weight: 700; font-size: 1.05em; }
+  .reveal .cat-lead { display: block; margin: -0.25em 0 0.4em; font-size: 0.62em; color: #3b4a5e; }
+  .reveal .catalog { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 0.5em; }
+  .reveal .cat-box { padding: 10px 12px 12px; border: 1px solid #dde4ee; border-top: 5px solid var(--cat); border-radius: 12px; background: #fff; }
+  .reveal .cat-box p { margin: 0 0 4px; line-height: 1.75; }
+  .reveal .cat-games { --cat: #0087ff; }
+  .reveal .cat-teach { --cat: #2e9e4f; }
+  .reveal .cat-board { --cat: #ff8c0f; }
+  .reveal .cat-tools { --cat: #7b4fc9; grid-column: 1 / -1; }
+  .reveal .cat-head { color: var(--cat); font-size: 1.25em; font-weight: 800; }
+  .reveal .cat-n { margin-left: 6px; padding: 1px 9px; border-radius: 999px; background: var(--cat); color: #fff; font-size: 0.9em; font-weight: 800; }
+  .reveal .chip { display: inline-block; margin: 0 2px 4px 0; padding: 1px 9px; border: 1px solid #cfd8e4; border-radius: 999px; background: #fff; color: #003477; font-weight: 600; line-height: 1.5; white-space: nowrap; text-decoration: none; }
+  .reveal a.chip:hover { border-color: var(--cat); background: color-mix(in srgb, var(--cat) 10%, #fff); }
+  .reveal .chip-key { background: #f4f6fa; border-style: dashed; color: #3b4a5e; }
+  .reveal .chip-wide { margin-top: 4px; border-color: var(--cat); background: color-mix(in srgb, var(--cat) 10%, #fff); }
 </style>
 ```
 
-::: {.small-note}
-These links jump between slide decks, too: any slide can link to any other slide.
-:::
-
 ::: notes
-Every link opens the example slide in another deck: press the browser's Back button to return here. The orange **New** row is the newest: four review games (in Unit 1's *Greek Word Games* deck) and the classroom toolbox, which is on every slide (press **W** to show it here). In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
+Every chip with a solid border opens a working example in another deck: press the browser's Back button to come back here. The toolbox tools (dashed) are on every slide: press **W** to open them, right here. The newest are the review games, the timelines and labelling, and the toolbox. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
 :::
 
 ## It always looks like your school
