@@ -14,13 +14,12 @@ resources:
   - embeds/**
 ---
 
+## What is a linkage?
 ```{=html}
 <style>
   .reveal .stem-frame { display: block; width: 100%; height: 570px; border: 1px solid var(--ui-line, #d6dee8); border-radius: 12px; background: #fff; }
 </style>
 ```
-
-## What is a linkage?
 
 :::: {.columns}
 ::: {.column width="55%"}
