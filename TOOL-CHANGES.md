@@ -16,6 +16,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Sort it: a reason for each item, feedback straight away, pictures
+- **Asked for:** "Definitely add the option for immediate feedback if the kid gets the answer wrong, a little explanation of why. I think a third group support for both is fine but we'll already have that if we support multiple groups. And yes I want the option for pictures as items." (After: "So we can sort based on characteristics that are not specifically listed in the vocabulary. For example in a biology class sorting animals by habitat.")
+- **Why:** to use Sort it for higher-order sorts, with feedback that teaches.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: Sort it items can have a reason and a picture.
+    - **Feedback straight away** (the usual): a right item locks in green; a wrong one shows red in that group, shakes, goes back to the bank, and its reason shows in a red box. It counts mistakes.
+    - `feedback="end"`: the old way, with Check showing up to three reasons.
+    - From the vocab: the reason is the word's meaning, and `with="picture"` shows the vocab pictures.
+  - `filter.lua`: `::: {.sort}` items can have `![Name](path)` pictures (copied to the site) and `| reason`; `feedback=` on the div. `shortcodes.lua`: `with=` and `feedback=` for `{{< sort >}}`.
+  - `games.css`: picture items and the reason box.
+  - `README.md`; the Greek Word Games deck: reasons on *Athens or Sparta?*, a new *Greek or Roman?* photo sort, and an updated code box and credits.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Word scramble, Sort it, and Bingo with cards made on demand
 - **Asked for:** "add bingo and sort it. Figure out where bingo would live because the process for that is a little different. The teacher would not do that live in class they would prepare it ahead of time and print the cards. Add word scramble." Then, on bingo: "Bingo cards should not be generated at build time ... Can we just use that [the PDF library] to generate printable PDF cards on demand? ... the teacher could reuse the game without regenerating the site. Change the number of cards the number of items etc."
 - **Why:** more review games. Bingo needs paper cards, prepared before class.

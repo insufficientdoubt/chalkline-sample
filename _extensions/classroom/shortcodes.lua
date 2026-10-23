@@ -446,7 +446,10 @@ return {
   -- (unit=1), into their topics. Your own groups: ::: {.sort} (filter.lua).
   ["sort"] = function(args, kwargs)
     if not quarto.doc.is_format("revealjs") then return games.placeholder("Sort it") end
-    return games.div("sort", game_config({}, kwargs, "sort"))
+    local c = game_config({}, kwargs, "sort")
+    c.with = str(kwargs["with"], "words")              -- with="picture": the vocab pictures
+    c.feedback = str(kwargs["feedback"], "now")        -- feedback="end": wait for Check
+    return games.div("sort", c)
   end,
 
   -- Bingo: make printable cards (in the browser) before class, then call the words in class.

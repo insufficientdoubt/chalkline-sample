@@ -274,7 +274,7 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 | 🔗 **Matching** | Words on the left, their meanings (or pictures) on the right, mixed up. Tap a word, then its partner: a right pair locks in, in its own color; a wrong pair shakes. It counts the tries. |
 | 🃏 **Memory** | Cards face down: each word and its picture (or meaning). Turn over two; a pair stays face up, the others turn back. It counts the turns. |
 | 🔤 **Word scramble** | The letters of a word, mixed up. Tap them (or type them) in order; tap a placed letter, or press Backspace, to take it back. **Hint**, **Mix again**, **Show the word**. Words as for Snowman. |
-| 🗂️ **Sort it** | A word bank and 2 or 3 groups. Tap a word, then its group; **Check** colors each word green or red. From the vocab list, one unit's words sort into their topics (geography, government…) and words from several units into their units. |
+| 🗂️ **Sort it** | Items in a bank and 2–4 groups ("Both" is just another group). Tap an item, then its group. A right item locks in green; a wrong one shakes, goes back to the bank, and **its reason shows**, so students learn why straight away. Items can be words, phrases or **pictures**. Write any sort you like (animals by habitat, fact or opinion, cause or effect), or use the vocab list: one unit's words sort into their topics, several units' into their units, and each word's meaning is its reason (`with="picture"` shows the pictures). `feedback="end"` lets students sort everything first; **Check** then marks each item and shows the reasons. |
 | 🎱 **Bingo** | Two steps. **Make cards** (before class): choose the grid (3 × 3 to 5 × 5), a free middle square and the number of cards, then **Download the cards**: a PDF made right there in the browser, two cards on each page, every card different. **Call** (in class): **Next** shows a meaning and its picture; students cross out the word. Type a card's number and **Check** to see whether it really has a full line. A **game code** printed on every card (like `1-3F-7365`) makes the same cards again, on any computer, so you can check cards printed last week; type it into the Call step to bring that game back. Nothing is made when the site is built. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
@@ -310,16 +310,16 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 :::
 ```
 
-Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game). Sort it is written like Jeopardy, without the `|`: each group in **bold**, its words under it:
+Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game). Sort it is written like Jeopardy: each group in **bold**, its items under it. After an item, a `|` and a reason (shown if a student puts it in the wrong group); an item can be a picture, named by its description:
 
 ```markdown
 ::: {.sort}
-- **Athens**
-  - Democracy
-  - Plays and theater
-- **Sparta**
-  - Two kings
-  - Boys trained as soldiers
+- **Ocean**
+  - Shark | Sharks live and hunt in the sea.
+  - ![Octopus](images/octopus.jpg) | Octopuses live on the sea floor.
+- **Desert**
+  - Camel | Camels can go days without water.
+  - Scorpion | Scorpions hide from the sun under rocks.
 :::
 ```
 

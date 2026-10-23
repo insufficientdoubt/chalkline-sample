@@ -747,17 +747,26 @@
 
   /* ---------------- Sort it ---------------- */
 
-  // Words in a bank, and 2 or 3 groups. Tap a word, then its group (tap a sorted word to move it
-  // again). Check colors each word right or wrong; Show the answers puts every word in its place.
-  // Written: ::: {.sort} with groups in bold and their words under them. From the vocab list: words
-  // from several units go into their units; words from one unit go into their topics.
+  // Items in a bank, and groups to sort them into (2 to 4). Tap an item, then its group (or an item
+  // already in that group). Written: ::: {.sort} with each group in bold and its items under it; an
+  // item can have a picture (![Camel](images/camel.jpg)) and a reason after a | ("Camel | Camels
+  // need little water."). From the vocab list: one unit's words sort into their topics, several
+  // units' words into their units; the reason is the word's meaning; with="picture" shows pictures.
+  // Feedback straight away (the usual): a right item locks in green; a wrong one goes back to the
+  // bank, and the reason shows. feedback="end": items stay where they're put until Check.
   function sortGroups(cfg) {
-    if (!cfg.random) return list(cfg.groups);
-    const words = shuffle(list(cfg.words)), units = list(cfg.units);
+    if (!cfg.random) {
+      return list(cfg.groups).map(function (g) {
+        return { name: g.name, items: list(g.items).map(function (it) { return typeof it === "string" ? { text: it } : it; }) };
+      });
+    }
+    const words = shuffle(list(cfg.words)), units = list(cfg.units), pictures = cfg.with === "picture";
     const byUnit = {}, byTopic = {};
     words.forEach(function (w) {
-      list(w.units).forEach(function (u) { (byUnit[u] = byUnit[u] || []).push(w.word); });
-      if (w.topic) (byTopic[w.topic] = byTopic[w.topic] || []).push(w.word);
+      if (pictures && !w.image) return;
+      const item = { text: w.word, why: w.word + ": " + w.hint, image: pictures ? w.image : "" };
+      list(w.units).forEach(function (u) { (byUnit[u] = byUnit[u] || []).push(item); });
+      if (w.topic) (byTopic[w.topic] = byTopic[w.topic] || []).push(item);
     });
     let groups = Object.keys(byUnit).length > 1
       ? Object.keys(byUnit).map(function (u) {
@@ -771,36 +780,46 @@
   }
 
   function sortIt(root, cfg) {
-    let groups, chips, sel;
+    const atEnd = cfg.feedback === "end";
+    let groups, chips, sel, mistakes;
     const bank = h("div", { class: "cg-sort-bank", onclick: function (e) { if (e.target === bank) drop(-1); } });
     const cols = h("div", { class: "cg-sort-cols" });
+    const why = h("div", { class: "cg-sort-why", hidden: true });
     const status = h("div", { class: "cg-status" });
-    root.append(bank, cols, status, h("div", { class: "cg-tools" },
-      button("Check", check, "cg-primary"), button("Show the answers", showAll),
+    root.append(bank, cols, why, status, h("div", { class: "cg-tools" },
+      atEnd ? button("Check", check, "cg-primary") : "", button("Show the answers", showAll),
       cfg.random ? button("New words", start, "cg-new") : ""));
 
     function start() {
       groups = sortGroups(cfg);
       chips = [];
-      groups.forEach(function (g, gi) { list(g.items).forEach(function (text) { chips.push({ text: text, group: gi, at: -1, mark: "" }); }); });
+      groups.forEach(function (g, gi) {
+        list(g.items).forEach(function (it) { chips.push({ text: it.text || "", why: it.why || "", image: it.image || "", group: gi, at: -1, mark: "" }); });
+      });
       chips = shuffle(chips);
-      sel = null;
+      sel = null; mistakes = 0;
+      why.hidden = true;
       cols.style.setProperty("--cols", Math.max(groups.length, 1));
+      root.classList.toggle("cg-sort-pictures", chips.some(function (c) { return c.image; }));
       paint();
     }
     function chip(c) {
-      return h("button", { class: "cg-sort-chip" + (c === sel ? " cg-selected" : "") + (c.mark ? " cg-" + c.mark : ""), text: c.text,
+      const el = h("button", { class: "cg-sort-chip" + (c.image ? " cg-has-pic" : "") + (c === sel ? " cg-selected" : "") + (c.mark ? " cg-" + c.mark : ""),
+        disabled: c.mark === "ok" && !atEnd, title: c.text,
         onclick: function (e) {
           e.stopPropagation();
-          if (sel && sel !== c && c.at !== -1) { drop(c.at); return; }   // a word is picked: tapping a group's word drops it there
+          if (sel && sel !== c && c.at !== -1) { drop(c.at); return; }   // an item is picked: tapping a group's item drops it there
           sel = sel === c ? null : c;
           paint();
-        } });
+        } },
+        c.image ? h("img", { src: c.image, alt: c.text }) : "",
+        c.image && !c.text ? "" : h("span", { text: c.text }));
+      return el;
     }
     function paint() {
       bank.textContent = "";
       const left = chips.filter(function (c) { return c.at === -1; });
-      if (!left.length) bank.append(h("span", { class: "cg-sort-empty", text: "All sorted. Press Check!" }));
+      if (!left.length) bank.append(h("span", { class: "cg-sort-empty", text: atEnd ? "All sorted. Press Check!" : "All sorted!" }));
       left.forEach(function (c) { bank.append(chip(c)); });
       cols.textContent = "";
       groups.forEach(function (g, gi) {
@@ -810,14 +829,42 @@
         chips.filter(function (c) { return c.at === gi; }).forEach(function (c) { col.append(chip(c)); });
         cols.append(col);
       });
-      const placed = chips.length - left.length;
-      if (!status.dataset.keep) status.textContent = sel ? "Now tap a group for “" + sel.text + "”." : "Sorted: " + placed + " of " + chips.length;
-      delete status.dataset.keep;
+      if (status.dataset.keep) { delete status.dataset.keep; return; }
+      const placed = chips.filter(function (c) { return c.at !== -1 && c.mark !== "no"; }).length;   // not the wrong one on its way back
+      status.textContent = sel ? "Now tap a group for “" + (sel.text || "this picture") + "”."
+        : "Sorted: " + placed + " of " + chips.length + (atEnd || !mistakes ? "" : "  ·  Mistakes: " + mistakes);
+    }
+    function explain(c, gi) {   // the feedback box: what went wrong, and why
+      why.textContent = "";
+      why.append(h("b", { text: "✗ " + (c.text ? "“" + c.text + "”" : "That picture") + " doesn't go in " + groups[gi].name + "." }),
+        c.why ? h("span", { text: " " + c.why }) : h("span", { text: " Try another group." }));
+      why.hidden = false;
+      why.classList.remove("cg-pop"); void why.offsetWidth; why.classList.add("cg-pop");
     }
     function drop(gi) {
       if (!sel) return;
-      sel.at = gi; sel.mark = ""; sel = null;
+      const c = sel;
+      sel = null;
+      if (atEnd || gi === -1) { c.at = gi; c.mark = ""; paint(); return; }
+      if (gi === c.group) {   // right: it locks in
+        c.at = gi; c.mark = "ok"; why.hidden = true;
+        beep(660, 0.12, 0.1);
+        paint();
+        if (chips.every(function (x) { return x.mark === "ok"; })) {
+          status.dataset.keep = "1";
+          status.textContent = "All sorted! ✓" + (mistakes ? "  (" + mistakes + (mistakes === 1 ? " mistake)" : " mistakes)") : "");
+          paint();
+          cheer();
+        }
+        return;
+      }
+      // wrong: it shows in that group for a moment, in red, then goes back to the bank
+      mistakes++;
+      c.at = gi; c.mark = "no";
+      explain(c, gi);
+      beep(220, 0.2, 0.1);
       paint();
+      setTimeout(function () { if (c.mark === "no") { c.at = -1; c.mark = ""; paint(); } }, 900);
     }
     function check() {
       let right = 0, wrong = 0;
@@ -827,13 +874,18 @@
         if (c.mark === "ok") right++; else wrong++;
       });
       const all = right === chips.length, left = chips.length - right - wrong;
+      // the reasons for the wrong ones
+      const wrongs = chips.filter(function (c) { return c.mark === "no" && c.why; });
+      why.textContent = "";
+      wrongs.slice(0, 3).forEach(function (c) { why.append(h("div", null, h("b", { text: "✗ " + (c.text || "Picture") + ": " }), c.why)); });
+      why.hidden = !wrongs.length;
       status.dataset.keep = "1";
       status.textContent = all ? "All right! ✓"
         : right + " right" + (wrong ? ", " + wrong + " wrong (move the red ones)" : "") + (left ? ", " + left + " still to sort" : "") + ".";
       if (all) cheer(); else beep(330, 0.2, 0.1);
       paint();
     }
-    function showAll() { chips.forEach(function (c) { c.at = c.group; c.mark = "ok"; }); sel = null; paint(); }
+    function showAll() { chips.forEach(function (c) { c.at = c.group; c.mark = "ok"; }); sel = null; why.hidden = true; paint(); }
     start();
     return start;
   }

@@ -81,8 +81,9 @@ end
 --     - ...
 --   :::
 --   ::: {.sort}                           groups to sort into, like jeopardy: each group in bold,
---   - **Athens**                            its words under it (no |)
---     - democracy
+--   - **Athens**                            its items under it. An item can have a picture, and a
+--     - Democracy | Citizens voted          reason after a | (shown when it goes in the wrong group).
+--     - ![Parthenon](images/parthenon.jpg)  feedback="end": no feedback until Check.
 --   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
 --   - democracy | Citizens vote on laws
 --   :::
@@ -107,6 +108,28 @@ local function clue(item)
   return { q = q, a = a }
 end
 
+-- One Sort it item: its words, a picture if it has one (![Camel](images/camel.jpg): the picture's
+-- description is its name), and the reason after a | ("Camel | Camels need little water.").
+local function sort_item(blocks)
+  local image, alt = nil, ""
+  local rest = pandoc.List()
+  for _, b in ipairs(blocks) do
+    rest:insert(b:walk({ Image = function(img)
+      if not image then
+        image = img.src
+        alt = pandoc.utils.stringify(img.caption)
+      end
+      return {}
+    end }))
+  end
+  local text, why = games.split(pandoc.utils.stringify(rest))
+  if text == "" then text = alt end
+  if image and not image:match("^%a+://") then   -- so the picture is copied to the site (the path is from this file)
+    quarto.doc.add_resource(pandoc.path.join({ pandoc.path.directory(quarto.doc.input_file), image }))
+  end
+  return { text = text, why = why, image = image or "" }
+end
+
 local function game_from_div(el)
   if el.classes:includes("jeopardy") then
     local categories = {}
@@ -121,14 +144,14 @@ local function game_from_div(el)
     return games.div("jeopardy", { categories = categories, points = points, random = false,
       teams = tonumber(el.attributes["teams"] or "2") or 2 })
   end
-  if el.classes:includes("sort") then   -- groups in bold, their words under them
+  if el.classes:includes("sort") then   -- groups in bold, their items under them
     local groups = {}
     for _, item in ipairs(list_items(el.content)) do
       local items = {}
-      for _, c in ipairs(list_items(item)) do table.insert(items, pandoc.utils.stringify(c)) end
+      for _, c in ipairs(list_items(item)) do table.insert(items, sort_item(c)) end
       table.insert(groups, { name = item[1] and pandoc.utils.stringify(item[1]) or "", items = items })
     end
-    return games.div("sort", { groups = groups, random = false })
+    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now" })
   end
   local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
   if kind then
