@@ -41,6 +41,12 @@
   }
 
   // Tiny element builder: h("div", {class: "x", onclick: fn}, child, "text", ...)
+  // A line icon (ui/icons.js, Lucide). The toolbox's controls use these; the voice levels keep
+  // their emoji, which are pictures for the students.
+  function icon(name) {
+    return window.ChalklineIcons ? ChalklineIcons.el(name) : document.createTextNode("");
+  }
+
   function h(tag, attrs) {
     const el = document.createElement(tag);
     for (const k in attrs || {}) {
@@ -214,7 +220,7 @@
 
   const TOOLS = {
     picker: {
-      title: "Name picker", icon: "🙋", w: 400, h: 280, minW: 260, minH: 230, keys: ["classes"],
+      title: "Name picker", icon: "hand", w: 400, h: 280, minW: 260, minH: 230, keys: ["classes"],
       build: function (body) {
         // Picks each student present once, then starts again. Picked names are remembered per class.
         let mode = "pick", rolling = 0, last = null;   // last: { cls, name } shown on the big card
@@ -281,7 +287,7 @@
     },
 
     groups: {
-      title: "Groups", icon: "🧩", w: 480, h: 340, minW: 300, minH: 240, keys: ["classes", "groups"],
+      title: "Groups", icon: "users", w: 480, h: 340, minW: 300, minH: 240, keys: ["classes", "groups"],
       build: function (body) {
         // Settings: { by: "size" (groups of n) or "count" (n groups), n }. The groups are kept per class.
         let mode = "groups";
@@ -335,7 +341,7 @@
     },
 
     scoreboard: {
-      title: "Scoreboard", icon: "🏆", w: 360, h: 300, minW: 150, minH: 230, keys: ["scores"],
+      title: "Scoreboard", icon: "trophy", w: 360, h: 300, minW: 150, minH: 230, keys: ["scores"],
       build: function (body) {
         function state() {
           return load("scores", { sound: true, teams: [1, 2, 3, 4].map(function (n) { return { name: "Team " + n, score: 0 }; }) });
@@ -378,11 +384,11 @@
             rows.append(h("div", { class: "ct-score-row", style: "--team:" + COLORS[i % COLORS.length] },
               h("button", { class: "ct-round ct-minus", "aria-label": "Minus one", text: "−", onclick: function () { change(i, -1); } }),
               name,
-              h("span", { class: "ct-crown", text: top > 0 && leaders === 1 && t.score === top ? "👑" : "" }),
+              h("span", { class: "ct-crown" }, top > 0 && leaders === 1 && t.score === top ? icon("crown") : ""),
               h("span", { class: "ct-score", text: t.score }),
               h("button", { class: "ct-round ct-plus", "aria-label": "Plus one", text: "+", onclick: function () { change(i, 1); } })));
           });
-          soundBtn.textContent = s.sound ? "🔔" : "🔕";
+          soundBtn.replaceChildren(icon(s.sound ? "bell" : "bell-off"));
         }
         paint();
         return { refresh: function () { s = state(); paint(); } };
@@ -390,7 +396,7 @@
     },
 
     voice: {
-      title: "Voice level", icon: "🤫", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count", "noise-sense"],
+      title: "Voice level", icon: "volume-2", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count", "noise-sense"],
       build: function (body, panel, grow) {
         // The voice level, and (the microphone button) a noise meter under it. The voice level sets
         // the "too loud" line: Silent is strict, Presenter allows the most. The meter also counts the
@@ -433,8 +439,8 @@
         const status = h("span", { class: "ct-noise-chip ct-noise-status", text: "Microphone off" });
         // How many times the class went over the line (kept until reset, also in the next deck).
         const count = h("span", { class: "ct-noise-count" });
-        const resetCount = h("button", { class: "ct-noise-mini", title: "Count from 0 again", "aria-label": "Reset the count", text: "↺",
-          onclick: function () { times = 0; save("noise-count", 0); paintCount(); } });
+        const resetCount = h("button", { class: "ct-noise-mini", title: "Count from 0 again", "aria-label": "Reset the count",
+          onclick: function () { times = 0; save("noise-count", 0); paintCount(); } }, icon("rotate-ccw"));
         const go = h("button", { class: "ct-noise-mini ct-noise-go", title: "Microphone on/off", onclick: function () { stream ? stop() : start(); } });
         const alarmBtn = h("button", { class: "ct-noise-mini", title: "Beep when too loud", onclick: function () {
           alarmOn = !alarmOn; save("noise-beep", alarmOn); paintButtons();
@@ -445,7 +451,7 @@
           h("button", { class: "ct-noise-mini", text: "−", "aria-label": "Less sensitive", onclick: function () { setSense(sense - 1); } }),
           senseLabel,
           h("button", { class: "ct-noise-mini", text: "+", "aria-label": "More sensitive", onclick: function () { setSense(sense + 1); } }));
-        const gear = h("button", { class: "ct-noise-mini", title: "Microphone sensitivity", text: "⚙", onclick: function () { settings.hidden = !settings.hidden; } });
+        const gear = h("button", { class: "ct-noise-mini", title: "Microphone sensitivity", onclick: function () { settings.hidden = !settings.hidden; } }, icon("settings"));
         const noise = h("div", { class: "ct-noise" },
           h("div", { class: "ct-noise-top" }, face, meter),
           h("div", { class: "ct-noise-info" }, status,
@@ -473,7 +479,7 @@
         function paintButtons() {
           go.innerHTML = stream ? '<span class="ct-noise-stop"></span>' : MIC;
           go.classList.toggle("ct-on", !!stream);
-          alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+          alarmBtn.replaceChildren(icon(alarmOn ? "bell" : "bell-off"));
         }
         function paintCount() { count.textContent = "Too loud: " + times; }
         function fmt(ms) {
@@ -557,7 +563,7 @@
     clock: {
       // The time, in a window you can drag and resize. Open in every deck unless you close it
       // (or press K); clock: false in a deck's labels leaves it closed there.
-      title: "Clock", icon: "🕒", w: 128, h: 52, minW: 100, minH: 44, keys: [],
+      title: "Clock", icon: "clock", w: 128, h: 52, minW: 100, minH: 44, keys: [],
       // Where it starts: off the slide, so it covers nothing. In the space beside the slide (left,
       // above the menu buttons; or right, under the slide number) when there's room; if not, the
       // top-right corner. It moves with the screen until it's dragged.
@@ -584,7 +590,7 @@
     spotlight: {
       // Darkens the screen except a circle: drag it (or tap where it should go) to show the class
       // where to look. The slider (or the mouse wheel) sets its size. Close the window to end it.
-      title: "Spotlight", icon: "🔦", w: 240, h: 96, minW: 180, minH: 86, keys: [],
+      title: "Spotlight", icon: "flashlight", w: 240, h: 96, minW: 180, minH: 86, keys: [],
       build: function (body) {
         const spot = { x: window.innerWidth / 2, y: window.innerHeight / 2, r: load("spotlight-size", 18) };
         const shade = h("div", { class: "ct-spot-shade", title: "Drag the light, or tap where it should go" });
@@ -615,7 +621,7 @@
     },
 
     slide: {
-      title: "Slide size", icon: "📐", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
+      title: "Slide size", icon: "ruler", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
       build: function (body) {
         // Changes how this screen shows the slides: the space around them, and their shape.
         // Saved as { margin: 0 to 0.3, wide: true for 16:9 }; the deck files don't change.
@@ -646,7 +652,7 @@
     },
 
     traffic: {
-      title: "Traffic light", icon: "🚦", w: 220, h: 380, minW: 150, minH: 250, keys: ["traffic"],
+      title: "Traffic light", icon: "traffic-cone", w: 220, h: 380, minW: 150, minH: 250, keys: ["traffic"],
       build: function (body) {
         const LIGHTS = [
           { id: "red", label: "Stop" },
@@ -674,7 +680,7 @@
     },
 
     qr: {
-      title: "QR code", icon: "🔳", w: 300, h: 360, minW: 220, minH: 260, keys: [],
+      title: "QR code", icon: "qr-code", w: 300, h: 360, minW: 220, minH: 260, keys: [],
       build: function (body) {
         const site = (document.querySelector('meta[name="chalkline-qr-site"]') || {}).content || "";
         const local = location.protocol === "file:" || /^(localhost|127\.|\[::1\]|0\.0\.0\.0)/.test(location.hostname);
@@ -722,7 +728,7 @@
     },
 
     stopwatch: {
-      title: "Stopwatch", icon: "⏱️", w: 320, h: 200, minW: 220, minH: 150, keys: ["stopwatch"],
+      title: "Stopwatch", icon: "timer", w: 320, h: 200, minW: 220, minH: 150, keys: ["stopwatch"],
       build: function (body) {
         // Saved as { since: start time while running, or 0; done: ms counted before that }.
         const time = h("div", { class: "ct-sw-time" });
@@ -753,7 +759,7 @@
     },
 
     dice: {
-      title: "Dice", icon: "🎲", w: 360, h: 240, minW: 250, minH: 190, keys: ["dice"],
+      title: "Dice", icon: "dices", w: 360, h: 240, minW: 250, minH: 190, keys: ["dice"],
       build: function (body) {
         const PIPS = [[], [4], [0, 8], [0, 4, 8], [0, 2, 6, 8], [0, 2, 4, 6, 8], [0, 2, 3, 5, 6, 8]];
         let rolling = 0;
@@ -891,7 +897,7 @@
       layout.pos[id] = Object.assign(tool.start(), { w: tool.w, h: tool.h, auto: true });   // until it's dragged
     }
     const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
-    const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
+    const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", onclick: function () { closeTool(id); } }, icon("x"));
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
     const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title },
@@ -960,15 +966,16 @@
       menu.append(h("button", { class: "ct-menu-item" + (open[id] ? " ct-on" : ""), role: "menuitemcheckbox",
         "aria-checked": open[id] ? "true" : "false",
         onclick: function () { open[id] ? closeTool(id) : openTool(id); } },
-        h("span", { class: "ct-menu-icon", text: t.icon }), h("span", { text: t.title }),
-        h("span", { class: "ct-check", text: open[id] ? "✓" : "" })));
+        h("span", { class: "ct-menu-icon" }, icon(t.icon)), h("span", { text: t.title }),
+        h("span", { class: "ct-check" }, open[id] ? icon("check") : "")));
     });
     if (Object.keys(open).length) {
-      menu.append(h("button", { class: "ct-menu-item ct-menu-close", text: "Close all",
-        onclick: function () { Object.keys(open).forEach(function (id) { closeTool(id); }); toggleMenu(false); } }));
+      menu.append(h("button", { class: "ct-menu-item ct-menu-close",
+        onclick: function () { Object.keys(open).forEach(function (id) { closeTool(id); }); toggleMenu(false); } },
+        icon("x"), h("span", { text: "Close all" })));
     }
     menu.append(h("button", { class: "ct-menu-item ct-menu-reset", onclick: function () { toggleMenu(false); showReset(); } },
-      h("span", { class: "ct-menu-icon", text: "↺" }), h("span", { text: "Reset for the next class…" })));
+      h("span", { class: "ct-menu-icon" }, icon("rotate-ccw")), h("span", { text: "Reset for the next class…" })));
   }
 
   /* ---------------- Reset for the next class ----------------
@@ -996,12 +1003,12 @@
         return h("label", { class: "ct-reset-item" }, boxes[i.key], h("span", { text: i.label }));
       }),
       h("div", { class: "ct-foot" },
-        h("button", { class: "ct-btn ct-primary", text: "↺ Reset", onclick: function () {
+        h("button", { class: "ct-btn ct-primary", onclick: function () {
           const pick = {};
           items.forEach(function (i) { pick[i.key] = boxes[i.key].checked; });
           resetAll(pick);
           close();
-        } }),
+        } }, icon("rotate-ccw"), " Reset"),
         h("button", { class: "ct-btn", text: "Cancel", onclick: close })));
     const shade = h("div", { class: "ct-shade", onclick: function (e) { if (e.target === shade) close(); } }, dialog);
     function close() { shade.remove(); }
