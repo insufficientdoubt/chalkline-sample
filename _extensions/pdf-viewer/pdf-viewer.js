@@ -409,8 +409,7 @@ class Viewer {
 
 // "⬇ Download": a menu with the choices spelled out (with my notes / original / open in a new tab)
 function downloadMenu(getUrl) {
-  const b = button("download", "Download", () => (menu.isConnected ? close() : open()), "pdfv-wide");
-  b.append(el("span", "pdfv-btn-label", "Download"));
+  const b = button("download", "Download: with my notes, or the original", () => (menu.isConnected ? close() : open()));
   b.setAttribute("aria-haspopup", "menu");
   const menu = el("div", "pdfv-menu");
   menu.setAttribute("role", "menu");
