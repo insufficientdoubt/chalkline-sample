@@ -26,9 +26,8 @@
 }
 .pdfv-viewer { height: 75vh; container-type: inline-size; }
 .reveal .pdfv-viewer { height: 560px; --pdfv-btn: 40px; }   /* a reveal.js slide is 700px tall */
-@container (max-width: 520px) {   /* narrow: room for the buttons (⤢ and ⬇ are still there) */
+@container (max-width: 520px) {   /* narrow: room for the buttons */
   .pdfv-viewer .pdfv-title { visibility: hidden; }
-  .pdfv-viewer .pdfv-btn-label { display: none; }
 }
 
 .pdfv-fallback { margin: auto; }
@@ -83,9 +82,6 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* a button with a word on it (Download) */
-.pdfv-btn.pdfv-wide { width: auto; padding: 0 12px; gap: 6px; font: inherit; font-size: 16px; font-weight: 600; }
-
 /* the Download menu: each choice spelled out */
 .pdfv-menu {
   position: fixed;

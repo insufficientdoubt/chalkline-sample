@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Download button: just the icon
+- **Asked for:** "I like the menu but the word download takes up a lot of horizontal space and is breaking some of the layouts. So keep the menu part but make it just the icon on the button."
+- **Why:** the word made the button too wide for some layouts.
+- **Changed:** `_extensions/pdf-viewer/pdf-viewer.js`, `pdf-viewer.css`: the Download button is the ⬇ icon only (its tooltip still says what it does); the menu with the spelled-out choices is unchanged. `README.md`: wording.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Clearer download buttons in the PDF viewer
 - **Asked for:** "Make the buttons for 'download annotated version' and 'download original version' more obvious in their functions."
 - **Why:** two icon-only buttons (⬇ and ↗) didn't say what they did; ↗ looked like "download original" but opened a new tab.
