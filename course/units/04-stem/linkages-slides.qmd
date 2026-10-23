@@ -51,7 +51,9 @@ resources:
 - Step 4: Test
 - Step 6: Improve
 
-### 4-Bar
+----
+
+## 4-Bar
 
 :::: {.columns}
 ::: {.column width="35%"}
@@ -62,11 +64,15 @@ Auton coding + simple 4 bar arm.
 :::
 ::::
 
-### 6-Bar + Catapult + intake
+----
+
+## 6-Bar + Catapult + intake
 
 {{< video https://www.youtube.com/watch?v=PSDdSdEetHc >}}
 
-### DR4B in action
+----
+
+## DR4B in action
 
 :::: {.columns}
 ::: {.column width="55%"}
@@ -77,11 +83,15 @@ The GOAT of robot lifts
 :::
 ::::
 
-### DR4B - Very basic
+----
+
+## DR4B - Very basic
 
 {{< video https://www.youtube.com/watch?v=1jujMz1sCGI >}}
 
-### "coaxial virtual 4-bar"
+----
+
+## "coaxial virtual 4-bar"
 
 {{< video https://www.youtube.com/shorts/aeNMAZ5RimI >}}
 
