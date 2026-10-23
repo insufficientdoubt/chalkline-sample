@@ -380,7 +380,7 @@ def _item(item, show_unit=False):
 def _packet_button(item):
     edition = item.get("edition")
     icon, text = EDITIONS[edition] if edition else ("package", "Unit packet")
-    cls = "ov-pack ov-pack-teacher" if edition == "teacher" else "ov-pack"
+    cls = {"teacher": "ov-pack ov-pack-teacher", "student": "ov-pack ov-pack-student"}.get(edition, "ov-pack")
     return (f'<a class="{cls}" href="{escape(item["pdf"])}" title="{escape(item["description"])}">'
             f'{_icon(icon)}<span>{text}<small>PDF</small></span></a>')
 
@@ -423,7 +423,8 @@ def markdown_by_unit():
         group = [i for i in items if i["unit"] == name]
         if not group:
             continue
-        packets = [i for i in group if i["type"] == "Packet"]
+        # the student copy first: printing it for class is what teachers do most; the answer keys come second
+        packets = sorted((i for i in group if i["type"] == "Packet"), key=lambda i: i.get("edition") == "teacher")
         rest = [i for i in group if i["type"] != "Packet"]
         title = f'<a href="{escape(unit["path"])}">{escape(unit["title"])}</a>' if unit else escape(name)
         about = unit["description"] if unit else YEAR_DESCRIPTION

@@ -8,6 +8,15 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: Overview: the student copy is the main packet button
+- **Asked for:** "I'd like the student edition to be green and this teacher edition to be that muted Orange ... Teachers first move is to print the student edition and the second move is to reference the one with answer keys (if they ever do). So the UI should reflect those priorities."
+- **Why:** printing the student copy is what teachers do most; the answer keys come second.
+- **Changed:**
+  - `brand/styles.scss`: the Student copy button is solid green; the Teacher edition is the quiet orange outline.
+  - `scripts/catalog.py`: the Student copy comes first in each unit's header.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Overview: colour coding back, and a more polished look
 - **Asked for:** "I think we still need some level of color highlighting to make it quick for teachers to find the right materials. I just wanted to be a bit more modern and restrained. The whole thing should feel a bit more polished than the default quarto look."
 - **Why:** colour helps teachers find the right materials fast; the first restyle was too plain.
