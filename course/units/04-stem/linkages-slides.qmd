@@ -44,8 +44,8 @@ resources:
 
 "Steal from the best, invent the rest".
 - Step 1: look for robots that are:
--- Good at the game
--- Reliable and Simple
+ - Good at the game
+ - Reliable and Simple
 - Step 2: Write down the best ideas. Write down where you see them.
 - Step 3: Combine the best ideas of others with you own ideas.
 - Step 4: Build
@@ -68,10 +68,15 @@ Auton coding + simple 4 bar arm.
 {{< video https://www.youtube.com/watch?v=PSDdSdEetHc >}}
 
 ### DR4B in action
+
+:::: {.columns}
 ::: {.column width="55%"}
 The GOAT of robot lifts
+:::
 ::: {.column width="45%"}
 {{< video https://www.youtube.com/shorts/No-Yq9FJkSA >}}
+:::
+::::
 
 ### DR4B - Very basic
 
@@ -115,7 +120,7 @@ One simulator, three lifts: use the buttons at the top. Every lift starts with t
 :::
 
 ## A catapult up close
-{{<video https://www.youtube.com/watch?v=qGepwXSrJiE}}
+{{< video https://www.youtube.com/watch?v=qGepwXSrJiE>}}
 
 ## Three ways to launch {#catapult}
 
