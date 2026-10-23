@@ -136,7 +136,7 @@ Only files whose `audience:` includes `parent` appear on the family site, plus t
 
 ## How the overview finds things
 
-You never edit the overview by hand. Before every render, `scripts/catalog.py` reads the labels at the top of each file in `course/` and builds the table. These are the labels:
+You never edit the overview by hand. Before every render, `scripts/catalog.py` reads the labels at the top of each file in `course/` and builds the list: a card for each unit, with a row for each file. These are the labels:
 
 ```yaml
 ---

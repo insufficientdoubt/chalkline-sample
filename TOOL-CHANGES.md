@@ -14,7 +14,7 @@ Newest entries first.
 - **Changed:**
   - `scripts/catalog.py`: the overview builders write cards instead of tables. Each unit is a card with its number, title, description and packet buttons (Teacher edition solid, Student copy outlined). Each document is a row with a line icon for its type, its title and description, and a PDF button; outside links show their source with an outside-link icon. "By type" uses the same cards, "Coming up" shows each event as a small card, and the family site's unit goals are cards too. The Lucide icons are drawn inline (no script). The packet titles lose their 🔑/🎒 emoji (the overview shows a key or a backpack icon instead) and get an `edition` field.
   - `brand/styles.scss`: a new "Overview" section with the same values as `ui.css` (white cards, thin borders, one quiet colour per type). The tabs are a segmented control. The Everything tab's table is restyled, without the coloured rows or emoji.
-  - `index.qmd`: the page is wrapped in `.overview`. A small script shows the Categories filter only on the Everything tab, where it works.
+  - `index.qmd`: the page is wrapped in `.overview`. `README.md`: "builds the table" now describes the cards. A small script shows the Categories filter only on the Everything tab, where it works.
 - **Who it helps:** probably every Chalkline course.
 - **AI assistant:** Claude.
 
