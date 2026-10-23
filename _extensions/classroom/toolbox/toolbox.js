@@ -3,17 +3,22 @@
   opens a menu of tools. Each tool is a floating panel on top of the slides, not on one slide,
   so it stays where you put it while you change slides.
 
-    Scoreboard      points for teams (names, colors, + and −)
-    Voice level     0 Silent to 4 Presenter
+    Name picker     picks a student from a class list, everyone once before anyone twice
+    Groups          random groups from a class list (groups of n, or n groups)
+    Scoreboard      points for teams (names, colors, + and −); narrow, it stacks each team
+    Voice level     0 Silent to 4 Presenter; 🔊 adds a noise meter: the room's sound level from
+                    the microphone, a "too loud" line with an alarm and a red flash, and a count
+    Slide size      the space around the slides, and standard or wide (16:9), on this screen
     Traffic light   red, yellow, green
-    Noise meter     the room's sound level from the microphone, with a "too loud" line
     QR code         a code for this deck's address (or any link) for students' tablets
     Stopwatch       counts up
     Dice            1 to 6 dice
 
-  Drag a panel by its title bar; drag the corner to make it bigger (everything inside grows).
+  Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
+  Narrow panels (scoreboard, voice level) change to a layout that stacks.
   Which panels are open, where they are, the scores and the other settings are remembered in
-  this browser, so they come back in the next slide deck. Nothing is sent anywhere.
+  this browser, so they come back in the next slide deck. Nothing is sent anywhere. Class lists
+  too: they stay in this browser, never in the course files or on the website.
 */
 (function () {
   // Speaker view previews and the slide PDF export get no tools.
@@ -50,10 +55,11 @@
     return el;
   }
 
-  function beep(freq, length, volume) {
+  function beep(freq, length, volume, type, delay) {
     try {
       const ctx = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)());
-      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + (delay || 0);
+      o.type = type || "sine";
       o.frequency.value = freq;
       g.gain.setValueAtTime(volume || 0.15, t);
       g.gain.exponentialRampToValueAtTime(0.001, t + length);
@@ -73,6 +79,129 @@
     return b;
   }
 
+  /* ---------------- Class lists (name picker and groups) ----------------
+     Saved as { current: index, classes: [{ name, names: [...], picked: [...], absent: { day, names },
+     groups: [[...], ...] }] }. Only in this browser: never in the course files or on the website. */
+
+  const PRIVACY = "Names are saved only in this browser, on this computer. They are not uploaded, " +
+    "and they are not in the course files or on the website.";
+
+  function today() { return new Date().toDateString(); }
+  function loadClasses() { return load("classes", { current: 0, classes: [] }); }
+  function saveClasses(c) {
+    save("classes", c);
+    refreshTools("classes");   // the other class tool in this tab shows the change too
+  }
+  function absentToday(k) { return k.absent && k.absent.day === today() ? k.absent.names : []; }
+  function present(k) {
+    const away = absentToday(k);
+    return k.names.filter(function (n) { return away.indexOf(n) < 0; });
+  }
+  function shuffle(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1)), t = a[i];
+      a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  // The class menu at the top of both tools: switch class, add one, or edit this one.
+  function classBar(c, edit) {
+    const select = h("select", { class: "ct-class-select", "aria-label": "Class", onchange: function () {
+      select.blur();   // so the arrow keys change slides again
+      if (select.value === "new") { edit(true); return; }
+      const now = loadClasses();
+      now.current = +select.value;
+      saveClasses(now);
+    } });
+    c.classes.forEach(function (k, i) { select.append(h("option", { value: i, text: k.name + " (" + k.names.length + ")" })); });
+    select.append(h("option", { value: "new", text: "+ New class…" }));
+    select.value = String(c.current);
+    return h("div", { class: "ct-class-bar" }, select,
+      h("button", { class: "ct-btn ct-small", text: "Edit", onclick: function () { edit(false); } }));
+  }
+
+  // No classes yet.
+  function noClasses(edit) {
+    return h("div", { class: "ct-empty" },
+      h("p", { text: "Add a class list to start." }),
+      h("button", { class: "ct-btn ct-primary", text: "+ New class", onclick: function () { edit(true); } }),
+      h("p", { class: "ct-privacy", text: PRIVACY }));
+  }
+
+  // Add a class (isNew) or edit the current one, inside a panel body; done() goes back.
+  function classEditor(body, isNew, done) {
+    const c = loadClasses();
+    const i = isNew || !c.classes[c.current] ? -1 : c.current;
+    const k = i >= 0 ? c.classes[i] : { name: "", names: [] };
+    const name = h("input", { class: "ct-input", placeholder: "Class name, like 7A", maxlength: 30, "aria-label": "Class name" });
+    name.value = k.name;
+    const list = h("textarea", { class: "ct-input ct-names", "aria-label": "Names",
+      placeholder: "One name on each line.\nYou can paste a column from a spreadsheet." });
+    list.value = k.names.join("\n");
+    const msg = h("p", { class: "ct-privacy", text: PRIVACY });
+    const saveBtn = h("button", { class: "ct-btn ct-primary", text: "Save", onclick: function () {
+      const names = [];
+      list.value.split(/[\r\n\t]+/).forEach(function (n) {
+        n = n.trim();
+        if (n && names.indexOf(n) < 0) names.push(n);
+      });
+      if (!names.length) { msg.textContent = "Add at least one name."; msg.classList.add("ct-warn"); return; }
+      const now = loadClasses();
+      const label = name.value.trim() || "Class " + (now.classes.length + (i >= 0 ? 0 : 1));
+      if (i >= 0 && now.classes[i]) {
+        const old = now.classes[i];
+        old.name = label;
+        old.names = names;
+        old.picked = (old.picked || []).filter(function (n) { return names.indexOf(n) >= 0; });
+        old.groups = null;   // the old groups may name students who left
+      } else {
+        now.classes.push({ name: label, names: names, picked: [] });
+        now.current = now.classes.length - 1;
+      }
+      saveClasses(now);
+      done();
+    } });
+    body.textContent = "";
+    body.append(h("div", { class: "ct-edit" }, name, list, msg,
+      h("div", { class: "ct-foot" }, saveBtn,
+        c.classes.length ? h("button", { class: "ct-btn", text: "Cancel", onclick: done }) : null,
+        i >= 0 ? sureButton("Delete class", function () {
+          const now = loadClasses();
+          now.classes.splice(i, 1);
+          now.current = 0;
+          saveClasses(now);
+          done();
+        }) : null)));
+    (i >= 0 ? list : name).focus();
+  }
+
+  // Who's here today: tap the students who are away (it starts fresh each day).
+  function attendance(k, done) {
+    const grid = h("div", { class: "ct-here-grid ct-nodrag" });
+    function paint() {
+      const away = absentToday(k);
+      grid.textContent = "";
+      k.names.forEach(function (n) {
+        grid.append(h("button", { class: "ct-chip" + (away.indexOf(n) >= 0 ? " ct-away" : ""), text: n, onclick: function () {
+          const now = loadClasses(), cls = now.classes[now.current];
+          const list = absentToday(cls).slice(), j = list.indexOf(n);
+          if (j >= 0) list.splice(j, 1); else list.push(n);
+          cls.absent = { day: today(), names: list };
+          k.absent = cls.absent;
+          saveClasses(now);
+          paint();
+        } }));
+      });
+    }
+    paint();
+    return h("div", { class: "ct-here" },
+      h("p", { class: "ct-hint", text: "Tap the students who are away today. This starts fresh tomorrow." }),
+      grid,
+      h("div", { class: "ct-foot" }, h("button", { class: "ct-btn ct-primary", text: "Done", onclick: done })));
+  }
+
   /* ---------------- The tools ----------------
      Each tool: title, icon, default size, and build(body) which fills the panel body and may
      return { refresh(), close() }: refresh redraws after another tab changes the saved state,
@@ -81,8 +210,129 @@
   const COLORS = ["#0087ff", "#ff8c0f", "#2e9e4f", "#7b4fc9", "#C8372D", "#1a9e9e", "#d6458f", "#003477"];
 
   const TOOLS = {
+    picker: {
+      title: "Name picker", icon: "🙋", w: 400, h: 280, minW: 260, minH: 230, keys: ["classes"],
+      build: function (body) {
+        // Picks each student present once, then starts again. Picked names are remembered per class.
+        let mode = "pick", rolling = 0, last = null;   // last: { cls, name } shown on the big card
+        function show(m, isNew) {
+          mode = m;
+          clearInterval(rolling); rolling = 0;
+          if (m === "edit") { classEditor(body, isNew, function () { show("pick"); }); return; }
+          const c = loadClasses(), k = c.classes[c.current];
+          body.textContent = "";
+          if (!k) { body.append(noClasses(function (n) { show("edit", n); })); return; }
+          const bar = classBar(c, function (n) { show("edit", n); });
+          if (m === "here") { body.append(bar, attendance(k, function () { show("pick"); })); return; }
+          const here = present(k), picked = k.picked || [];
+          const left = here.filter(function (n) { return picked.indexOf(n) < 0; });
+          const name = last && last.cls === k.name ? last.name : "";
+          const card = h("button", { class: "ct-pick-card" + (name ? "" : " ct-idle"), onclick: pick, text: name || "Tap to pick" });
+          fit(card, name || "Tap to pick");
+          body.append(bar, card,
+            h("div", { class: "ct-pick-info", text: here.length ? left.length + " of " + here.length + " not picked yet" : "Everyone is away today." }),
+            h("div", { class: "ct-foot" },
+              h("button", { class: "ct-btn ct-primary", text: "Pick", onclick: pick }),
+              h("button", { class: "ct-btn", text: "Start again", onclick: function () {
+                const now = loadClasses();
+                now.classes[now.current].picked = [];
+                last = null;
+                saveClasses(now);
+                show("pick");
+              } }),
+              h("button", { class: "ct-btn", text: "Who's here?", onclick: function () { show("here"); } })));
+
+          function pick() {
+            if (rolling || !here.length) return;
+            const pool = left.length ? left : here;   // everyone picked: start a new round
+            const winner = pool[Math.floor(Math.random() * pool.length)];
+            let n = 0;
+            card.classList.remove("ct-idle", "ct-won");
+            rolling = setInterval(function () {
+              if (++n < 14) {
+                const any = here[Math.floor(Math.random() * here.length)];
+                card.textContent = any; fit(card, any);
+                return;
+              }
+              clearInterval(rolling); rolling = 0;
+              const now = loadClasses(), cls = now.classes[now.current];
+              cls.picked = (left.length ? cls.picked || [] : []).concat([winner]);
+              last = { cls: cls.name, name: winner };
+              saveClasses(now);
+              show("pick");
+              body.querySelector(".ct-pick-card").classList.add("ct-won");
+            }, 70);
+          }
+        }
+        // Long names get a smaller font, so they fit on one line (Chinese characters count double).
+        function fit(el, text) {
+          const len = Array.from(text).reduce(function (a, ch) { return a + (/[⺀-￿]/.test(ch) ? 2 : 1); }, 0);
+          el.style.setProperty("--len", Math.max(len, 7));
+        }
+        show("pick");
+        return {
+          refresh: function () { if (mode !== "edit" && !rolling) show(mode); },
+          close: function () { clearInterval(rolling); },
+        };
+      },
+    },
+
+    groups: {
+      title: "Groups", icon: "🧩", w: 480, h: 340, minW: 300, minH: 240, keys: ["classes", "groups"],
+      build: function (body) {
+        // Settings: { by: "size" (groups of n) or "count" (n groups), n }. The groups are kept per class.
+        let mode = "groups";
+        function show(m, isNew) {
+          mode = m;
+          if (m === "edit") { classEditor(body, isNew, function () { show("groups"); }); return; }
+          const c = loadClasses(), k = c.classes[c.current];
+          body.textContent = "";
+          if (!k) { body.append(noClasses(function (n) { show("edit", n); })); return; }
+          const bar = classBar(c, function (n) { show("edit", n); });
+          if (m === "here") { body.append(bar, attendance(k, function () { show("groups"); })); return; }
+          const s = load("groups", { by: "size", n: 4 });
+          const cards = h("div", { class: "ct-group-cards ct-nodrag" });
+          // Columns and rows from the number of groups, so the text can be as big as the panel allows.
+          const count = (k.groups || []).length, cols = count <= 4 ? Math.max(count, 1) : count <= 6 ? 3 : count <= 8 ? 4 : 5;
+          cards.style.setProperty("--cols", cols);
+          cards.style.setProperty("--grid-rows", Math.max(1, Math.ceil(count / cols)));
+          cards.style.setProperty("--most", Math.max.apply(null, (k.groups || [[]]).map(function (g) { return g.length; })));
+          (k.groups || []).forEach(function (g, i) {
+            cards.append(h("div", { class: "ct-group", style: "--team:" + COLORS[i % COLORS.length] },
+              h("div", { class: "ct-group-title", text: "Group " + (i + 1) }),
+              h("ul", null, ...g.map(function (n) { return h("li", { text: n }); }))));
+          });
+          if (!k.groups) cards.append(h("p", { class: "ct-hint", text: present(k).length + " students here. Press Make groups." }));
+          function setting(by, n) { save("groups", { by: by, n: Math.max(by === "size" ? 2 : 1, Math.min(n, 12)) }); show("groups"); }
+          body.append(bar, cards, h("div", { class: "ct-foot" },
+            h("button", { class: "ct-btn ct-primary", text: "Make groups", onclick: make }),
+            h("button", { class: "ct-btn ct-small", "aria-label": "Fewer", text: "−", onclick: function () { setting(s.by, s.n - 1); } }),
+            h("button", { class: "ct-btn ct-small ct-group-mode", title: "Tap to switch", onclick: function () { setting(s.by === "size" ? "count" : "size", s.n); },
+              text: s.by === "size" ? "Groups of " + s.n : s.n + " groups" }),
+            h("button", { class: "ct-btn ct-small", "aria-label": "More", text: "+", onclick: function () { setting(s.by, s.n + 1); } }),
+            h("button", { class: "ct-btn", text: "Who's here?", onclick: function () { show("here"); } })));
+
+          function make() {
+            const names = shuffle(present(k));
+            if (!names.length) return;
+            // Groups of n: no group bigger than n, and sizes differ by at most one.
+            const count = Math.min(names.length, s.by === "size" ? Math.ceil(names.length / s.n) : s.n);
+            const groups = [];
+            for (let i = 0; i < count; i++) groups.push([]);
+            names.forEach(function (n, i) { groups[i % count].push(n); });
+            const now = loadClasses();
+            now.classes[now.current].groups = groups;
+            saveClasses(now);
+            show("groups");
+          }
+        }
+        show("groups");
+        return { refresh: function () { if (mode !== "edit") show(mode); } };
+      },
+    },
+
     scoreboard: {
-      title: "Scoreboard", icon: "🏆", w: 360, h: 300, minW: 300, minH: 230, keys: ["scores"],
+      title: "Scoreboard", icon: "🏆", w: 360, h: 300, minW: 150, minH: 230, keys: ["scores"],
       build: function (body) {
         function state() {
           return load("scores", { sound: true, teams: [1, 2, 3, 4].map(function (n) { return { name: "Team " + n, score: 0 }; }) });
@@ -123,7 +373,7 @@
               onkeydown: function (e) { if (e.key === "Enter") name.blur(); } });
             name.value = t.name;
             rows.append(h("div", { class: "ct-score-row", style: "--team:" + COLORS[i % COLORS.length] },
-              h("button", { class: "ct-round", "aria-label": "Minus one", text: "−", onclick: function () { change(i, -1); } }),
+              h("button", { class: "ct-round ct-minus", "aria-label": "Minus one", text: "−", onclick: function () { change(i, -1); } }),
               name,
               h("span", { class: "ct-crown", text: top > 0 && leaders === 1 && t.score === top ? "👑" : "" }),
               h("span", { class: "ct-score", text: t.score }),
@@ -137,8 +387,10 @@
     },
 
     voice: {
-      title: "Voice level", icon: "🤫", w: 340, h: 260, minW: 260, minH: 180, keys: ["voice"],
-      build: function (body) {
+      title: "Voice level", icon: "🤫", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count"],
+      build: function (body, panel, grow) {
+        // The voice level, and (🔊) a noise meter under it: the room's sound level from the microphone,
+        // a "too loud" line, an alarm and a red flash over the line, and a count of the times.
         const LEVELS = [
           { icon: "🤫", label: "Silent", color: "#C8372D" },
           { icon: "💬", label: "Whisper", color: "#ff8c0f" },
@@ -146,20 +398,162 @@
           { icon: "👥", label: "Group talk", color: "#2e9e4f" },
           { icon: "🎤", label: "Presenter", color: "#0087ff" },
         ];
+        const NOISE_HEIGHT = 170;   // the panel grows by this much when the noise meter is turned on
         const big = h("div", { class: "ct-voice-big" });
         const picks = h("div", { class: "ct-voice-picks" });
         LEVELS.forEach(function (l, i) {
           picks.append(h("button", { class: "ct-voice-pick", style: "--lvl:" + l.color, title: l.label, text: i,
             onclick: function () { save("voice", i); paint(); } }));
         });
-        body.append(big, picks);
+        let noiseOn = load("noise-on", false);
+        const toggle = h("button", { class: "ct-voice-pick ct-noise-toggle", title: "Noise meter", "aria-label": "Noise meter", text: "🔊",
+          onclick: function () {
+            noiseOn = !noiseOn;
+            save("noise-on", noiseOn);
+            grow(noiseOn ? NOISE_HEIGHT : -NOISE_HEIGHT);
+            if (noiseOn) start(); else stop();
+            paint();
+          } });
+        picks.append(toggle);
+
+        let limit = load("noise-limit", 60), alarmOn = load("noise-beep", true), times = load("noise-count", 0);
+        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false;
+        const face = h("span", { class: "ct-noise-face", text: "🙂" });
+        const fill = h("div", { class: "ct-noise-fill" });
+        const meter = h("div", { class: "ct-noise-meter" }, fill, h("div", { class: "ct-noise-line" }));
+        const status = h("span", { class: "ct-noise-status", text: "Press Start to use the microphone." });
+        // How many times the class went over the line (kept until Reset, also in the next deck).
+        const count = h("span", { class: "ct-noise-count", title: "Times it was too loud" });
+        const resetCount = sureButton("Reset", function () { times = 0; save("noise-count", 0); paintCount(); });
+        resetCount.classList.add("ct-small");
+        const go = h("button", { class: "ct-btn ct-primary", text: "Start", onclick: function () { stream ? stop() : start(); } });
+        const slider = h("input", { type: "range", min: 10, max: 95, value: limit, "aria-label": "Too loud at",
+          oninput: function () { limit = +slider.value; save("noise-limit", limit); paintLine(); } });
+        const alarmBtn = h("button", { class: "ct-btn ct-small", title: "Alarm when too loud", onclick: function () {
+          alarmOn = !alarmOn; save("noise-beep", alarmOn); alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        } });
+        alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        const noise = h("div", { class: "ct-noise" },
+          h("div", { class: "ct-noise-top" }, face, meter),
+          h("div", { class: "ct-noise-info" }, status, h("span", { class: "ct-noise-tally" }, count, resetCount)),
+          h("div", { class: "ct-foot" }, go, h("label", { class: "ct-noise-limit" }, "Too loud at ", slider), alarmBtn));
+        body.append(big, picks, noise);
+
         function paint() {
           const i = load("voice", 0), l = LEVELS[i] || LEVELS[0];
           big.style.setProperty("--lvl", l.color);
           big.textContent = "";
           big.append(h("span", { class: "ct-voice-num", text: i }), h("span", { class: "ct-voice-icon", text: l.icon }),
             h("span", { class: "ct-voice-label", text: l.label }));
-          Array.prototype.forEach.call(picks.children, function (b, j) { b.classList.toggle("ct-on", j === i); });
+          Array.prototype.forEach.call(picks.children, function (b, j) { b.classList.toggle("ct-on", j === i || (b === toggle && noiseOn)); });
+          noise.hidden = !noiseOn;
+        }
+        function paintCount() { count.textContent = "Times too loud: " + times; }
+        function paintLine() { meter.style.setProperty("--limit", limit + "%"); }
+        function fmt(ms) {
+          const s = Math.floor(ms / 1000);
+          return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+        }
+        function alarm() {
+          [0, 0.22, 0.44].forEach(function (t) { beep(988, 0.18, 0.5, "square", t); });
+        }
+        async function start() {
+          if (stream) return;
+          if (!window.isSecureContext || !navigator.mediaDevices) {
+            status.textContent = "The microphone works only on http://localhost or an https:// site.";
+            return;
+          }
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+          } catch (e) {
+            status.textContent = e.name === "NotAllowedError"
+              ? "The browser blocked the microphone. Allow it with the icon in the address bar."
+              : "No microphone found.";
+            return;
+          }
+          if (!noiseOn) { stop(); return; }   // turned off while the browser was asking
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 2048;
+          ctx.createMediaStreamSource(stream).connect(analyser);
+          const data = new Float32Array(analyser.fftSize);
+          quietSince = Date.now(); loudSince = 0; loud = false;
+          go.textContent = "Stop";
+          function frame() {
+            analyser.getFloatTimeDomainData(data);
+            let sum = 0;
+            for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
+            const db = 20 * Math.log10(Math.sqrt(sum / data.length) || 1e-6);   // about −60 (quiet) to 0 (very loud)
+            const now = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
+            level = now > level ? level * 0.6 + now * 0.4 : level * 0.94 + now * 0.06;   // rise fast, fall slowly
+            const t = Date.now();
+            if (level > limit) {
+              if (!loudSince) loudSince = t;
+              if (!loud && t - loudSince > 1000) {
+                loud = true;
+                times = load("noise-count", 0) + 1;
+                save("noise-count", times);
+                paintCount();
+                if (alarmOn) alarm();
+              }
+            } else {
+              loudSince = 0;
+              if (loud) { loud = false; quietSince = t; }
+            }
+            meter.style.setProperty("--pct", level + "%");
+            const zone = level > limit ? "loud" : level > limit * 0.75 ? "near" : "ok";
+            meter.dataset.zone = zone;
+            face.textContent = loud ? "😣" : zone === "near" ? "😐" : "🙂";
+            panel.classList.toggle("ct-loud", loud);
+            status.textContent = loud ? "Too loud!" : "Quiet for " + fmt(t - quietSince);
+            raf = requestAnimationFrame(frame);
+          }
+          frame();
+        }
+        function stop() {
+          cancelAnimationFrame(raf);
+          if (stream) stream.getTracks().forEach(function (tr) { tr.stop(); });
+          if (ctx) ctx.close();
+          stream = ctx = null; level = 0;
+          meter.style.setProperty("--pct", "0%");
+          face.textContent = "🙂";
+          panel.classList.remove("ct-loud");
+          go.textContent = "Start";
+          status.textContent = "Microphone off.";
+        }
+        paint(); paintCount(); paintLine();
+        return {
+          refresh: function () { times = load("noise-count", 0); paintCount(); paint(); },
+          close: stop,
+        };
+      },
+    },
+
+    slide: {
+      title: "Slide size", icon: "📐", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
+      build: function (body) {
+        // Changes how this screen shows the slides: the space around them, and their shape.
+        // Saved as { margin: 0 to 0.3, wide: true for 16:9 }; the deck files don't change.
+        const label = h("div", { class: "ct-slide-label" });
+        const slider = h("input", { type: "range", min: 0, max: 30, "aria-label": "Space around the slide", oninput: function () {
+          const s = slideSetting();
+          s.margin = +slider.value / 100;
+          save("slide", s); applySlide(s); paint();
+        } });
+        const normal = h("button", { class: "ct-btn ct-small", text: "Standard", onclick: function () { setWide(false); } });
+        const wide = h("button", { class: "ct-btn ct-small", text: "Wide (16:9)", onclick: function () { setWide(true); } });
+        body.append(label, h("div", { class: "ct-slide-range" }, slider),
+          h("div", { class: "ct-foot" }, normal, wide, h("button", { class: "ct-btn ct-small", text: "Reset", onclick: function () {
+            try { localStorage.removeItem(PREFIX + "slide"); } catch (e) { /* private window */ }
+            applySlide(slideSetting()); paint();
+          } })));
+        function setWide(on) { const s = slideSetting(); s.wide = on; save("slide", s); applySlide(s); paint(); }
+        function paint() {
+          const s = slideSetting();
+          slider.value = Math.round(s.margin * 100);
+          label.textContent = "Space around the slide: " + Math.round(s.margin * 100) + "%";
+          normal.classList.toggle("ct-primary", !s.wide);
+          wide.classList.toggle("ct-primary", !!s.wide);
         }
         paint();
         return { refresh: paint };
@@ -191,92 +585,6 @@
         }
         paint();
         return { refresh: paint };
-      },
-    },
-
-    noise: {
-      title: "Noise meter", icon: "🔊", w: 400, h: 240, minW: 320, minH: 190, keys: [],
-      build: function (body, panel) {
-        let limit = load("noise-limit", 60), beepOn = load("noise-beep", false);
-        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false;
-        const face = h("span", { class: "ct-noise-face", text: "🙂" });
-        const fill = h("div", { class: "ct-noise-fill" });
-        const line = h("div", { class: "ct-noise-line" });
-        const meter = h("div", { class: "ct-noise-meter" }, fill, line);
-        const status = h("div", { class: "ct-noise-status", text: "Press Start to use the microphone." });
-        const go = h("button", { class: "ct-btn ct-primary", text: "Start", onclick: function () { stream ? stop() : start(); } });
-        const slider = h("input", { type: "range", min: 10, max: 95, value: limit, "aria-label": "Too loud at",
-          oninput: function () { limit = +slider.value; save("noise-limit", limit); paintLine(); } });
-        const beepBtn = h("button", { class: "ct-btn", title: "Beep when too loud", onclick: function () {
-          beepOn = !beepOn; save("noise-beep", beepOn); beepBtn.textContent = beepOn ? "🔔" : "🔕";
-        } });
-        beepBtn.textContent = beepOn ? "🔔" : "🔕";
-        body.append(h("div", { class: "ct-noise-top" }, face, meter), status,
-          h("div", { class: "ct-foot" }, go, h("label", { class: "ct-noise-limit" }, "Too loud at ", slider), beepBtn));
-        function paintLine() { line.style.left = limit + "%"; }
-        paintLine();
-
-        function fmt(ms) {
-          const s = Math.floor(ms / 1000);
-          return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-        }
-        async function start() {
-          if (!window.isSecureContext || !navigator.mediaDevices) {
-            status.textContent = "The microphone works only on http://localhost or an https:// site.";
-            return;
-          }
-          try {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
-          } catch (e) {
-            status.textContent = e.name === "NotAllowedError"
-              ? "The browser blocked the microphone. Allow it with the icon in the address bar."
-              : "No microphone found.";
-            return;
-          }
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          const analyser = ctx.createAnalyser();
-          analyser.fftSize = 2048;
-          ctx.createMediaStreamSource(stream).connect(analyser);
-          const data = new Float32Array(analyser.fftSize);
-          quietSince = Date.now(); loudSince = 0; loud = false;
-          go.textContent = "Stop";
-          function frame() {
-            analyser.getFloatTimeDomainData(data);
-            let sum = 0;
-            for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
-            const db = 20 * Math.log10(Math.sqrt(sum / data.length) || 1e-6);   // about −60 (quiet) to 0 (very loud)
-            const now = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
-            level = now > level ? level * 0.6 + now * 0.4 : level * 0.94 + now * 0.06;   // rise fast, fall slowly
-            const t = Date.now();
-            if (level > limit) {
-              if (!loudSince) loudSince = t;
-              if (!loud && t - loudSince > 1000) { loud = true; if (beepOn) beep(660, 0.5, 0.2); }
-            } else {
-              loudSince = 0;
-              if (loud) { loud = false; quietSince = t; }
-            }
-            fill.style.width = level + "%";
-            const zone = level > limit ? "loud" : level > limit * 0.75 ? "near" : "ok";
-            meter.dataset.zone = zone;
-            face.textContent = loud ? "😣" : zone === "near" ? "😐" : "🙂";
-            panel.classList.toggle("ct-loud", loud);
-            status.textContent = loud ? "Too loud!" : "Quiet for " + fmt(t - quietSince);
-            raf = requestAnimationFrame(frame);
-          }
-          frame();
-        }
-        function stop() {
-          cancelAnimationFrame(raf);
-          if (stream) stream.getTracks().forEach(function (tr) { tr.stop(); });
-          if (ctx) ctx.close();
-          stream = ctx = null; level = 0;
-          fill.style.width = "0";
-          face.textContent = "🙂";
-          panel.classList.remove("ct-loud");
-          go.textContent = "Start";
-          status.textContent = "Microphone off.";
-        }
-        return { close: stop };
       },
     },
 
@@ -409,6 +717,24 @@
     },
   };
 
+  /* ---------------- Slide size (applied in every deck, even with its panel closed) ---------------- */
+
+  const DECK = window.Reveal ? Reveal.getConfig() : {};
+  const DECK_SIZE = { margin: DECK.margin == null ? 0.04 : DECK.margin, width: DECK.width || 960, height: DECK.height || 700 };
+  function slideSetting() { return load("slide", { margin: DECK_SIZE.margin, wide: false }); }
+  function applySlide(s) {
+    if (!window.Reveal) return;
+    Reveal.configure({
+      margin: s.margin,
+      width: s.wide ? Math.round(DECK_SIZE.height * 16 / 9) : DECK_SIZE.width,   // same height: nothing new to overflow
+      height: DECK_SIZE.height,
+    });
+  }
+  if (window.Reveal && load("slide", null)) {
+    if (Reveal.isReady()) applySlide(slideSetting());
+    else Reveal.on("ready", function () { applySlide(slideSetting()); });
+  }
+
   /* ---------------- Panels ---------------- */
 
   const layer = h("div", { id: "ct-layer" });
@@ -435,14 +761,21 @@
     panel.style.width = p.w + "px"; panel.style.height = p.h + "px";
   }
 
-  // Drag `handle` to change the panel's position (move) or size (resize).
+  // Move a panel by dragging any empty part of it (not a button, field or list that scrolls);
+  // the drag starts after a few pixels, so taps still work. Resize it with the corner grip.
+  const NO_DRAG = "button, input, select, textarea, label, a, .ct-nodrag, .ct-grip";
   function dragger(panel, id, handle, resize) {
     handle.addEventListener("pointerdown", function (e) {
-      if (e.button !== 0 || e.target.closest("button")) return;
+      if (e.button !== 0 || (!resize && e.target.closest(NO_DRAG))) return;
       e.preventDefault();
-      handle.setPointerCapture(e.pointerId);
       const p = layout.pos[id], sx = e.clientX, sy = e.clientY, start = Object.assign({}, p);
+      let dragging = resize;
       function move(ev) {
+        if (!dragging) {
+          if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 6) return;
+          dragging = true;
+          panel.classList.add("ct-dragging");
+        }
         if (resize) {   // the corner stays on the screen
           p.w = Math.min(start.w + ev.clientX - sx, window.innerWidth - p.x - 4);
           p.h = Math.min(start.h + ev.clientY - sy, window.innerHeight - p.y - 4);
@@ -451,14 +784,15 @@
         place(panel, clampPos(p, TOOLS[id]));
       }
       function up() {
-        handle.removeEventListener("pointermove", move);
-        handle.removeEventListener("pointerup", up);
-        handle.removeEventListener("pointercancel", up);
-        saveLayout();
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
+        panel.classList.remove("ct-dragging");
+        if (dragging) saveLayout();
       }
-      handle.addEventListener("pointermove", move);
-      handle.addEventListener("pointerup", up);
-      handle.addEventListener("pointercancel", up);
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
     });
   }
 
@@ -468,19 +802,23 @@
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
     const n = Object.keys(open).length;
     const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
-    const head = h("div", { class: "ct-head" },
-      h("span", { class: "ct-title", text: tool.icon + " " + tool.title }),
-      h("button", { class: "ct-close", "aria-label": "Close", title: "Close", text: "×", onclick: function () { closeTool(id); } }));
+    const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
-    const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title }, head, body, grip);
+    const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title },
+      h("div", { class: "ct-handle", "aria-hidden": "true" }), close, body, grip);
     panel.addEventListener("pointerdown", function () { panel.style.zIndex = ++zTop; });
     place(panel, clampPos(p, tool));
     panel.style.zIndex = ++zTop;
     layer.append(panel);
-    dragger(panel, id, head, false);
+    dragger(panel, id, panel, false);
     dragger(panel, id, grip, true);
-    open[id] = { panel: panel, api: tool.build(body, panel) || {} };
+    function grow(dh) {   // a tool that shows more (the noise meter) makes its panel taller, or shorter again
+      p.h = Math.max(tool.minH, p.h + dh);
+      place(panel, clampPos(p, tool));
+      saveLayout();
+    }
+    open[id] = { panel: panel, api: tool.build(body, panel, grow) || {} };
     saveLayout();
     paintMenu();
   }
@@ -501,13 +839,15 @@
     if (b) b.blur();
   });
 
-  // Another tab (say, the next deck) changed a score or setting: show it here too.
-  window.addEventListener("storage", function (e) {
-    if (!e.key || e.key.indexOf(PREFIX) !== 0) return;
-    const key = e.key.slice(PREFIX.length);
+  // Redraw the open tools that show a saved setting (key) after it changed.
+  function refreshTools(key) {
     for (const id in open) {
       if (TOOLS[id].keys.indexOf(key) >= 0 && open[id].api.refresh) open[id].api.refresh();
     }
+  }
+  // Another tab (say, the next deck) changed a score or setting: show it here too.
+  window.addEventListener("storage", function (e) {
+    if (e.key && e.key.indexOf(PREFIX) === 0) refreshTools(e.key.slice(PREFIX.length));
   });
 
   /* ---------------- The toolbox button and its menu ---------------- */
@@ -544,9 +884,13 @@
   document.addEventListener("pointerdown", function (e) {
     if (!menu.hidden && !menu.contains(e.target) && !launch.contains(e.target)) toggleMenu(false);
   });
-  document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape" && !menu.hidden) toggleMenu(false);
-  });
+  // Esc closes the menu (and only the menu: reveal.js would also open the slide overview).
+  window.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !menu.hidden) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      toggleMenu(false);
+    }
+  }, true);
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
   }
@@ -558,7 +902,7 @@
     if (layer.parentNode !== home) home.append(layer);
   });
 
-  // Bring back the panels that were open in the last deck.
-  (layout.open || []).forEach(openTool);
+  // Bring back the panels that were open in the last deck (the old noise meter is now in Voice level).
+  (layout.open || []).map(function (id) { return id === "noise" ? "voice" : id; }).forEach(openTool);
   paintMenu();
 })();

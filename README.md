@@ -24,7 +24,7 @@ Things to try once the site is open:
 - Hover or tap a word with a dotted line on any slide: its vocab card pops up.
 - Open a unit page and click **Unit packet (PDF)**: every printable in one file, ready to copy.
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
-- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice. They float above the slides and stay put when you change slides.
+- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch and dice. They float above the slides and stay put when you change slides.
 - In the overview, each deck has a **PDF** too.
 - **Terminal > Run Task… > Open family site (parents)**: the version families see.
 - **Terminal > Run Task… > Open student site**: what students see, without the answer keys and teacher notes.
@@ -236,21 +236,25 @@ Every slide deck shows the current time in the bottom-left corner. Press **K** t
 
 Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen.
 
-## Classroom tools (scoreboard, noise meter, …)
+## Classroom tools (scoreboard, voice level, …)
 
-Every slide deck has a toolbox: press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by its blue title bar; drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). × closes it.
+Every slide deck has a toolbox: press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
 
 | Tool | What it does |
 |---|---|
-| 🏆 **Scoreboard** | Points for 1–8 teams. Tap a name to rename it; **+** and **−** change the score; 👑 marks the leader. **Reset** (tap twice) sets every score to 0. 🔔 turns the sound on or off. |
-| 🤫 **Voice level** | 0 Silent, 1 Whisper, 2 Partner talk, 3 Group talk, 4 Presenter. Tap a number. |
+| 🙋 **Name picker** | Picks a student from your class list. Everyone present gets picked once before anyone is picked again (**Start again** starts a new round). |
+| 🧩 **Groups** | Random groups from your class list: **Groups of 4** or **4 groups** (tap to switch, − and + to change the number). No group is bigger than the number you choose, and sizes differ by at most one. |
+| 🏆 **Scoreboard** | Points for 1–8 teams. Tap a name to rename it; **+** and **−** change the score; 👑 marks the leader. **Reset** (tap twice) sets every score to 0. 🔔 turns the sound on or off. Make it narrow to fit in the slide margin: each team's name moves above its score. |
+| 🤫 **Voice level** | 0 Silent, 1 Whisper, 2 Partner talk, 3 Group talk, 4 Presenter. Tap a number. Tap 🔊 to add the **noise meter** below it (the window grows): allow the microphone, and the bar shows how loud the room is. Move the **Too loud at** slider to set the line. Over the line for a second, the whole window flashes red and an alarm sounds (🔔 turns the alarm off). It shows how long the class has been quiet and counts the times it went over the line (**Reset** sets the count to 0; it carries on into the next deck until then). Nothing is recorded or sent anywhere; **Stop** or 🔊 again turns the microphone off. |
+| 📐 **Slide size** | Changes how **this screen** shows the slides, while you watch: the **space around the slide** (slider, 0–30%) and its shape, **Standard** or **Wide (16:9)**. Kept on that computer for every deck, so the board and your laptop can differ. **Reset** goes back to the deck's own size. The deck files and slide PDFs don't change. |
 | 🚦 **Traffic light** | Tap red (Stop), yellow (Get ready) or green (Go); tap it again to turn it off. |
-| 🔊 **Noise meter** | Press **Start** and allow the microphone. The bar shows how loud the room is; move the **Too loud at** slider to set the line. Over the line for a second, the window flashes red (and beeps, if 🔔 is on). It also shows how long the class has been quiet. Nothing is recorded or sent anywhere; **Stop** or × turns the microphone off. |
 | 🔳 **QR code** | A code for this deck, so students can open it on a tablet. **Edit link** makes a code for any link. On your own computer (`localhost`) the deck's address only works on that computer: the code says so. To make it point at your published site instead, add `classroom-tools: {qr-site: "https://…/"}` to `_quarto.yml`. |
 | ⏱️ **Stopwatch** | Counts up. Start, Pause, Reset. |
 | 🎲 **Dice** | 1–6 dice. **Roll** (or tap the dice); with more than one, it adds them up. |
 
-Open windows, where they are, the scores and the settings are remembered **on that computer** (in the browser), so they come back in the next deck and the next lesson. Team names you type stay on that computer too; they are never put in the course files or the website. To hide the toolbox in one deck, add `classroom-tools: false` to its labels.
+**Class lists** (name picker and groups): choose **+ New class…** in the class menu, type a name for the class (like 7A) and paste the students' names, one on each line (a column copied from a spreadsheet works). Add as many classes as you like and switch between them with the class menu at the top; both tools follow it. **Edit** changes or deletes the current class. **Who's here?** marks students who are away today, so they aren't picked or put in a group; it starts fresh the next day.
+
+Open windows, where they are, the scores, the class lists and the settings are remembered **only in that browser on that computer**, so they come back in the next deck and the next lesson. Names are never uploaded or put in the course files or on the website (each class list shows a note saying so). That also means a class list typed on one computer isn't on another, and clearing the browser's data deletes it: keep your own copy of each list to paste in again. To hide the toolbox in one deck, add `classroom-tools: false` to its labels.
 
 ## Tap-to-vote polls
 

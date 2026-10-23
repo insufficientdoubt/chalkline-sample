@@ -16,6 +16,26 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Toolbox: slide size, voice level with the noise meter, windows without title bars
+- **Asked for:** "Try adding the margin tool. We can see how it works and remove later if it sucks." "Merge noise meter and voice level tools into one (set voice level, and optionally enable noise meter). Also make the warning sound louder and add a visual cue flash the whole meter box red when triggered. Like the score box, this needs a vertical version." "For the gadgets ... they don't need the top bar and label. Give them a more modern look with no name and just a light x to close them."
+- **Why:** the slide margins are narrow, and the right amount depends on the screen. Fewer, cleaner windows on the board.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: new **Slide size** tool: a slider for the space around the slide (0–30%) and Standard / Wide (16:9), applied live with `Reveal.configure`. It's saved per computer and applied in every deck, even with the window closed. Reset goes back to the deck's own size. **Voice level** now holds the noise meter: 🔊 turns it on (and makes the window taller) or off (and stops the microphone). The alarm is louder (three square-wave beeps) and on by default. An old saved "noise meter" window opens as Voice level. Windows have no title bar: drag any empty part (after 6px, so taps still work), and a light × closes them.
+  - `_extensions/classroom/toolbox/toolbox.css`: windows have a small grab bar and a light ×. When it's too loud, a red layer flashes over the whole window. Below 260px wide, the voice level stacks and the noise meter stands up. Styles for Slide size.
+  - `README.md`: the tool table and how to move windows.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: Toolbox: name picker, groups, a narrow scoreboard, a noise count
+- **Asked for:** "name lists and let the teacher add more classes and quickly switch between them. Include a small note saying that this is stored in the browser so no one complains about pipl compliance." "For the group points gadget - add a vertical orientation when it's resized to be narrow. So the group name appears above the score and -/+ buttons. That way it will fit in the margin better." "For the noise meter add a function to count how many times is triggered."
+- **Why:** name pickers and group makers need class lists, and the students have no class numbers. Lists must stay off the public site and out of the repo (PIPL). The scoreboard should fit in the slide margin.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: two new tools. **Name picker** picks each student present once before anyone twice. **Groups** makes "groups of n" or "n groups" with sizes that differ by at most one. They share class lists: any number of classes, a class menu to switch (both tools follow it), **+ New class…** and **Edit** (paste names one on each line, delete a class), and **Who's here?** to mark students away for the day. The class editor shows a note that names stay only in this browser. **Scoreboard** can now be made as narrow as 150px. **Noise meter** counts the times it went over the line (saved, with Reset). Esc closes the toolbox menu without also opening reveal.js's slide overview.
+  - `_extensions/classroom/toolbox/toolbox.css`: styles for the class menu, editor, attendance chips, picker and group cards. Below 250px wide, the scoreboard puts each team's name above its − score +. The noise meter's info row has the count.
+  - `README.md`: the new tools, class lists and where they are stored.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Classroom toolbox on every slide deck (scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice)
 - **Asked for:** classroom-management tools like Classroomscreen's: "Add numbers 2-6" (a points scoreboard as a ClassDojo stand-in, work symbols and a traffic light, a noise meter, a QR code for the current page, a stopwatch and dice). "All of the classroom management ones should be visible across slides not connected to the current slide."
 - **Why:** Classroomscreen's classroom-management tools are good, but they live in another tab. ClassDojo can't be built in: it has no public API, and like most sites with a login it can't be shown inside another site.
