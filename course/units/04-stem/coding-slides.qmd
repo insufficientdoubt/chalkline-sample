@@ -6,6 +6,10 @@ description: "Build programs with Blockly blocks and see the same program in Pyt
 order: 2
 audience: [teacher, student]
 format: revealjs
+title-slide-attributes:
+  data-background-color: "#003477"
+  data-background-image: images/title-coding.svg
+  data-background-opacity: "0.55"      # the drawing, dimmed, so the title stays readable
 resources:
   - embeds/**
 ---

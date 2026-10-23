@@ -317,7 +317,7 @@ Every chip with a solid border opens a working example in another deck: press th
 ::: {.cat-box .cat-stem}
 [STEM you can move]{.cat-head} [9]{.cat-n}
 
-[Drag a triangle: angles add to 180°](../04-stem/math-slides.html#/triangle){.chip} [GeoGebra graphs with sliders](../04-stem/math-slides.html#/parabola){.chip} [PhET simulations](../04-stem/math-slides.html#/lines){.chip} [Blocks that become Python](../04-stem/coding-slides.html#/blocks){.chip} [Blockly Games maze](../04-stem/coding-slides.html#/maze){.chip} [Robot lifts: 4-bar and 6-bar, against a size limit](../04-stem/linkages-slides.html#/four-bar){.chip} [DR4B: floor to top, extension measured](../04-stem/linkages-slides.html#/dr4b){.chip} [Catapults: three ways to launch](../04-stem/linkages-slides.html#/catapult){.chip} [Linkage simulator: Grashof, Watt, Stephenson](../04-stem/linkages-slides.html#/four-bar-general){.chip}
+[Drag a triangle: angles add to 180°](../04-stem/math-slides.html#/triangle){.chip} [GeoGebra graphs with sliders](../04-stem/math-slides.html#/parabola){.chip} [PhET simulations](../04-stem/math-slides.html#/lines){.chip} [Blocks that become Python](../04-stem/coding-slides.html#/blocks){.chip} [Blockly Games maze](../04-stem/coding-slides.html#/maze){.chip} [Robot lifts: 4-bar, 6-bar and DR4B, with the size rules](../04-stem/linkages-slides.html#/lifts){.chip} [Build a lift: tower height and position, extension measured](../04-stem/linkages-slides.html#/lifts){.chip} [Catapults: three ways to launch](../04-stem/linkages-slides.html#/catapult){.chip} [Linkage simulator: Grashof, Watt, Stephenson](../04-stem/linkages-slides.html#/four-bar-general){.chip}
 :::
 
 ::: {.cat-box .cat-print}
