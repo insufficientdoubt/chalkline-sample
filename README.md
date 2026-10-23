@@ -266,7 +266,7 @@ Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`
 |---|---|
 | ⛄ **Snowman** | Guess the word one letter at a time (tap the letters, or type them). Each wrong letter melts part of the snowman: 7 wrong letters and it's a puddle. **💡 Hint** shows the picture and meaning. |
 | 🖼️ **Picture reveal** | A picture hides under numbered tiles. Open one tile at a time until someone guesses it. |
-| 🏆 **Jeopardy** | A board of categories and points. Tap a square for the clue, then **Show the answer**. Used squares go grey. |
+| 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. Tap a team to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:
@@ -296,7 +296,7 @@ Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`
 :::
 ```
 
-Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
+Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
 
 ## Tap-to-vote polls
 

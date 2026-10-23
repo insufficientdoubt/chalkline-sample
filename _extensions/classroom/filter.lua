@@ -80,7 +80,8 @@ end
 --   - **People**
 --     - ...
 --   :::
--- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values.
+-- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values;
+-- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
 
 local function list_items(blocks)
@@ -111,7 +112,8 @@ local function game_from_div(el)
     end
     local points = {}
     for n in (el.attributes["points"] or ""):gmatch("%d+") do table.insert(points, tonumber(n)) end
-    return games.div("jeopardy", { categories = categories, points = points, random = false })
+    return games.div("jeopardy", { categories = categories, points = points, random = false,
+      teams = tonumber(el.attributes["teams"] or "2") or 2 })
   end
   local questions = {}
   for _, item in ipairs(list_items(el.content)) do table.insert(questions, clue(item)) end

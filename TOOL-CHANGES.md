@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Jeopardy: teams, turns and scores
+- **Asked for:** "For the jeopardy game - add support for 2-4 teams and score keeping/ turn taking (highlight the current team)."
+- **Why:** not given (Jeopardy is usually played in teams).
+- **Changed:** `_extensions/classroom/games/games.js`: a team bar above the board (2 to 4 teams, with − and +). The current team is filled in and marked ▶. After **Show the answer**, **✓ Right +200** or **✗ Wrong** scores the clue and passes the turn; tap a team to give it the turn. A crown marks the leader, a winner card ends the game, and **Play again** restarts it. The clue card covers only the board, so the teams stay visible. Still separate from the toolbox scoreboard. `games.css`: team styles; the squares are a little shorter to make room. `shortcodes.lua`, `filter.lua`: `teams=` (default 2, `0` = no teams). `README.md` and the Greek Word Games deck: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: A ↓ button when there's a slide below
 - **Asked for:** "add a down arrow to the slides that have a slide below them." Also "put a code box on the first page which shows the short code that generates the game" (in the Greek Word Games deck: content, no log needed).
 - **Why:** a column of slides is easy to miss: the only sign was reveal.js's small corner arrows.

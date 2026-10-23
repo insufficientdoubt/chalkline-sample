@@ -132,7 +132,7 @@ Fewer tiles opened = a better guess. Tap **Show the answer** when someone gets i
 
 :::: {.columns .game-intro}
 ::: {.column width="38%"}
-Choose a category and a number.
+Teams take turns. Choose a category and a number.
 
 Bigger numbers are harder questions.
 
@@ -142,7 +142,7 @@ Press **↓** to play.
 [Make your own]{.code-label}
 
 ```{.markdown code-line-numbers="false"}
-::: {.jeopardy}
+::: {.jeopardy teams="2"}
 - **Places**
   - Land with water on three sides | a peninsula
   - This city had the first democracy | Athens
@@ -151,14 +151,14 @@ Press **↓** to play.
   - The goddess of wisdom | Athena
 :::
 
-From unit 1's vocab, with a 🔀 button:
-{{</* jeopardy unit=1 */>}}
+From unit 1's vocab, 3 teams, with a 🔀 button:
+{{</* jeopardy unit=1 teams=3 */>}}
 ```
 :::
 ::::
 
 ::: notes
-Teams take turns choosing a square. Read the clue, give the team time to answer, then tap **Show the answer**.
+The team whose turn it is (filled in, with ▶) chooses a square. Read the clue, give the team time to answer, then tap **Show the answer** and mark it **✓ Right** (the team gets the points) or **✗ Wrong**. Either way the turn passes to the next team. Tap a team to give it the turn; − and + change the number of teams (2 to 4). When every square is used, the game shows the winner. `teams="0"` turns teams and scores off.
 
 Each category is a **bold** line; under it, one line per clue: the clue, a `|`, then the answer. The first clue is worth 100, the next 200, and so on.
 :::
@@ -190,7 +190,7 @@ Each category is a **bold** line; under it, one line per clue: the clue, a `|`, 
 
 ## Vocab Jeopardy
 
-{{< jeopardy unit=1 >}}
+{{< jeopardy unit=1 teams=3 >}}
 
 # Quick-fire ⚡
 
