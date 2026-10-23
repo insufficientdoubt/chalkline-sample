@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: A playful worksheet layout for younger students
+- **Asked for:** worksheets that look "more like" Teachers Pay Teachers primary worksheets: "a certain kind of chalky style", "little line drawings that can be colored", "lots of space for the kids to work", "handwritten style fonts". "Make a playful worksheet. I want to see what it would look like as something more kid friendly."
+- **Why:** to make printables more child friendly than the clean, professional worksheet style.
+- **Changed:** `brand/typst/typst-template.typ`: a `layout: playful` option (handwriting fonts, a hand-drawn double frame, a dashed "cloud" title, a big Name/Date line, the teacher tab, a gentle footer) and a playful kit for worksheets: `doodle()` (seven line-art doodles drawn for Chalkline: robot, pencil, star, gear, sun, cloud, sparkle), `star-num()` and `work-box()`. `brand/fonts/print/`: Patrick Hand and Fredoka (OFL, with their licences). `brand/README.md` and README document it. Example: `course/units/04-stem/robot-times-tables.qmd` (its problems from `playful.py`).
+- **Who it helps:** probably every Chalkline course with younger students.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The Start here catalogue matches the new look
 - **Asked for:** "make it match, drop the emoji" (the "So what else can you do?" slide).
 - **Why:** it kept its own emoji and colored badges after the toolbox, games and activities moved to one design.

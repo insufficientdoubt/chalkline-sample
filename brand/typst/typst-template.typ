@@ -196,6 +196,40 @@
   ]
 }
 
+
+// ---- Playful kit (layout: playful): for younger students ---------------------------------------
+// Line-art doodles to color in, star number badges and roomy work boxes. Use them in a .qmd file:
+//   ```{=typst}
+//   #doodle("robot", width: 1.2in)     robot, pencil, star, gear, sun, cloud, sparkle
+//   #star-num(3)                       a star with a number in it
+//   #work-box(height: 1.4in)[Draw it!] a dashed box with room to work
+//   ```
+// The doodles are simple outlines drawn for Chalkline (no outside artwork), white inside so they
+// can be colored. Fonts: Patrick Hand (text) and Fredoka (titles, numbers), in brand/fonts/print/.
+#let playful-hand = ("Patrick Hand", "Noto Sans SC")
+#let playful-round = ("Fredoka", "Noto Sans SC")
+#let doodle-svg = (
+  robot: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 150\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"52\" y=\"78\" width=\"16\" height=\"12\" rx=\"3\"/><line x1=\"60\" y1=\"14\" x2=\"60\" y2=\"28\"/><circle cx=\"60\" cy=\"10\" r=\"6\"/><rect x=\"10\" y=\"42\" width=\"12\" height=\"22\" rx=\"5\"/><rect x=\"98\" y=\"42\" width=\"12\" height=\"22\" rx=\"5\"/><rect x=\"20\" y=\"28\" width=\"80\" height=\"54\" rx=\"16\"/><circle cx=\"44\" cy=\"52\" r=\"10\"/><circle cx=\"76\" cy=\"52\" r=\"10\"/><circle cx=\"46\" cy=\"54\" r=\"3.5\" fill=\"#1F2933\"/><circle cx=\"78\" cy=\"54\" r=\"3.5\" fill=\"#1F2933\"/><path d=\"M48 68 Q60 77 72 68\" fill=\"none\"/><path d=\"M28 98 Q8 104 12 122\" fill=\"none\"/><circle cx=\"12\" cy=\"127\" r=\"6\"/><path d=\"M92 98 Q112 104 108 122\" fill=\"none\"/><circle cx=\"108\" cy=\"127\" r=\"6\"/><rect x=\"26\" y=\"88\" width=\"68\" height=\"46\" rx=\"12\"/><path d=\"M60 106 C55 98 45 101 48 108 L60 118 L72 108 C75 101 65 98 60 106 Z\"/><rect x=\"34\" y=\"134\" width=\"20\" height=\"11\" rx=\"4\"/><rect x=\"66\" y=\"134\" width=\"20\" height=\"11\" rx=\"4\"/></svg>",
+  pencil: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 150 44\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"24,8 24,36 4,22\"/><polygon points=\"4,22 11,18 11,26\" fill=\"#1F2933\"/><rect x=\"24\" y=\"8\" width=\"92\" height=\"28\"/><line x1=\"24\" y1=\"17\" x2=\"116\" y2=\"17\"/><line x1=\"24\" y1=\"27\" x2=\"116\" y2=\"27\"/><rect x=\"116\" y=\"8\" width=\"10\" height=\"28\"/><rect x=\"126\" y=\"8\" width=\"20\" height=\"28\" rx=\"6\"/></svg>",
+  star: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polygon points=\"50.0,7.0 62.3,36.0 93.7,38.8 70.0,59.5 77.0,90.2 50.0,74.0 23.0,90.2 30.0,59.5 6.3,38.8 37.7,36.0\"/><path d=\"M38 56 Q50 66 62 56\" fill=\"none\"/><circle cx=\"40\" cy=\"44\" r=\"3\" fill=\"#1F2933\"/><circle cx=\"60\" cy=\"44\" r=\"3\" fill=\"#1F2933\"/></svg>",
+  gear: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M50.0,14.0 L59.0,4.9 L67.6,7.5 L70.0,20.1 L75.5,24.5 L88.2,24.4 L92.5,32.4 L85.3,43.0 L86.0,50.0 L95.1,59.0 L92.5,67.6 L79.9,70.0 L75.5,75.5 L75.6,88.2 L67.6,92.5 L57.0,85.3 L50.0,86.0 L41.0,95.1 L32.4,92.5 L30.0,79.9 L24.5,75.5 L11.8,75.6 L7.5,67.6 L14.7,57.0 L14.0,50.0 L4.9,41.0 L7.5,32.4 L20.1,30.0 L24.5,24.5 L24.4,11.8 L32.4,7.5 L43.0,14.7 Z\"/><circle cx=\"50\" cy=\"50\" r=\"14\"/></svg>",
+  sun: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"80.0\" y1=\"50.0\" x2=\"94.0\" y2=\"50.0\"/><line x1=\"71.2\" y1=\"71.2\" x2=\"81.1\" y2=\"81.1\"/><line x1=\"50.0\" y1=\"80.0\" x2=\"50.0\" y2=\"94.0\"/><line x1=\"28.8\" y1=\"71.2\" x2=\"18.9\" y2=\"81.1\"/><line x1=\"20.0\" y1=\"50.0\" x2=\"6.0\" y2=\"50.0\"/><line x1=\"28.8\" y1=\"28.8\" x2=\"18.9\" y2=\"18.9\"/><line x1=\"50.0\" y1=\"20.0\" x2=\"50.0\" y2=\"6.0\"/><line x1=\"71.2\" y1=\"28.8\" x2=\"81.1\" y2=\"18.9\"/><circle cx=\"50\" cy=\"50\" r=\"22\"/><circle cx=\"42\" cy=\"46\" r=\"3\" fill=\"#1F2933\"/><circle cx=\"58\" cy=\"46\" r=\"3\" fill=\"#1F2933\"/><path d=\"M40 56 Q50 64 60 56\" fill=\"none\"/></svg>",
+  cloud: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 120 80\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M28 68 A18 18 0 0 1 30 32 A26 26 0 0 1 78 22 A20 20 0 0 1 100 46 A16 16 0 0 1 96 68 Z\"/></svg>",
+  sparkle: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 60 60\" fill=\"#fff\" stroke=\"#1F2933\" stroke-width=\"4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M30 4 Q34 26 56 30 Q34 34 30 56 Q26 34 4 30 Q26 26 30 4 Z\"/></svg>",
+)
+#let doodle(name, width: 1in) = image(bytes(doodle-svg.at(name)), format: "svg", width: width)
+#let star-num(n, size: 30pt, fill: rgb("#ffe08a")) = box(width: size, height: size, {
+  let pts = range(10).map(i => {
+    let r = if calc.even(i) { size / 2 } else { size / 4.4 }
+    let a = -90deg + i * 36deg
+    (size / 2 + r * calc.cos(a), size / 2 + 1.5pt + r * calc.sin(a))
+  })
+  place(polygon(fill: fill, stroke: (paint: rgb("#1F2933"), thickness: 1.4pt, join: "round"), ..pts))
+  place(center + horizon, dy: 1.5pt, text(font: playful-round, size: size * 0.4, weight: 700, fill: rgb("#1F2933"))[#n])
+})
+#let work-box(height: 1.2in, body) = block(width: 100%, height: height, inset: 10pt, radius: 14pt,
+  stroke: (paint: rgb("#8a97a8"), thickness: 1.5pt, dash: "dashed"), body)
+
 #let article(
   title: none,
   subtitle: none,
@@ -210,7 +244,7 @@
   colors: (:),
   logos: (:),
   school: none,
-  layout: none,           // "poster" for posters; anything else is a worksheet
+  layout: none,           // "poster" for posters; "playful" for younger students; anything else is a worksheet
   poster-theme: none,     // "dark" for a navy poster with white text
   poster-title: true,     // false: don't print the title (when a big quote is the headline)
   poster-center: false,   // true: center the content vertically
@@ -270,6 +304,60 @@
       v(10pt)
     }
     if poster-center { block(height: 100%, width: 100%, align(horizon, doc)) } else { doc }
+
+  // --- Playful layout (layout: playful) -------------------------------------
+  // For younger students: handwriting fonts, a hand-drawn double frame, a dashed "cloud" title,
+  // a big Name line, and room to work. Teacher copies still get the orange corner tab.
+  } else if layout == "playful" {
+    let k = brand-colors(colors)
+    let tab = if is-teacher {
+      place(top + right, dx: -0.42in, dy: 0.42in,
+        block(fill: orange, inset: (x: 12pt, y: 6pt), radius: (bottom-left: 10pt, top-right: 14pt))[
+          #set text(font: playful-round, size: 8pt, weight: 700, fill: navy)
+          #upper(edition)
+        ])
+    }
+    let frame = {
+      place(top + left, dx: 0.32in, dy: 0.32in,
+        rect(width: 100% - 0.64in, height: 100% - 0.64in, radius: 22pt, stroke: 2.4pt + ink))
+      place(top + left, dx: 0.42in, dy: 0.42in,
+        rect(width: 100% - 0.84in, height: 100% - 0.84in, radius: 16pt,
+          stroke: (paint: k.blue.lighten(30%), thickness: 1.2pt, dash: "dashed")))
+      tab
+    }
+    set page(
+      margin: (x: 0.7in, top: 0.7in, bottom: 0.95in),
+      background: frame,
+      header: none,
+      footer: context {
+        set text(font: playful-hand, size: 10pt, fill: navy.lighten(30%))
+        align(center)[#if school != none [#school] #if doc-type != none [ · #doc-type] · page #counter(page).display() of #counter(page).final().first()]
+      },
+      footer-descent: 0.12in,
+    )
+    set text(font: playful-hand, size: 15pt, fill: ink)
+    set par(leading: 0.65em, spacing: 1em)
+    show heading: set text(font: playful-round, fill: navy, weight: 700)
+    show heading.where(level: 1): it => block(above: 1.1em, below: 0.6em, sticky: true)[
+      #box(baseline: 20%, doodle("sparkle", width: 16pt)) #h(4pt) #text(size: 1.3em, it.body)]
+    show heading.where(level: 2): it => block(above: 0.9em, below: 0.5em, sticky: true, text(size: 1.1em, it.body))
+    show strong: set text(fill: navy)
+
+    // the title, in a dashed cloud-shaped box, and the Name line
+    block(width: 100%, fill: k.sky, radius: 30pt, inset: (x: 20pt, y: 12pt),
+      stroke: (paint: navy, thickness: 2pt, dash: "dashed"))[
+      #set text(font: playful-round)
+      #text(size: 26pt, weight: 700, fill: navy)[#title]
+      #if subtitle != none { linebreak(); text(size: 13pt, fill: navy.lighten(15%))[#subtitle] }
+    ]
+    if name-box {
+      v(4pt)
+      grid(columns: (auto, 1fr, auto, 0.55fr), column-gutter: 8pt, align: bottom,
+        text(font: playful-round, size: 14pt, fill: navy)[Name:], line(length: 100%, stroke: 1.3pt + ink),
+        text(font: playful-round, size: 14pt, fill: navy)[Date:], line(length: 100%, stroke: 1.3pt + ink))
+    }
+    v(6pt)
+    doc
   } else {
   // --- Worksheet layout ---------------------------------------------------
   set par(justify: false, leading: 0.72em, spacing: 1.05em)

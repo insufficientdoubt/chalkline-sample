@@ -169,7 +169,7 @@ format:
   typst: default    # PDF (A4)
 ```
 
-Add `docx: default` for a Word file. PDFs are A4; posters set `papersize: a3`. Shared settings live in `_quarto.yml`.
+Add `docx: default` for a Word file. PDFs are A4; posters set `papersize: a3`. Shared settings live in `_quarto.yml`. For younger students, `layout: playful` gives a printable a kid-friendly look: handwriting fonts, a hand-drawn frame, star numbers and line-art doodles to color (see `brand/README.md` and **Unit 4 › Robot Times Tables!**).
 
 
 ## Teacher-only content

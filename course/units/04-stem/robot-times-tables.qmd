@@ -1,0 +1,83 @@
+---
+title: "Robot Times Tables!"
+subtitle: "Help the robots solve these. Then color them in!"
+type: worksheet
+description: "A playful, kid-friendly worksheet: 12 times-table facts in star boxes, three robot story problems with room to draw, and a robot to color. Handwriting fonts and line-art doodles (layout: playful). Change the seed for a new version. Teacher copy has answers."
+order: 7
+audience: [teacher, student, parent]
+doc-type: Worksheet
+name-box: true
+layout: playful
+format:
+  html: default
+  typst: default
+resources:
+  - fonts/*
+---
+
+```{python}
+#| output: asis
+# Change SEED for a new set of problems (the answer key changes with it).
+SEED = 3
+import sys; sys.path.append("course/units/04-stem")
+from playful import facts, stories, facts_typst, stories_typst, facts_html, stories_html, WEB
+fact_list, story_list = facts(SEED), stories(SEED)
+print(WEB)
+```
+
+```{=typst}
+#grid(columns: (1fr, auto), column-gutter: 12pt, align: horizon,
+  [*Ready, set, multiply!* Write each answer in the dashed box.],
+  doodle("pencil", width: 1.3in))
+#v(4pt)
+```
+
+::: {.content-visible when-format="html"}
+[**Ready, set, multiply!** Write each answer in the dashed box.]{.pl}
+:::
+
+```{python}
+#| output: asis
+print(facts_typst(fact_list))
+print(facts_html(fact_list))
+```
+
+```{=typst}
+#v(1fr)
+#align(center, grid(columns: 4, column-gutter: 22pt, align: horizon,
+  doodle("star", width: 0.8in), doodle("sun", width: 0.9in), doodle("gear", width: 0.75in), doodle("star", width: 0.8in)))
+#align(center, text(size: 13pt, fill: rgb("#5b6b80"))[Color a star for every answer you got right!])
+```
+
+{{< pagebreak >}}
+
+# Robot stories
+
+```{python}
+#| output: asis
+print(stories_typst(story_list))
+print(stories_html(story_list))
+```
+
+```{=typst}
+#v(1fr)
+#grid(columns: (1fr, auto), column-gutter: 16pt, align: horizon,
+  [#text(font: playful-round, size: 20pt, weight: 700, fill: rgb("#003477"))[All done?] \
+   Color in your robot helper! \
+   Then give it a name: #box(width: 1.6in, stroke: (bottom: 1.3pt + rgb("#1F2933")))[#v(1.1em)]],
+  doodle("robot", width: 2.1in))
+```
+
+::: {.content-visible when-profile="teacher"}
+{{< pagebreak >}}
+
+# Answer key
+
+```{python}
+#| output: asis
+print(facts_typst(fact_list, answers=True))
+print(facts_html(fact_list, answers=True))
+print(stories_typst(story_list, answers=True))
+print(stories_html(story_list, answers=True))
+```
+:::
