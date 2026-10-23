@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: The Start here catalogue matches the new look
+- **Asked for:** "make it match, drop the emoji" (the "So what else can you do?" slide).
+- **Why:** it kept its own emoji and colored badges after the toolbox, games and activities moved to one design.
+- **Changed:** `_extensions/classroom/ui/icons.js`: a microphone icon (for the catalogue's Noise meter chip). The slide itself (content): no emoji, chips and boxes use the shared design values, and the toolbox chips show the toolbox's line icons. IDEAS.md: two intro decks added to the to-do list.
+- **Who it helps:** this course (the icon: every Chalkline course).
+- **AI assistant:** Claude.
+
 ## 2026-10-23: One design for the tools, games and activities; line icons instead of emoji
 - **Asked for:** "go with option 1": after comparing the look with Shoelace and Bootstrap, use Chalkline's own design values and a free icon set, to lose the "vibe coded look".
 - **Why:** "I was thinking about the vibe coded look." In the test, the frameworks' controls were too small for a board, and Bootstrap clashed with reveal.js (it hid the deck and the tool windows); most of the casual look came from emoji icons and small inconsistencies.
