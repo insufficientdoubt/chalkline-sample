@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Jeopardy: scores under the board; rename teams, change scores
+- **Asked for:** "visually segregate the score keeping area. Move scores to the bottom and add some space and a decorative line between the scores and the gameplay part. Allow the teacher to change team's names. Allow the teacher to click on the score to manually change it."
+- **Why:** the scores above the board looked like part of the game.
+- **Changed:** `_extensions/classroom/games/games.js`: the team bar is now under the board, after a divider. Tap a team's name to rename it, tap its score to type a new one (Enter or tapping away keeps it, Esc cancels), or tap the team anywhere else to give it the turn. Names stay when the board is reset. `games.css`: a gold dashed line with "SCORES" between the board and the teams; styles for the name, score and typing box. `README.md` and the Greek Word Games notes: updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Noise meter: the voice level sets the line; a cleaner look
 - **Asked for:** "For the noise meter: the target sound level should be set by the voice level instruction. Not a separate slider. Also just put a bit of effort into making it look nicer/more cohesion."
 - **Why:** the voice level already says how loud the room should be.

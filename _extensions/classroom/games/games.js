@@ -271,7 +271,10 @@
     const bar = h("div", { class: "cg-teams" });
     const board = h("div", { class: "cg-board" });
     const card = h("div", { class: "cg-clue", hidden: true });
-    root.append(useTeams ? bar : "", h("div", { class: "cg-board-wrap" }, board, card),   // the clue covers the board, not the teams
+    // The board on top; the scores below it, after a dividing line. The clue covers the board, not the scores.
+    root.append(h("div", { class: "cg-board-wrap" }, board, card),
+      useTeams ? h("div", { class: "cg-divider", "aria-hidden": "true" }, h("span", { text: "Scores" })) : "",
+      useTeams ? bar : "",
       !useTeams && cfg.random ? h("div", { class: "cg-tools" }, button("🔀 New board", start, "cg-new")) : "");
 
     function setTeams(n) {
@@ -281,20 +284,52 @@
       turn = turn % n;
       paintTeams();
     }
+    // Each team: tap its name to rename it, tap its score to change it, tap anywhere else to give it the turn.
     function paintTeams() {
       if (!useTeams) return;
       bar.textContent = "";
       const top = Math.max.apply(null, teams.map(function (t) { return t.score; }));
       teams.forEach(function (t, i) {
-        bar.append(h("button", { class: "cg-team" + (i === turn ? " cg-turn" : ""), style: "--team:" + TEAM_COLORS[i],
-          title: "Give this team the turn", onclick: function () { turn = i; paintTeams(); } },
-          h("span", { class: "cg-team-name", text: (i === turn ? "▶ " : "") + t.name + (top > 0 && t.score === top ? " 👑" : "") }),
-          h("span", { class: "cg-team-score", text: t.score })));
+        const name = h("button", { class: "cg-team-name", title: "Tap to rename", text: t.name });
+        const score = h("button", { class: "cg-team-score", title: "Tap to change the score", text: t.score });
+        name.addEventListener("click", function (e) {
+          e.stopPropagation();
+          edit(name, t.name, "text", function (v) { t.name = v.trim().slice(0, 20) || t.name; });
+        });
+        score.addEventListener("click", function (e) {
+          e.stopPropagation();
+          edit(score, t.score, "number", function (v) { const n = parseInt(v, 10); if (!isNaN(n)) t.score = n; });
+        });
+        bar.append(h("div", { class: "cg-team" + (i === turn ? " cg-turn" : ""), style: "--team:" + TEAM_COLORS[i],
+          title: "Tap to give this team the turn", onclick: function () { turn = i; paintTeams(); } },
+          h("span", { class: "cg-team-mark", text: i === turn ? "▶" : "" }), name,
+          h("span", { class: "cg-team-crown", text: top > 0 && t.score === top ? "👑" : "" }), score));
       });
       bar.append(h("span", { class: "cg-team-tools" },
         h("button", { class: "cg-btn cg-small", text: "−", title: "Fewer teams", onclick: function () { setTeams(teams.length - 1); } }),
         h("button", { class: "cg-btn cg-small", text: "+", title: "More teams", onclick: function () { setTeams(teams.length + 1); } }),
         cfg.random ? button("🔀", start, "cg-new cg-small") : ""));
+    }
+    // Swap a name or score for a box to type in; Enter (or tapping away) keeps it, Esc cancels.
+    function edit(el, value, type, keep) {
+      const box = h("input", { class: "cg-team-input", type: type, value: value, "aria-label": type === "number" ? "Score" : "Team name" });
+      box.value = value;
+      let done = false;
+      function finish(save) {
+        if (done) return;
+        done = true;
+        if (save) keep(box.value);
+        paintTeams();
+      }
+      box.addEventListener("click", function (e) { e.stopPropagation(); });
+      box.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") finish(true);
+        else if (e.key === "Escape") { e.stopPropagation(); finish(false); }
+      });
+      box.addEventListener("blur", function () { finish(true); });
+      el.replaceWith(box);
+      box.focus();
+      box.select();
     }
     function start() {
       const cats = cfg.random ? vocabBoard(list(cfg.words), cfg.rows) : list(cfg.categories);
