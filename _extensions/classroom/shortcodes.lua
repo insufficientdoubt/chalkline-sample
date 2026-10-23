@@ -37,6 +37,9 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< matching unit=1 >}}                pairs: tap a word, then its meaning (with="picture": its picture)
   {{< memory unit=1 >}}                  pairs: turn over two cards (a word and its picture, or with="meaning")
                                          count=6 pairs. Your own pairs: ::: {.matching} or {.memory} (filter.lua).
+  {{< scramble unit=1 >}}                the letters of a word, mixed up (words as for snowman)
+  {{< sort unit=1 >}}                    sort words into groups: their topics (one unit) or units
+  {{< bingo unit=1 >}}                   bingo: make printable cards (PDF, in the browser), then call
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
@@ -100,7 +103,7 @@ local games = dofile(quarto.utils.resolve_path("games/games.lua"))
 
 local function game_word(t, up)
   return { word = t.term, hint = t.definition, image = t.image ~= "" and (up .. t.image) or "", example = t.example or "",
-           units = t.units or {} }
+           units = t.units or {}, topic = t.topic or "" }
 end
 
 local function game_config(args, kwargs, kind)
@@ -134,7 +137,7 @@ local function game_config(args, kwargs, kind)
     quarto.log.warning(kind .. " shortcode: no vocab words" .. (unit and (" for unit " .. unit) or "") ..
       " (is the unit's list in course/vocab/?)")
   end
-  return { words = words, random = true }
+  return { words = words, random = true, units = vex_units, unit = unit }
 end
 
 -- Outside PDFs: page counts from generated/pdf-pages.json, and paths from the project root.
@@ -431,6 +434,33 @@ return {
     c.count = tonumber(str(kwargs["count"], "6")) or 6
     c.with = str(kwargs["with"], "picture")
     return games.div("memory", c)
+  end,
+
+  -- Word scramble: the same words as Snowman (random, unit=1, a vocab word, or your own).
+  ["scramble"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Word scramble") end
+    return games.div("scramble", game_config(args, kwargs, "scramble"))
+  end,
+
+  -- Sort it from the vocab list: words from several units go into their units; from one unit
+  -- (unit=1), into their topics. Your own groups: ::: {.sort} (filter.lua).
+  ["sort"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Sort it") end
+    local c = game_config({}, kwargs, "sort")
+    c.with = str(kwargs["with"], "words")              -- with="picture": the vocab pictures
+    c.feedback = str(kwargs["feedback"], "now")        -- feedback="end": wait for Check
+    return games.div("sort", c)
+  end,
+
+  -- Bingo: make printable cards (in the browser) before class, then call the words in class.
+  ["bingo"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Bingo") end
+    local c = game_config({}, kwargs, "bingo")
+    c.unit = c.unit or 0
+    for _, u in ipairs(vex_units or {}) do
+      if u.unit == c.unit then c.title = u.title end
+    end
+    return games.div("bingo", c)
   end,
 
   -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).

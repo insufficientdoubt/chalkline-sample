@@ -16,6 +16,52 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Timelines (to teach with, across slides, and for students) and Label it
+- **Asked for:** "A timeline template slide ... for introducing a timeline when teaching. It should have all the events preloaded with photos and allow the speaker to scrub through them chronologically, or to click on any item to pull up more information on it (like a zoom-in function). A timeline activity slide for students where they have to place items correctly on the timeline ... the correct order and they have to slide it to the correct year. A labeling activity slide. Using a photograph students need to drag labels onto the correct region ... do whatever is best practice." And: "An option for a timeline to run across multiple slides ... the timeline can be an automatic insert and then later on you can use the timeline element to click on it and either get the info back from the slides or go directly to the slide."
+- **Why:** to teach chronology, and for labelling activities.
+- **Changed:**
+  - `_extensions/classroom/games/timeline.js` and `timeline.css` (new):
+    - **Timeline to teach with:** a big card above the line; ‹ ›, tap or drag along the line; tap the card to zoom in.
+    - **Strips:** on slides that events link to. Tap an event for its card, then **Go to this slide** or **The timeline**.
+    - **Timeline activity:** drag events onto the line at their year (or tap, then tap the line). Check marks each one (tolerance, snap) and the order.
+    - **Label it:** numbered dots on a photo; drag or tap labels on; feedback with reasons; L finds and copies a place. Wide photos use the whole width.
+    - Dates like "509 BC", "AD 80" and "c. 9600 BC" are read and sorted; there's no "AD 0".
+  - `_extensions/classroom/games/games.js`: shares its helpers (`window.ChalklineGames`) so timeline.js can add games, and starts the games once the page has loaded. `games.lua`: loads timeline.js and timeline.css.
+  - `_extensions/classroom/filter.lua`: `::: {.timeline-interactive}` and `::: {.timeline-activity}` (events as `::: {.event}` divs, or a list) and `::: {.label-it}`. A new pass gives each timeline an id and puts a strip on every slide an event links to. Plain `::: {.timeline}` stays the simple styled list.
+  - `course/units/02-ancient-rome/rome-timeline-slides.qmd` (new demo deck), `README.md`, the Start-here slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: Sort it: a reason for each item, feedback straight away, pictures
+- **Asked for:** "Definitely add the option for immediate feedback if the kid gets the answer wrong, a little explanation of why. I think a third group support for both is fine but we'll already have that if we support multiple groups. And yes I want the option for pictures as items." (After: "So we can sort based on characteristics that are not specifically listed in the vocabulary. For example in a biology class sorting animals by habitat.")
+- **Why:** to use Sort it for higher-order sorts, with feedback that teaches.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: Sort it items can have a reason and a picture.
+    - **Feedback straight away** (the usual): a right item locks in green; a wrong one shows red in that group, shakes, goes back to the bank, and its reason shows in a red box. It counts mistakes.
+    - `feedback="end"`: the old way, with Check showing up to three reasons.
+    - From the vocab: the reason is the word's meaning, and `with="picture"` shows the vocab pictures.
+  - `filter.lua`: `::: {.sort}` items can have `![Name](path)` pictures (copied to the site) and `| reason`; `feedback=` on the div. `shortcodes.lua`: `with=` and `feedback=` for `{{< sort >}}`.
+  - `games.css`: picture items and the reason box.
+  - `README.md`; the Greek Word Games deck: reasons on *Athens or Sparta?*, a new *Greek or Roman?* photo sort, and an updated code box and credits.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: Word scramble, Sort it, and Bingo with cards made on demand
+- **Asked for:** "add bingo and sort it. Figure out where bingo would live because the process for that is a little different. The teacher would not do that live in class they would prepare it ahead of time and print the cards. Add word scramble." Then, on bingo: "Bingo cards should not be generated at build time ... Can we just use that [the PDF library] to generate printable PDF cards on demand? ... the teacher could reuse the game without regenerating the site. Change the number of cards the number of items etc."
+- **Why:** more review games. Bingo needs paper cards, prepared before class.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: three new games.
+    - **Word scramble:** tap or type the mixed-up letters in order.
+    - **Sort it:** a word bank and 2–3 groups; tap a word, then its group; Check; from the vocab, by topic (one unit) or by unit (several).
+    - **Bingo**, in two steps. *Make cards*: grid 3–5, free square, number of cards; a PDF made in the browser by pdf-lib when the teacher presses Download (nothing at build time). *Call*: one meaning at a time; check a card by its number for a full line. A game code (unit-grid-free-number) printed on every card makes the same cards again with a repeatable random generator, so any card can be checked on any computer; the game and the words called are saved in the browser.
+    - The Review games page lists nine games in a full-width row, with the unit menu under it.
+  - `games.css`: styles for the three games and the two-row header. `games.lua`: ships `../pdf-viewer/pdf-lib.esm.min.js` next to `games.js`.
+  - `shortcodes.lua`: `{{< scramble >}}`, `{{< sort >}}`, `{{< bingo >}}`; vocab game settings carry the unit list. `filter.lua`: `::: {.sort}` (groups in bold, words under them).
+  - `scripts/vocab_terms.py`: each term's topic (its `subdomain`), for Sort it.
+  - `README.md`; the Greek Word Games deck (Scramble, Sort it and Bingo sections); the Start-here slide. `IDEAS.md` (new): the game ideas not built yet (Heads up / Taboo, Spin the wheel and others), and next steps for Bingo.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The calm style for every game; Matching and Memory
 - **Asked for:** "apply the calmer style to the game slides too. Oh and let's add a matching game, and memory (the card flipping game)."
 - **Why:** to match the Review games page; two more classic review games.

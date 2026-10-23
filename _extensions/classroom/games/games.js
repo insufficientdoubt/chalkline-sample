@@ -10,6 +10,7 @@
   so they work the same whether or not it's open.
 */
 (function () {
+  const BASE = document.currentScript ? document.currentScript.src.replace(/[^/]*$/, "") : "";   // pdf-lib sits next to this file
   const COLORS = ["#0087ff", "#ff8c0f", "#2e9e4f", "#7b4fc9", "#e5383b", "#1a9e9e", "#d6458f", "#e0a800"];
 
   // Tiny element builder: h("div", {class: "x", onclick: fn}, child, "text", ...)
@@ -642,6 +643,493 @@
     return start;
   }
 
+  /* ---------------- Word scramble ---------------- */
+
+  // The letters of a word, mixed up. Tap them (or type them) in order to spell the word; tap a
+  // placed letter (or press Backspace) to take it back. Same words as Snowman.
+  function scramble(root, cfg) {
+    const words = list(cfg.words), next = picker(words);
+    let w, tiles, placed, over;
+    const slots = h("div", { class: "cg-word cg-scramble-slots" });
+    const bank = h("div", { class: "cg-scramble-bank" });
+    const status = h("div", { class: "cg-status" });
+    const hint = h("div", { class: "cg-hint", hidden: true });
+    root.append(slots, status, bank, hint, h("div", { class: "cg-tools" },
+      button("Hint", function () { hint.hidden = !hint.hidden; }),
+      button("Mix again", function () { if (!over) { takeAll(); mix(); paint(); } }),
+      button("Show the word", function () { finish(false); }),
+      cfg.random ? button("New word", start, "cg-new") : ""));
+
+    function isLetter(ch) { return /\p{L}/u.test(ch); }
+    function start() {
+      w = next();
+      if (!w) { status.textContent = "No words."; return; }
+      over = false;
+      root.classList.remove("cg-won");
+      tiles = Array.from(w.word.toUpperCase()).filter(isLetter).map(function (ch, i) { return { ch: ch, i: i, used: false }; });
+      placed = [];
+      hint.hidden = true;
+      hint.textContent = "";
+      if (w.image) hint.append(h("img", { src: w.image, alt: "" }));
+      hint.append(h("span", { text: w.hint || "No hint for this one." }));
+      mix();
+      paint();
+    }
+    function mix() {   // a new order, never the word itself (when there's a choice)
+      const word = tiles.map(function (t) { return t.ch; }).join("");
+      for (let k = 0; k < 10; k++) {
+        tiles = shuffle(tiles);
+        if (tiles.map(function (t) { return t.ch; }).join("") !== word || new Set(word).size < 2) break;
+      }
+    }
+    function takeAll() { tiles.forEach(function (t) { t.used = false; }); placed = []; }
+    function paint(reveal) {
+      slots.textContent = "";
+      let p = 0;
+      w.word.toUpperCase().split(" ").forEach(function (part) {
+        const group = h("span", { class: "cg-word-part" });
+        Array.from(part).forEach(function (ch) {
+          if (!isLetter(ch)) { group.append(h("span", { class: "cg-letter cg-mark", text: ch })); return; }
+          const t = placed[p++];
+          const slot = h("button", { class: "cg-letter cg-slot" + (t ? " cg-filled" : ""), text: reveal ? ch : t ? t.ch : "",
+            onclick: function () { if (t && !over) { takeBack(t); } } });
+          group.append(slot);
+        });
+        slots.append(group);
+      });
+      bank.textContent = "";
+      tiles.forEach(function (t) {
+        bank.append(h("button", { class: "cg-key cg-tile-letter" + (t.used ? " cg-used" : ""), text: t.ch, disabled: t.used || over,
+          onclick: function () { put(t); } }));
+      });
+      if (!over) status.textContent = "Spell the word: " + tiles.length + " letters";
+    }
+    function put(t) {
+      if (over || t.used) return;
+      t.used = true;
+      placed.push(t);
+      paint();
+      if (placed.length === tiles.length) check();
+    }
+    function takeBack(t) {
+      const k = placed.indexOf(t);
+      placed.splice(k, 1);
+      t.used = false;
+      paint();
+    }
+    function check() {
+      const spelled = placed.map(function (t) { return t.ch; }).join("");
+      const answer = Array.from(w.word.toUpperCase()).filter(isLetter).join("");
+      if (spelled === answer) { finish(true); return; }
+      slots.classList.remove("cg-shake"); void slots.offsetWidth; slots.classList.add("cg-shake");
+      status.textContent = "Not quite. Tap a letter to take it back.";
+      beep(220, 0.2, 0.1);
+    }
+    function finish(won) {
+      if (over || !w) return;
+      over = true;
+      root.classList.toggle("cg-won", won);
+      status.textContent = won ? "Well done! ✓" : "The word is:";
+      paint(true);
+      if (won) cheer();
+    }
+    keyHandlers.push({ el: root, fn: function (e) {
+      if (over || !tiles) return false;
+      if (e.key === "Backspace" && placed.length) { takeBack(placed[placed.length - 1]); return true; }
+      if (e.key.length !== 1 || !/\p{L}/u.test(e.key)) return false;
+      const t = tiles.find(function (x) { return !x.used && x.ch === e.key.toUpperCase(); });
+      if (t) put(t);
+      return true;
+    } });
+    start();
+    return start;
+  }
+
+  /* ---------------- Sort it ---------------- */
+
+  // Items in a bank, and groups to sort them into (2 to 4). Tap an item, then its group (or an item
+  // already in that group). Written: ::: {.sort} with each group in bold and its items under it; an
+  // item can have a picture (![Camel](images/camel.jpg)) and a reason after a | ("Camel | Camels
+  // need little water."). From the vocab list: one unit's words sort into their topics, several
+  // units' words into their units; the reason is the word's meaning; with="picture" shows pictures.
+  // Feedback straight away (the usual): a right item locks in green; a wrong one goes back to the
+  // bank, and the reason shows. feedback="end": items stay where they're put until Check.
+  function sortGroups(cfg) {
+    if (!cfg.random) {
+      return list(cfg.groups).map(function (g) {
+        return { name: g.name, items: list(g.items).map(function (it) { return typeof it === "string" ? { text: it } : it; }) };
+      });
+    }
+    const words = shuffle(list(cfg.words)), units = list(cfg.units), pictures = cfg.with === "picture";
+    const byUnit = {}, byTopic = {};
+    words.forEach(function (w) {
+      if (pictures && !w.image) return;
+      const item = { text: w.word, why: w.word + ": " + w.hint, image: pictures ? w.image : "" };
+      list(w.units).forEach(function (u) { (byUnit[u] = byUnit[u] || []).push(item); });
+      if (w.topic) (byTopic[w.topic] = byTopic[w.topic] || []).push(item);
+    });
+    let groups = Object.keys(byUnit).length > 1
+      ? Object.keys(byUnit).map(function (u) {
+          const t = units.find(function (x) { return String(x.unit) === u; });
+          return { name: t ? t.title : "Unit " + u, items: byUnit[u] };
+        })
+      : Object.keys(byTopic).map(function (k) { return { name: k, items: byTopic[k] }; });
+    groups = shuffle(groups.filter(function (g) { return g.items.length >= 2; })).slice(0, 3);
+    const each = groups.length === 2 ? 5 : 4;
+    return groups.map(function (g) { return { name: g.name, items: g.items.slice(0, each) }; });
+  }
+
+  function sortIt(root, cfg) {
+    const atEnd = cfg.feedback === "end";
+    let groups, chips, sel, mistakes;
+    const bank = h("div", { class: "cg-sort-bank", onclick: function (e) { if (e.target === bank) drop(-1); } });
+    const cols = h("div", { class: "cg-sort-cols" });
+    const why = h("div", { class: "cg-sort-why", hidden: true });
+    const status = h("div", { class: "cg-status" });
+    root.append(bank, cols, why, status, h("div", { class: "cg-tools" },
+      atEnd ? button("Check", check, "cg-primary") : "", button("Show the answers", showAll),
+      cfg.random ? button("New words", start, "cg-new") : ""));
+
+    function start() {
+      groups = sortGroups(cfg);
+      chips = [];
+      groups.forEach(function (g, gi) {
+        list(g.items).forEach(function (it) { chips.push({ text: it.text || "", why: it.why || "", image: it.image || "", group: gi, at: -1, mark: "" }); });
+      });
+      chips = shuffle(chips);
+      sel = null; mistakes = 0;
+      why.hidden = true;
+      cols.style.setProperty("--cols", Math.max(groups.length, 1));
+      root.classList.toggle("cg-sort-pictures", chips.some(function (c) { return c.image; }));
+      paint();
+    }
+    function chip(c) {
+      const el = h("button", { class: "cg-sort-chip" + (c.image ? " cg-has-pic" : "") + (c === sel ? " cg-selected" : "") + (c.mark ? " cg-" + c.mark : ""),
+        disabled: c.mark === "ok" && !atEnd, title: c.text,
+        onclick: function (e) {
+          e.stopPropagation();
+          if (sel && sel !== c && c.at !== -1) { drop(c.at); return; }   // an item is picked: tapping a group's item drops it there
+          sel = sel === c ? null : c;
+          paint();
+        } },
+        c.image ? h("img", { src: c.image, alt: c.text }) : "",
+        c.image && !c.text ? "" : h("span", { text: c.text }));
+      return el;
+    }
+    function paint() {
+      bank.textContent = "";
+      const left = chips.filter(function (c) { return c.at === -1; });
+      if (!left.length) bank.append(h("span", { class: "cg-sort-empty", text: atEnd ? "All sorted. Press Check!" : "All sorted!" }));
+      left.forEach(function (c) { bank.append(chip(c)); });
+      cols.textContent = "";
+      groups.forEach(function (g, gi) {
+        const col = h("div", { class: "cg-sort-col" + (sel ? " cg-target" : ""), style: "--cat:" + COLORS[gi % COLORS.length],
+          onclick: function () { drop(gi); } },
+          h("div", { class: "cg-sort-head", text: g.name }));
+        chips.filter(function (c) { return c.at === gi; }).forEach(function (c) { col.append(chip(c)); });
+        cols.append(col);
+      });
+      if (status.dataset.keep) { delete status.dataset.keep; return; }
+      const placed = chips.filter(function (c) { return c.at !== -1 && c.mark !== "no"; }).length;   // not the wrong one on its way back
+      status.textContent = sel ? "Now tap a group for “" + (sel.text || "this picture") + "”."
+        : "Sorted: " + placed + " of " + chips.length + (atEnd || !mistakes ? "" : "  ·  Mistakes: " + mistakes);
+    }
+    function explain(c, gi) {   // the feedback box: what went wrong, and why
+      why.textContent = "";
+      why.append(h("b", { text: "✗ " + (c.text ? "“" + c.text + "”" : "That picture") + " doesn't go in " + groups[gi].name + "." }),
+        c.why ? h("span", { text: " " + c.why }) : h("span", { text: " Try another group." }));
+      why.hidden = false;
+      why.classList.remove("cg-pop"); void why.offsetWidth; why.classList.add("cg-pop");
+    }
+    function drop(gi) {
+      if (!sel) return;
+      const c = sel;
+      sel = null;
+      if (atEnd || gi === -1) { c.at = gi; c.mark = ""; paint(); return; }
+      if (gi === c.group) {   // right: it locks in
+        c.at = gi; c.mark = "ok"; why.hidden = true;
+        beep(660, 0.12, 0.1);
+        paint();
+        if (chips.every(function (x) { return x.mark === "ok"; })) {
+          status.dataset.keep = "1";
+          status.textContent = "All sorted! ✓" + (mistakes ? "  (" + mistakes + (mistakes === 1 ? " mistake)" : " mistakes)") : "");
+          paint();
+          cheer();
+        }
+        return;
+      }
+      // wrong: it shows in that group for a moment, in red, then goes back to the bank
+      mistakes++;
+      c.at = gi; c.mark = "no";
+      explain(c, gi);
+      beep(220, 0.2, 0.1);
+      paint();
+      setTimeout(function () { if (c.mark === "no") { c.at = -1; c.mark = ""; paint(); } }, 900);
+    }
+    function check() {
+      let right = 0, wrong = 0;
+      chips.forEach(function (c) {
+        if (c.at === -1) { c.mark = ""; return; }
+        c.mark = c.at === c.group ? "ok" : "no";
+        if (c.mark === "ok") right++; else wrong++;
+      });
+      const all = right === chips.length, left = chips.length - right - wrong;
+      // the reasons for the wrong ones
+      const wrongs = chips.filter(function (c) { return c.mark === "no" && c.why; });
+      why.textContent = "";
+      wrongs.slice(0, 3).forEach(function (c) { why.append(h("div", null, h("b", { text: "✗ " + (c.text || "Picture") + ": " }), c.why)); });
+      why.hidden = !wrongs.length;
+      status.dataset.keep = "1";
+      status.textContent = all ? "All right! ✓"
+        : right + " right" + (wrong ? ", " + wrong + " wrong (move the red ones)" : "") + (left ? ", " + left + " still to sort" : "") + ".";
+      if (all) cheer(); else beep(330, 0.2, 0.1);
+      paint();
+    }
+    function showAll() { chips.forEach(function (c) { c.at = c.group; c.mark = "ok"; }); sel = null; why.hidden = true; paint(); }
+    start();
+    return start;
+  }
+
+  /* ---------------- Bingo ----------------
+     Two steps. Before class, Make cards: choose the grid (3 × 3 to 5 × 5), a free middle square and
+     how many cards, and download them as a PDF to print (made in the browser by pdf-lib, which loads
+     only then). In class, Call: show one meaning at a time; students cross out the word. Check a
+     card by its number to see if it really has a bingo.
+     Every card is different. A game code (like 1-4F-2831: unit, grid, free square, number) is printed
+     on each card; the same code always makes the same cards, so the caller can check any card, on
+     any computer. Typing a code from a printed card brings that game back. */
+
+  function seeded(seed) {   // a repeatable random number generator (mulberry32)
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seededShuffle(items, random) {
+    const a = items.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1)), t = a[i];
+      a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function bingo(root, cfg) {
+    // The words in a fixed order (by word), so a game code always makes the same cards.
+    const pool = list(cfg.words).slice().sort(function (a, b) { return a.word.localeCompare(b.word); });
+    const unit = cfg.unit || 0;
+    const key = "chalkline-games:bingo:" + unit;
+    const fits = function (n, free) { return n * n - (free ? 1 : 0) <= pool.length; };
+    let g = null;
+    try { g = JSON.parse(localStorage.getItem(key)); } catch (e) { /* none yet */ }
+    if (!g || !fits(g.size, g.free)) g = newGame(fits(4, true) ? 4 : 3, true);
+    function newGame(size, free) {
+      return { size: size, free: free && size % 2 === 1, cards: 30, seed: 1000 + Math.floor(Math.random() * 9000), called: [] };
+    }
+    function saveGame() { try { localStorage.setItem(key, JSON.stringify(g)); } catch (e) { /* private window */ } }
+    function code() { return unit + "-" + g.size + (g.free ? "F" : "N") + "-" + g.seed; }
+    function cardWords(n) {   // card n (1, 2, …): its words, row by row; "" is the free square
+      const k = g.size * g.size - (g.free ? 1 : 0);
+      const words = seededShuffle(pool, seeded(g.seed * 1000 + n)).slice(0, k).map(function (w) { return w.word; });
+      if (g.free) words.splice(Math.floor(g.size * g.size / 2), 0, "");
+      return words;
+    }
+    function callOrder() { return seededShuffle(pool, seeded(g.seed)); }
+
+    const tabs = h("div", { class: "cg-bingo-tabs" });
+    const panel = h("div", { class: "cg-bingo-panel" });
+    root.append(tabs, panel);
+    let step = g.called.length ? "call" : "make";
+
+    function paint() {
+      tabs.textContent = "";
+      [["make", "1  Make cards", "before class"], ["call", "2  Call", "in class"]].forEach(function (t) {
+        tabs.append(h("button", { class: "cg-bingo-tab" + (step === t[0] ? " cg-on" : ""), onclick: function () { step = t[0]; paint(); } },
+          h("b", { text: t[1] }), h("span", { text: t[2] })));
+      });
+      tabs.append(h("span", { class: "cg-bingo-code", title: "Printed on every card" }, "Game code ", h("b", { text: code() })));
+      panel.textContent = "";
+      if (step === "make") make(); else call();
+    }
+
+    // ---- Step 1: make the cards ----
+    function make() {
+      const sizes = h("div", { class: "cg-seg" });
+      [3, 4, 5].forEach(function (n) {
+        const ok = fits(n, n % 2 === 1 && g.free) || fits(n, false);
+        sizes.append(h("button", { class: "cg-seg-btn" + (g.size === n ? " cg-on" : ""), disabled: !ok,
+          title: ok ? "" : "Not enough words in this unit", text: n + " × " + n,
+          onclick: function () { change({ size: n, free: n % 2 === 1 && g.free !== false ? g.free : false }); } }));
+      });
+      const free = h("input", { type: "checkbox", disabled: g.size % 2 === 0 });
+      free.checked = g.free;
+      free.addEventListener("change", function () { change({ free: free.checked }); });
+      const count = h("input", { type: "number", min: 1, max: 99, value: g.cards, class: "cg-bingo-count" });
+      count.addEventListener("change", function () { g.cards = Math.max(1, Math.min(99, parseInt(count.value, 10) || 30)); count.value = g.cards; saveGame(); });
+      const msg = h("p", { class: "cg-bingo-note" });
+      const download = button("Download the cards (PDF)", function () { makePdf(msg); }, "cg-primary");
+      panel.append(
+        h("div", { class: "cg-bingo-form" },
+          h("label", { class: "cg-field" }, h("span", { text: "Grid" }), sizes),
+          h("label", { class: "cg-field" }, h("span", { text: "Free middle square" }), free),
+          h("label", { class: "cg-field" }, h("span", { text: "Number of cards" }), count),
+          h("div", { class: "cg-field" }, h("span", { text: "Words" }), h("b", { text: pool.length + (unit ? " from this unit" : " from all units") }))),
+        h("div", { class: "cg-tools cg-tools-left" }, download,
+          sureButton("New game code", function () { g = newGame(g.size, g.free); saveGame(); paint(); })),
+        msg,
+        h("p", { class: "cg-bingo-note", text: "Every card is different. Print them before class, two cards on each page. The game code on the cards lets you check a winner. " +
+          "A new game code makes new cards (print them again)." }));
+      function change(c) {
+        Object.assign(g, c);
+        if (g.size % 2 === 0) g.free = false;
+        if (!fits(g.size, g.free)) g.free = false;
+        g.called = [];
+        saveGame(); paint();
+      }
+    }
+
+    async function makePdf(msg) {
+      msg.textContent = "Making the cards…";
+      try {
+        const lib = await import(BASE + "pdf-lib.esm.min.js");
+        const doc = await lib.PDFDocument.create();
+        const bold = await doc.embedFont(lib.StandardFonts.HelveticaBold);
+        const regular = await doc.embedFont(lib.StandardFonts.Helvetica);
+        const navy = lib.rgb(0, 52 / 255, 119 / 255), grey = lib.rgb(0.55, 0.6, 0.67), light = lib.rgb(0.93, 0.95, 0.98);
+        const W = 595.28, H = 841.89, M = 42;   // A4, in points
+        const safe = function (font, text) {   // the built-in PDF fonts can't show every letter: swap those for ?
+          return Array.from(text).map(function (ch) { try { font.encodeText(ch); return ch; } catch (e) { return "?"; } }).join("");
+        };
+        const title = (cfg.title || "Vocab") + " Bingo";
+        for (let n = 1; n <= g.cards; n++) {
+          const top = n % 2 === 1;
+          if (top) doc.addPage([W, H]);
+          const page = doc.getPages()[doc.getPageCount() - 1];
+          const y0 = top ? H - M : H / 2 - 18;   // the top of this card
+          page.drawText(safe(bold, title), { x: M, y: y0 - 22, size: 22, font: bold, color: navy });
+          page.drawText("Name: ______________________", { x: W - M - 220, y: y0 - 20, size: 12, font: regular, color: navy });
+          page.drawText("Card " + n + "   ·   Game " + code(), { x: M, y: y0 - 40, size: 10, font: regular, color: grey });
+          const gridTop = y0 - 56, room = H / 2 - M - 80;
+          const cell = Math.min((W - 2 * M) / g.size, room / g.size);
+          const x0 = (W - cell * g.size) / 2;
+          cardWords(n).forEach(function (word, i) {
+            const r = Math.floor(i / g.size), c = i % g.size;
+            const x = x0 + c * cell, y = gridTop - (r + 1) * cell;
+            page.drawRectangle({ x: x, y: y, width: cell, height: cell, borderColor: navy, borderWidth: 1.5, color: word ? undefined : light });
+            const text = word ? safe(bold, word) : "FREE";
+            const font = word ? bold : regular;
+            // Fit the word: wrap at spaces, then shrink until each line fits the square.
+            let size = Math.min(22, cell / 4.2), lines;
+            for (;;) {
+              lines = [];
+              text.split(" ").forEach(function (part) {
+                const last = lines[lines.length - 1];
+                if (last && font.widthOfTextAtSize(last + " " + part, size) < cell - 12) lines[lines.length - 1] = last + " " + part;
+                else lines.push(part);
+              });
+              if (size <= 8 || lines.every(function (l) { return font.widthOfTextAtSize(l, size) < cell - 12; }) && lines.length * size * 1.2 < cell - 10) break;
+              size -= 1;
+            }
+            lines.forEach(function (l, k) {
+              const lw = font.widthOfTextAtSize(l, size);
+              page.drawText(l, { x: x + (cell - lw) / 2, y: y + cell / 2 + (lines.length / 2 - k - 0.8) * size * 1.2, size: size, font: font, color: word ? navy : grey });
+            });
+          });
+          if (top && n < g.cards) {   // a dashed cut line between the two cards
+            page.drawLine({ start: { x: M / 2, y: H / 2 }, end: { x: W - M / 2, y: H / 2 }, thickness: 0.8, color: grey, dashArray: [6, 5] });
+          }
+        }
+        const bytes = await doc.save();
+        const a = h("a", { href: URL.createObjectURL(new Blob([bytes], { type: "application/pdf" })),
+          download: "bingo-" + code() + ".pdf" });
+        document.body.append(a); a.click(); a.remove();
+        msg.textContent = "Downloaded: " + g.cards + " cards, game " + code() + ". Print them, then use step 2 in class.";
+      } catch (e) {
+        msg.textContent = "Couldn't make the PDF (" + e.message + ").";
+      }
+    }
+
+    // ---- Step 2: call the words ----
+    function call() {
+      const order = callOrder();
+      const now = g.called.length ? pool.find(function (w) { return w.word === g.called[g.called.length - 1]; }) : null;
+      const card = h("div", { class: "cg-bingo-clue" });
+      if (now) {
+        if (now.image) card.append(h("img", { src: now.image, alt: "" }));
+        card.append(h("div", { class: "cg-bingo-meaning", text: now.hint || now.word }),
+          h("details", { class: "cg-bingo-word" }, h("summary", { text: "Show the word" }), h("b", { text: now.word })));
+      } else card.append(h("div", { class: "cg-bingo-meaning cg-idle", text: "Press Next to call the first word." }));
+      const done = g.called.length >= order.length;
+      const checkBox = h("input", { type: "number", min: 1, max: g.cards, placeholder: "Card no.", class: "cg-bingo-count" });
+      const result = h("div", { class: "cg-bingo-check" });
+      checkBox.addEventListener("keydown", function (e) { if (e.key === "Enter") checkCard(); });
+      function checkCard() {
+        const n = parseInt(checkBox.value, 10);
+        result.textContent = "";
+        if (!(n >= 1)) return;
+        const words = cardWords(n);
+        const hit = words.map(function (w) { return w === "" || g.called.indexOf(w) >= 0; });
+        const lines = [];
+        for (let i = 0; i < g.size; i++) {
+          lines.push(Array.from({ length: g.size }, function (_, k) { return i * g.size + k; }));   // a row
+          lines.push(Array.from({ length: g.size }, function (_, k) { return k * g.size + i; }));   // a column
+        }
+        lines.push(Array.from({ length: g.size }, function (_, k) { return k * g.size + k; }));
+        lines.push(Array.from({ length: g.size }, function (_, k) { return k * g.size + g.size - 1 - k; }));
+        const win = lines.find(function (l) { return l.every(function (i) { return hit[i]; }); });
+        const grid = h("div", { class: "cg-bingo-mini", style: "--n:" + g.size });
+        words.forEach(function (w, i) {
+          grid.append(h("span", { class: (hit[i] ? "cg-hit" : "") + (win && win.indexOf(i) >= 0 ? " cg-line" : ""), text: w || "FREE" }));
+        });
+        result.append(h("b", { class: win ? "cg-yes" : "cg-no", text: win ? "Card " + n + ": BINGO! ✓" : "Card " + n + ": not yet" }), grid);
+        if (win) cheer();
+      }
+      panel.append(h("div", { class: "cg-bingo-call" },
+        h("div", { class: "cg-bingo-main" }, card,
+          h("div", { class: "cg-tools cg-tools-left" },
+            button(done ? "All called" : "Next", function () {
+              if (done) return;
+              g.called.push(order[g.called.length].word); saveGame(); paint();
+            }, "cg-primary cg-big"),
+            sureButton("Start over", function () { g.called = []; saveGame(); paint(); })),
+          h("div", { class: "cg-status", text: "Called: " + g.called.length + " of " + order.length })),
+        h("div", { class: "cg-bingo-side" },
+          h("div", { class: "cg-bingo-label", text: "Check a card" }),
+          h("div", { class: "cg-tools cg-tools-left" }, checkBox, button("Check", checkCard)),
+          result,
+          h("div", { class: "cg-bingo-label", text: "Called so far" }),
+          h("div", { class: "cg-bingo-called" }, ...g.called.slice().reverse().map(function (w) { return h("span", { text: w }); })),
+          h("label", { class: "cg-bingo-load" }, "Cards from another game? Type their code: ",
+            (function () {
+              const box = h("input", { placeholder: "1-4F-2831", class: "cg-bingo-codebox" });
+              box.addEventListener("change", function () {
+                const m = box.value.trim().toUpperCase().match(/^(\d+)-(\d)([FN])-(\d+)$/);
+                if (!m || +m[1] !== unit) { box.value = ""; box.placeholder = "Not a code for this unit"; return; }
+                g = { size: +m[2], free: m[3] === "F", cards: g.cards, seed: +m[4], called: [] };
+                saveGame(); paint();
+              });
+              return box;
+            })()))));
+    }
+
+    paint();
+    return function () { g.called = []; saveGame(); step = "make"; paint(); };   // reset: a fresh call (the same cards)
+  }
+
+  // A button that needs a second tap within 3 seconds ("Start over" → "Sure?").
+  function sureButton(label, action) {
+    let armed = null;
+    const b = h("button", { class: "cg-btn", text: label, onclick: function () {
+      if (armed) { clearTimeout(armed); armed = null; b.textContent = label; action(); return; }
+      b.textContent = "Sure?";
+      armed = setTimeout(function () { armed = null; b.textContent = label; }, 3000);
+    } });
+    return b;
+  }
+
   /* ---------------- Review games page: choose a game and a unit, then play ----------------
      config: { words: every vocab word, with its units; units: [{ unit, title }]; home: the overview }.
      The last choice is remembered in this browser. */
@@ -649,11 +1137,14 @@
   // Simple line icons (24 × 24, drawn in the text color), so the header looks the same everywhere.
   const PICKS = [
     { id: "snowman", label: "Snowman", icon: '<circle cx="12" cy="7" r="3.5"/><circle cx="12" cy="16" r="5"/><path d="M4 11l4 2M20 11l-4 2"/>' },
+    { id: "scramble", label: "Scramble", icon: '<rect x="2.5" y="8" width="5.5" height="8" rx="1"/><rect x="9.25" y="8" width="5.5" height="8" rx="1"/><rect x="16" y="8" width="5.5" height="8" rx="1"/><path d="M5 5c2-2 5-2 7 0M19 19c-2 2-5 2-7 0"/>' },
     { id: "picture-reveal", label: "Picture", icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' },
-    { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
-    { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
     { id: "matching", label: "Matching", icon: '<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6.8l10 10.4M7 17.2L17 6.8"/>' },
     { id: "memory", label: "Memory", icon: '<rect x="2.5" y="5" width="9" height="14" rx="1.5"/><rect x="12.5" y="5" width="9" height="14" rx="1.5"/><path d="M7 10.5v3M17 10.5v3"/>' },
+    { id: "sort", label: "Sort it", icon: '<path d="M4 4v16h16"/><path d="M8 15V10M12 15V7M16 15v-3"/>' },
+    { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
+    { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
+    { id: "bingo", label: "Bingo", icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><circle cx="12" cy="12" r="1.6"/>' },
   ];
   function icon(paths) {
     const span = h("span", { class: "cg-pick-icon", "aria-hidden": "true" });
@@ -708,7 +1199,8 @@
       stage.append(el);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
       reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: /match|memory/.test(choice.game) ? 6 : 5, seconds: 10, tiles: 16,
-        title: (unit ? unit.title : "Vocab") + " quick-fire" });
+        units: units, unit: choice.unit,
+        title: (unit ? unit.title : "Vocab") + (choice.game === "bingo" ? "" : " quick-fire") });
     }
     play();
     return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
@@ -717,7 +1209,7 @@
   /* ---------------- Start every game on the page ---------------- */
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia,
-    "matching": matching, "memory": memory, "picker": gamePicker };
+    "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "picker": gamePicker };
   // A calm look: buttons are plain words. Take off a leading emoji ("🔀 New word" -> "New word"),
   // also on buttons a game adds later (the clue card, the end of a quick-fire).
   function calm(root) {
@@ -735,15 +1227,27 @@
     new MutationObserver(plain).observe(root, { childList: true, subtree: true });
   }
 
+  // Other files add games too (timeline.js: timelines and Label it), with these helpers.
+  window.ChalklineGames = {
+    h: h, list: list, shuffle: shuffle, button: button, beep: beep, cheer: cheer, COLORS: COLORS,
+    keyHandlers: keyHandlers, onCurrentSlide: onCurrentSlide,
+    add: function (name, fn) { GAMES[name] = fn; },
+  };
+
+  // Start the games once every game file has loaded (they all load at the end of the page).
   const resets = [];
-  document.querySelectorAll(".cg-game").forEach(function (el) {
-    let cfg = {};
-    try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
-    if (GAMES[el.dataset.game]) {
-      resets.push(GAMES[el.dataset.game](el, cfg));
-      calm(el);
-    }
-  });
+  function startAll() {
+    document.querySelectorAll(".cg-game").forEach(function (el) {
+      let cfg = {};
+      try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
+      if (GAMES[el.dataset.game]) {
+        resets.push(GAMES[el.dataset.game](el, cfg));
+        calm(el);
+      }
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startAll);
+  else setTimeout(startAll, 0);
   // The toolbox's "Reset for the next class" starts every game in the deck again.
   document.addEventListener("chalkline:reset", function (e) {
     if (e.detail && e.detail.games) resets.forEach(function (r) { if (r) r(); });

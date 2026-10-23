@@ -80,6 +80,10 @@ end
 --   - **People**
 --     - ...
 --   :::
+--   ::: {.sort}                           groups to sort into, like jeopardy: each group in bold,
+--   - **Athens**                            its items under it. An item can have a picture, and a
+--     - Democracy | Citizens voted          reason after a | (shown when it goes in the wrong group).
+--     - ![Parthenon](images/parthenon.jpg)  feedback="end": no feedback until Check.
 --   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
 --   - democracy | Citizens vote on laws
 --   :::
@@ -104,7 +108,96 @@ local function clue(item)
   return { q = q, a = a }
 end
 
+-- A picture named in a game: copy it to the site too (the path is from this file).
+local function picture(path)
+  if path and path ~= "" and not path:match("^%a+://") then
+    quarto.doc.add_resource(pandoc.path.join({ pandoc.path.directory(quarto.doc.input_file), path }))
+  end
+end
+
+-- One Sort it item: its words, a picture if it has one (![Camel](images/camel.jpg): the picture's
+-- description is its name), and the reason after a | ("Camel | Camels need little water.").
+local function sort_item(blocks)
+  local image, alt = nil, ""
+  local rest = pandoc.List()
+  for _, b in ipairs(blocks) do
+    rest:insert(b:walk({ Image = function(img)
+      if not image then
+        image = img.src
+        alt = pandoc.utils.stringify(img.caption)
+      end
+      return {}
+    end }))
+  end
+  local text, why = games.split(pandoc.utils.stringify(rest))
+  if text == "" then text = alt end
+  picture(image)
+  return { text = text, why = why, image = image or "" }
+end
+
+-- Timelines (timeline.js). Each event is a ::: {.event} div inside the timeline:
+--   ::: {.timeline-interactive #rome title="Rome"}   (.timeline-activity: the students' version;
+--                                                    plain .timeline is the simple styled list)
+--   ::: {.event date="509 BC" title="Rome becomes a republic" image="images/senate.jpg" slide="the-republic"}
+--   The Romans remove their last king. ...         (the first paragraph is the summary; all of it shows
+--   :::                                             when you zoom in)
+--   :::
+-- or, for a quick activity, a list: "- 509 BC | Rome becomes a republic", with an optional picture.
+-- slide="..." links an event to the slide with that id: it gets a timeline strip (see Pandoc below).
+local function timeline_config(el)
+  local events = {}
+  for _, b in ipairs(el.content) do
+    if b.t == "Div" and b.classes:includes("event") then
+      local a = b.attributes
+      picture(a["image"])
+      b.content:walk({ Image = function(img) picture(img.src) end })
+      local first = b.content[1]
+      table.insert(events, {
+        date = a["date"] or "", year = a["year"] or "", title = a["title"] or "", image = a["image"] or "",
+        summary = a["summary"] or ((first and (first.t == "Para" or first.t == "Plain")) and pandoc.utils.stringify(first) or ""),
+        html = pandoc.write(pandoc.Pandoc(b.content), "html"),
+        slide = (a["slide"] or ""):gsub("^#", ""),
+      })
+    end
+  end
+  if #events == 0 then
+    for _, item in ipairs(list_items(el.content)) do
+      local it = sort_item(item)
+      local title, summary = games.split(it.why)
+      table.insert(events, { date = it.text, year = "", title = title, summary = summary, image = it.image, html = "", slide = "" })
+    end
+  end
+  local a = el.attributes
+  return {
+    id = el.identifier, title = a["title"] or "", events = events,
+    spacing = a["spacing"] or "auto",                                   -- "time", "even" or "auto"
+    snap = tonumber(a["snap"] or ""), tolerance = tonumber(a["tolerance"] or ""),
+    start = a["start"] or "", ["end"] = a["end"] or "",
+  }
+end
+
+-- Label it: a picture and its labels. Each line: the label, where its dot is (x,y in % from the
+-- top left; press L on the slide to find them), and an optional reason.
+--   ::: {.label-it image="images/parthenon-west.jpg"}
+--   - Columns | 30,55 | They hold up the roof.
+--   :::
+local function label_config(el)
+  picture(el.attributes["image"])
+  local labels = {}
+  for _, item in ipairs(list_items(el.content)) do
+    local parts = {}
+    for part in (pandoc.utils.stringify(item) .. "|"):gmatch("%s*(.-)%s*|") do table.insert(parts, part) end
+    local x, y = (parts[2] or ""):match("([%d%.]+)%s*,%s*([%d%.]+)")
+    if not x then quarto.log.warning('label-it: no "x,y" place for: ' .. (parts[1] or "")) end
+    table.insert(labels, { text = parts[1] or "", x = tonumber(x) or 50, y = tonumber(y) or 50, why = parts[3] or "" })
+  end
+  return { image = el.attributes["image"] or "", labels = labels }
+end
+
 local function game_from_div(el)
+  if el.classes:includes("timeline-interactive") then return games.div("timeline", timeline_config(el)) end
+  if el.classes:includes("timeline-activity") then return games.div("timeline-activity", timeline_config(el)) end
+  if el.classes:includes("label-it") then return games.div("label-it", label_config(el)) end
   if el.classes:includes("jeopardy") then
     local categories = {}
     for _, item in ipairs(list_items(el.content)) do
@@ -117,6 +210,15 @@ local function game_from_div(el)
     for n in (el.attributes["points"] or ""):gmatch("%d+") do table.insert(points, tonumber(n)) end
     return games.div("jeopardy", { categories = categories, points = points, random = false,
       teams = tonumber(el.attributes["teams"] or "2") or 2 })
+  end
+  if el.classes:includes("sort") then   -- groups in bold, their items under them
+    local groups = {}
+    for _, item in ipairs(list_items(el.content)) do
+      local items = {}
+      for _, c in ipairs(list_items(item)) do table.insert(items, sort_item(c)) end
+      table.insert(groups, { name = item[1] and pandoc.utils.stringify(item[1]) or "", items = items })
+    end
+    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now" })
   end
   local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
   if kind then
@@ -131,7 +233,8 @@ local function game_from_div(el)
 end
 
 local function Div(el)
-  for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory" }) do
+  for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
+                           ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it" }) do
     if el.classes:includes(cls) then
       if quarto.doc.is_format("revealjs") then return game_from_div(el) end
       return games.placeholder(name)
@@ -186,7 +289,41 @@ local function Meta(meta)
   return nil
 end
 
+-- Slides only, before the Div pass: give every timeline an id, and put a timeline strip on each
+-- slide an event links to (slide="..."), so that slide shows where it is on the timeline.
+local function Pandoc(doc)
+  if not quarto.doc.is_format("revealjs") then return nil end
+  local strips, n = {}, 0
+  doc = doc:walk({ Div = function(el)
+    local teach = el.classes:includes("timeline-interactive")
+    if not teach and not el.classes:includes("timeline-activity") then return nil end
+    n = n + 1
+    if el.identifier == "" then el.identifier = "timeline-" .. n end
+    local i = 0
+    for _, b in ipairs(el.content) do
+      if b.t == "Div" and b.classes:includes("event") then
+        local slide = (b.attributes["slide"] or ""):gsub("^#", "")
+        if slide ~= "" and teach then strips[slide] = { el.identifier, i } end
+        i = i + 1
+      end
+    end
+    return el
+  end })
+  if not next(strips) then return doc end
+  local blocks = pandoc.List()
+  for _, b in ipairs(doc.blocks) do
+    blocks:insert(b)
+    local s = b.t == "Header" and strips[b.identifier]
+    if s then
+      blocks:insert(pandoc.RawBlock("html", '<div class="cg-strip" data-timeline="' .. s[1] .. '" data-event="' .. s[2] .. '"></div>'))
+    end
+  end
+  doc.blocks = blocks
+  return doc
+end
+
 return {
   { Meta = Meta },
+  { Pandoc = Pandoc },
   { Div = Div },
 }

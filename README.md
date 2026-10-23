@@ -262,7 +262,7 @@ Open windows, where they are, the scores, the class lists and the settings are r
 
 ## Slide games
 
-Six review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
+Nine review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
 
 To put a game in your own slides, see them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
@@ -273,6 +273,9 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 | 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. The scores are under the board: tap a team's **name** to rename it, its **score** to change it, or anywhere else on it to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
 | 🔗 **Matching** | Words on the left, their meanings (or pictures) on the right, mixed up. Tap a word, then its partner: a right pair locks in, in its own color; a wrong pair shakes. It counts the tries. |
 | 🃏 **Memory** | Cards face down: each word and its picture (or meaning). Turn over two; a pair stays face up, the others turn back. It counts the turns. |
+| 🔤 **Word scramble** | The letters of a word, mixed up. Tap them (or type them) in order; tap a placed letter, or press Backspace, to take it back. **Hint**, **Mix again**, **Show the word**. Words as for Snowman. |
+| 🗂️ **Sort it** | Items in a bank and 2–4 groups ("Both" is just another group). Tap an item, then its group. A right item locks in green; a wrong one shakes, goes back to the bank, and **its reason shows**, so students learn why straight away. Items can be words, phrases or **pictures**. Write any sort you like (animals by habitat, fact or opinion, cause or effect), or use the vocab list: one unit's words sort into their topics, several units' into their units, and each word's meaning is its reason (`with="picture"` shows the pictures). `feedback="end"` lets students sort everything first; **Check** then marks each item and shows the reasons. |
+| 🎱 **Bingo** | Two steps. **Make cards** (before class): choose the grid (3 × 3 to 5 × 5), a free middle square and the number of cards, then **Download the cards**: a PDF made right there in the browser, two cards on each page, every card different. **Call** (in class): **Next** shows a meaning and its picture; students cross out the word. Type a card's number and **Check** to see whether it really has a full line. A **game code** printed on every card (like `1-3F-7365`) makes the same cards again, on any computer, so you can check cards printed last week; type it into the Call step to bring that game back. Nothing is made when the site is built. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:
@@ -307,9 +310,66 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 :::
 ```
 
-Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game).
+Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game). Sort it is written like Jeopardy: each group in **bold**, its items under it. After an item, a `|` and a reason (shown if a student puts it in the wrong group); an item can be a picture, named by its description:
+
+```markdown
+::: {.sort}
+- **Ocean**
+  - Shark | Sharks live and hunt in the sea.
+  - ![Octopus](images/octopus.jpg) | Octopuses live on the sea floor.
+- **Desert**
+  - Camel | Camels can go days without water.
+  - Scorpion | Scorpions hide from the sun under rocks.
+:::
+```
+
+`{{< scramble >}}` takes words like `{{< snowman >}}`; `{{< sort unit=1 >}}` and `{{< bingo unit=1 >}}` use a unit's vocab (or every word, with no `unit`). More game ideas, not built yet: `IDEAS.md`.
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
+
+## Timelines and labelling
+
+Three slide types for history (or any subject), all in **Unit 2 › Rome on a Timeline** (`course/units/02-ancient-rome/rome-timeline-slides.qmd`); its speaker notes show how each is written.
+
+**A timeline to teach with.** One slide holds all the events, each with a date, a title, a photo and some text. A big card shows one event above the timeline: **‹ ›** go through them in order, tapping an event (or dragging along the line) jumps to it, and tapping the card **zooms in** to the whole photo and everything you wrote. Events are sorted by date for you ("509 BC", "AD 80", "1453").
+
+```markdown
+::: {.timeline-interactive #rome title="Ancient Rome"}
+
+::: {.event date="509 BC" title="Rome becomes a republic" image="images/senate.jpg" slide="the-republic"}
+The Romans send away their last king.     ← the first paragraph is the card's summary
+
+Two consuls lead Rome, for one year each. ← everything shows when you zoom in
+:::
+
+::: {.event date="27 BC" title="Augustus, the first emperor" image="images/augustus.jpg"}
+...
+:::
+
+:::
+```
+
+**A timeline across several slides:** give an event `slide="..."` (the id of a slide, from `## The Republic {#the-republic}`). That slide then gets a **timeline strip** along its bottom, by itself, showing where it is in the story. Tap any event on the strip to see its card, then **Go to this slide** or **The timeline** (back to the big one, on that event). The zoomed card on the big timeline gets **Go to this slide** too. Leave a little room at the bottom of those slides for the strip.
+
+**Put it on the timeline (students).** The events without their dates: students drag each one onto the line at its year (or tap it, then tap the line). **Check** marks each one green, or red with its real date and a green dot where it belongs, and says whether the order is right. Write it as a list (or use `::: {.event}` divs):
+
+```markdown
+::: {.timeline-activity}
+- 509 BC | Rome becomes a republic ![](images/senate.jpg)
+- 27 BC | Augustus, the first emperor
+:::
+```
+
+Options: `tolerance="25"` (years off that still count; the usual is 5% of the timeline), `snap="10"`, `start="600 BC" end="AD 200"`. Plain `::: {.timeline}` is still the simple styled list.
+
+**Label it.** A photo with numbered dots and a bank of labels: students drag each label onto its dot (or tap the label, then the dot). A right label stays, joined to its dot; a wrong one shakes and shows its reason. Each line is the label, a `|`, where its dot goes (`x,y`: percent from the left and from the top), and an optional reason. To find a place, press **L** on the slide and tap the photo: it shows (and copies) the `x,y`.
+
+```markdown
+::: {.label-it image="images/pont-du-gard.jpg"}
+- Water channel | 40,15 | The water flowed in a covered channel along the very top.
+- River | 12,82 | The aqueduct crosses the Gardon River.
+:::
+```
 
 ## Tap-to-vote polls
 

@@ -323,6 +323,145 @@ Teams or students take turns: turn over two cards. If they are a pair, they stay
 
 {{< memory unit=1 >}}
 
+# Word scramble 🔤
+
+:::: {.columns .game-intro}
+::: {.column width="38%"}
+The letters are mixed up.
+
+Tap them in the right order to spell the word.
+
+Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+A vocab word:
+{{</* scramble "philosopher" */>}}
+
+Your own word and hint:
+{{</* scramble "Olympia" hint="Where the Olympic Games began" */>}}
+
+A random word from unit 1, with a New word button:
+{{</* scramble unit=1 */>}}
+```
+:::
+::::
+
+::: notes
+Tap the letters, or type them on the keyboard. Tap a placed letter (or press Backspace) to take it back. **Mix again** shuffles the letters; **Hint** shows the picture and meaning.
+:::
+
+## Unscramble it
+
+{{< scramble "philosopher" >}}
+
+## A random word
+
+{{< scramble unit=1 >}}
+
+# Sort it 🗂️
+
+:::: {.columns .game-intro}
+::: {.column width="38%"}
+Which group does each word belong to?
+
+Tap a word, then tap its group. Then press **Check**.
+
+Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+::: {.sort}
+- **Athens**
+  - Democracy | Athens let its citizens vote.
+  - ![Parthenon](images/parthenon-west.jpg)
+- **Sparta**
+  - Two kings | Sparta had kings, not votes.
+:::
+
+Unit 1's vocab, by topic:
+{{</* sort unit=1 */>}}
+```
+:::
+::::
+
+::: notes
+Tap an item, then its group. A right item locks in green; a wrong one shakes, goes back to the bank, and its reason shows (what you wrote after the `|`). Each group is a **bold** line, with its items under it; any number of groups (2 to 4 fit best), so "Both" is just another group. An item can be a picture: `![Name](images/file.jpg)`. To let students sort everything first and check at the end, use `feedback="end"` (then **Check** marks each item and shows the reasons).
+
+From the vocab list, words from one unit are sorted into their topics (geography, government, culture…); words from several units are sorted into their units.
+:::
+
+## Athens or Sparta?
+
+::: {.sort}
+- **Athens**
+  - Democracy | Athens let its citizens vote on laws.
+  - Plays and theater | Athens built theaters and wrote plays.
+  - A strong navy | Athens was a sea power, with many warships.
+  - Philosophers | Thinkers like Socrates lived in Athens.
+- **Sparta**
+  - Two kings | Sparta had two kings, not a democracy.
+  - Boys trained as soldiers | In Sparta, boys left home at 7 to train for war.
+  - The strongest army on land | Sparta's soldiers were the best in Greece.
+  - Life built around the army | Everything in Sparta was about being ready for war.
+:::
+
+## Greek or Roman?
+
+::: {.sort}
+- **Ancient Greece**
+  - ![The Parthenon](images/parthenon-west.jpg) | The Parthenon is a Greek temple in Athens.
+  - ![A theater](images/epidaurus-theatre.jpg) | This theater is at Epidaurus, in Greece.
+  - ![A painted vase](images/runners-amphora.jpg) | Greek vases often showed athletes, like these runners.
+- **Ancient Rome**
+  - ![The Colosseum](../02-ancient-rome/images/colosseum-forum.jpg) | The Colosseum is a huge arena in Rome.
+  - ![An aqueduct](../02-ancient-rome/images/pont-du-gard.jpg) | Romans built aqueducts to carry water to cities.
+  - ![A stone road](../02-ancient-rome/images/via-appia.jpg) | The Via Appia is a Roman road, built for the army.
+:::
+
+## Sort the vocab
+
+{{< sort unit=1 >}}
+
+# Bingo 🎱
+
+:::: {.columns .game-intro}
+::: {.column width="38%"}
+**Before class:** make the cards and print them.
+
+**In class:** read the meanings. Cross out the word on your card.
+
+A full line wins!
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+Bingo with unit 1's vocab:
+{{</* bingo unit=1 */>}}
+
+Bingo with every word:
+{{</* bingo */>}}
+```
+
+Or open **Review games** in the sidebar and choose **Bingo**.
+:::
+::::
+
+::: notes
+**1 · Make cards** (before class): choose the grid, the free square and the number of cards, then **Download the cards**: a PDF, two cards on each page, every card different. The **game code** printed on each card means you can check any card later, on any computer.
+
+**2 · Call** (in class): **Next** shows a meaning (and its picture); students find the word and cross it out. When someone calls "Bingo!", type their card number and press **Check**: it shows the card with the called words, and whether it has a full line.
+:::
+
+## Ancient Greece bingo
+
+{{< bingo unit=1 >}}
+
 ```{=html}
 <style>
   .reveal .game-intro { align-items: center; margin-top: 0.4em; }
@@ -338,4 +477,6 @@ Teams or students take turns: turn over two cards. If they are a pair, they stay
 - **Title:** the Acropolis and the Parthenon, photo by Jebulon, CC0, via Wikimedia Commons.
 - **The Parthenon:** photo by User:Mountain, public domain, via Wikimedia Commons.
 - **Theater of Epidaurus:** photo by Olecorre, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0), via Wikimedia Commons.
+- **Runners vase:** photo by Daderot, CC0, via Wikimedia Commons.
+- **Colosseum and Forum:** photo by Wilfredor, CC0; **Pont du Gard:** photo by Benh LIEU SONG, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0); **Via Appia:** photo by Nicolò Musmeci, public domain; all via Wikimedia Commons (list: `../02-ancient-rome/images/CREDITS.md`).
 - Drawings: original, made for this course. Full list: `images/CREDITS.md`.
