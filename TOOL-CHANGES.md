@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Clearer download buttons in the PDF viewer
+- **Asked for:** "Make the buttons for 'download annotated version' and 'download original version' more obvious in their functions."
+- **Why:** two icon-only buttons (⬇ and ↗) didn't say what they did; ↗ looked like "download original" but opened a new tab.
+- **Changed:** `_extensions/pdf-viewer/pdf-viewer.js`, `pdf-viewer.css`: one **⬇ Download** button (with the word, except in a narrow viewer) opens a menu with the choices spelled out: **With my notes** (saves `<name>-with-notes.pdf`), **Original** (saves the PDF as it is), **Open in a new tab**. Big, easy-to-tap rows; Esc or tapping elsewhere closes it. `pdf-viewer.lua`, `README.md`: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Download a PDF with its ink
 - **Asked for:** "How difficult is it to add a download function for the edited PDFs?", then "build it with pdf-lib".
 - **Why:** to keep or share a worksheet after writing on it in class.
