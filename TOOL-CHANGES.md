@@ -16,6 +16,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Slides show the student copy of a PDF, even on the teacher site
+- **Asked for:** "the slides should always default to showing the Student version. Teachers never need to project the teacher version in a normal context. I can imagine a time like when giving professional development when you might want that but the default behavior would be the Student version."
+- **Why:** so answer keys don't end up on the board.
+- **Changed:**
+  - `scripts/packets.py`: the teacher build also writes a student copy of every printable, `<name>-student.pdf`, next to its teacher edition (one extra Quarto run, alongside the packets). `--unit` and `--stale` work for these too.
+  - `_quarto-teacher.yml`: `pdf-viewer: prefer: "{name}-student.pdf"`, so slides on the teacher site show that copy.
+  - `_extensions/pdf-viewer/pdf-viewer.lua`, `pdf-viewer.js`: a new project option `pdf-viewer: prefer:` (tried first, falling back to the named file) and `prefer=false` on one shortcode to show the named file as it is (the teacher edition, for training).
+  - `README.md`: how it works, and `prefer=false`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: PDFs on slides (viewer and gallery, with pens), and the chalkboard
 - **Asked for:** "Teachers want to embed the worksheet PDF in the reveal.js presentation, so that they can have slides that show the workbook together with in-class instructions or resources." Two ways: a gallery of pages that opens a large popup (draggable, resizable), and a PDF on the slide with on-screen page controls. Both with ink for touch screens, kept until Clear. Plus an example of the built-in chalkboard.
 - **Why:** to show the worksheet next to in-class instructions, and write on it with the class.

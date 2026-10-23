@@ -11,6 +11,13 @@ Options:
   page=2                     the page to start on (viewer)
   height="560px"             how tall the viewer is (default: fills its slide column)
   ink=false                  no pens (default: pens on, for touch screens)
+  prefer=false               always show this file, even when the project prefers another (below)
+
+Project option: show another version of each PDF when there is one, for example a student copy
+next to a teacher edition. {name} is the file name without ".pdf":
+  pdf-viewer:
+    prefer: "{name}-student.pdf"
+The viewer tries that file first and falls back to the one named in the shortcode.
 
 The path is relative to this file, like a link. The PDF is loaded when the page is shown, not
 when it is built, so it can be a PDF that the same render makes (a worksheet's own PDF).
@@ -30,7 +37,7 @@ local function html_escape(s)
 end
 
 return {
-  ["pdf-viewer"] = function(args, kwargs)
+  ["pdf-viewer"] = function(args, kwargs, meta)
     local file = str(args[1], nil)
     if not file then return pandoc.Null() end
     local title = str(kwargs["title"], file:match("[^/]+$"))
@@ -44,6 +51,13 @@ return {
       stylesheets = { "pdf-viewer.css" },
       resources = { "pdf.min.mjs", "pdf.worker.min.mjs" },
     })
+    local prefer = str(meta and meta["pdf-viewer"] and meta["pdf-viewer"]["prefer"], nil)
+    if prefer and str(kwargs["prefer"], "true") ~= "false" then
+      local dir, name = file:match("^(.-)([^/]+)%.pdf$")
+      prefer = name and (dir .. prefer:gsub("{name}", (name:gsub("%%", "%%%%")))) or nil
+    else
+      prefer = nil
+    end
     local layout = str(kwargs["layout"], "viewer") == "gallery" and "gallery" or "viewer"
     local height = str(kwargs["height"], nil)
     local style = height and (' style="height:' .. html_escape(height) .. '"') or ""
@@ -51,6 +65,7 @@ return {
       '<div class="pdfv pdfv-' .. layout .. '" data-src="' .. html_escape(file) ..
       '" data-title="' .. html_escape(title) .. '" data-layout="' .. layout ..
       '" data-page="' .. html_escape(str(kwargs["page"], "1")) ..
+      (prefer and ('" data-prefer="' .. html_escape(prefer)) or "") ..
       '" data-ink="' .. (str(kwargs["ink"], "true") == "false" and "false" or "true") ..
       '" data-prevent-swipe data-pending' .. style .. '>' ..
       '<a class="pdfv-fallback" href="' .. html_escape(file) .. '">📄 ' .. html_escape(title) .. ' (PDF)</a></div>')

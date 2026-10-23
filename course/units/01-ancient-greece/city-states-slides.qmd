@@ -185,7 +185,7 @@ Ideas to look for: both were Greek city-states, spoke Greek, honored the same go
 ::::
 
 ::: notes
-**PDF on a slide:** the worksheet's own PDF, with ‹ › to turn pages. Tap a pen to write on it, for example to fill in the first answer together as a model. The ink stays (on this computer) until you press the bin button. ⤢ opens it large. On the teacher site the last page is the answer key, so stop on page 2 while students work.
+**PDF on a slide:** the worksheet's own PDF, with ‹ › to turn pages. Tap a pen to write on it, for example to fill in the first answer together as a model. The ink stays (on this computer) until you press the bin button. ⤢ opens it large. This always shows the student copy, even on the teacher site, so the answer key never goes on the board. (For teacher training, `prefer=false` in the shortcode shows the teacher edition.)
 
 In the source this is one line: `{{</* pdf-viewer "athens-vs-sparta.pdf" */>}}`.
 :::

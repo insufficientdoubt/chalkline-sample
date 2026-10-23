@@ -20,6 +20,16 @@ function loadPdf(url) {
   return docs.get(url);
 }
 
+// The box's PDF: the preferred version (data-prefer, e.g. a student copy) if it's there, else data-src
+async function openPdf(root) {
+  if (root.dataset.prefer) {
+    const url = new URL(root.dataset.prefer, document.baseURI).href;
+    try { return [url, await loadPdf(url)]; } catch (e) { /* not there: use the usual file */ }
+  }
+  const url = new URL(root.dataset.src, document.baseURI).href;
+  return [url, await loadPdf(url)];
+}
+
 // ---- Ink: a list of strokes per PDF page. Points are fractions of the page (0–1), so the
 // same ink fits a thumbnail, a slide and the big popup. ----
 
@@ -241,7 +251,7 @@ function penBar(owner) {
   return bar;
 }
 
-function showError(root, url, title) {
+function showError(root, title) {
   root.replaceChildren(el("p", "pdfv-error", "This PDF isn't available here: " + title + "."));
 }
 
@@ -250,11 +260,10 @@ function showError(root, url, title) {
 class Viewer {
   constructor(root) {
     this.root = root;
-    this.url = new URL(root.dataset.src, document.baseURI).href;
     this.title = root.dataset.title;
     this.n = parseInt(root.dataset.page, 10) || 1;
     this.stage = el("div", "pdfv-stage");
-    this.page = new PageView(this.url, () => this.tool);
+    this.page = new PageView(null, () => this.tool);
     this.stage.append(this.page.el);
     this.prev = button("prev", "Previous page", () => this.go(this.n - 1));
     this.next = button("next", "Next page", () => this.go(this.n + 1));
@@ -262,11 +271,12 @@ class Viewer {
     const nav = el("div", "pdfv-bar");
     nav.append(this.prev, this.count, this.next, el("span", "pdfv-title", this.title),
       button("big", "Open large", () => popup.open(this.url, this.title, this.n)),
-      openLink(this.url));
+      openLink(() => this.url));
     root.replaceChildren(...(root.dataset.ink === "false" ? [] : [penBar(this)]), this.stage, nav);
   }
   async start() {
-    this.doc = await loadPdf(this.url);
+    [this.url, this.doc] = await openPdf(this.root);
+    this.page.url = this.url;
     await this.go(this.n);
   }
   async go(n) {
@@ -280,8 +290,8 @@ class Viewer {
   refresh() { return this.go(this.n); }
 }
 
-function openLink(url) {
-  return button("open", "Open the PDF in a new tab", () => window.open(url, "_blank", "noopener"));
+function openLink(getUrl) {
+  return button("open", "Open the PDF in a new tab", () => window.open(getUrl(), "_blank", "noopener"));
 }
 
 // ---- Gallery: every page as a thumbnail ----
@@ -289,17 +299,16 @@ function openLink(url) {
 class Gallery {
   constructor(root) {
     this.root = root;
-    this.url = new URL(root.dataset.src, document.baseURI).href;
     this.title = root.dataset.title;
     this.strip = el("div", "pdfv-strip");
     this.thumbs = [];
     const head = el("div", "pdfv-bar");
     this.count = el("span", "pdfv-count");
-    head.append(el("span", "pdfv-title", this.title), this.count, openLink(this.url));
+    head.append(el("span", "pdfv-title", this.title), this.count, openLink(() => this.url));
     root.replaceChildren(this.strip, head);
   }
   async start() {
-    this.doc = await loadPdf(this.url);
+    [this.url, this.doc] = await openPdf(this.root);
     const pages = this.doc.numPages;
     this.count.textContent = pages + (pages === 1 ? " page" : " pages") + " · tap one to open it";
     for (let n = 1; n <= pages; n++) {
@@ -423,7 +432,7 @@ async function start(root) {
     started.push(part);
   } catch (e) {
     console.warn("pdf-viewer:", root.dataset.src, e);
-    showError(root, part.url, part.title);
+    showError(root, part.title);
   }
   root.removeAttribute("data-pending");   // scripts/slides_pdf.py waits for this when printing
 }
