@@ -22,6 +22,8 @@ listing:
     page-size: 200
 ---
 
+:::: {.overview}
+
 ```{python}
 #| output: asis
 import sys; sys.path.append("scripts")
@@ -29,11 +31,11 @@ from catalog import markdown_season, markdown_by_unit, markdown_by_type, markdow
 print(markdown_season())
 ```
 
-::: {.content-visible when-profile="teacher"}
-::: {.callout-warning}
-**Teacher build.** Worksheets here include answer keys and teacher notes. Don't share this version with students.
+:::: {.content-visible when-profile="teacher"}
+::: {.ov-notice}
+**Teacher site.** Worksheets here include answer keys and teacher notes. Don't share this version with students.
 :::
-:::
+::::
 
 ::: {.content-visible when-profile="parent"}
 Welcome, families! This is where you can follow what your child is learning: the slides we use in class, the **vocabulary** (English with 中文) and the goals for each unit.
@@ -50,7 +52,7 @@ print(markdown_learning())
 :::
 
 ::: {.content-hidden when-profile="parent"}
-Every slide deck, printable and poster for the course, **by unit** below. The **Everything** tab has a search box and filters (type, unit, source) on the right; **By type** groups them by kind. The sidebar search looks inside every page. Inside any page, use the previous/next buttons at the bottom to flip through.
+[Every slide deck, printable and poster for the course. Tap a color below to show just one kind. **Everything** has a search box and filters; **By type** groups files by kind. The search at the top of the sidebar looks inside every page.]{.ov-intro}
 
 ::: {.panel-tabset}
 
@@ -76,3 +78,38 @@ print(markdown_by_type())
 :::
 
 :::
+
+::::
+
+```{=html}
+<script>
+// The Categories filter (right margin) filters the Everything tab only: show it on that tab.
+document.addEventListener("DOMContentLoaded", function () {
+  const tabs = document.querySelector(".overview .panel-tabset");
+  if (!tabs) return;   // the family site has no tabs: the list and its filter are always shown
+  function update() {
+    const on = tabs.querySelector(".nav-link.active");
+    document.body.classList.toggle("ov-filters-off", !on || on.textContent.trim() !== "Everything");
+  }
+  tabs.addEventListener("shown.bs.tab", update);
+  update();
+});
+
+// The chips above the units show only one kind of document; a unit with none of that kind is hidden.
+document.addEventListener("click", function (e) {
+  const chip = e.target.closest(".ov-chip");
+  if (!chip) return;
+  const bar = chip.parentElement, f = chip.dataset.f;
+  bar.querySelectorAll(".ov-chip").forEach(function (c) { c.classList.toggle("ov-on", c === chip); });
+  let el = bar.closest(".cell-output-display, .tab-pane") || document;
+  el.querySelectorAll(".ov-unit").forEach(function (unit) {
+    let shown = 0;
+    unit.querySelectorAll(".ov-item").forEach(function (row) {
+      row.hidden = f !== "all" && row.dataset.f !== f;
+      if (!row.hidden) shown++;
+    });
+    unit.hidden = f !== "all" && shown === 0;
+  });
+});
+</script>
+```

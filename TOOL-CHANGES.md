@@ -8,6 +8,57 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: Unit pages and the rest of the site match the new overview
+- **Asked for:** "Make sure the unit pages and everything in that interface matches."
+- **Why:** one look across the site, after the overview restyle.
+- **Changed:**
+  - `brand/styles.scss`:
+    - The title banner on every web page is the same card as the overview's header (soft gradient, small breadcrumbs, a short orange rule).
+    - Section headings lose the blue band (a short blue bar instead).
+    - Callout boxes are rounded cards.
+    - Material tables are a rounded card, with one colour per type, the same as the overview (a bar on the left edge, the type in colour). The 📊/📦/🔑/🎒 emoji are gone.
+    - The packet cards put the Student copy first in solid green and the Teacher edition in muted orange, with line icons. On the student site, the single "Unit packet" button is green.
+  - `_extensions/classroom/shortcodes.lua`:
+    - `{{< packet >}}`: no emoji, and the student copy first.
+    - `{{< objectives >}}`: a card headed "In this unit", with green ticks (web only; PDFs keep the plain list).
+  - `brand/type-colors.html`: tags every table row with its type (`row-t-worksheet`, …), not just slides and packets.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: Overview: the student copy is the main packet button
+- **Asked for:** "I'd like the student edition to be green and this teacher edition to be that muted Orange ... Teachers first move is to print the student edition and the second move is to reference the one with answer keys (if they ever do). So the UI should reflect those priorities."
+- **Why:** printing the student copy is what teachers do most; the answer keys come second.
+- **Changed:**
+  - `brand/styles.scss`: the Student copy button is solid green; the Teacher edition is the quiet orange outline.
+  - `scripts/catalog.py`: the Student copy comes first in each unit's header.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: Overview: colour coding back, and a more polished look
+- **Asked for:** "I think we still need some level of color highlighting to make it quick for teachers to find the right materials. I just wanted to be a bit more modern and restrained. The whole thing should feel a bit more polished than the default quarto look."
+- **Why:** colour helps teachers find the right materials fast; the first restyle was too plain.
+- **Changed:**
+  - `brand/styles.scss`:
+    - Each type has one colour, used three ways: a bar on the row's left edge, the icon tile and the type label. Slides (teal) and packets (orange) stand out most, with solid tiles and orange packet buttons, as before.
+    - A new page header replaces Quarto's title banner on the overview: course name, season, counts and the next events as date cards.
+    - The teacher-site warning is now a slim notice with a key icon.
+    - The Everything table keeps teal and orange bars for slides and packets, and the Categories list is quieter.
+    - Sidebar, on every page: slide decks get a small teal presentation icon instead of 📊, and the current page shows as a soft pill.
+  - `scripts/catalog.py`: filter chips above the units (All, Slides, Worksheets, …, Outside links, each with its colour and count). The rows say what the chips match. `markdown_season()` builds the new header.
+  - `index.qmd`: the chips' script (it shows one kind and hides units with none of it), the teacher notice, and a shorter intro.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: The overview in the new style
+- **Asked for:** "Rebuild the overview with the new styles."
+- **Why:** not given. (The overview still had the old look: tables, coloured rows and emoji, while the catalogue, tools and games now share one design.)
+- **Changed:**
+  - `scripts/catalog.py`: the overview builders write cards instead of tables. Each unit is a card with its number, title, description and packet buttons (Teacher edition solid, Student copy outlined). Each document is a row with a line icon for its type, its title and description, and a PDF button; outside links show their source with an outside-link icon. "By type" uses the same cards, "Coming up" shows each event as a small card, and the family site's unit goals are cards too. The Lucide icons are drawn inline (no script). The packet titles lose their 🔑/🎒 emoji (the overview shows a key or a backpack icon instead) and get an `edition` field.
+  - `brand/styles.scss`: a new "Overview" section with the same values as `ui.css` (white cards, thin borders, one quiet colour per type). The tabs are a segmented control. The Everything tab's table is restyled, without the coloured rows or emoji.
+  - `index.qmd`: the page is wrapped in `.overview`. `README.md`: "builds the table" now describes the cards. A small script shows the Categories filter only on the Everything tab, where it works.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Traffic light shows its lights again
 - **Asked for:** "for a teacher tools the traffic light is broken right now."
 - **Why:** it was broken: the panel opened, but the lights had no shape or colour.
