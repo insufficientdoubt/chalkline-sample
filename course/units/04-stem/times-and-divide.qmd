@@ -1,0 +1,37 @@
+---
+title: "Times and Divide: 30 Mixed"
+type: worksheet
+description: "Thirty multiplication and division problems in a grid, from facts to 2-digit × 2-digit, with score and time boxes. Change the seed for a new version. Teacher copy has answers."
+order: 5
+audience: [teacher, student]
+doc-type: Worksheet
+name-box: true
+format:
+  html: default
+  typst: default
+---
+
+```{python}
+#| output: asis
+# Change SEED for a new set of problems (the answer key changes with it).
+SEED = 4
+import sys; sys.path.append("course/units/04-stem")
+from practice import times_divide, times_divide_typst, times_divide_html, score_bar, WEB_STYLE
+problems = times_divide(SEED)
+print(WEB_STYLE)
+print(score_bar(30, "Work out each one. The problems get harder as you go. Show your working in the column problems."))
+print(times_divide_typst(problems))
+print(times_divide_html(problems))
+```
+
+::: {.content-visible when-profile="teacher"}
+{{< pagebreak >}}
+
+## Answer key
+
+```{python}
+#| output: asis
+print(times_divide_typst(problems, answers=True))
+print(times_divide_html(problems, answers=True))
+```
+:::

@@ -1,0 +1,120 @@
+---
+title: "Math You Can Move"
+subtitle: "Geometry, graphs and equations · STEM sampler"
+type: slides
+description: "Drag a triangle's corners, slide a parabola, graph lines in PhET, then put equation steps in order, match formulas, sort numbers in a Venn diagram and race through mental math."
+order: 1
+audience: [teacher, student]
+format: revealjs
+resources:
+  - embeds/**
+---
+
+```{=html}
+<style>
+  /* An interactive page in a frame, filling the slide under its title */
+  .reveal .stem-frame { display: block; width: 100%; height: 560px; border: 1px solid var(--ui-line, #d6dee8); border-radius: 12px; background: #fff; }
+  .reveal .stem-link { font-size: 0.5em; color: var(--ui-muted, #5b6b80); }
+</style>
+```
+
+## Angles in a triangle {#triangle}
+
+<iframe class="stem-frame" data-src="embeds/triangle.html" title="Angles in a triangle"></iframe>
+
+::: notes
+Drag any corner. The three angles change, but they always add up to **180°**. Ask: *Can you make one angle very big? What happens to the other two?* Try a right angle (90°).
+
+This is an interactive page in the unit's `embeds/` folder, shown in a frame: `<iframe class="stem-frame" data-src="embeds/triangle.html"></iframe>`. It uses JSXGraph (free, MIT licence), saved in the course, so it works without the internet.
+:::
+
+## Parabolas: move the sliders {#parabola}
+
+<iframe class="stem-frame" data-src="embeds/parabola.html" title="Parabola in GeoGebra"></iframe>
+
+::: notes
+**y = ax² + bx + c.** Move **a**: the parabola gets narrow or wide, and flips when a is negative. Move **c**: it slides up and down. Move **b**: the turning point moves sideways *and* up or down. Ask students to predict before you move a slider.
+
+This one is **GeoGebra**, loaded from geogebra.org (it needs the internet). The commands that make it are in `embeds/parabola.html`: change them to graph anything GeoGebra can.
+:::
+
+## Lines: slope and intercept {#lines}
+
+<iframe class="stem-frame" style="height: 520px" data-src="https://phet.colorado.edu/sims/html/graphing-lines/latest/graphing-lines_en.html" title="PhET Graphing Lines" allowfullscreen></iframe>
+
+[PhET Interactive Simulations, University of Colorado Boulder (CC BY 4.0). Needs the internet.]{.stem-link}
+
+::: notes
+**PhET Graphing Lines.** Choose *Slope-Intercept*, then change m and b. Ask: *What does m do? What does b do?*
+
+Any PhET simulation can go on a slide like this: on phet.colorado.edu, open a simulation, choose **Embed**, and copy its address into `data-src`.
+:::
+
+## Solve it, step by step
+
+::: {.put-in-order first="Start" last="Answer"}
+- 3x + 5 = 20 | The equation to solve.
+- 3x + 5 − 5 = 20 − 5 | Take 5 from both sides.
+- 3x = 15 | Now only the x part is on the left.
+- 3x ÷ 3 = 15 ÷ 3 | Divide both sides by 3.
+- x = 5 | The answer. Check: 3 × 5 + 5 = 20 ✓
+:::
+
+::: notes
+**Put it in order** works for any process: the steps of solving an equation, of a proof, of a construction. The reasons (after the `|`) show when every step is in the right place.
+:::
+
+## Match the formula
+
+::: {.matching}
+- A = πr² | Area of a circle
+- C = 2πr | Circumference of a circle
+- a² + b² = c² | Pythagoras' theorem
+- A = ½ × b × h | Area of a triangle
+- y = mx + b | A straight line
+- V = l × w × h | Volume of a box
+:::
+
+## Prime, even, or both?
+
+::: {.sort layout="venn"}
+- **Prime**
+  - 3 | 3 has only two factors: 1 and 3. It is odd.
+  - 5 | 5 has only two factors: 1 and 5. It is odd.
+  - 7 | 7 has only two factors: 1 and 7. It is odd.
+  - 11 | 11 has only two factors: 1 and 11. It is odd.
+- **Both**
+  - 2 | 2 is the only even prime number.
+- **Even**
+  - 4 | 4 = 2 × 2, so it is not prime.
+  - 6 | 6 = 2 × 3, so it is not prime.
+  - 10 | 10 = 2 × 5, so it is not prime.
+  - 12 | 12 = 3 × 4, so it is not prime.
+:::
+
+::: notes
+A **Venn diagram** (Sort it with `layout="venn"`). Ask: *Why is 2 the only number in the middle?* Then: *Where would 9 go?* (Outside both circles: a good discussion.)
+:::
+
+## Math words
+
+::: {.fill-blanks extra="radius, area"}
+The longest side of a right triangle is the [hypotenuse]. The angles in a triangle add up to [180] degrees.
+
+In y = mx + b, the number m is the [slope]. A number with only two factors, 1 and itself, is a [prime] number.
+:::
+
+## Mental math
+
+::: {.trivia seconds="8" title="Quick-fire!"}
+- 7 × 8 | 56
+- 144 ÷ 12 | 12
+- 15% of 200 | 30
+- 3² + 4² | 25
+- The angles of a square, added up | 360°
+- Half of 3.5 | 1.75
+:::
+
+::: notes
+**Quick-fire**: 8 seconds a question. Change `seconds="8"` to make it easier or harder.
+:::

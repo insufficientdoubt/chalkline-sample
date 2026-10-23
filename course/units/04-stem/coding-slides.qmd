@@ -1,0 +1,78 @@
+---
+title: "Code with Blocks"
+subtitle: "Block coding and Python · STEM sampler"
+type: slides
+description: "Build programs with Blockly blocks and see the same program in Python, try a Blockly Games maze, then build lines of code, order an algorithm and match coding words."
+order: 2
+audience: [teacher, student]
+format: revealjs
+resources:
+  - embeds/**
+---
+
+```{=html}
+<style>
+  .reveal .stem-frame { display: block; width: 100%; height: 560px; border: 1px solid var(--ui-line, #d6dee8); border-radius: 12px; background: #fff; }
+  .reveal .stem-link { font-size: 0.5em; color: var(--ui-muted, #5b6b80); }
+</style>
+```
+
+## Blocks become Python {#blocks}
+
+<iframe class="stem-frame" data-src="embeds/blocks.html" title="Blocks and Python"></iframe>
+
+::: notes
+Press **Run**: the program counts from 1 to 5 and says which numbers are even. On the right is **the same program in Python**. Change a block and watch the Python change.
+
+Try: change *to 5* to *to 10*. Change *even* to *a multiple of 3* (the remainder of n ÷ 3). Drag in a new **print** block from *Text*.
+
+This uses **Blockly** (free, from Google; the same blocks as Code.org and Scratch), saved in the course, so it works without the internet. The page is `embeds/blocks.html`.
+:::
+
+## A maze to solve {#maze}
+
+<iframe class="stem-frame" style="height: 520px" data-src="https://blockly.games/maze?lang=en&level=1" title="Blockly Games: Maze"></iframe>
+
+[Blockly Games (Google, free). Needs the internet. [Open it in a new tab](https://blockly.games/maze?lang=en){target="_blank"}.]{.stem-link}
+
+::: notes
+**Blockly Games** has ten free levels of Maze, plus Bird, Turtle (drawing) and Music. Students can work through them on tablets at their own speed. If the frame stays empty on your network, use the link under it.
+:::
+
+## Build the line of code
+
+::: {.sentence-builder}
+- print / ( / name / ) | Show the value of name on the screen.
+- for / i / in / range(5) / : | Repeat the code under it 5 times.
+- if / score / > / 10 / : | Only do the next part when score is more than 10.
+- total / = / total / + / 1 | Add 1 to total.
+:::
+
+::: notes
+**Build the sentence**, used for code. Each `/` marks one tile. Ask students to read each line aloud in plain English once it's built.
+:::
+
+## Find the biggest number
+
+::: {.put-in-order first="First" last="Last"}
+- Look at the first number. Call it "biggest".
+- Look at the next number.
+- If it is bigger than "biggest", it becomes "biggest".
+- Repeat until there are no numbers left.
+- Say "biggest". It is the answer.
+:::
+
+::: notes
+An **algorithm** is a step-by-step plan. Put the steps in order, then act it out: give five students number cards and walk along the line.
+:::
+
+## Coding words
+
+::: {.matching}
+- algorithm | A step-by-step plan to solve a problem
+- loop | Code that repeats
+- variable | A named box that stores a value
+- if | Code that makes a choice
+- function | Steps with a name, to use again and again
+- bug | A mistake in a program
+:::
