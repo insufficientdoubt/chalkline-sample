@@ -35,7 +35,7 @@
       <div class="stat"><small>The claw</small>Height off the floor: <b id="height"></b><br>Moves forward: <b id="reach"></b></div>
       <div class="stat" id="lengthBox"><small>Robot length (back to front)</small><span class="big" id="length"></span>
         <span id="widest"></span></div>
-      <label class="row">Size limit: <span id="limitV"></span><input type="range" id="limit" min="35" max="90" value="55"></label>
+      <label class="row">Horizontal limit (no height limit): <span id="limitV"></span><input type="range" id="limit" min="35" max="90" value="55"></label>
       <label class="row">Lift <input type="range" id="lift" min="0" max="100" value="0"></label>
       <label class="row">Bar length: <span id="lenV"></span><input type="range" id="len" min="15" max="40" value="25"></label>
       <div id="about" class="note"></div>
@@ -56,7 +56,7 @@
   const MODES = {
     four: { lo: -30, hi: 60, about: "<b>4-bar:</b> one parallelogram. The claw stays level, but it moves forward and back as it lifts (an arc)." },
     six:  { lo: -15, hi: 40, about: "<b>6-bar:</b> the first 4-bar's top bar is extra long (purple): it keeps going as the second 4-bar's bottom bar. The green end bar is extra tall: it's the tower for the second 4-bar. 6 bars in all. About twice as high, but it also reaches further forward: careful the robot doesn't tip!" },
-    dr4b: { lo: 4, hi: 72, about: "<b>DR4B</b> (double reverse four-bar): the top 4-bar tilts the other way, so the claw goes <b>straight up</b>. Great for stacking." },
+    dr4b: { about: "<b>DR4B</b> (double reverse four-bar), at the end of the robot with its claw facing out: the top 4-bar tilts the other way, so the claw goes <b>straight up and down</b>, from the floor all the way up, and the robot never gets longer." },
   };
   let mode = "four", t = 0, dir = 1, playing = false, L = 25;
   const svg = document.getElementById("svg");
@@ -68,15 +68,20 @@
   const ruler = el("g", {});
   for (let cm = 0; cm <= 65; cm += 5) {
     const y = GROUND - cm * SCALE;
-    el("line", { x1: 40, x2: cm % 10 ? 50 : 58, y1: y, y2: y, stroke: "#8a97a8", "stroke-width": 1.5 }, ruler);
-    if (cm % 10 === 0) el("text", { x: 62, y: y + 5, "font-size": 14, fill: "#5b6b80" }, ruler).textContent = cm;
+    el("line", { x1: 862, x2: cm % 10 ? 852 : 844, y1: y, y2: y, stroke: "#8a97a8", "stroke-width": 1.5 }, ruler);
+    if (cm % 10 === 0) el("text", { x: 868, y: y + 5, "font-size": 14, fill: "#5b6b80" }, ruler).textContent = cm;
   }
-  el("line", { x1: 40, x2: 40, y1: GROUND, y2: GROUND - 65 * SCALE, stroke: "#8a97a8", "stroke-width": 1.5 });
-  el("text", { x: 34, y: GROUND - 65 * SCALE - 10, "font-size": 14, fill: "#5b6b80" }).textContent = "cm";
+  el("line", { x1: 862, x2: 862, y1: GROUND, y2: GROUND - 65 * SCALE, stroke: "#8a97a8", "stroke-width": 1.5 });
+  el("text", { x: 852, y: GROUND - 65 * SCALE - 10, "font-size": 14, fill: "#5b6b80" }).textContent = "cm";
   const BACK = TOWER_X - 110, BASE_W = 260;   // the robot's base: its back edge and length
+  // The DR4B sits at the back end of the robot with its claw facing out, so it can reach the floor
+  // behind the robot; the others sit in the middle with the claw facing forward.
+  const towerX = function () { return mode === "dr4b" ? BACK + 8 : TOWER_X; };
+  const FACE = function () { return mode === "dr4b" ? -1 : 1; };
+  const OUT = function () { return mode === "dr4b" ? 34 : 0; };   // the claw's bracket: how far out it holds the claw
   el("rect", { x: BACK, y: GROUND - 6 * SCALE, width: BASE_W, height: 4 * SCALE, rx: 6, fill: "#c3ccd8" });
   [TOWER_X - 80, TOWER_X + 120].forEach(function (x) { el("circle", { cx: x, cy: GROUND - 2 * SCALE, r: 2 * SCALE, fill: "#5b6b80" }); });
-  el("rect", { x: TOWER_X - 8, y: GROUND - (TOWER_H + 3) * SCALE, width: 16, height: (TOWER_H - 3) * SCALE, rx: 3, fill: "#8a97a8" });
+  const towerRect = el("rect", { x: TOWER_X - 8, y: GROUND - (TOWER_H + 3) * SCALE, width: 16, height: (TOWER_H - 3) * SCALE, rx: 3, fill: "#8a97a8" });
 
   // Moving parts
   const path = el("polyline", { fill: "none", stroke: "#d6458f", "stroke-width": 2, "stroke-dasharray": "5 5", opacity: 0.7 });
@@ -89,7 +94,7 @@
   // The joints for an angle a (degrees above level). Returns the claw's mount (top and bottom).
   function solve(a) {
     const r = a * Math.PI / 180, dx = L * SCALE * Math.cos(r), dy = -L * SCALE * Math.sin(r);
-    const T1 = [TOWER_X, GROUND - (TOWER_H + 1) * SCALE], T2 = [TOWER_X, T1[1] + GAP * SCALE];   // the tower's two pivots
+    const T1 = [towerX(), GROUND - (TOWER_H + 1) * SCALE], T2 = [towerX(), T1[1] + GAP * SCALE];   // the tower's two pivots
     const M1 = [T1[0] + dx, T1[1] + dy], M2 = [T2[0] + dx, T2[1] + dy];                           // end of stage 1
     if (mode === "four") return { stages: [[T1, T2, M1, M2]], end: [M1, M2] };
     if (mode === "six") {
@@ -108,7 +113,7 @@
   function span(s) {
     let pts = [].concat.apply([], s.stages).concat(s.end);
     if (s.six) pts = pts.concat([s.six.T1, s.six.T2, s.six.M1, s.six.M2, s.six.M3]);
-    const xs = pts.map(function (p) { return p[0]; }).concat([BACK, BACK + BASE_W, s.end[1][0] + 46 + 4]);
+    const xs = pts.map(function (p) { return p[0]; }).concat([BACK, BACK + BASE_W, s.end[1][0] + FACE() * (OUT() + 50)]);
     return { back: Math.min.apply(null, xs), front: Math.max.apply(null, xs) };
   }
   function length(sp) { return (sp.front - sp.back) / SCALE; }
@@ -120,8 +125,15 @@
       if (!widest || n > widest.len) widest = { len: n, x: sp.front, at: p };
     }
   }
-  function clawPoint(s) { return [s.end[0][0] + 26, s.end[1][1]]; }   // the claw's grip, level with the lower pin
-  const angle = function (p) { const m = MODES[mode]; return m.lo + (m.hi - m.lo) * p / 100; };
+  function clawPoint(s) { return [s.end[0][0] + FACE() * (OUT() + 26), s.end[1][1]]; }   // the claw's grip, level with the lower pin
+  function range() {
+    if (mode !== "dr4b") return MODES[mode];
+    // lowest: the claw just above the floor (the lower pivot is TOWER_H + 1 - GAP cm up, and the
+    // claw drops two bar lengths × sin); highest: the top pin still inside the picture (66 cm)
+    const low = TOWER_H + 1 - GAP, deg = function (x) { return Math.asin(Math.max(-1, Math.min(1, x))) * 180 / Math.PI; };
+    return { lo: -deg((low - 1) / (2 * L)), hi: Math.min(75, deg((66 - GAP - low) / (2 * L))) };
+  }
+  const angle = function (p) { const m = range(); return m.lo + (m.hi - m.lo) * p / 100; };
 
   function draw() {
     const a = angle(t), s = solve(a);
@@ -138,18 +150,20 @@
     });
     if (s.stages.length > 1 && !s.six) upright([s.stages[0][2][0], s.stages[0][2][1] - 10], [s.stages[0][3][0], s.stages[0][3][1] + 10], "#2e9e4f");   // the middle link
     // the claw: an upright plate with two level fingers
-    const [e1, e2] = s.end;
+    const [e1, e2] = s.end, f = FACE(), px = e2[0] + f * OUT();
     upright([e1[0], e1[1] - 8], [e2[0], e2[1] + 8], "#10233f");
-    el("path", { d: `M${e2[0]} ${e2[1]} h46 M${e2[0]} ${e2[1] - 26} h46`, stroke: "#10233f", "stroke-width": 7, "stroke-linecap": "round", fill: "none" }, g);
-    el("rect", { x: e2[0] + 14, y: e2[1] - 24, width: 26, height: 22, rx: 3, fill: "#ffc61a", stroke: "#b8860b" }, g);   // a cube
+    if (OUT()) bar([e1[0], e1[1]], [px, e1[1]], "#10233f"), bar([e2[0], e2[1]], [px, e2[1]], "#10233f"), upright([px, e1[1] - 8], [px, e2[1] + 8], "#10233f");
+    el("path", { d: `M${px} ${e2[1]} h${46 * f} M${px} ${e2[1] - 26} h${46 * f}`, stroke: "#10233f", "stroke-width": 7, "stroke-linecap": "round", fill: "none" }, g);
+    el("rect", { x: f > 0 ? px + 14 : px - 40, y: e2[1] - 24, width: 26, height: 22, rx: 3, fill: "#ffc61a", stroke: "#b8860b" }, g);   // a cube
     s.stages.forEach(function (st) { st.forEach(pin); });
     // the motor, on the tower's lower pivot
     el("circle", { cx: s.stages[0][1][0], cy: s.stages[0][1][1], r: 13, fill: "none", stroke: "#10233f", "stroke-width": 2, "stroke-dasharray": "4 3" }, g);
 
-    // the robot's length along the floor, the widest point in the swing, and the size limit
-    const sp = span(s), limitCm = +document.getElementById("limit").value, limitX = BACK + limitCm * SCALE, yy = GROUND + 24;
+    // the robot's length along the floor, the widest point in the swing, and the horizontal limit
+    // (measured from the robot's back-most point; height doesn't count)
+    const sp = span(s), limitCm = +document.getElementById("limit").value, limitX = sp.back + limitCm * SCALE, yy = GROUND + 24;
     el("line", { x1: limitX, x2: limitX, y1: 40, y2: GROUND + 40, stroke: "#c23b3b", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, dim);
-    el("text", { x: limitX + 6, y: 58, "font-size": 16, "font-weight": 700, fill: "#c23b3b" }, dim).textContent = "size limit " + limitCm + " cm";
+    el("text", { x: limitX + 6, y: 58, "font-size": 16, "font-weight": 700, fill: "#c23b3b" }, dim).textContent = "horizontal limit " + limitCm + " cm";
     el("line", { x1: sp.back, x2: sp.front, y1: yy, y2: yy, stroke: "#10233f", "stroke-width": 2.5, "marker-start": "url(#arrowDark)", "marker-end": "url(#arrowDark)" }, dim);
     el("text", { x: (sp.back + sp.front) / 2 - 34, y: yy - 6, "font-size": 15, "font-weight": 700, fill: "#10233f" }, dim).textContent = length(sp).toFixed(0) + " cm";
     if (widest) {
@@ -169,9 +183,9 @@
     document.getElementById("height").textContent = height.toFixed(1) + " cm";
     document.getElementById("reach").textContent = mode === "dr4b" ? "0 cm: straight up ✓" : (reach > 0.05 ? "+" : "") + reach.toFixed(1) + " cm";
     // the extension, measured beside the claw: from its lowest point to now
-    const x = Math.max(now[0], low[0]) + 90;
-    el("line", { x1: x - 70, x2: x + 10, y1: low[1], y2: low[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
-    el("line", { x1: now[0] + 50, x2: x + 10, y1: now[1], y2: now[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
+    const x = FACE() > 0 ? Math.min(Math.max(now[0], low[0]) + 90, 760) : 34;
+    el("line", { x1: FACE() > 0 ? x - 70 : x - 10, x2: FACE() > 0 ? x + 10 : low[0] - 30, y1: low[1], y2: low[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
+    el("line", { x1: now[0] + FACE() * 50, x2: x + 10, y1: now[1], y2: now[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
     if (ext > 1) {
       el("line", { x1: x, x2: x, y1: low[1] - 2, y2: now[1] + 2, stroke: "#7b4fc9", "stroke-width": 3, "marker-start": "url(#arrow)", "marker-end": "url(#arrow)" }, dim);
       el("text", { x: x + 12, y: (low[1] + now[1]) / 2 + 6, "font-size": 20, "font-weight": 700, fill: "#7b4fc9" }, dim).textContent = ext.toFixed(1) + " cm";
@@ -192,6 +206,7 @@
   }
   function setMode(m) {
     mode = m;
+    towerRect.setAttribute("x", towerX() - 8);
     len.max = m === "six" ? 28 : 40;   // a 6-bar with longer bars would go off the picture
     if (L > +len.max) { L = +len.max; len.value = L; document.getElementById("lenV").textContent = L + " cm"; }
     document.querySelectorAll("[data-mode]").forEach(function (b) { b.classList.toggle("on", b.dataset.mode === m); });
