@@ -243,7 +243,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 [Snowman](../01-ancient-greece/review-games-slides.html#/word-1){.chip} [Word scramble](../01-ancient-greece/review-games-slides.html#/unscramble-it){.chip} [Picture reveal](../01-ancient-greece/review-games-slides.html#/what-is-it){.chip} [Matching](../01-ancient-greece/review-games-slides.html#/greek-gods){.chip} [Memory](../01-ancient-greece/review-games-slides.html#/find-the-pairs){.chip} [Jeopardy, with teams](../01-ancient-greece/review-games-slides.html#/ancient-greece){.chip} [Quick-fire](../01-ancient-greece/review-games-slides.html#/greece-review){.chip} [Bingo, printed cards](../01-ancient-greece/review-games-slides.html#/ancient-greece-bingo){.chip}
 
-[**Review games page:** any game, any unit](../review-games.html){.chip .chip-wide}
+[**Review games page:** any game, any unit](../../review-games.html){.chip .chip-wide}
 :::
 
 ::: {.cat-box .cat-learn}

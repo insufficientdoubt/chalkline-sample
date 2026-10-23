@@ -294,6 +294,40 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-big { font-size: min(11cqh, 10cqw); }
 .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-pick { width: min(9cqh, 13cqw); height: min(9cqh, 13cqw); }
 
+/* ---- Traffic light ---- */
+.ct-body.ct-traffic { align-items: center; }
+.ct-traffic-box {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: min(42cqh, 90cqw);
+  border-radius: 1.2em;
+  background: #22262e;
+  font-size: min(3cqh, 6cqw);
+}
+.ct-light {
+  width: min(22cqh, 70cqw);
+  height: min(22cqh, 70cqw);
+  border: 0;
+  border-radius: 50%;
+  opacity: 0.22;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+.ct-light.ct-red { background: #e5383b; }
+.ct-light.ct-yellow { background: #ffc61a; }
+.ct-light.ct-green { background: #2fbf5b; }
+.ct-light.ct-on { opacity: 1; box-shadow: 0 0 4cqh currentColor; }
+.ct-light.ct-red.ct-on { color: #e5383b; }
+.ct-light.ct-yellow.ct-on { color: #ffc61a; }
+.ct-light.ct-green.ct-on { color: #2fbf5b; }
+.ct-traffic-label { flex: none; min-height: 1.2em; padding-top: 0.15em; font-size: min(10cqh, 16cqw); font-weight: 700; line-height: 1.2; }
+.ct-traffic-label.ct-red { color: #c4262a; }
+.ct-traffic-label.ct-yellow { color: #a87a00; }
+.ct-traffic-label.ct-green { color: #1f8a40; }
+
 /* Noise meter: a box of its own size, so what's inside scales with it */
 .ct-noise {
   flex: 1;

@@ -8,6 +8,13 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: Traffic light shows its lights again
+- **Asked for:** "for a teacher tools the traffic light is broken right now."
+- **Why:** it was broken: the panel opened, but the lights had no shape or colour.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.css`: put back the traffic light's styles (the dark box, the three round lights, the glow on the one that's on, the coloured label). An earlier noise-meter restyle deleted them by mistake.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## YYYY-MM-DD: short title
 - **Asked for:** what the teacher wanted, in their words if they gave them.
 - **Why:** the reason they gave, or "not given".
