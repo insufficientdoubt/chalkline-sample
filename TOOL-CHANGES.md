@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: AI instructions: real photos first for vocab pictures
+- **Asked for:** "When adding vocabulary, prefer high quality creative Commons or public source images. Wikimedia, unsplash, etc. generate original images when the public source images don't provide a high quality image that is distinct, clear, and memorable ... New one should be reserved for cases where we don't have a good way to illustrate the point."
+- **Why:** many vocab words are clearer and more memorable as a real image than as a generated drawing.
+- **Changed:** `CLAUDE.md` (which `AGENTS.md` and `GEMINI.md` point to): a rule to look for an open-licensed real image first, and to make a drawing only when none works; picture credits go in `CREDITS.md` (`course/links.yml` is for links). `vocab/README.md`: a "Pictures" section: where to search, which licenses to use or avoid, quality checks, size (4:3, about 800 × 600, under 200 KB) and how to credit. `vocab/images/CREDITS.md` (new): the credits table for vocab pictures. Not tool files, but logged because the rule would suit every course.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire
 - **Asked for:** "build snowman hangman, picture reveal and jeopardy. Do not integrate these with the group score tools ... Keep them separate. Give teachers the option of having random vocabulary, unit specific vocabulary, or writing the answers in the shortcode directly. If it's random ... a replay button ... If it's not random then it shouldn't have that." Also "a trivia style game ... the teacher would just point to the student and they would answer orally and then reveal the answer and mark it as right or wrong but keep score."
 - **Why:** templates for interactive review on the board.
