@@ -24,6 +24,7 @@ Things to try once the site is open:
 - Hover or tap a word with a dotted line on any slide: its vocab card pops up.
 - Open a unit page and click **Unit packet (PDF)**: every printable in one file, ready to copy.
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
+- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice. They float above the slides and stay put when you change slides.
 - In the overview, each deck has a **PDF** too.
 - **Terminal > Run Task… > Open family site (parents)**: the version families see.
 - **Terminal > Run Task… > Open student site**: what students see, without the answer keys and teacher notes.
@@ -234,6 +235,22 @@ Put `{{< timer 20 >}}` on a slide. It has Start/Pause, Reset and +1 min buttons 
 Every slide deck shows the current time in the bottom-left corner. Press **K** to hide or show it (the choice is remembered on that computer), or turn it off for one deck with `clock: false` in its labels. Slides fade from one to the next; that's set under `revealjs:` in `_quarto.yml`.
 
 Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen.
+
+## Classroom tools (scoreboard, noise meter, …)
+
+Every slide deck has a toolbox: press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by its blue title bar; drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). × closes it.
+
+| Tool | What it does |
+|---|---|
+| 🏆 **Scoreboard** | Points for 1–8 teams. Tap a name to rename it; **+** and **−** change the score; 👑 marks the leader. **Reset** (tap twice) sets every score to 0. 🔔 turns the sound on or off. |
+| 🤫 **Voice level** | 0 Silent, 1 Whisper, 2 Partner talk, 3 Group talk, 4 Presenter. Tap a number. |
+| 🚦 **Traffic light** | Tap red (Stop), yellow (Get ready) or green (Go); tap it again to turn it off. |
+| 🔊 **Noise meter** | Press **Start** and allow the microphone. The bar shows how loud the room is; move the **Too loud at** slider to set the line. Over the line for a second, the window flashes red (and beeps, if 🔔 is on). It also shows how long the class has been quiet. Nothing is recorded or sent anywhere; **Stop** or × turns the microphone off. |
+| 🔳 **QR code** | A code for this deck, so students can open it on a tablet. **Edit link** makes a code for any link. On your own computer (`localhost`) the deck's address only works on that computer: the code says so. To make it point at your published site instead, add `classroom-tools: {qr-site: "https://…/"}` to `_quarto.yml`. |
+| ⏱️ **Stopwatch** | Counts up. Start, Pause, Reset. |
+| 🎲 **Dice** | 1–6 dice. **Roll** (or tap the dice); with more than one, it adds them up. |
+
+Open windows, where they are, the scores and the settings are remembered **on that computer** (in the browser), so they come back in the next deck and the next lesson. Team names you type stay on that computer too; they are never put in the course files or the website. To hide the toolbox in one deck, add `classroom-tools: false` to its labels.
 
 ## Tap-to-vote polls
 

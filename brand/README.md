@@ -35,7 +35,7 @@ Yellow `#fbc400` and cyan `#0abee6` are kept only for charts and polls that need
 
 1. Put new logo files in `logos/`. SVG is best; PNG works too.
 2. In `_brand.yml`, update the hex codes under `palette:`, the font names under `typography:`, and the logo paths if the file names changed.
-3. The slide stylesheet (`revealjs.scss`) and the poll, timer and clock widgets in `_extensions/classroom/` repeat the hex codes; update them too.
+3. The slide stylesheet (`revealjs.scss`) and the poll, timer, clock and toolbox widgets in `_extensions/classroom/` repeat the hex codes; update them too.
 4. Run `quarto render`.
 
 ## Worksheet options (set at the top of a `.qmd` file)
