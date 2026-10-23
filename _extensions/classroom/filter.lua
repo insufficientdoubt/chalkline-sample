@@ -4,6 +4,11 @@ this file turns them into the right thing for each output format.
 
 Slides (reveal.js):
   - adds the corner clock to every deck (turn off with `clock: false`)
+  - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
+    scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
+    in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
+      classroom-tools:
+        qr-site: "https://example.github.io/my-course/"   # the QR code points here, not at localhost
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
@@ -88,6 +93,20 @@ local function Meta(meta)
   local clock = meta.clock
   local off = clock ~= nil and pandoc.utils.stringify(clock) == "false"
   if quarto.doc.is_format("revealjs") and not off then include_once("clock.html") end
+  -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
+  local tools = meta["classroom-tools"]
+  local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
+  if quarto.doc.is_format("revealjs") and not tools_off then
+    local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
+    quarto.doc.add_html_dependency({
+      name = "classroom-tools",
+      version = "1.0.0",
+      scripts = { { path = "toolbox/toolbox.js", afterBody = true } },
+      stylesheets = { "toolbox/toolbox.css" },
+      resources = { "toolbox/qrcode.js" },
+      meta = site ~= "" and { ["chalkline-qr-site"] = site } or nil,
+    })
+  end
   -- Web pages: links to slideshows open in a new tab (slides-new-tab: false turns it off).
   local nt = meta["slides-new-tab"]
   local nt_off = nt ~= nil and pandoc.utils.stringify(nt) == "false"

@@ -3,7 +3,7 @@
 # How this repo is organized (so it can be remixed for another subject):
 #   course/                 CONTENT  (swap this folder for a different subject)
 #   brand/                  APPEARANCE (colors, fonts, logos, page and slide layouts)
-#   _extensions/classroom/  CODE: shortcodes, polls, timer, clock
+#   _extensions/classroom/  CODE: shortcodes, polls, timer, clock, classroom toolbox
 #   scripts/                CODE: catalog builder, vocab tools
 #   index.qmd               overview page, built automatically from every document's labels
 

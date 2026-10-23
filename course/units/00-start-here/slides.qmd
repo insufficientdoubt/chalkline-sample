@@ -181,6 +181,7 @@ One label decides who sees a file: `audience: [teacher, student, parent]`
 - A **timer** on any slide (press **T**)
 - A **clock** in the corner (press **K**)
 - **Speaker notes** in a second window (press **S**)
+- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice
 - **Tap-to-vote polls**: no devices, no accounts
 :::
 ::: {.column width="50%"}

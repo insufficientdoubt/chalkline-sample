@@ -16,6 +16,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Classroom toolbox on every slide deck (scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice)
+- **Asked for:** classroom-management tools like Classroomscreen's: "Add numbers 2-6" (a points scoreboard as a ClassDojo stand-in, work symbols and a traffic light, a noise meter, a QR code for the current page, a stopwatch and dice). "All of the classroom management ones should be visible across slides not connected to the current slide."
+- **Why:** Classroomscreen's classroom-management tools are good, but they live in another tab. ClassDojo can't be built in: it has no public API, and like most sites with a login it can't be shown inside another site.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js` and `toolbox.css` (new): a toolbox button in the bottom-left row of slide icons (or press **W**) opens a menu of 7 tools. Each opens in a window that floats above the slides, so it stays when you change slides (and in fullscreen). Drag by the title bar; drag the corner to resize (contents grow with it, and touch works). Open windows, positions, scores and settings are saved in the browser and come back in the next deck; other tabs update too. Nothing is sent anywhere. The noise meter uses the microphone only after **Start**. Not shown in speaker-view previews or slide PDFs.
+  - `_extensions/classroom/toolbox/qrcode.js` and `LICENSE-qrcode.txt` (new): qrcode-generator 2.0.4 (MIT) for the QR code. It loads only when the QR window opens.
+  - `_extensions/classroom/filter.lua`: adds the toolbox to every slide deck. `classroom-tools: false` turns it off for a deck; `classroom-tools: {qr-site: "https://…/"}` makes the QR code point to the published site instead of `localhost`.
+  - `_quarto.yml`, `brand/README.md`: comments mention the toolbox. `README.md`: a "Classroom tools" section and a line in "Things to try".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Download button: just the icon
 - **Asked for:** "I like the menu but the word download takes up a lot of horizontal space and is breaking some of the layouts. So keep the menu part but make it just the icon on the button."
 - **Why:** the word made the button too wide for some layouts.
