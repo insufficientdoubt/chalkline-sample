@@ -511,19 +511,32 @@
      config: { words: every vocab word, with its units; units: [{ unit, title }]; home: the overview }.
      The last choice is remembered in this browser. */
 
+  // Simple line icons (24 × 24, drawn in the text color), so the header looks the same everywhere.
   const PICKS = [
-    { id: "snowman", icon: "⛄", label: "Snowman" },
-    { id: "picture-reveal", icon: "🖼️", label: "Picture reveal" },
-    { id: "jeopardy", icon: "🏆", label: "Jeopardy" },
-    { id: "trivia", icon: "⚡", label: "Quick-fire" },
+    { id: "snowman", label: "Snowman", icon: '<circle cx="12" cy="7" r="3.5"/><circle cx="12" cy="16" r="5"/><path d="M4 11l4 2M20 11l-4 2"/>' },
+    { id: "picture-reveal", label: "Picture reveal", icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' },
+    { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
+    { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
   ];
+  function icon(paths) {
+    const span = h("span", { class: "cg-pick-icon", "aria-hidden": "true" });
+    span.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + paths + "</svg>";
+    return span;
+  }
 
   function gamePicker(root, cfg) {
     const words = list(cfg.words), units = list(cfg.units);
     let choice = { game: "snowman", unit: 0 }, reset = null;
     try { choice = Object.assign(choice, JSON.parse(localStorage.getItem("chalkline-games:picker")) || {}); } catch (e) { /* first visit */ }
-    const gameRow = h("div", { class: "cg-pick-row" });
-    const unitRow = h("div", { class: "cg-pick-row cg-pick-units" });
+    // The header: the games as one segmented control, then the unit menu and a link back to the overview.
+    const gameRow = h("div", { class: "cg-pick-games", role: "tablist", "aria-label": "Game" });
+    const unitMenu = h("select", { class: "cg-pick-select", "aria-label": "Unit", onchange: function () {
+      unitMenu.blur();   // so the arrow keys don't change the unit by accident
+      choose({ unit: +unitMenu.value });
+    } });
+    const unitRow = h("div", { class: "cg-pick-side" },
+      h("label", { class: "cg-pick-label" }, "Unit", unitMenu),
+      cfg.home ? h("a", { class: "cg-pick-home", href: cfg.home, text: "← Overview" }) : "");
     const stage = h("div", { class: "cg-pick-stage" });
     root.append(h("div", { class: "cg-pick-bar" }, gameRow, unitRow), stage);
 
@@ -534,16 +547,16 @@
     }
     function paintBar() {
       gameRow.textContent = "";
-      PICKS.forEach(function (g, i) {
-        gameRow.append(h("button", { class: "cg-pick" + (g.id === choice.game ? " cg-on" : ""), style: "--pick:" + COLORS[i],
-          onclick: function () { choose({ game: g.id }); } }, h("span", { class: "cg-pick-icon", text: g.icon }), g.label));
+      PICKS.forEach(function (g) {
+        const on = g.id === choice.game;
+        gameRow.append(h("button", { class: "cg-pick" + (on ? " cg-on" : ""), role: "tab", "aria-selected": on ? "true" : "false",
+          onclick: function () { choose({ game: g.id }); } }, icon(g.icon), g.label));
       });
-      if (cfg.home) gameRow.append(h("a", { class: "cg-pick-home", href: cfg.home, title: "Back to the overview", text: "⌂" }));
-      unitRow.textContent = "";
+      unitMenu.textContent = "";
       [{ unit: 0, title: "All units" }].concat(units).forEach(function (u) {
-        unitRow.append(h("button", { class: "cg-pick-unit" + (u.unit === choice.unit ? " cg-on" : ""),
-          onclick: function () { choose({ unit: u.unit }); } }, u.unit ? h("b", { text: u.unit }) : "", u.title));
+        unitMenu.append(h("option", { value: u.unit, text: u.unit ? u.unit + " · " + u.title : u.title }));
       });
+      unitMenu.value = String(choice.unit);
     }
     function play() {
       if (!PICKS.some(function (g) { return g.id === choice.game; })) choice.game = "snowman";
@@ -560,6 +573,19 @@
       reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: 5, seconds: 10, tiles: 16,
         title: (unit ? unit.title : "Vocab") + " quick-fire" });
     }
+    // On this page the buttons are plain words: take off a leading emoji ("🔀 New word" -> "New word"),
+    // also on buttons a game adds later (the clue card, the end of a quick-fire).
+    function plain(node) {
+      node.querySelectorAll("button").forEach(function (b) {
+        const first = b.firstChild;
+        if (first && first.nodeType === 3) {
+          const text = first.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u, "");
+          first.textContent = text || "New board";   // a button that was only an emoji (Jeopardy's 🔀)
+        }
+      });
+    }
+    new MutationObserver(function () { plain(stage); }).observe(stage, { childList: true, subtree: true });
+    root.classList.add("cg-plain");
     play();
     return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
   }

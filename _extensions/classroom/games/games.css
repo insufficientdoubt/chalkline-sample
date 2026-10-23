@@ -310,61 +310,104 @@
 @keyframes cg-pop { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes cg-shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
-/* ---- Review games page: choose a game and a unit ---- */
+/* ---- Review games page: choose a game and a unit ----
+   One quiet header: the games as a segmented control (neutral track, the chosen game raised in white),
+   then the unit menu and a text link. Brand navy only, so the colorful game below stands out. */
 .reveal .cg-picker { margin: 0; }
-.reveal section:has(> .cg-picker) > h2 { display: none; }   /* the page's slide has no title: the games start at the top */
 .reveal .cg-picker .cg-game { margin-top: 0; }
-.reveal .cg-pick-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 3px solid #e3eaf3; }
-.reveal .cg-pick-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.reveal section:has(> .cg-picker) > h2 { display: none; }   /* the page's slide has no title: the games start at the top */
+.reveal .cg-pick-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #dde4ee;
+}
+.reveal .cg-pick-games {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 12px;
+  background: #eef2f7;
+}
 .reveal .cg-pick {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 18px 6px 12px;
-  border: 3px solid var(--pick);
-  border-radius: 999px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #5b6b80;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+.reveal .cg-pick:hover { color: var(--cg-navy); }
+.reveal .cg-pick.cg-on {
   background: #fff;
-  color: var(--pick);
-  font-size: 24px;
-  font-weight: 800;
-}
-.reveal .cg-pick:hover { background: color-mix(in srgb, var(--pick) 10%, #fff); }
-.reveal .cg-pick.cg-on { background: var(--pick); color: #fff; box-shadow: 0 4px 14px rgba(0, 20, 60, 0.2); }
-.reveal .cg-pick-icon { font-size: 1.1em; }
-.reveal .cg-pick-home {
-  margin-left: auto;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #eef3f9;
   color: var(--cg-navy);
-  font-size: 26px;
-  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(0, 20, 60, 0.12), 0 2px 8px rgba(0, 20, 60, 0.06);
 }
-.reveal .cg-pick-home:hover { background: #dfe8f3; }
-.reveal .cg-pick-units { gap: 6px; }
-.reveal .cg-pick-unit {
+.reveal .cg-pick-icon { display: inline-grid; width: 20px; height: 20px; }
+.reveal .cg-pick-icon svg { width: 100%; height: 100%; }
+.reveal .cg-pick.cg-on .cg-pick-icon { color: var(--cg-blue); }
+.reveal .cg-pick-side { display: flex; align-items: center; gap: 18px; }
+.reveal .cg-pick-label {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 14px;
-  border: 2px solid #c9d5e3;
-  border-radius: 999px;
+  gap: 10px;
+  color: #5b6b80;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.reveal .cg-pick-select {
+  min-width: 210px;
+  padding: 7px 34px 7px 12px;
+  border: 1px solid #cfd8e4;
+  border-radius: 9px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23003477' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 14px;
+  color: var(--cg-navy);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  appearance: none;
+  cursor: pointer;
+}
+.reveal .cg-pick-select:focus { outline: 2px solid var(--cg-blue); outline-offset: 1px; }
+.reveal .cg-pick-home { color: #5b6b80; font-size: 16px; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.reveal .cg-pick-home:hover { color: var(--cg-navy); text-decoration: underline; }
+
+/* On the Review games page, the games themselves are calmer too: plain buttons with small corners,
+   and the picture tiles in brand navy instead of many colors. (Game slides in decks keep their look.) */
+.reveal .cg-plain .cg-btn {
+  padding: 8px 18px;
+  border: 1px solid #cfd8e4;
+  border-radius: 9px;
   background: #fff;
   color: var(--cg-navy);
   font-size: 19px;
-  font-weight: 700;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 20, 60, 0.06);
 }
-.reveal .cg-pick-unit b {
-  display: grid;
-  place-items: center;
-  width: 1.35em;
-  height: 1.35em;
-  border-radius: 50%;
-  background: #e3eaf3;
-  font-size: 0.85em;
-}
-.reveal .cg-pick-unit.cg-on { border-color: var(--cg-navy); background: var(--cg-navy); color: #fff; }
-.reveal .cg-pick-unit.cg-on b { background: rgba(255, 255, 255, 0.25); }
+.reveal .cg-plain .cg-btn:hover { border-color: #aebdd0; background: #f7f9fc; }
+.reveal .cg-plain .cg-btn.cg-primary, .reveal .cg-plain .cg-btn.cg-big { border-color: var(--cg-navy); background: var(--cg-navy); color: #fff; }
+.reveal .cg-plain .cg-btn.cg-new { color: var(--cg-blue); }
+.reveal .cg-plain .cg-btn.cg-big { padding: 12px 36px; font-size: 26px; }
+.reveal .cg-plain .cg-btn.cg-small { padding: 4px 12px; font-size: 17px; }
+.reveal .cg-plain .cg-btn.cg-right-btn { border-color: var(--cg-green); background: var(--cg-green); color: #fff; }
+.reveal .cg-plain .cg-btn.cg-wrong-btn { border-color: var(--cg-red); background: var(--cg-red); color: #fff; }
+.reveal .cg-plain .cg-clue .cg-btn { border-color: rgba(255, 255, 255, 0.5); }
+.reveal .cg-plain .cg-clue .cg-btn.cg-primary { border-color: var(--cg-gold); background: var(--cg-gold); color: var(--cg-navy); }
+.reveal .cg-plain .cg-quiz-stage .cg-btn:not(.cg-right-btn):not(.cg-wrong-btn) { border-color: #fff; background: #fff; color: var(--cg-navy); }
+.reveal .cg-plain .cg-tile { background: var(--cg-navy); color: rgba(255, 255, 255, 0.85); font-size: 28px; font-weight: 700; box-shadow: none; }
+.reveal .cg-plain .cg-tile:nth-child(odd) { background: #0a4389; }
+.reveal .cg-plain .cg-tile:hover { background: #1557a8; filter: none; }
+.reveal .cg-plain .cg-key { box-shadow: 0 1px 0 #c4d3e4; }

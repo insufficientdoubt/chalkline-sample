@@ -16,6 +16,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Review games page: a more professional look
+- **Asked for:** "Restyle the review games page. It looks very AI/vibe coded (which it is, but still). Give it a more professional look."
+- **Why:** the rainbow pills and emoji looked unpolished.
+- **Changed:** `_extensions/classroom/games/games.js`, `games.css`:
+  - **Header:** one quiet header row. The games are a segmented control (a grey track with the chosen game raised in white) with simple line icons instead of emoji. Next to it are a **Unit** dropdown (it scales to any number of units) and a plain "← Overview" link. Only brand navy is used, with a thin rule under the header.
+  - **The games, on this page only:** plain-word buttons (no emoji; Jeopardy's 🔀 becomes "New board") with small corners and thin borders, and navy picture tiles instead of many colors. The game slides in decks keep their playful look.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: A Review games page: any game, any unit
 - **Asked for:** "Add a web page called review games. It should allow teachers to select a game and a units and play immediately."
 - **Why:** to play a review game without making a deck first.
