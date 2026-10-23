@@ -179,9 +179,9 @@ One label decides who sees a file: `audience: [teacher, student, parent]`
 :::: {.columns}
 ::: {.column width="50%"}
 - A **timer** on any slide (press **T**)
-- A **clock** in the corner (press **K**)
+- A **clock** you can drag anywhere (press **K**)
 - **Speaker notes** in a second window (press **S**)
-- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice
+- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight
 - **Tap-to-vote polls**: no devices, no accounts
 - **Games**: Snowman, Picture reveal, Jeopardy, Quick-fire (see Unit 1)
 :::
@@ -233,7 +233,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**41 ready-made features,** all working in this course today. Click one to see it.]{.cat-lead}
+[**46 ready-made features,** all working in this course today. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -247,9 +247,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 :::
 
 ::: {.cat-box .cat-learn}
-[🧠 Learning activities]{.cat-head} [3]{.cat-n}
+[🧠 Learning activities]{.cat-head} [7]{.cat-n}
 
-[🏷️ Label a photo](../02-ancient-rome/rome-timeline-slides.html#/label-the-aqueduct){.chip} [📅 Put it on the timeline](../02-ancient-rome/rome-timeline-slides.html#/put-rome-on-the-timeline){.chip} [🗂️ Sort it, with reasons](../01-ancient-greece/review-games-slides.html#/greek-or-roman){.chip}
+[🏷️ Label a photo](../02-ancient-rome/rome-timeline-slides.html#/label-the-aqueduct){.chip} [📅 Put it on the timeline](../02-ancient-rome/rome-timeline-slides.html#/put-rome-on-the-timeline){.chip} [🗂️ Sort it, with reasons](../01-ancient-greece/review-games-slides.html#/greek-or-roman){.chip} [⭕ Venn diagram](../02-ancient-rome/learning-activities-slides.html#/greece-rome-or-both){.chip} [🧱 Build the sentence](../02-ancient-rome/learning-activities-slides.html#/build-the-sentence){.chip} [✏️ Fill in the blanks](../02-ancient-rome/learning-activities-slides.html#/fill-in-the-blanks){.chip} [🔢 Put it in order](../02-ancient-rome/learning-activities-slides.html#/how-to-build-a-roman-road){.chip}
 :::
 ::::
 
@@ -266,9 +266,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 :::
 
 ::: {.cat-box .cat-tools}
-[🧰 Toolbox on every slide: press W]{.cat-head} [12]{.cat-n}
+[🧰 Toolbox on every slide: press W]{.cat-head} [13]{.cat-n}
 
-[🙋 Name picker]{.chip .chip-key} [🧩 Groups]{.chip .chip-key} [🏆 Scoreboard]{.chip .chip-key} [🤫 Voice level]{.chip .chip-key} [🎙️ Noise meter]{.chip .chip-key} [🚦 Traffic light]{.chip .chip-key} [🔳 QR code]{.chip .chip-key} [⏱️ Stopwatch]{.chip .chip-key} [🎲 Dice]{.chip .chip-key} [📐 Slide size]{.chip .chip-key} [↺ Reset for the next class]{.chip .chip-key} [🕒 Clock: press K]{.chip .chip-key}
+[🙋 Name picker]{.chip .chip-key} [🧩 Groups]{.chip .chip-key} [🏆 Scoreboard]{.chip .chip-key} [🤫 Voice level]{.chip .chip-key} [🎙️ Noise meter]{.chip .chip-key} [🚦 Traffic light]{.chip .chip-key} [🔳 QR code]{.chip .chip-key} [⏱️ Stopwatch]{.chip .chip-key} [🎲 Dice]{.chip .chip-key} [📐 Slide size]{.chip .chip-key} [↺ Reset for the next class]{.chip .chip-key} [🕒 Clock (K)]{.chip .chip-key} [🔦 Spotlight]{.chip .chip-key}
 :::
 
 ::::
@@ -276,7 +276,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 ```{=html}
 <style>
   .reveal .cat-lead { display: block; margin: -0.25em 0 0.4em; font-size: 0.62em; color: #3b4a5e; }
-  .reveal .catalog { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 0.5em; }
+  .reveal .catalog { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; font-size: 0.47em; }
   .reveal .cat-box { padding: 8px 12px 8px; border: 1px solid #dde4ee; border-top: 5px solid var(--cat); border-radius: 12px; background: #fff; }
   .reveal .cat-box p { margin: 0 0 3px; line-height: 1.6; }
   .reveal .cat-games { --cat: #0087ff; }
@@ -296,7 +296,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 ```
 
 ::: notes
-Every chip with a solid border opens a working example in another deck: press the browser's Back button to come back here. The toolbox tools (dashed) are on every slide: press **W** to open them, right here. The newest are the review games, the learning activities (timelines, labelling, sorting with reasons), and the toolbox. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
+Every chip with a solid border opens a working example in another deck: press the browser's Back button to come back here. The toolbox tools (dashed) are on every slide: press **W** to open them, right here. The newest are the review games, the learning activities (timelines, labelling, sorting with reasons, a Venn diagram, sentence building, fill in the blanks, putting things in order), and the toolbox. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
 :::
 
 ## It always looks like your school

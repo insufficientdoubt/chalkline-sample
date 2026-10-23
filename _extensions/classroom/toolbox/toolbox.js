@@ -13,6 +13,8 @@
     Traffic light   red, yellow, green
     QR code         a code for this deck's address (or any link) for students' tablets
     Stopwatch       counts up
+    Clock           the time; open unless you close it (K shows and hides it)
+    Spotlight       darkens the screen except a circle you drag, to show where to look
     Dice            1 to 6 dice
 
   Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
@@ -552,6 +554,56 @@
       },
     },
 
+    clock: {
+      // The time, in a window you can drag and resize. Open in every deck unless you close it
+      // (or press K); clock: false in a deck's labels leaves it closed there.
+      title: "Clock", icon: "🕒", w: 150, h: 58, minW: 110, minH: 50, keys: [],
+      start: function () {   // bottom left, beside the menu and toolbox buttons (and the chalkboard's, if there)
+        return { x: document.querySelector(".slide-chalkboard-buttons") ? 172 : 96, y: window.innerHeight - 58 - 8 };
+      },
+      build: function (body) {
+        const time = h("div", { class: "ct-clock-time" });
+        function tick() { time.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }   // the computer's 12- or 24-hour setting
+        body.append(time);
+        tick();
+        const timer = setInterval(tick, 1000);
+        return { close: function () { clearInterval(timer); } };
+      },
+    },
+
+    spotlight: {
+      // Darkens the screen except a circle: drag it (or tap where it should go) to show the class
+      // where to look. The slider (or the mouse wheel) sets its size. Close the window to end it.
+      title: "Spotlight", icon: "🔦", w: 240, h: 96, minW: 180, minH: 86, keys: [],
+      build: function (body) {
+        const spot = { x: window.innerWidth / 2, y: window.innerHeight / 2, r: load("spotlight-size", 18) };
+        const shade = h("div", { class: "ct-spot-shade", title: "Drag the light, or tap where it should go" });
+        layer.prepend(shade);   // under the tool windows, over the slides
+        const label = h("div", { class: "ct-slide-label" });
+        const slider = h("input", { type: "range", min: 6, max: 45, "aria-label": "Size of the light", oninput: function () { size(+slider.value); } });
+        body.append(label, h("div", { class: "ct-slide-range" }, slider));
+        function size(v) { spot.r = Math.max(6, Math.min(45, v)); save("spotlight-size", spot.r); paint(); }
+        function paint() {
+          const r = spot.r / 100 * Math.min(window.innerWidth, window.innerHeight);
+          shade.style.background = "radial-gradient(circle at " + spot.x + "px " + spot.y + "px, transparent " + r + "px, rgba(8, 14, 26, 0.86) " + (r + 3) + "px)";
+          slider.value = spot.r;
+          label.textContent = "Size of the light";
+        }
+        shade.addEventListener("pointerdown", function (e) {
+          e.preventDefault();
+          shade.setPointerCapture(e.pointerId);
+          function to(ev) { spot.x = ev.clientX; spot.y = ev.clientY; paint(); }
+          to(e);
+          shade.onpointermove = to;
+          shade.onpointerup = shade.onpointercancel = function () { shade.onpointermove = null; };
+        });
+        shade.addEventListener("wheel", function (e) { e.preventDefault(); size(spot.r + (e.deltaY < 0 ? 2 : -2)); }, { passive: false });
+        window.addEventListener("resize", paint);
+        paint();
+        return { close: function () { shade.remove(); window.removeEventListener("resize", paint); } };
+      },
+    },
+
     slide: {
       title: "Slide size", icon: "📐", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
       build: function (body) {
@@ -824,7 +876,8 @@
     if (!tool) return;
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
     const n = Object.keys(open).length;
-    const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
+    const start = tool.start ? tool.start() : { x: 80 + 36 * n, y: 70 + 36 * n };
+    const p = layout.pos[id] || (layout.pos[id] = { x: start.x, y: start.y, w: tool.w, h: tool.h });
     const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
@@ -842,16 +895,18 @@
       saveLayout();
     }
     open[id] = { panel: panel, api: tool.build(body, panel, grow) || {} };
+    if (id === "clock") save("clock-off", false);
     saveLayout();
     paintMenu();
   }
 
-  function closeTool(id) {
+  function closeTool(id, keep) {   // keep: the clock closes for this deck only
     const o = open[id];
     if (!o) return;
     if (o.api.close) o.api.close();
     o.panel.remove();
     delete open[id];
+    if (id === "clock" && !keep) save("clock-off", true);   // closed on purpose: it stays closed in the next deck
     saveLayout();
     paintMenu();
   }
@@ -897,7 +952,7 @@
     });
     if (Object.keys(open).length) {
       menu.append(h("button", { class: "ct-menu-item ct-menu-close", text: "Close all",
-        onclick: function () { Object.keys(open).forEach(closeTool); toggleMenu(false); } }));
+        onclick: function () { Object.keys(open).forEach(function (id) { closeTool(id); }); toggleMenu(false); } }));
     }
     menu.append(h("button", { class: "ct-menu-item ct-menu-reset", onclick: function () { toggleMenu(false); showReset(); } },
       h("span", { class: "ct-menu-icon", text: "↺" }), h("span", { text: "Reset for the next class…" })));
@@ -970,6 +1025,7 @@
   }, true);
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
+    Reveal.addKeyBinding({ keyCode: 75, key: "K", description: "Show/hide the clock" }, function () { open.clock ? closeTool("clock") : openTool("clock"); });
   }
 
   // Fullscreen shows only one element: take the tools along into it, and back out again.
@@ -980,6 +1036,15 @@
   });
 
   // Bring back the panels that were open in the last deck (the old noise meter is now in Voice level).
-  (layout.open || []).map(function (id) { return id === "noise" ? "voice" : id; }).forEach(openTool);
+  (layout.open || []).map(function (id) { return id === "noise" ? "voice" : id; })
+    .filter(function (id) { return id !== "spotlight"; })   // the spotlight is for one moment: not in the next deck
+    .forEach(openTool);
+  // The clock is on unless it was closed (or the old corner clock was hidden with K), or this deck
+  // turns it off (clock: false).
+  let clockOff = load("clock-off", null);
+  if (clockOff === null) { try { clockOff = localStorage.getItem("slide-clock-visible") === "0"; } catch (e) { clockOff = false; } }
+  const deckOff = (document.querySelector('meta[name="chalkline-clock"]') || {}).content === "off";
+  if (deckOff) closeTool("clock", true);   // just this deck: it comes back in the next one
+  else if (!clockOff) openTool("clock");
   paintMenu();
 })();

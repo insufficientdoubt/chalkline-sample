@@ -16,7 +16,7 @@
 #ct-layer button { font: inherit; cursor: pointer; }
 @media print { #ct-layer { display: none; } }
 
-/* ---- The toolbox button: in the bottom-left row of icons (menu, chalkboard), the clock moves right ---- */
+/* ---- The toolbox button: in the bottom-left row of icons (menu, chalkboard) ---- */
 #ct-launch {
   position: fixed;
   left: 52px;
@@ -33,8 +33,6 @@
 }
 #ct-launch:hover { opacity: 1; background: rgba(0, 52, 119, 0.08); }
 body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
-body:has(#ct-launch) #slide-clock { left: 96px; }
-body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; }
 
 #ct-menu {
   position: fixed;
@@ -84,8 +82,10 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   flex-direction: column;
   overflow: hidden;
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 10px 32px rgba(0, 20, 60, 0.22), 0 0 0 1px rgba(0, 52, 119, 0.1);
+  background: rgba(232, 236, 242, 0.84);   /* grey, see-through: the slide shows faintly behind */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 32px rgba(0, 20, 60, 0.22), 0 0 0 1px rgba(0, 52, 119, 0.12);
   cursor: grab;
   touch-action: none;       /* drag with a finger moves the panel, not the page */
   user-select: none;
@@ -607,3 +607,10 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
 .ct-reset-item:hover { background: rgba(0, 135, 255, 0.08); }
 .ct-reset-item input { width: 20px; height: 20px; accent-color: var(--ct-navy); }
 .ct-reset .ct-foot { justify-content: flex-end; padding: 14px 0 0; font-size: 18px; }
+
+/* ---- Clock ---- */
+.ct-body.ct-clock { justify-content: center; align-items: center; padding: 10px 8px 4px; }
+.ct-clock-time { font-size: min(62cqh, 30cqw); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+
+/* ---- Spotlight: the dark screen with a hole in it, under the tool windows ---- */
+.ct-spot-shade { position: fixed; inset: 0; z-index: 0; cursor: move; touch-action: none; }

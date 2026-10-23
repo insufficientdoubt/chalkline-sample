@@ -16,6 +16,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Build the sentence, Fill in the blanks, Put it in order, a Venn diagram, and a Spotlight
+- **Asked for:** whiteboard learning activities: "build those five" (a sentence builder, fill in the blanks, put it in order, a Venn layout for Sort it, and a spotlight; a screen shade was dropped because fragments already do it).
+- **Why:** "Are there any obvious learning activities that work well with interactive whiteboards that we should include?"
+- **Changed:** `_extensions/classroom/games/activities.js` and `activities.css` (new): the three activities, each working by drag or by tap-then-tap. `games.lua`: loads them. `timeline.js`: shares its drag helper. `filter.lua`: reads `::: {.sentence-builder}`, `{.fill-blanks}`, `{.put-in-order}` and Sort it's `layout="venn"`. `games.js` and `games.css`: the Venn layout. `toolbox/toolbox.js` and `toolbox.css`: a 🔦 Spotlight tool (not reopened in the next deck). A new demo deck in Unit 2, the Start here catalogue (46 features), README and IDEAS.md updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-23: The clock is a toolbox tool; see-through grey tool windows
+- **Asked for:** "Remember the clock we have on each side? Make it into one of the new teacher tools so we can drag it around. have it always on by default and have it have a gray translucent background. Actually give all of the teacher tools a grey translucent background."
+- **Why:** not given (the fixed corner clock couldn't be moved).
+- **Changed:** `_extensions/classroom/toolbox/toolbox.js`: a new 🕒 Clock tool, open by default at the top left; closing it (× or **K**) is remembered, and someone who hid the old clock keeps it hidden; **K** shows and hides it; a deck with `clock: false` leaves it closed. `toolbox.css`: every tool window is light grey and see-through (blurred slide behind); the clock's style; the rules that moved the old clock removed. `filter.lua`: no longer adds the old clock; `clock: false` is passed to the toolbox. `_extensions/classroom/clock.html` deleted. README and the Start here slides updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Timelines (to teach with, across slides, and for students) and Label it
 - **Asked for:** "A timeline template slide ... for introducing a timeline when teaching. It should have all the events preloaded with photos and allow the speaker to scrub through them chronologically, or to click on any item to pull up more information on it (like a zoom-in function). A timeline activity slide for students where they have to place items correctly on the timeline ... the correct order and they have to slide it to the correct year. A labeling activity slide. Using a photograph students need to drag labels onto the correct region ... do whatever is best practice." And: "An option for a timeline to run across multiple slides ... the timeline can be an automatic insert and then later on you can use the timeline element to click on it and either get the info back from the slides or go directly to the slide."
 - **Why:** to teach chronology, and for labelling activities.

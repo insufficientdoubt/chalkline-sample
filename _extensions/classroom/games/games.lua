@@ -14,11 +14,12 @@ function M.div(kind, config)
   quarto.doc.add_html_dependency({
     name = "classroom-games",
     version = "1.0.0",
-    scripts = {   -- paths are from _extensions/classroom/; timeline.js adds its games to games.js
+    scripts = {   -- paths are from _extensions/classroom/; timeline.js and activities.js add their games to games.js
       { path = "games/games.js", afterBody = true },
       { path = "games/timeline.js", afterBody = true },
+      { path = "games/activities.js", afterBody = true },   -- uses timeline.js's drag helper
     },
-    stylesheets = { "games/games.css", "games/timeline.css" },
+    stylesheets = { "games/games.css", "games/timeline.css", "games/activities.css" },
     -- Bingo makes its printable cards in the browser with pdf-lib (the PDF viewer's copy; MIT).
     resources = { "../pdf-viewer/pdf-lib.esm.min.js" },
   })

@@ -234,13 +234,13 @@ Put `{{< timer 20 >}}` on a slide. It has Start/Pause, Reset and +1 min buttons 
 
 When a slide has another slide below it (a column of slides: a `#` heading with `##` slides under it), a bouncing **↓** button shows at the bottom of the screen; click it or press ↓. Turn it off for one deck with `down-arrow: false`.
 
-Every slide deck shows the current time in the bottom-left corner. Press **K** to hide or show it (the choice is remembered on that computer), or turn it off for one deck with `clock: false` in its labels. Slides fade from one to the next; that's set under `revealjs:` in `_quarto.yml`.
+Every slide deck shows the current time in a small **🕒 Clock** window, at first in the bottom-left corner. It's one of the classroom tools (below): drag it anywhere, or drag its corner to make it bigger. Press **K** (or its ×) to hide it, and **K** again to show it; the choice is remembered on that computer. To leave it closed in one deck, add `clock: false` to its labels. Slides fade from one to the next; that's set under `revealjs:` in `_quarto.yml`.
 
 Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen.
 
 ## Classroom tools (scoreboard, voice level, …)
 
-Every slide deck has a toolbox: press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
+Every slide deck has a toolbox: press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. The windows are light grey and a little see-through, so the slide shows faintly behind them. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
 
 | Tool | What it does |
 |---|---|
@@ -252,6 +252,8 @@ Every slide deck has a toolbox: press **W**, or the four-squares button in the b
 | 🚦 **Traffic light** | Tap red (Stop), yellow (Get ready) or green (Go); tap it again to turn it off. |
 | 🔳 **QR code** | A code for this deck, so students can open it on a tablet. **Edit link** makes a code for any link. On your own computer (`localhost`) the deck's address only works on that computer: the code says so. To make it point at your published site instead, add `classroom-tools: {qr-site: "https://…/"}` to `_quarto.yml`. |
 | ⏱️ **Stopwatch** | Counts up. Start, Pause, Reset. |
+| 🕒 **Clock** | The time. Open in every deck unless you close it; **K** shows and hides it. |
+| 🔦 **Spotlight** | Darkens the screen except a circle, to show the class where to look. Drag the circle (or tap where it should go); the slider or the mouse wheel changes its size. The tool windows stay on top. Close the window to end it; it doesn't come back in the next deck. |
 | 🎲 **Dice** | 1–6 dice. **Roll** (or tap the dice); with more than one, it adds them up. |
 
 **Class lists** (name picker and groups): choose **+ New class…** in the class menu, type a name for the class (like 7A) and paste the students' names, one on each line (a column copied from a spreadsheet works). Add as many classes as you like and switch between them with the class menu at the top; both tools follow it. **Edit** changes or deletes the current class. **Who's here?** marks students who are away today, so they aren't picked or put in a group; it starts fresh the next day.
@@ -368,6 +370,50 @@ Options: `tolerance="25"` (years off that still count; the usual is 5% of the ti
 ::: {.label-it image="images/pont-du-gard.jpg"}
 - Water channel | 40,15 | The water flowed in a covered channel along the very top.
 - River | 12,82 | The aqueduct crosses the Gardon River.
+:::
+```
+
+## More learning activities
+
+Four more, all in **Unit 2 › Rome: Build It, Fill It, Order It** (`course/units/02-ancient-rome/learning-activities-slides.qmd`); its speaker notes show how each is written. Like Label it, each works by dragging **or** by tapping one thing and then where it goes, so they work on boards that drag badly. Write the right answer; the activity mixes it up.
+
+**Build the sentence.** The words of a sentence, mixed up: students tap them in order (or drag them onto the line), then **Check**: words in the right place turn green, the others red. One sentence at a time, with **Next sentence**. Use `/` to keep words together as one tile; the full stop stays at the end. A picture, or a hint after a `|`, is optional.
+
+```markdown
+::: {.sentence-builder}
+- The Romans / built / long, straight roads. ![](images/via-appia.jpg)
+- The Senate / gave / advice / to the consuls. | Who gave advice?
+:::
+```
+
+**Fill in the blanks.** A text with gaps and a word bank: students drag each word into its gap (or tap the word, then the gap); tapping a filled gap takes its word out. **Check** marks each gap. Put each missing word in `[square brackets]`; `extra="..."` adds wrong words to the bank.
+
+```markdown
+::: {.fill-blanks extra="soldiers, temples"}
+The Romans built [aqueducts] to carry [water] to their cities.
+:::
+```
+
+**Put it in order.** Cards to put in order: steps, events, a story. Students drag a card to its place (or tap it, then its new place); **Check** turns the cards in the right place green, and once all are right, each card's reason (after a `|`) shows. When every card has a picture, they sit side by side. `first="Oldest" last="Newest"` changes the words at the ends.
+
+```markdown
+::: {.put-in-order}
+- Dig a deep trench. | First, the workers dug down about a meter.
+- Fill it with big stones. | Big stones made a strong base.
+- Put flat stones on top.
+:::
+```
+
+**Venn diagram.** A Sort it with `layout="venn"` and exactly three groups, in the order left circle, middle ("both"), right circle:
+
+```markdown
+::: {.sort layout="venn"}
+- **Ancient Greece**
+  - The first democracy | Athens had the first democracy.
+- **Both**
+  - Many gods | Greeks and Romans both prayed to many gods.
+- **Ancient Rome**
+  - Latin | The Romans spoke Latin. The Greeks spoke Greek.
 :::
 ```
 

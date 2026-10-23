@@ -432,6 +432,8 @@
     return start;
   }
 
+  G.draggable = draggable;   // activities.js uses these too
+  G.slideScale = slideScale;
   G.add("timeline", timeline);
   G.add("timeline-activity", timelineActivity);
   G.add("label-it", labelIt);

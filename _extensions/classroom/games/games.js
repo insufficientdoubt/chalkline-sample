@@ -800,6 +800,10 @@
       sel = null; mistakes = 0;
       why.hidden = true;
       cols.style.setProperty("--cols", Math.max(groups.length, 1));
+      // layout="venn": two circles that overlap; the middle group is "both"
+      const venn = cfg.layout === "venn" && groups.length === 3;
+      cols.classList.toggle("cg-venn", venn);
+      root.classList.toggle("cg-sort-is-venn", venn);
       root.classList.toggle("cg-sort-pictures", chips.some(function (c) { return c.image; }));
       paint();
     }
@@ -822,6 +826,10 @@
       if (!left.length) bank.append(h("span", { class: "cg-sort-empty", text: atEnd ? "All sorted. Press Check!" : "All sorted!" }));
       left.forEach(function (c) { bank.append(chip(c)); });
       cols.textContent = "";
+      if (cols.classList.contains("cg-venn")) {
+        cols.append(h("span", { class: "cg-venn-circle cg-venn-a", style: "--cat:" + COLORS[0] }),
+          h("span", { class: "cg-venn-circle cg-venn-b", style: "--cat:" + COLORS[2] }));
+      }
       groups.forEach(function (g, gi) {
         const col = h("div", { class: "cg-sort-col" + (sel ? " cg-target" : ""), style: "--cat:" + COLORS[gi % COLORS.length],
           onclick: function () { drop(gi); } },

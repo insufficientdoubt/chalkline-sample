@@ -3,7 +3,7 @@ Classroom filter. Lets content stay plain: authors write semantic markers and
 this file turns them into the right thing for each output format.
 
 Slides (reveal.js):
-  - adds the corner clock to every deck (turn off with `clock: false`)
+  - the clock is a toolbox tool, open in every deck (clock: false leaves it closed in a deck)
   - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
@@ -84,6 +84,8 @@ end
 --   - **Athens**                            its items under it. An item can have a picture, and a
 --     - Democracy | Citizens voted          reason after a | (shown when it goes in the wrong group).
 --     - ![Parthenon](images/parthenon.jpg)  feedback="end": no feedback until Check.
+--                                           layout="venn": a Venn diagram of three groups, in the
+--                                           order left, both, right.
 --   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
 --   - democracy | Citizens vote on laws
 --   :::
@@ -194,7 +196,38 @@ local function label_config(el)
   return { image = el.attributes["image"] or "", labels = labels }
 end
 
+-- Learning activities (activities.js):
+--   ::: {.sentence-builder}           one sentence a line; words mix up. Keep words together with /
+--   - The Romans / built / long roads.   ("The Romans" stays one tile). After a |, a hint; a picture too.
+--   :::
+--   ::: {.fill-blanks extra="king, temple"}   a text with the missing words in [square brackets];
+--   The Romans built [aqueducts] to carry [water].   extra= adds wrong words to the word bank.
+--   :::
+--   ::: {.put-in-order first="First" last="Last"}   in the right order; they mix up. A picture and a
+--   - Dig a channel | reason (after a |, shown once they're in order) are optional.
+--   :::
+local function activity_from_div(el)
+  if el.classes:includes("sentence-builder") then
+    local sentences = {}
+    for _, item in ipairs(list_items(el.content)) do
+      local it = sort_item(item)
+      table.insert(sentences, { text = it.text, hint = it.why, image = it.image })
+    end
+    return games.div("sentence-builder", { sentences = sentences })
+  end
+  if el.classes:includes("fill-blanks") then
+    el.content:walk({ Image = function(img) picture(img.src) end })
+    return games.div("fill-blanks", { html = pandoc.write(pandoc.Pandoc(el.content), "html"), extra = el.attributes["extra"] or "" })
+  end
+  local items = {}
+  for _, item in ipairs(list_items(el.content)) do table.insert(items, sort_item(item)) end
+  return games.div("put-in-order", { items = items, first = el.attributes["first"] or "", last = el.attributes["last"] or "" })
+end
+
 local function game_from_div(el)
+  for _, cls in ipairs({ "sentence-builder", "fill-blanks", "put-in-order" }) do
+    if el.classes:includes(cls) then return activity_from_div(el) end
+  end
   if el.classes:includes("timeline-interactive") then return games.div("timeline", timeline_config(el)) end
   if el.classes:includes("timeline-activity") then return games.div("timeline-activity", timeline_config(el)) end
   if el.classes:includes("label-it") then return games.div("label-it", label_config(el)) end
@@ -218,7 +251,8 @@ local function game_from_div(el)
       for _, c in ipairs(list_items(item)) do table.insert(items, sort_item(c)) end
       table.insert(groups, { name = item[1] and pandoc.utils.stringify(item[1]) or "", items = items })
     end
-    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now" })
+    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now",
+      layout = el.attributes["layout"] or "" })   -- layout="venn": three groups, the middle one is "both"
   end
   local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
   if kind then
@@ -234,7 +268,8 @@ end
 
 local function Div(el)
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
-                           ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it" }) do
+                           ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
+                           ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do
     if el.classes:includes(cls) then
       if quarto.doc.is_format("revealjs") then return game_from_div(el) end
       return games.placeholder(name)
@@ -259,9 +294,9 @@ local function Div(el)
 end
 
 local function Meta(meta)
+  -- The clock is a toolbox tool now; clock: false tells the toolbox to leave it closed in this deck.
   local clock = meta.clock
   local off = clock ~= nil and pandoc.utils.stringify(clock) == "false"
-  if quarto.doc.is_format("revealjs") and not off then include_once("clock.html") end
   -- Slides: a ↓ when a slide has another below it (turn off with `down-arrow: false`).
   local down = meta["down-arrow"]
   local down_off = down ~= nil and pandoc.utils.stringify(down) == "false"
@@ -271,13 +306,16 @@ local function Meta(meta)
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
   if quarto.doc.is_format("revealjs") and not tools_off then
     local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
+    local tags = {}
+    if site ~= "" then tags["chalkline-qr-site"] = site end
+    if off then tags["chalkline-clock"] = "off" end
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",
       scripts = { { path = "toolbox/toolbox.js", afterBody = true } },
       stylesheets = { "toolbox/toolbox.css" },
       resources = { "toolbox/qrcode.js" },
-      meta = site ~= "" and { ["chalkline-qr-site"] = site } or nil,
+      meta = next(tags) and tags or nil,
     })
   end
   -- Web pages: links to slideshows open in a new tab (slides-new-tab: false turns it off).
