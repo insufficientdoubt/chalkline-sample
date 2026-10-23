@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: The clock starts beside the slide, not on it
+- **Asked for:** "move the clock default so it doesn't cover slide content"
+- **Why:** at the bottom left, it covered the bottom of full slides.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.js`: the clock starts in the empty space beside the slide (left, above the menu buttons; or right) when there's room, or else in the top-right corner, and follows the screen size until it's moved or resized. A clock still at the old default spot moves too. It's a little smaller (128 × 52). README updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Build the sentence, Fill in the blanks, Put it in order, a Venn diagram, and a Spotlight
 - **Asked for:** whiteboard learning activities: "build those five" (a sentence builder, fill in the blanks, put it in order, a Venn layout for Sort it, and a spotlight; a screen shade was dropped because fragments already do it).
 - **Why:** "Are there any obvious learning activities that work well with interactive whiteboards that we should include?"

@@ -557,10 +557,20 @@
     clock: {
       // The time, in a window you can drag and resize. Open in every deck unless you close it
       // (or press K); clock: false in a deck's labels leaves it closed there.
-      title: "Clock", icon: "🕒", w: 150, h: 58, minW: 110, minH: 50, keys: [],
-      start: function () {   // bottom left, beside the menu and toolbox buttons (and the chalkboard's, if there)
-        return { x: document.querySelector(".slide-chalkboard-buttons") ? 172 : 96, y: window.innerHeight - 58 - 8 };
+      title: "Clock", icon: "🕒", w: 128, h: 52, minW: 100, minH: 44, keys: [],
+      // Where it starts: off the slide, so it covers nothing. In the space beside the slide (left,
+      // above the menu buttons; or right, under the slide number) when there's room; if not, the
+      // top-right corner. It moves with the screen until it's dragged.
+      start: function () {
+        const r = (document.querySelector(".reveal .slides") || document.body).getBoundingClientRect();
+        const W = window.innerWidth, H = window.innerHeight, w = 128, h = 52;
+        const left = Math.max(r.left, 0), right = W - Math.min(r.right, W);
+        if (left >= w + 12) return { x: Math.round((left - w) / 2), y: H - h - 56 };
+        if (right >= w + 12) return { x: Math.round(Math.min(r.right, W) + (right - w) / 2), y: 40 };
+        return { x: W - w - 8, y: 36 };
       },
+      // A clock still where an earlier version put it (bottom left, over the slide) moves too.
+      oldDefault: function (p) { return (p.x === 96 || p.x === 172) && p.w === 150 && p.h === 58; },
       build: function (body) {
         const time = h("div", { class: "ct-clock-time" });
         function tick() { time.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }   // the computer's 12- or 24-hour setting
@@ -863,7 +873,7 @@
         window.removeEventListener("pointerup", up);
         window.removeEventListener("pointercancel", up);
         panel.classList.remove("ct-dragging");
-        if (dragging) saveLayout();
+        if (dragging) { delete p.auto; saveLayout(); }   // moved or resized on purpose: it stays that way
       }
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
@@ -876,8 +886,11 @@
     if (!tool) return;
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
     const n = Object.keys(open).length;
-    const start = tool.start ? tool.start() : { x: 80 + 36 * n, y: 70 + 36 * n };
-    const p = layout.pos[id] || (layout.pos[id] = { x: start.x, y: start.y, w: tool.w, h: tool.h });
+    const saved = layout.pos[id];
+    if (tool.start && (!saved || saved.auto || (tool.oldDefault && tool.oldDefault(saved)))) {
+      layout.pos[id] = Object.assign(tool.start(), { w: tool.w, h: tool.h, auto: true });   // until it's dragged
+    }
+    const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
     const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
@@ -1046,5 +1059,15 @@
   const deckOff = (document.querySelector('meta[name="chalkline-clock"]') || {}).content === "off";
   if (deckOff) closeTool("clock", true);   // just this deck: it comes back in the next one
   else if (!clockOff) openTool("clock");
+  // The slide's size settles once the deck is ready, and changes with the window: a clock that
+  // hasn't been dragged follows the space beside the slide.
+  function reseatClock() {
+    const p = layout.pos.clock;
+    if (!open.clock || !p || !p.auto) return;
+    Object.assign(p, TOOLS.clock.start());
+    place(open.clock.panel, clampPos(p, TOOLS.clock));
+  }
+  if (Reveal.isReady()) reseatClock(); else Reveal.on("ready", reseatClock);
+  Reveal.on("resize", reseatClock);
   paintMenu();
 })();
