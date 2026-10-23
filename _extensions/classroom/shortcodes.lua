@@ -34,6 +34,9 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          Your own Jeopardy and quick-fire questions: a ::: div
                                          (see filter.lua). Options: tiles=16 (picture-reveal),
                                          rows=4 teams=2 (jeopardy), count=5 seconds=10 title="..." (trivia).
+  {{< matching unit=1 >}}                pairs: tap a word, then its meaning (with="picture": its picture)
+  {{< memory unit=1 >}}                  pairs: turn over two cards (a word and its picture, or with="meaning")
+                                         count=6 pairs. Your own pairs: ::: {.matching} or {.memory} (filter.lua).
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
@@ -410,6 +413,24 @@ return {
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
     c.title = str(kwargs["title"], "Quick-fire!")
     return games.div("trivia", c)
+  end,
+
+  -- Matching (tap a word, then its partner) and Memory (turn over two cards): pairs from the vocab
+  -- list. with="meaning" or "picture" chooses each word's partner; count=6 pairs.
+  ["matching"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Matching") end
+    local c = game_config({}, kwargs, "matching")
+    c.count = tonumber(str(kwargs["count"], "6")) or 6
+    c.with = str(kwargs["with"], "meaning")
+    return games.div("matching", c)
+  end,
+
+  ["memory"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Memory") end
+    local c = game_config({}, kwargs, "memory")
+    c.count = tonumber(str(kwargs["count"], "6")) or 6
+    c.with = str(kwargs["with"], "picture")
+    return games.div("memory", c)
   end,
 
   -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).

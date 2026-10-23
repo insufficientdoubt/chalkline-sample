@@ -33,14 +33,14 @@ Your own word, hint and picture:
 {{</* snowman "Parthenon" hint="A temple in Athens"
     image="images/parthenon-west.jpg" */>}}
 
-A random word from unit 1, with a 🔀 button:
+A random word from unit 1, with a New word button:
 {{</* snowman unit=1 */>}}
 ```
 :::
 ::::
 
 ::: notes
-Tap the letters on the board, or type them on the keyboard. **💡 Hint** shows the picture and the meaning.
+Tap the letters on the board, or type them on the keyboard. **Hint** shows the picture and the meaning.
 
 These slides go down (↓): a word, then a slide about it, then the next word. To do the same, start a column with a `#` heading and put each slide under it with `##`.
 :::
@@ -86,7 +86,7 @@ These slides go down (↓): a word, then a slide about it, then the next word. T
 {{< snowman unit=1 >}}
 
 ::: notes
-A random word from this unit. Press **🔀 New word** to play again with another word.
+A random word from this unit. Press **New word** to play again with another word.
 :::
 
 # Picture reveal 🖼️
@@ -110,7 +110,7 @@ Your own picture, with 9 tiles:
 {{</* picture-reveal "theater" tiles=9
     image="images/epidaurus-theatre.jpg" */>}}
 
-A random picture from unit 1, with a 🔀 button:
+A random picture from unit 1, with a New picture button:
 {{</* picture-reveal unit=1 */>}}
 ```
 :::
@@ -151,7 +151,7 @@ Press **↓** to play.
   - The goddess of wisdom | Athena
 :::
 
-From unit 1's vocab, 3 teams, with a 🔀 button:
+From unit 1's vocab, 3 teams, with a New board button:
 {{</* jeopardy unit=1 teams=3 */>}}
 ```
 :::
@@ -211,7 +211,7 @@ Press **↓** to play.
 - The Olympic Games honored which god? | Zeus
 :::
 
-From unit 1's vocab, with a 🔀 button:
+From unit 1's vocab, with a New questions button:
 {{</* trivia unit=1 */>}}
 ```
 :::
@@ -236,6 +236,92 @@ One line per question: the question, a `|`, then the answer (one or two words is
 ## Vocab quick-fire
 
 {{< trivia unit=1 title="Vocab quick-fire" >}}
+
+# Matching 🔗
+
+:::: {.columns .game-intro}
+::: {.column width="38%"}
+Tap a word. Then tap what it means.
+
+A right pair stays. A wrong pair shakes!
+
+Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+::: {.matching}
+- Zeus | The king of the gods
+- Athena | The goddess of wisdom
+:::
+
+6 words from unit 1, with their meanings:
+{{</* matching unit=1 */>}}
+
+Words and their pictures:
+{{</* matching unit=1 with="picture" */>}}
+```
+:::
+::::
+
+::: notes
+Tap a word on the left, then its partner on the right (or the other way round). A right pair locks in, in its own color; a wrong pair shakes. The game counts the tries. **Show the answers** matches everything.
+
+Each line is a word, a `|`, then its partner. `count=8` gives more pairs (6 is the usual).
+:::
+
+## Greek gods
+
+::: {.matching}
+- Zeus | The king of the gods
+- Athena | The goddess of wisdom
+- Poseidon | The god of the sea
+- Apollo | The god of music and the sun
+- Ares | The god of war
+- Hera | The queen of the gods
+:::
+
+## Words and pictures
+
+{{< matching unit=1 with="picture" >}}
+
+# Memory 🃏
+
+:::: {.columns .game-intro}
+::: {.column width="38%"}
+All the cards are face down.
+
+Turn over two. Is it a word and its picture? Keep them!
+
+Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+6 words from unit 1 and their pictures:
+{{</* memory unit=1 */>}}
+
+Words and their meanings:
+{{</* memory unit=1 with="meaning" */>}}
+
+Your own pairs:
+::: {.memory}
+- Sparta | A city of soldiers
+- Athens | The first democracy
+:::
+```
+:::
+::::
+
+::: notes
+Teams or students take turns: turn over two cards. If they are a pair, they stay face up; if not, they turn back over, so remember where they were! The game counts the turns. **Show all the cards** turns them all over.
+:::
+
+## Find the pairs
+
+{{< memory unit=1 >}}
 
 ```{=html}
 <style>

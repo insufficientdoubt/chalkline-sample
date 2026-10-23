@@ -310,6 +310,88 @@
 @keyframes cg-pop { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes cg-shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
 
+/* ---- Matching: two columns; a right pair locks in, in its own color ---- */
+.reveal .cg-match { display: grid; grid-template-columns: 38% 1fr; gap: 14px 36px; }
+.reveal .cg-match-col { display: flex; flex-direction: column; gap: 9px; }
+.reveal .cg-match-item {
+  display: flex;
+  align-items: center;
+  min-height: 60px;
+  padding: 8px 16px;
+  border: 1px solid #cfd8e4;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--cg-navy);
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0, 20, 60, 0.06);
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.reveal .cg-match-item.cg-side-a { justify-content: center; font-family: var(--r-heading-font, inherit); font-size: 24px; font-weight: 700; }
+.reveal .cg-match-item:hover { border-color: #aebdd0; background: #f7f9fc; }
+.reveal .cg-match-item.cg-selected { border: 2px solid var(--cg-blue); background: #eaf4ff; transform: translateX(4px); }
+.reveal .cg-match-right .cg-match-item.cg-selected { transform: translateX(-4px); }
+.reveal .cg-match-item.cg-matched {
+  border: 2px solid var(--pair);
+  background: color-mix(in srgb, var(--pair) 12%, #fff);
+  color: color-mix(in srgb, var(--pair) 60%, #000);
+  cursor: default;
+}
+.reveal .cg-match-item.cg-wrong-pair { border: 2px solid var(--cg-red); background: #fdecec; animation: cg-shake 0.35s; }
+.reveal .cg-match-pictures .cg-match-right { display: grid; grid-template-columns: repeat(3, 1fr); align-content: start; }
+.reveal .cg-match-pictures .cg-match-right .cg-match-item { justify-content: center; min-height: 0; padding: 6px; }
+.reveal .cg-match-item img { width: 100%; max-height: 110px; margin: 0; object-fit: contain; }
+.reveal .cg-match + .cg-status { margin-top: 14px; }
+
+/* ---- Memory: cards that turn over ---- */
+.reveal .cg-memory-grid { display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 12px; perspective: 1200px; }
+.reveal .cg-card { height: 128px; padding: 0; border: 0; background: transparent; }
+.reveal .cg-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.45s;
+}
+.reveal .cg-card.cg-up .cg-card-inner { transform: rotateY(180deg); }
+.reveal .cg-card-back, .reveal .cg-card-front {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.reveal .cg-card-back {
+  background: var(--cg-navy);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 12px 12px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 28px;
+  font-weight: 700;
+}
+.reveal .cg-card:hover .cg-card-back { background-color: #0a4389; }
+.reveal .cg-card-front {
+  transform: rotateY(180deg);
+  border: 1px solid #cfd8e4;
+  background: #fff;
+  color: var(--cg-navy);
+  font-size: 19px;
+  font-weight: 500;
+  line-height: 1.2;
+  box-shadow: 0 1px 3px rgba(0, 20, 60, 0.08);
+}
+.reveal .cg-card-front img { max-width: 100%; max-height: 108px; margin: 0; object-fit: contain; }
+.reveal .cg-card-word { font-family: var(--r-heading-font, inherit); font-size: 24px; font-weight: 700; }
+.reveal .cg-card.cg-found .cg-card-front { border: 2px solid var(--pair); background: color-mix(in srgb, var(--pair) 10%, #fff); }
+.reveal .cg-card.cg-found { cursor: default; }
+.reveal .cg-memory-grid + .cg-status { margin-top: 14px; }
+
 /* ---- Review games page: choose a game and a unit ----
    One quiet header: the games as a segmented control (neutral track, the chosen game raised in white),
    then the unit menu and a text link. Brand navy only, so the colorful game below stands out. */
@@ -335,27 +417,28 @@
 .reveal .cg-pick {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 7px;
+  padding: 8px 12px;
   border: 0;
   border-radius: 9px;
   background: transparent;
   color: #5b6b80;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.2;
   transition: background 0.15s, color 0.15s, box-shadow 0.15s;
 }
+.reveal .cg-pick { white-space: nowrap; }
 .reveal .cg-pick:hover { color: var(--cg-navy); }
 .reveal .cg-pick.cg-on {
   background: #fff;
   color: var(--cg-navy);
   box-shadow: 0 1px 2px rgba(0, 20, 60, 0.12), 0 2px 8px rgba(0, 20, 60, 0.06);
 }
-.reveal .cg-pick-icon { display: inline-grid; width: 20px; height: 20px; }
+.reveal .cg-pick-icon { display: inline-grid; width: 18px; height: 18px; }
 .reveal .cg-pick-icon svg { width: 100%; height: 100%; }
 .reveal .cg-pick.cg-on .cg-pick-icon { color: var(--cg-blue); }
-.reveal .cg-pick-side { display: flex; align-items: center; gap: 18px; }
+.reveal .cg-pick-side { display: flex; align-items: center; gap: 14px; }
 .reveal .cg-pick-label {
   display: inline-flex;
   align-items: center;
@@ -367,7 +450,7 @@
   text-transform: uppercase;
 }
 .reveal .cg-pick-select {
-  min-width: 210px;
+  min-width: 190px;
   padding: 7px 34px 7px 12px;
   border: 1px solid #cfd8e4;
   border-radius: 9px;
@@ -385,8 +468,8 @@
 .reveal .cg-pick-home { color: #5b6b80; font-size: 16px; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .reveal .cg-pick-home:hover { color: var(--cg-navy); text-decoration: underline; }
 
-/* On the Review games page, the games themselves are calmer too: plain buttons with small corners,
-   and the picture tiles in brand navy instead of many colors. (Game slides in decks keep their look.) */
+/* The calm look, for every game (games.js adds .cg-plain): plain buttons with small corners,
+   and the picture tiles in brand navy instead of many colors. */
 .reveal .cg-plain .cg-btn {
   padding: 8px 18px;
   border: 1px solid #cfd8e4;

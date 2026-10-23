@@ -16,6 +16,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: The calm style for every game; Matching and Memory
+- **Asked for:** "apply the calmer style to the game slides too. Oh and let's add a matching game, and memory (the card flipping game)."
+- **Why:** to match the Review games page; two more classic review games.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: every game uses the calm look: plain-word buttons, with the emoji taken off ("🔀 New word" → "New word"), also on buttons a game adds later. Two new games:
+    - **Matching:** words on the left, their meanings or pictures (`with=`) on the right, mixed up. Tap one, then its partner: a right pair locks in, in its own color; a wrong pair shakes. It counts the tries.
+    - **Memory:** cards that turn over (3D flip). Each word pairs with its picture or meaning; a pair stays up, a miss turns back after a moment. It counts the turns.
+    Both take 6 pairs (`count=`), from random vocab (all or one unit, with **New words** / **New cards**) or written pairs. Both reset with "Reset for the next class". The Review games page lists all six games ("Picture" for short, every label on one line), and its "Unit" label is gone (the menu's "All units" says it).
+  - `games.css`: the calm styles now apply to every game; styles for Matching and Memory; a tighter header.
+  - `shortcodes.lua`: `{{< matching >}}` and `{{< memory >}}` (`unit=`, `count=`, `with="meaning"|"picture"`). `filter.lua`: `::: {.matching}` and `::: {.memory}` with `word | partner` lines.
+  - `README.md`, the Greek Word Games deck (Matching and Memory sections, with code boxes; button names without emoji), the Review games page notes, and the Start-here "what else" slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Review games page: a more professional look
 - **Asked for:** "Restyle the review games page. It looks very AI/vibe coded (which it is, but still). Give it a more professional look."
 - **Why:** the rainbow pills and emoji looked unpolished.

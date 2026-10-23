@@ -80,6 +80,9 @@ end
 --   - **People**
 --     - ...
 --   :::
+--   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
+--   - democracy | Citizens vote on laws
+--   :::
 -- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values;
 -- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
@@ -115,6 +118,12 @@ local function game_from_div(el)
     return games.div("jeopardy", { categories = categories, points = points, random = false,
       teams = tonumber(el.attributes["teams"] or "2") or 2 })
   end
+  local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
+  if kind then
+    local pairs = {}
+    for _, item in ipairs(list_items(el.content)) do table.insert(pairs, clue(item)) end
+    return games.div(kind, { pairs = pairs, random = false })
+  end
   local questions = {}
   for _, item in ipairs(list_items(el.content)) do table.insert(questions, clue(item)) end
   return games.div("trivia", { questions = questions, random = false,
@@ -122,9 +131,11 @@ local function game_from_div(el)
 end
 
 local function Div(el)
-  if el.classes:includes("jeopardy") or el.classes:includes("trivia") then
-    if quarto.doc.is_format("revealjs") then return game_from_div(el) end
-    return games.placeholder(el.classes:includes("jeopardy") and "Jeopardy" or "Quick-fire questions")
+  for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory" }) do
+    if el.classes:includes(cls) then
+      if quarto.doc.is_format("revealjs") then return game_from_div(el) end
+      return games.placeholder(name)
+    end
   end
   if quarto.doc.is_format("typst") then
     for cls, fn in pairs(TYPST_FUNCTIONS) do

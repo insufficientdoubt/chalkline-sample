@@ -262,27 +262,29 @@ Open windows, where they are, the scores, the class lists and the settings are r
 
 ## Slide games
 
-Four review games for slides. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; 🔀 gives a new word, picture, board or set of questions. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
+Six review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
 
 To put a game in your own slides, see them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
 | Game | How it plays |
 |---|---|
-| ⛄ **Snowman** | Guess the word one letter at a time (tap the letters, or type them). Each wrong letter melts part of the snowman: 7 wrong letters and it's a puddle. **💡 Hint** shows the picture and meaning. |
+| ⛄ **Snowman** | Guess the word one letter at a time (tap the letters, or type them). Each wrong letter melts part of the snowman: 7 wrong letters and it's a puddle. **Hint** shows the picture and meaning. |
 | 🖼️ **Picture reveal** | A picture hides under numbered tiles. Open one tile at a time until someone guesses it. |
 | 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. The scores are under the board: tap a team's **name** to rename it, its **score** to change it, or anywhere else on it to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
+| 🔗 **Matching** | Words on the left, their meanings (or pictures) on the right, mixed up. Tap a word, then its partner: a right pair locks in, in its own color; a wrong pair shakes. It counts the tries. |
+| 🃏 **Memory** | Cards face down: each word and its picture (or meaning). Turn over two; a pair stays face up, the others turn back. It counts the turns. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:
 
 | Write | You get |
 |---|---|
-| `{{< snowman >}}` | a random word from the whole vocab list, with a **🔀 New word** button |
-| `{{< snowman unit=1 >}}` | a random word from unit 1's list (`course/vocab/`), with **🔀** |
-| `{{< snowman "democracy" >}}` | that vocab word (its picture and meaning are the hint); no 🔀 |
-| `{{< snowman "Parthenon" hint="A temple in Athens" image="images/parthenon-west.jpg" >}}` | your own word, hint and picture; no 🔀 |
+| `{{< snowman >}}` | a random word from the whole vocab list, with a **New word** button |
+| `{{< snowman unit=1 >}}` | a random word from unit 1's list (`course/vocab/`), with **New word** |
+| `{{< snowman "democracy" >}}` | that vocab word (its picture and meaning are the hint); no New word button |
+| `{{< snowman "Parthenon" hint="A temple in Athens" image="images/parthenon-west.jpg" >}}` | your own word, hint and picture; no New word button |
 
-`{{< picture-reveal >}}` works the same way (add `tiles=9` or `tiles=25`). `{{< jeopardy unit=1 >}}` makes a board from a unit's vocab (columns: *What's the word?*, *Picture*, *Fill the gap*) and `{{< trivia unit=1 >}}` asks 5 questions about it (`count=8`, `seconds=15`, `title="..."`); both have 🔀 for new ones. To write your own:
+`{{< picture-reveal >}}` works the same way (add `tiles=9` or `tiles=25`). `{{< jeopardy unit=1 >}}` makes a board from a unit's vocab (columns: *What's the word?*, *Picture*, *Fill the gap*) and `{{< trivia unit=1 >}}` asks 5 questions about it (`count=8`, `seconds=15`, `title="..."`). `{{< matching unit=1 >}}` and `{{< memory unit=1 >}}` use 6 pairs (`count=8` for more); `with="picture"` or `with="meaning"` chooses each word's partner (matching shows meanings, memory shows pictures, unless you say). The random ones have a button for a new set. To write your own:
 
 ```markdown
 ::: {.jeopardy}
@@ -298,7 +300,14 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 - Which city had the first democracy? | Athens
 - The Olympic Games honored which god? | Zeus
 :::
+
+::: {.matching}
+- Zeus | The king of the gods
+- Athena | The goddess of wisdom
+:::
 ```
+
+Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.memory}` for the card game).
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
 
