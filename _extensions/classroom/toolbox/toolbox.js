@@ -13,6 +13,7 @@
     Traffic light   red, yellow, green
     QR code         a code for this deck's address (or any link) for students' tablets
     Stopwatch       counts up
+    Clock           the time; open unless you close it (K shows and hides it)
     Dice            1 to 6 dice
 
   Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
@@ -552,6 +553,23 @@
       },
     },
 
+    clock: {
+      // The time, in a window you can drag and resize. Open in every deck unless you close it
+      // (or press K); clock: false in a deck's labels leaves it closed there.
+      title: "Clock", icon: "🕒", w: 150, h: 58, minW: 110, minH: 50, keys: [],
+      start: function () {   // bottom left, beside the menu and toolbox buttons (and the chalkboard's, if there)
+        return { x: document.querySelector(".slide-chalkboard-buttons") ? 172 : 96, y: window.innerHeight - 58 - 8 };
+      },
+      build: function (body) {
+        const time = h("div", { class: "ct-clock-time" });
+        function tick() { time.textContent = new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); }   // the computer's 12- or 24-hour setting
+        body.append(time);
+        tick();
+        const timer = setInterval(tick, 1000);
+        return { close: function () { clearInterval(timer); } };
+      },
+    },
+
     slide: {
       title: "Slide size", icon: "📐", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
       build: function (body) {
@@ -824,7 +842,8 @@
     if (!tool) return;
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
     const n = Object.keys(open).length;
-    const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
+    const start = tool.start ? tool.start() : { x: 80 + 36 * n, y: 70 + 36 * n };
+    const p = layout.pos[id] || (layout.pos[id] = { x: start.x, y: start.y, w: tool.w, h: tool.h });
     const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
@@ -842,16 +861,18 @@
       saveLayout();
     }
     open[id] = { panel: panel, api: tool.build(body, panel, grow) || {} };
+    if (id === "clock") save("clock-off", false);
     saveLayout();
     paintMenu();
   }
 
-  function closeTool(id) {
+  function closeTool(id, keep) {   // keep: the clock closes for this deck only
     const o = open[id];
     if (!o) return;
     if (o.api.close) o.api.close();
     o.panel.remove();
     delete open[id];
+    if (id === "clock" && !keep) save("clock-off", true);   // closed on purpose: it stays closed in the next deck
     saveLayout();
     paintMenu();
   }
@@ -897,7 +918,7 @@
     });
     if (Object.keys(open).length) {
       menu.append(h("button", { class: "ct-menu-item ct-menu-close", text: "Close all",
-        onclick: function () { Object.keys(open).forEach(closeTool); toggleMenu(false); } }));
+        onclick: function () { Object.keys(open).forEach(function (id) { closeTool(id); }); toggleMenu(false); } }));
     }
     menu.append(h("button", { class: "ct-menu-item ct-menu-reset", onclick: function () { toggleMenu(false); showReset(); } },
       h("span", { class: "ct-menu-icon", text: "↺" }), h("span", { text: "Reset for the next class…" })));
@@ -970,6 +991,7 @@
   }, true);
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
+    Reveal.addKeyBinding({ keyCode: 75, key: "K", description: "Show/hide the clock" }, function () { open.clock ? closeTool("clock") : openTool("clock"); });
   }
 
   // Fullscreen shows only one element: take the tools along into it, and back out again.
@@ -981,5 +1003,12 @@
 
   // Bring back the panels that were open in the last deck (the old noise meter is now in Voice level).
   (layout.open || []).map(function (id) { return id === "noise" ? "voice" : id; }).forEach(openTool);
+  // The clock is on unless it was closed (or the old corner clock was hidden with K), or this deck
+  // turns it off (clock: false).
+  let clockOff = load("clock-off", null);
+  if (clockOff === null) { try { clockOff = localStorage.getItem("slide-clock-visible") === "0"; } catch (e) { clockOff = false; } }
+  const deckOff = (document.querySelector('meta[name="chalkline-clock"]') || {}).content === "off";
+  if (deckOff) closeTool("clock", true);   // just this deck: it comes back in the next one
+  else if (!clockOff) openTool("clock");
   paintMenu();
 })();

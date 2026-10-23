@@ -179,7 +179,7 @@ One label decides who sees a file: `audience: [teacher, student, parent]`
 :::: {.columns}
 ::: {.column width="50%"}
 - A **timer** on any slide (press **T**)
-- A **clock** in the corner (press **K**)
+- A **clock** you can drag anywhere (press **K**)
 - **Speaker notes** in a second window (press **S**)
 - A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice
 - **Tap-to-vote polls**: no devices, no accounts
@@ -268,7 +268,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 ::: {.cat-box .cat-tools}
 [🧰 Toolbox on every slide: press W]{.cat-head} [12]{.cat-n}
 
-[🙋 Name picker]{.chip .chip-key} [🧩 Groups]{.chip .chip-key} [🏆 Scoreboard]{.chip .chip-key} [🤫 Voice level]{.chip .chip-key} [🎙️ Noise meter]{.chip .chip-key} [🚦 Traffic light]{.chip .chip-key} [🔳 QR code]{.chip .chip-key} [⏱️ Stopwatch]{.chip .chip-key} [🎲 Dice]{.chip .chip-key} [📐 Slide size]{.chip .chip-key} [↺ Reset for the next class]{.chip .chip-key} [🕒 Clock: press K]{.chip .chip-key}
+[🙋 Name picker]{.chip .chip-key} [🧩 Groups]{.chip .chip-key} [🏆 Scoreboard]{.chip .chip-key} [🤫 Voice level]{.chip .chip-key} [🎙️ Noise meter]{.chip .chip-key} [🚦 Traffic light]{.chip .chip-key} [🔳 QR code]{.chip .chip-key} [⏱️ Stopwatch]{.chip .chip-key} [🎲 Dice]{.chip .chip-key} [📐 Slide size]{.chip .chip-key} [↺ Reset for the next class]{.chip .chip-key} [🕒 Clock (K)]{.chip .chip-key}
 :::
 
 ::::

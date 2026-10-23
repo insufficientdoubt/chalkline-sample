@@ -3,7 +3,7 @@ Classroom filter. Lets content stay plain: authors write semantic markers and
 this file turns them into the right thing for each output format.
 
 Slides (reveal.js):
-  - adds the corner clock to every deck (turn off with `clock: false`)
+  - the clock is a toolbox tool, open in every deck (clock: false leaves it closed in a deck)
   - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
@@ -259,9 +259,9 @@ local function Div(el)
 end
 
 local function Meta(meta)
+  -- The clock is a toolbox tool now; clock: false tells the toolbox to leave it closed in this deck.
   local clock = meta.clock
   local off = clock ~= nil and pandoc.utils.stringify(clock) == "false"
-  if quarto.doc.is_format("revealjs") and not off then include_once("clock.html") end
   -- Slides: a ↓ when a slide has another below it (turn off with `down-arrow: false`).
   local down = meta["down-arrow"]
   local down_off = down ~= nil and pandoc.utils.stringify(down) == "false"
@@ -271,13 +271,16 @@ local function Meta(meta)
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
   if quarto.doc.is_format("revealjs") and not tools_off then
     local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
+    local tags = {}
+    if site ~= "" then tags["chalkline-qr-site"] = site end
+    if off then tags["chalkline-clock"] = "off" end
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",
       scripts = { { path = "toolbox/toolbox.js", afterBody = true } },
       stylesheets = { "toolbox/toolbox.css" },
       resources = { "toolbox/qrcode.js" },
-      meta = site ~= "" and { ["chalkline-qr-site"] = site } or nil,
+      meta = next(tags) and tags or nil,
     })
   end
   -- Web pages: links to slideshows open in a new tab (slides-new-tab: false turns it off).
