@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="embed.css">
 <style>
   .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 260px; gap: 10px; }
-  svg { width: 100%; height: 100%; min-height: 0; border: 1px solid var(--line); border-radius: var(--r); background: #fbfcfe; }
+  .left { min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+  .lengthBox { flex: none; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 18px; }
+  svg { flex: 1; width: 100%; min-height: 0; border: 1px solid var(--line); border-radius: var(--r); background: #fbfcfe; }
   .panel { display: flex; flex-direction: column; gap: 5px; padding: 7px; overflow: auto; font-size: 15px; }
   .big { font-size: 23px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
   .stat { padding: 7px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
@@ -15,6 +17,7 @@
   .ok { color: var(--ok); font-weight: 700; }
   .over { border-color: var(--bad); background: #fbecec; }
   #widest, #start { display: block; font-size: 14px; }
+  .lengthBox .big { font-size: 21px; }
   .rules { display: block; font-size: 13px; color: var(--muted); }
   .over .big, .bad { color: var(--bad); font-weight: 700; }
   #warn { padding: 7px 10px; border-radius: var(--r-sm); background: #fbecec; color: var(--bad); font-size: 14px; font-weight: 600; }
@@ -38,13 +41,14 @@
     <button class="primary" id="play">▶ Lift</button>
   </div>
   <div class="main">
-    <svg id="svg" viewBox="0 0 900 600" aria-label="A robot lift"></svg>
+    <div class="left">
+      <svg id="svg" viewBox="0 0 900 600" aria-label="A robot lift"></svg>
+      <div class="stat lengthBox" id="lengthBox"><div><small>Robot length (back to front)</small><span class="big" id="length"></span></div>
+        <div><span id="start"></span><span id="widest"></span><span class="rules">Rules: start within 20 in, never wider than 24 in. No height limit.</span></div></div>
+    </div>
     <div class="panel box">
       <div class="stat"><small>Extension</small><span class="big" id="ext"></span>
         <span class="sub"><b id="height"></b> off the floor · moves forward <b id="reach"></b></span></div>
-      <div class="stat" id="lengthBox"><small>Robot length (back to front)</small><span class="big" id="length"></span>
-        <span id="start"></span><span id="widest"></span>
-        <span class="rules">Rules: start within 20 in, never wider than 24 in. No height limit.</span></div>
       <div id="warn"></div>
       <label class="row"><span>Lift</span><input type="range" id="lift" min="0" max="100" value="0"></label>
       <label class="row"><span>Bar length <b id="lenV"></b></span><input type="range" id="len" min="15" max="40" value="25"></label>
@@ -69,6 +73,7 @@
     drawn at a scale that fits the whole swing in the picture, so tall lifts just zoom out.
     The size rules are in inches (the game is American), so the robot's length shows inches first.
   */
+  const GROUND = 520;                             // the floor line in the picture; under it: the robot's length and the size rules
   const IN = 2.54, START_IN = 20, MAX_IN = 24;   // the robot must start within 20 in and never be wider than 24 in
   const BASE = 32.5, GAP = 7, FLOOR = 1.5;        // chassis length, bar spacing, the claw's lower pin at the start (cm)
   const CHASSIS = [2, 6], WHEEL = 2;              // the chassis plate (bottom and top, cm), wheel radius
@@ -146,11 +151,11 @@
     }
     // fit: the tallest point under the top edge, and everything (with the 24 in line and its label) across
     const right = Math.max(maxX + 14, origin + MAX_IN * IN + 22);
-    S = Math.min(8, 470 / maxY, 760 / (right - minX));
+    S = Math.min(8, (GROUND - 30) / maxY, 760 / (right - minX));
     LEFT = 40 - minX * S;
     TOPCM = maxY;
   }
-  const X = function (x) { return LEFT + x * S; }, Y = function (y) { return 560 - y * S; };
+  const X = function (x) { return LEFT + x * S; }, Y = function (y) { return GROUND - y * S; };
 
   const scene = el("g", {});
   const defs = el("defs", {});
@@ -167,20 +172,21 @@
     const pin = function (p) { el("circle", { cx: X(p[0]), cy: Y(p[1]), r: 5, fill: "#fff", stroke: "#10233f", "stroke-width": 2.5 }, g); };
 
     // floor and ruler
-    el("rect", { x: 0, y: 560, width: 900, height: 40, fill: "#e9edf2" }, g);
+    el("rect", { x: 0, y: GROUND, width: 900, height: 600 - GROUND, fill: "#e9edf2" }, g);
     const top = Math.floor(TOPCM / 5) * 5, step = S < 5 ? 20 : 10;
     for (let cm = 0; cm <= top; cm += 5) {
       el("line", { x1: 872, x2: cm % step ? 864 : 857, y1: Y(cm), y2: Y(cm), stroke: "#8a97a8", "stroke-width": 1.5 }, g);
       if (cm % step === 0) el("text", { x: 876, y: Y(cm) + 5, "font-size": 13, fill: "#5b6b80" }, g).textContent = cm;
     }
-    el("line", { x1: 872, x2: 872, y1: 560, y2: Y(top), stroke: "#8a97a8", "stroke-width": 1.5 }, g);
+    el("line", { x1: 872, x2: 872, y1: GROUND, y2: Y(top), stroke: "#8a97a8", "stroke-width": 1.5 }, g);
     el("text", { x: 862, y: Y(top) - 10, "font-size": 13, fill: "#5b6b80" }, g).textContent = "cm";
 
-    // the two size rules, measured from the robot's back-most point in the swing
-    [[START_IN, "#e07b00", "start: 20 in (50.8 cm)", 26], [MAX_IN, "#c23b3b", "max: 24 in (61.0 cm)", 46]].forEach(function (lim) {
+    // the two size rules, measured from the robot's back-most point in the swing; their labels sit
+    // on the floor, under the length measure, so they read as lengths, not heights
+    [[START_IN, "#e07b00", "start limit: 20 in (50.8 cm)", GROUND + 54], [MAX_IN, "#c23b3b", "max limit: 24 in (61.0 cm)", GROUND + 75]].forEach(function (lim) {
       const x = X(origin + lim[0] * IN);
-      el("line", { x1: x, x2: x, y1: lim[3] - 15, y2: 600, stroke: lim[1], "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
-      el("text", { x: x + 6, y: lim[3], "font-size": 14, "font-weight": 700, fill: lim[1] }, g).textContent = lim[2];
+      el("line", { x1: x, x2: x, y1: 10, y2: lim[3] + 4, stroke: lim[1], "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
+      el("text", { x: x - 6, y: lim[3], "text-anchor": "end", "font-size": 16, "font-weight": 700, fill: lim[1] }, g).textContent = lim[2];
     });
 
     // the claw's path, bottom to top
@@ -214,11 +220,11 @@
     el("circle", { cx: X(tx), cy: Y(H - GAP), r: 13, fill: "none", stroke: "#10233f", "stroke-width": 2, "stroke-dasharray": "4 3" }, g);   // the motor
 
     // the robot's length along the floor, and the widest point in the swing
-    const sp = span(s), len = sp.front - sp.back, yy = 584;
+    const sp = span(s), len = sp.front - sp.back, yy = GROUND + 24;
     el("line", { x1: X(sp.back), x2: X(sp.front), y1: yy, y2: yy, stroke: "#10233f", "stroke-width": 2.5, "marker-start": "url(#arrowDark)", "marker-end": "url(#arrowDark)" }, g);
     el("text", { x: (X(sp.back) + X(sp.front)) / 2 - 22, y: yy - 6, "font-size": 14, "font-weight": 700, fill: "#10233f" }, g).textContent = (len / IN).toFixed(1) + " in";
-    el("line", { x1: X(widest.x), x2: X(widest.x), y1: 558, y2: 598, stroke: "#ff8c0f", "stroke-width": 3 }, g);
-    el("text", { x: X(widest.x) + 5, y: 597, "font-size": 12, "font-weight": 700, fill: "#b85d00" }, g).textContent = "widest";
+    el("line", { x1: X(widest.x), x2: X(widest.x), y1: GROUND - 2, y2: GROUND + 34, stroke: "#ff8c0f", "stroke-width": 3 }, g);
+    el("text", { x: X(widest.x) + 5, y: GROUND + 32, "font-size": 12, "font-weight": 700, fill: "#b85d00" }, g).textContent = "widest";
 
     // numbers
     const low = swing[0], now = grip(s);
