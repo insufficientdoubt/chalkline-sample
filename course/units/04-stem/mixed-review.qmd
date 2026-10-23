@@ -1,0 +1,37 @@
+---
+title: "Mixed Review: 12 Topics"
+type: worksheet
+description: "Twelve middle-school problems in labelled cards: fractions, decimals, percent, integers, order of operations, ratios, exponents, equations, area, mean, angles and unit rate. Change the seed for a new version. Teacher copy has answers."
+order: 6
+audience: [teacher, student]
+doc-type: Worksheet
+name-box: true
+format:
+  html: default
+  typst: default
+---
+
+```{python}
+#| output: asis
+# Change SEED for a new set of numbers (the answer key changes with it).
+SEED = 7
+import sys; sys.path.append("course/units/04-stem")
+from practice import mixed_review, mixed_review_typst, mixed_review_web, score_bar, WEB_STYLE
+problems = mixed_review(SEED)
+print(WEB_STYLE)
+print(score_bar(12, "Solve each problem in its box. Show your working.", timer=False))
+print(mixed_review_typst(problems))
+print(mixed_review_web(problems))
+```
+
+::: {.content-visible when-profile="teacher"}
+{{< pagebreak >}}
+
+## Answer key
+
+```{python}
+#| output: asis
+print(mixed_review_typst(problems, answers=True))
+print(mixed_review_web(problems, answers=True))
+```
+:::

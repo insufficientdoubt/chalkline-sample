@@ -3,12 +3,13 @@ title: "Unit 4: STEM Sampler"
 short-title: "Unit 4 · STEM Sampler"
 unit: 4
 format: html
-description: "A sampler of interactive math, coding and engineering: geometry and graphs you can drag, block coding that turns into Python, and linkages that move."
+description: "A sampler of interactive math, coding and engineering: geometry and graphs you can drag, block coding that turns into Python, robot lifts and catapults that move, and practice worksheets."
 objectives:
   - I can explain why the angles in a triangle add up to 180°.
   - I can describe how a, b and c change the graph of y = ax² + bx + c.
   - I can build a short program with blocks and read the same program in Python.
-  - I can name the links in a four-bar linkage and use Grashof's rule to say if one link turns all the way round.
+  - I can explain how a parallelogram keeps a robot's claw level, and compare a 4-bar, a 6-bar and a DR4B lift.
+  - I can describe three ways to pull back and release a rubber-band catapult.
 listing:
   contents: "*.qmd"
   type: table

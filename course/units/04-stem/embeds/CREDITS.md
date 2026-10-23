@@ -1,6 +1,6 @@
 # Credits: the STEM unit's interactive pages
 
-The pages in this folder (`blocks.html`, `triangle.html`, `linkage.html`, `parabola.html`) were written for this course. They use:
+The pages in this folder (`blocks.html`, `triangle.html`, `linkage.html`, `lifts.html`, `catapult.html`, `parabola.html`) were written for this course; `lifts.html` and `catapult.html` are plain SVG and JavaScript, with no library. They use:
 
 | What | Used in | Licence | Where it comes from |
 |---|---|---|---|

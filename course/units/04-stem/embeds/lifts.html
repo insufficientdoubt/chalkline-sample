@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robot lifts</title>
+<link rel="stylesheet" href="embed.css">
+<style>
+  .main { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 250px; gap: 10px; }
+  svg { width: 100%; height: 100%; min-height: 0; border: 1px solid var(--line); border-radius: var(--r); background: #fbfcfe; }
+  .panel { display: flex; flex-direction: column; gap: 8px; padding: 10px; overflow: auto; }
+  .big { font-size: 30px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat { padding: 8px 10px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--surface); }
+  .stat small { display: block; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
+  .ok { color: var(--ok); font-weight: 700; }
+  label.row { display: grid; gap: 2px; font-weight: 600; }
+  #about { font-size: 15px; }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <button data-mode="four">4-bar</button>
+    <button data-mode="six">6-bar</button>
+    <button data-mode="dr4b">DR4B</button>
+    <span class="grow"></span>
+    <button class="primary" id="play">▶ Lift</button>
+  </div>
+  <div class="main">
+    <svg id="svg" viewBox="0 0 900 600" aria-label="A robot lift"></svg>
+    <div class="panel box">
+      <div class="stat"><small id="heightLabel">Extension</small><span class="big" id="ext"></span></div>
+      <div class="stat"><small>Claw height off the floor</small><span id="height"></span></div>
+      <div class="stat"><small>Claw moves forward</small><span id="reach"></span></div>
+      <div class="stat"><small>Claw angle</small><span class="ok">Always level ✓</span></div>
+      <label class="row">Lift <input type="range" id="lift" min="0" max="100" value="0"></label>
+      <label class="row">Bar length: <span id="lenV"></span><input type="range" id="len" min="15" max="40" value="25"></label>
+      <div id="about" class="note"></div>
+    </div>
+  </div>
+
+<script>
+  /*
+    Three lifts made of parallelograms (two equal bars, the same distance apart at both ends), so
+    the end of each stage stays upright and the claw stays level.
+      4-bar: one stage, from the tower to the claw. The claw swings up in an arc.
+      6-bar: two stages stacked, both tilted the same way: about twice the height of a 4-bar.
+      DR4B (double reverse four-bar): two stages, the top one tilted the OTHER way, so the claw goes
+            straight up. Extension = how far the claw has gone up from its lowest point.
+    Sizes are in cm; 1 cm is SCALE drawing units.
+  */
+  const SCALE = 8, GROUND = 560, TOWER_X = 260, TOWER_H = 22, GAP = 7;   // tower height, bar spacing (cm)
+  const MODES = {
+    four: { lo: -30, hi: 60, about: "<b>4-bar:</b> one parallelogram. The claw stays level, but it moves forward and back as it lifts (an arc)." },
+    six:  { lo: -15, hi: 60, about: "<b>6-bar:</b> two 4-bars stacked; a link makes the top one tilt with the bottom one. About twice the height of a 4-bar with the same bars." },
+    dr4b: { lo: 4, hi: 72, about: "<b>DR4B</b> (double reverse four-bar): the top 4-bar tilts the other way, so the claw goes <b>straight up</b>. Great for stacking." },
+  };
+  let mode = "four", t = 0, dir = 1, playing = false, L = 25;
+  const svg = document.getElementById("svg");
+  const NS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); (parent || svg).append(e); return e; }
+
+  // Static parts: floor, ruler, robot base, tower
+  el("rect", { x: 0, y: GROUND, width: 900, height: 40, fill: "#e9edf2" });
+  const ruler = el("g", {});
+  for (let cm = 0; cm <= 65; cm += 5) {
+    const y = GROUND - cm * SCALE;
+    el("line", { x1: 40, x2: cm % 10 ? 50 : 58, y1: y, y2: y, stroke: "#8a97a8", "stroke-width": 1.5 }, ruler);
+    if (cm % 10 === 0) el("text", { x: 62, y: y + 5, "font-size": 14, fill: "#5b6b80" }, ruler).textContent = cm;
+  }
+  el("line", { x1: 40, x2: 40, y1: GROUND, y2: GROUND - 65 * SCALE, stroke: "#8a97a8", "stroke-width": 1.5 });
+  el("text", { x: 34, y: GROUND - 65 * SCALE - 10, "font-size": 14, fill: "#5b6b80" }).textContent = "cm";
+  el("rect", { x: TOWER_X - 110, y: GROUND - 6 * SCALE, width: 260, height: 4 * SCALE, rx: 6, fill: "#c3ccd8" });
+  [TOWER_X - 80, TOWER_X + 120].forEach(function (x) { el("circle", { cx: x, cy: GROUND - 2 * SCALE, r: 2 * SCALE, fill: "#5b6b80" }); });
+  el("rect", { x: TOWER_X - 8, y: GROUND - (TOWER_H + 3) * SCALE, width: 16, height: (TOWER_H - 3) * SCALE, rx: 3, fill: "#8a97a8" });
+
+  // Moving parts
+  const path = el("polyline", { fill: "none", stroke: "#d6458f", "stroke-width": 2, "stroke-dasharray": "5 5", opacity: 0.7 });
+  const g = el("g", {});
+  const dim = el("g", {});
+  function bar(p, q, color) { el("line", { x1: p[0], y1: p[1], x2: q[0], y2: q[1], stroke: color, "stroke-width": 9, "stroke-linecap": "round" }, g); }
+  function pin(p) { el("circle", { cx: p[0], cy: p[1], r: 5, fill: "#fff", stroke: "#10233f", "stroke-width": 2.5 }, g); }
+  function upright(top, bottom, color) { bar(top, bottom, color); }
+
+  // The joints for an angle a (degrees above level). Returns the claw's mount (top and bottom).
+  function solve(a) {
+    const r = a * Math.PI / 180, dx = L * SCALE * Math.cos(r), dy = -L * SCALE * Math.sin(r);
+    const T1 = [TOWER_X, GROUND - (TOWER_H + 1) * SCALE], T2 = [TOWER_X, T1[1] + GAP * SCALE];   // the tower's two pivots
+    const M1 = [T1[0] + dx, T1[1] + dy], M2 = [T2[0] + dx, T2[1] + dy];                           // end of stage 1
+    if (mode === "four") return { stages: [[T1, T2, M1, M2]], end: [M1, M2] };
+    const back = mode === "dr4b" ? -1 : 1;   // DR4B: the top stage points back
+    const E1 = [M1[0] + back * dx, M1[1] + dy], E2 = [M2[0] + back * dx, M2[1] + dy];
+    return { stages: [[T1, T2, M1, M2], [M1, M2, E1, E2]], end: [E1, E2] };
+  }
+  function clawPoint(s) { return [s.end[0][0] + 26, s.end[1][1]]; }   // the claw's grip, level with the lower pin
+  const angle = function (p) { const m = MODES[mode]; return m.lo + (m.hi - m.lo) * p / 100; };
+
+  function draw() {
+    const a = angle(t), s = solve(a);
+    g.textContent = ""; dim.textContent = "";
+    const colors = ["#0087ff", "#ff8c0f"];
+    s.stages.forEach(function (st, i) {
+      bar(st[0], st[2], colors[i]); bar(st[1], st[3], colors[i]);
+    });
+    if (s.stages.length > 1) upright([s.stages[0][2][0], s.stages[0][2][1] - 10], [s.stages[0][3][0], s.stages[0][3][1] + 10], "#2e9e4f");   // the middle link
+    // the claw: an upright plate with two level fingers
+    const [e1, e2] = s.end;
+    upright([e1[0], e1[1] - 8], [e2[0], e2[1] + 8], "#10233f");
+    el("path", { d: `M${e2[0]} ${e2[1]} h46 M${e2[0]} ${e2[1] - 26} h46`, stroke: "#10233f", "stroke-width": 7, "stroke-linecap": "round", fill: "none" }, g);
+    el("rect", { x: e2[0] + 14, y: e2[1] - 24, width: 26, height: 22, rx: 3, fill: "#ffc61a", stroke: "#b8860b" }, g);   // a cube
+    s.stages.forEach(function (st) { st.forEach(pin); });
+    // the motor, on the tower's lower pivot
+    el("circle", { cx: s.stages[0][1][0], cy: s.stages[0][1][1], r: 13, fill: "none", stroke: "#10233f", "stroke-width": 2, "stroke-dasharray": "4 3" }, g);
+
+    // numbers
+    const low = clawPoint(solve(angle(0))), now = clawPoint(s);
+    const ext = (low[1] - now[1]) / SCALE, height = (GROUND - now[1]) / SCALE, reach = (now[0] - low[0]) / SCALE;
+    document.getElementById("ext").textContent = ext.toFixed(1) + " cm";
+    document.getElementById("height").textContent = height.toFixed(1) + " cm";
+    document.getElementById("reach").textContent = mode === "dr4b" ? "0 cm: straight up ✓" : (reach > 0.05 ? "+" : "") + reach.toFixed(1) + " cm";
+    // the extension, measured beside the claw: from its lowest point to now
+    const x = Math.max(now[0], low[0]) + 90;
+    el("line", { x1: x - 70, x2: x + 10, y1: low[1], y2: low[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
+    el("line", { x1: now[0] + 50, x2: x + 10, y1: now[1], y2: now[1], stroke: "#7b4fc9", "stroke-dasharray": "4 4" }, dim);
+    if (ext > 1) {
+      el("line", { x1: x, x2: x, y1: low[1] - 2, y2: now[1] + 2, stroke: "#7b4fc9", "stroke-width": 3, "marker-start": "url(#arrow)", "marker-end": "url(#arrow)" }, dim);
+      el("text", { x: x + 12, y: (low[1] + now[1]) / 2 + 6, "font-size": 20, "font-weight": 700, fill: "#7b4fc9" }, dim).textContent = ext.toFixed(1) + " cm";
+    }
+  }
+  // arrow heads for the measurement
+  const defs = el("defs", {});
+  const marker = el("marker", { id: "arrow", viewBox: "0 0 10 10", refX: 5, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse" }, defs);
+  el("path", { d: "M0 0 L10 5 L0 10 z", fill: "#7b4fc9" }, marker);
+
+  function tracePath() {   // the claw's whole path, from bottom to top
+    const pts = [];
+    for (let p = 0; p <= 100; p += 2) pts.push(clawPoint(solve(angle(p))).join(","));
+    path.setAttribute("points", pts.join(" "));
+  }
+  function setMode(m) {
+    mode = m;
+    document.querySelectorAll("[data-mode]").forEach(function (b) { b.classList.toggle("on", b.dataset.mode === m); });
+    document.getElementById("about").innerHTML = MODES[m].about;
+    tracePath(); draw();
+  }
+  document.querySelectorAll("[data-mode]").forEach(function (b) { b.onclick = function () { setMode(b.dataset.mode); }; });
+  const lift = document.getElementById("lift"), len = document.getElementById("len"), play = document.getElementById("play");
+  lift.oninput = function () { t = +lift.value; playing = false; play.textContent = "▶ Lift"; draw(); };
+  len.oninput = function () { L = +len.value; document.getElementById("lenV").textContent = L + " cm"; tracePath(); draw(); };
+  play.onclick = function () { playing = !playing; play.textContent = playing ? "❚❚ Stop" : "▶ Lift"; };
+  document.getElementById("lenV").textContent = L + " cm";
+
+  // Play: up to the top, a pause, back down, a pause
+  let wait = 0;
+  (function loop() {
+    if (playing) {
+      if (wait > 0) wait--;
+      else {
+        t += dir * 0.6;
+        if (t >= 100 || t <= 0) { t = Math.max(0, Math.min(100, t)); dir = -dir; wait = 50; }
+        lift.value = t; draw();
+      }
+    }
+    requestAnimationFrame(loop);
+  })();
+  setMode(new URLSearchParams(location.search).get("mode") || "four");
+</script>
+</body>
+</html>
