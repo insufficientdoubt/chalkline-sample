@@ -34,6 +34,7 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          Your own Jeopardy and quick-fire questions: a ::: div
                                          (see filter.lua). Options: tiles=16 (picture-reveal),
                                          rows=4 teams=2 (jeopardy), count=5 seconds=10 title="..." (trivia).
+  {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
 ]]
@@ -61,10 +62,10 @@ local function include_once(file)
 end
 
 -- VEX vocab terms, loaded once from generated/vocab-terms.json and looked up by ID, term or "also called" name.
-local vex_vocab, vex_list
+local vex_vocab, vex_list, vex_units
 local function vocab_lookup(key)
   if not vex_vocab then
-    vex_vocab, vex_list = {}, {}
+    vex_vocab, vex_list, vex_units = {}, {}, {}
     local path = (quarto.project.directory or ".") .. "/generated/vocab-terms.json"
     local f = io.open(path, "r")
     if not f then
@@ -73,6 +74,7 @@ local function vocab_lookup(key)
     end
     local data = quarto.json.decode(f:read("a"))
     f:close()
+    vex_units = data.units or {}
     for _, t in ipairs(data.terms) do
       table.insert(vex_list, t)
       for _, k in ipairs({ t.id, t.term, table.unpack(t.aka or {}) }) do
@@ -94,7 +96,8 @@ end
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
 
 local function game_word(t, up)
-  return { word = t.term, hint = t.definition, image = t.image ~= "" and (up .. t.image) or "", example = t.example or "" }
+  return { word = t.term, hint = t.definition, image = t.image ~= "" and (up .. t.image) or "", example = t.example or "",
+           units = t.units or {} }
 end
 
 local function game_config(args, kwargs, kind)
@@ -407,6 +410,16 @@ return {
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
     c.title = str(kwargs["title"], "Quick-fire!")
     return games.div("trivia", c)
+  end,
+
+  -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).
+  ["game-picker"] = function()
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Review games") end
+    local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+    vocab_lookup("")   -- loads the list
+    local words = {}
+    for _, t in ipairs(vex_list or {}) do table.insert(words, game_word(t, up)) end
+    return games.div("picker", { words = words, units = vex_units, home = up .. "index.html", random = true })
   end,
 
   ["timer"] = function(args)

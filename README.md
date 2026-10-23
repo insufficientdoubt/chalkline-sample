@@ -262,13 +262,15 @@ Open windows, where they are, the scores, the class lists and the settings are r
 
 ## Slide games
 
-Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
+Four review games for slides. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; 🔀 gives a new word, picture, board or set of questions. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
+
+To put a game in your own slides, see them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
 | Game | How it plays |
 |---|---|
 | ⛄ **Snowman** | Guess the word one letter at a time (tap the letters, or type them). Each wrong letter melts part of the snowman: 7 wrong letters and it's a puddle. **💡 Hint** shows the picture and meaning. |
 | 🖼️ **Picture reveal** | A picture hides under numbered tiles. Open one tile at a time until someone guesses it. |
-| 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. Tap a team to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
+| 🏆 **Jeopardy** | A board of categories and points, for 2 to 4 teams. The team whose turn it is is highlighted: it chooses a square, answers, and you mark **✓ Right** (it gets the points) or **✗ Wrong**. Then the turn passes on. The scores are under the board: tap a team's **name** to rename it, its **score** to change it, or anywhere else on it to give it the turn; − and + change the number of teams. When every square is used, it shows the winner. Used squares go grey. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:

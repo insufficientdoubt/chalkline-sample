@@ -57,6 +57,9 @@ website:
       - text: "History vocab 词汇"
         href: vocab/app/index.html   # the vocab app (copied in via resources above)
         icon: book
+      - text: "Review games"
+        href: course/review-games.qmd  # any game, any unit (slides; left out of the family site)
+        icon: controller
       - auto: course/units      # one section per unit folder, titled from its index.qmd
 
 # Defaults for each output format. Individual files choose which formats they use.

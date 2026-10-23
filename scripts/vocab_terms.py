@@ -5,7 +5,8 @@ match the vocab list. Picture and link paths are relative to the site root; the 
 adds the "../" a page needs.
 
 Each term also gets the units whose word list (course/vocab/*.yml) has it, and its example
-sentence, for the slide games ({{< snowman unit=1 >}} and the others).
+sentence, for the slide games ({{< snowman unit=1 >}} and the others). "units" lists each
+unit's number and title, for the Review games page.
 
 Writes:
     generated/vocab-terms.json
@@ -25,18 +26,19 @@ OUT = ROOT / "generated" / "vocab-terms.json"
 UNITS = ROOT / "course" / "vocab"
 
 
-def units_by_term():
-    """{"democracy": [1], ...} from each unit's word list."""
-    found = {}
+def unit_lists():
+    """({"democracy": [1], ...}, [{"unit": 1, "title": "Ancient Greece"}, ...]) from each unit's word list."""
+    found, units = {}, []
     for path in sorted(UNITS.glob("*.yml")):
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        units.append({"unit": data.get("unit"), "title": data.get("unit_title", "")})
         for t in data.get("terms") or []:
             found.setdefault(str(t.get("term", "")).strip().lower(), []).append(data.get("unit"))
-    return found
+    return found, units
 
 
 def main():
-    units = units_by_term()
+    units, unit_titles = unit_lists()
     terms = []
     with open(SRC, encoding="utf-8", newline="") as f:
         for r in csv.DictReader(f):
@@ -52,7 +54,7 @@ def main():
                 "units": units.get(r["term_en"].strip().lower(), []),
             })
     OUT.parent.mkdir(exist_ok=True)
-    write_if_changed(OUT, json.dumps({"terms": terms}, ensure_ascii=False, indent=0))
+    write_if_changed(OUT, json.dumps({"terms": terms, "units": unit_titles}, ensure_ascii=False, indent=0))
     print(f"vocab_terms.py: {len(terms)} terms")
 
 

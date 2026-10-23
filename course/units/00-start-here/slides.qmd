@@ -237,7 +237,7 @@ Each one is a working example in this course. Click to jump there.
 
 ::: {.feature-list}
 ::: {.new-features}
-[New]{.new-badge} 🎮 **Games:** [⛄ Snowman](../01-ancient-greece/review-games-slides.html#/word-1) · [🖼️ Picture reveal](../01-ancient-greece/review-games-slides.html#/what-is-it) · [🏆 Jeopardy](../01-ancient-greece/review-games-slides.html#/ancient-greece) · [⚡ Quick-fire](../01-ancient-greece/review-games-slides.html#/greece-review)<br>🧰 **Toolbox** on every slide (press **W**): name picker, scoreboard, noise meter and more
+[New]{.new-badge} 🎮 **Games:** [⛄ Snowman](../01-ancient-greece/review-games-slides.html#/word-1) · [🖼️ Picture reveal](../01-ancient-greece/review-games-slides.html#/what-is-it) · [🏆 Jeopardy](../01-ancient-greece/review-games-slides.html#/ancient-greece) · [⚡ Quick-fire](../01-ancient-greece/review-games-slides.html#/greece-review)<br>🎲 **Review games:** [any game, any unit, ready to play](../review-games.html)<br>🧰 **Toolbox** on every slide (press **W**): name picker, scoreboard, noise meter and more
 :::
 
 :::: {.columns}

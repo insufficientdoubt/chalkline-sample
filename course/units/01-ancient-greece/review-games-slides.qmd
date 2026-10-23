@@ -158,7 +158,7 @@ From unit 1's vocab, 3 teams, with a 🔀 button:
 ::::
 
 ::: notes
-The team whose turn it is (filled in, with ▶) chooses a square. Read the clue, give the team time to answer, then tap **Show the answer** and mark it **✓ Right** (the team gets the points) or **✗ Wrong**. Either way the turn passes to the next team. Tap a team to give it the turn; − and + change the number of teams (2 to 4). When every square is used, the game shows the winner. `teams="0"` turns teams and scores off.
+The team whose turn it is (filled in, with ▶) chooses a square. Read the clue, give the team time to answer, then tap **Show the answer** and mark it **✓ Right** (the team gets the points) or **✗ Wrong**. Either way the turn passes to the next team. The scores are under the board: tap a team's name to rename it, tap its score to change it, or tap the team anywhere else to give it the turn. − and + change the number of teams (2 to 4). When every square is used, the game shows the winner. `teams="0"` turns teams and scores off.
 
 Each category is a **bold** line; under it, one line per clue: the clue, a `|`, then the answer. The first clue is worth 100, the next 200, and so on.
 :::
