@@ -78,6 +78,7 @@ const ICONS = {
   open: '<path d="M14 4h6v6M20 4L10 14"/><path d="M18 14v6H4V6h6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   download: '<path d="M12 4v11M7 10l5 5 5-5M5 19h14"/>',
+  pen: '<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
   text: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
   zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6M10.5 7.5v6"/>',
   zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6"/>',
@@ -387,7 +388,7 @@ class Viewer {
     const nav = el("div", "pdfv-bar");
     nav.append(this.prev, this.count, this.next, zoomBar(this), el("span", "pdfv-title", this.title),
       button("big", "Open large", () => popup.open(this.url, this.title, this.n)),
-      downloadButton(() => this.url), openLink(() => this.url));
+      downloadMenu(() => this.url));
     root.replaceChildren(...(root.dataset.ink === "false" ? [] : [penBar(this)]), this.stage, nav);
   }
   async start() {
@@ -406,20 +407,64 @@ class Viewer {
   refresh() { return this.go(this.n); }
 }
 
-function openLink(getUrl) {
-  return button("open", "Open the PDF in a new tab", () => window.open(getUrl(), "_blank", "noopener"), "pdfv-openlink");
+// "⬇ Download": a menu with the choices spelled out (with my notes / original / open in a new tab)
+function downloadMenu(getUrl) {
+  const b = button("download", "Download", () => (menu.isConnected ? close() : open()), "pdfv-wide");
+  b.append(el("span", "pdfv-btn-label", "Download"));
+  b.setAttribute("aria-haspopup", "menu");
+  const menu = el("div", "pdfv-menu");
+  menu.setAttribute("role", "menu");
+  const item = (icon, label, note, act) => {
+    const i = el("button", "pdfv-menu-item");
+    i.type = "button";
+    i.setAttribute("role", "menuitem");
+    i.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true">' + ICONS[icon] + "</svg>";
+    const words = el("span");
+    words.append(el("strong", "", label), el("small", "", note));
+    i.append(words);
+    i.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      close();
+      try { await act(getUrl()); } catch (err) {
+        console.warn("pdf-viewer: download", err);
+        alert("Sorry, this PDF couldn't be saved: " + err.message);
+      }
+    });
+    menu.append(i);
+  };
+  item("pen", "With my notes", "The PDF with everything drawn or typed on it", downloadWithInk);
+  item("download", "Original", "The PDF as printed, without notes", (url) => saveFile(url, fileName(url) + ".pdf"));
+  item("open", "Open in a new tab", "To read or print it in the browser", (url) => window.open(url, "_blank", "noopener"));
+  const outside = (e) => { if (!menu.contains(e.target) && !b.contains(e.target)) close(); };
+  const esc = (e) => { if (e.key === "Escape") { e.stopImmediatePropagation(); close(); } };
+  function open() {
+    menu.style.fontFamily = getComputedStyle(document.querySelector(".reveal") || document.body).fontFamily;
+    document.body.append(menu);
+    const r = b.getBoundingClientRect(), m = menu.getBoundingClientRect();
+    const up = r.top - m.height - 6 > 0 && r.bottom + m.height + 6 > innerHeight;   // above the button if there's no room below
+    menu.style.left = Math.max(8, Math.min(r.right - m.width, innerWidth - m.width - 8)) + "px";
+    menu.style.top = (up ? r.top - m.height - 6 : r.bottom + 6) + "px";
+    b.setAttribute("aria-expanded", "true");
+    document.addEventListener("pointerdown", outside, true);
+    addEventListener("keydown", esc, true);
+  }
+  function close() {
+    menu.remove();
+    b.setAttribute("aria-expanded", "false");
+    document.removeEventListener("pointerdown", outside, true);
+    removeEventListener("keydown", esc, true);
+  }
+  return b;
 }
 
-function downloadButton(getUrl) {
-  const b = button("download", "Download the PDF with your ink", async () => {
-    b.disabled = true;
-    try { await downloadWithInk(getUrl()); } catch (e) {
-      console.warn("pdf-viewer: download", e);
-      alert("Sorry, this PDF couldn't be saved with the ink: " + e.message);
-    }
-    b.disabled = false;
-  });
-  return b;
+const fileName = (url) => decodeURIComponent(new URL(url).pathname.split("/").pop()).replace(/\.pdf$/i, "");
+function saveFile(href, name) {
+  const a = el("a");
+  a.href = href;
+  a.download = name;
+  document.body.append(a);
+  a.click();
+  a.remove();
 }
 
 // ---- Download: the PDF with the ink added to its pages, made in the browser by pdf-lib (MIT,
@@ -438,14 +483,9 @@ async function downloadWithInk(url) {
     const strokes = readInk(url, i + 1);
     if (strokes.length) await inkOnPage(pdf, pages[i], strokes, font, lib);
   }
-  const blob = new Blob([await pdf.save()], { type: "application/pdf" });
-  const a = el("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = decodeURIComponent(new URL(url).pathname.split("/").pop()).replace(/\.pdf$/i, "") + "-annotated.pdf";
-  document.body.append(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  const href = URL.createObjectURL(new Blob([await pdf.save()], { type: "application/pdf" }));
+  saveFile(href, fileName(url) + "-with-notes.pdf");
+  setTimeout(() => URL.revokeObjectURL(href), 10000);
 }
 
 // The ink is stored as fractions of the page as shown (pdf.js shows the crop box, turned by the page's
@@ -506,7 +546,7 @@ class Gallery {
     this.thumbs = [];
     const head = el("div", "pdfv-bar");
     this.count = el("span", "pdfv-count");
-    head.append(el("span", "pdfv-title", this.title), this.count, downloadButton(() => this.url), openLink(() => this.url));
+    head.append(el("span", "pdfv-title", this.title), this.count, downloadMenu(() => this.url));
     root.replaceChildren(this.strip, head);
   }
   async start() {
@@ -549,7 +589,7 @@ const popup = {
     this.page = new PageView(null, this);
     this.stage.append(this.page.el);
     head.insertBefore(zoomBar(this), head.lastChild);
-    head.insertBefore(downloadButton(() => this.url), head.lastChild);
+    head.insertBefore(downloadMenu(() => this.url), head.lastChild);
     const grip = el("div", "pdfv-grip");
     grip.title = "Drag to resize";
     root.append(head, penBar(this), this.stage, grip);
@@ -587,7 +627,7 @@ const popup = {
     });
 
     addEventListener("keydown", (e) => {
-      if (!this.isOpen || e.target.closest("input, textarea")) return;
+      if (!this.isOpen || e.target.closest("input, textarea") || document.querySelector(".pdfv-menu")) return;   // typing, or the Download menu is open
       const zoomKey = { "+": 1, "=": 1, "-": -1 }[e.key];
       if (zoomKey || e.key === "0") {
         if (zoomKey) this.zoomStep(zoomKey);

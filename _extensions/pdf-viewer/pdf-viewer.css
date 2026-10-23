@@ -28,7 +28,7 @@
 .reveal .pdfv-viewer { height: 560px; --pdfv-btn: 40px; }   /* a reveal.js slide is 700px tall */
 @container (max-width: 520px) {   /* narrow: room for the buttons (⤢ and ⬇ are still there) */
   .pdfv-viewer .pdfv-title { visibility: hidden; }
-  .pdfv-viewer .pdfv-openlink { display: none; }
+  .pdfv-viewer .pdfv-btn-label { display: none; }
 }
 
 .pdfv-fallback { margin: auto; }
@@ -83,6 +83,43 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* a button with a word on it (Download) */
+.pdfv-btn.pdfv-wide { width: auto; padding: 0 12px; gap: 6px; font: inherit; font-size: 16px; font-weight: 600; }
+
+/* the Download menu: each choice spelled out */
+.pdfv-menu {
+  position: fixed;
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 300px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #c6d0da;
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  font-family: inherit;
+}
+.pdfv-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;            /* easy to tap */
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: #1F2933;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+}
+.pdfv-menu-item:hover, .pdfv-menu-item:focus-visible { background: #ebf7fd; }
+.pdfv-menu-item svg { flex: none; width: 24px; height: 24px; fill: none; stroke: #003477; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.pdfv-menu-item strong { display: block; font-size: 17px; color: #003477; }
+.pdfv-menu-item small { display: block; font-size: 14px; color: #5b6774; }
+
 /* pens: a dot of their color; the highlighter a wide bar */
 .pdfv-swatch svg { display: none; }
 .pdfv-swatch::before {

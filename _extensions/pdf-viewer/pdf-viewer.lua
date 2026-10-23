@@ -24,7 +24,7 @@ when it is built, so it can be a PDF that the same render makes (a worksheet's o
 Pens: pen, highlighter, text (tap the page, type, Enter), eraser, undo and Clear. Ink stays on
 the page in this browser until Clear. Zoom: − 100% + (or Ctrl/⌘ + scroll, a trackpad pinch, and
 + − 0 in the large window); when zoomed in, scroll or drag to move around.
-⬇ downloads the PDF with the ink added (pdf-lib 1.17.1, pdf-lib.esm.min.js, MIT: LICENSE-pdf-lib.txt;
+⬇ Download: with my notes (the PDF with the ink added), the original, or open in a new tab (pdf-lib 1.17.1, pdf-lib.esm.min.js, MIT: LICENSE-pdf-lib.txt;
 it loads only when someone presses it).
 In other formats (PDF, Word) you get a plain link.
 ]]
