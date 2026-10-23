@@ -14,16 +14,35 @@ title-slide-attributes:
 
 # Snowman ⛄
 
+:::: {.columns .game-intro}
+::: {.column width="38%"}
 Guess the word, one letter at a time.
 
 Every wrong letter melts part of the snowman!
 
 Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+A vocab word (the hint is its picture and meaning):
+{{</* snowman "democracy" */>}}
+
+Your own word, hint and picture:
+{{</* snowman "Parthenon" hint="A temple in Athens"
+    image="images/parthenon-west.jpg" */>}}
+
+A random word from unit 1, with a 🔀 button:
+{{</* snowman unit=1 */>}}
+```
+:::
+::::
 
 ::: notes
 Tap the letters on the board, or type them on the keyboard. **💡 Hint** shows the picture and the meaning.
 
-To make your own: `{{{< snowman "democracy" >}}}` (a vocab word), `{{{< snowman "Parthenon" hint="..." image="images/..." >}}}` (your own word), or `{{{< snowman unit=1 >}}}` (a random word from the unit, with a **🔀 New word** button). These slides go down (↓): a word, then a slide about it, then the next word.
+These slides go down (↓): a word, then a slide about it, then the next word. To do the same, start a column with a `#` heading and put each slide under it with `##`.
 :::
 
 ## Word 1
@@ -72,16 +91,33 @@ A random word from this unit. Press **🔀 New word** to play again with another
 
 # Picture reveal 🖼️
 
+:::: {.columns .game-intro}
+::: {.column width="38%"}
 A picture is hiding under the tiles.
 
 Open one tile at a time. Who can guess it first?
 
 Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+A vocab word's picture:
+{{</* picture-reveal "aqueduct" */>}}
+
+Your own picture, with 9 tiles:
+{{</* picture-reveal "theater" tiles=9
+    image="images/epidaurus-theatre.jpg" */>}}
+
+A random picture from unit 1, with a 🔀 button:
+{{</* picture-reveal unit=1 */>}}
+```
+:::
+::::
 
 ::: notes
-Fewer tiles opened = a better guess. Tap **Show the answer** when someone gets it.
-
-To make your own: `{{{< picture-reveal "aqueduct" >}}}` (a vocab word's picture), `{{{< picture-reveal "Parthenon" image="images/parthenon-west.jpg" >}}}` (your own picture), or `{{{< picture-reveal unit=1 >}}}` (random, with **🔀 New picture**). Add `tiles=9` or `tiles=25` for fewer or more tiles.
+Fewer tiles opened = a better guess. Tap **Show the answer** when someone gets it. `tiles=9`, `16` (the usual) or `25`.
 :::
 
 ## What is it?
@@ -94,16 +130,37 @@ To make your own: `{{{< picture-reveal "aqueduct" >}}}` (a vocab word's picture)
 
 # Jeopardy 🏆
 
+:::: {.columns .game-intro}
+::: {.column width="38%"}
 Choose a category and a number.
 
 Bigger numbers are harder questions.
 
 Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+::: {.jeopardy}
+- **Places**
+  - Land with water on three sides | a peninsula
+  - This city had the first democracy | Athens
+- **Gods**
+  - The king of the gods | Zeus
+  - The goddess of wisdom | Athena
+:::
+
+From unit 1's vocab, with a 🔀 button:
+{{</* jeopardy unit=1 */>}}
+```
+:::
+::::
 
 ::: notes
 Teams take turns choosing a square. Read the clue, give the team time to answer, then tap **Show the answer**.
 
-To make your own board, write a list: each category in **bold**, and under it one line per clue: the clue, a `|`, then the answer. The first clue is worth 100, the next 200, and so on. `{{{< jeopardy unit=1 >}}}` makes a board from the unit's vocab instead, with **🔀 New board**.
+Each category is a **bold** line; under it, one line per clue: the clue, a `|`, then the answer. The first clue is worth 100, the next 200, and so on.
 :::
 
 ## Ancient Greece
@@ -137,16 +194,33 @@ To make your own board, write a list: each category in **bold**, and under it on
 
 # Quick-fire ⚡
 
+:::: {.columns .game-intro}
+::: {.column width="38%"}
 A question pops up. Answer fast!
 
 The teacher points to you. Say the answer out loud.
 
 Press **↓** to play.
+:::
+::: {.column width="62%"}
+[Make your own]{.code-label}
+
+```{.markdown code-line-numbers="false"}
+::: {.trivia title="Greece review" seconds="10"}
+- Which city had the first democracy? | Athens
+- The Olympic Games honored which god? | Zeus
+:::
+
+From unit 1's vocab, with a 🔀 button:
+{{</* trivia unit=1 */>}}
+```
+:::
+::::
 
 ::: notes
 Point to a student, let them answer, then tap **Show the answer** and mark it **✓ Right** or **✗ Wrong**. The game keeps the score.
 
-To make your own: `::: {.trivia title="..." seconds="10"}`, then one line per question: the question, a `|`, then the answer (one or two words is best). `seconds="0"` turns the timer off. `{{{< trivia unit=1 >}}}` asks about the unit's vocab instead, with **🔀 New questions**.
+One line per question: the question, a `|`, then the answer (one or two words is best). `seconds="0"` turns the timer off.
 :::
 
 ## Greece review
@@ -162,6 +236,16 @@ To make your own: `::: {.trivia title="..." seconds="10"}`, then one line per qu
 ## Vocab quick-fire
 
 {{< trivia unit=1 title="Vocab quick-fire" >}}
+
+```{=html}
+<style>
+  .reveal .game-intro { align-items: center; margin-top: 0.4em; }
+  .reveal .game-intro p { margin: 0 0 0.6em; }
+  .reveal .game-intro pre { margin: 0; font-size: 0.6em; border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 20, 60, 0.12); }
+  .reveal .game-intro pre code { max-height: none; line-height: 1.45; white-space: pre; }
+  .reveal .code-label { display: inline-block; margin-bottom: 0.3em; padding: 0.05em 0.7em; border-radius: 999px; background: #003477; color: #fff; font-size: 0.6em; font-weight: 700; }
+</style>
+```
 
 # Picture credits {.credits}
 

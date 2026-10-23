@@ -232,6 +232,8 @@ Put `{{< timer 20 >}}` on a slide. It has Start/Pause, Reset and +1 min buttons 
 
 ## Clock and transitions
 
+When a slide has another slide below it (a column of slides: a `#` heading with `##` slides under it), a bouncing **↓** button shows at the bottom of the screen; click it or press ↓. Turn it off for one deck with `down-arrow: false`.
+
 Every slide deck shows the current time in the bottom-left corner. Press **K** to hide or show it (the choice is remembered on that computer), or turn it off for one deck with `clock: false` in its labels. Slides fade from one to the next; that's set under `revealjs:` in `_quarto.yml`.
 
 Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen.

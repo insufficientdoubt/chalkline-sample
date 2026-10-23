@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: A ↓ button when there's a slide below
+- **Asked for:** "add a down arrow to the slides that have a slide below them." Also "put a code box on the first page which shows the short code that generates the game" (in the Greek Word Games deck: content, no log needed).
+- **Why:** a column of slides is easy to miss: the only sign was reveal.js's small corner arrows.
+- **Changed:** `_extensions/classroom/down-arrow.html` (new): a bouncing ↓ at the bottom center whenever the slide has one below it. Click it or press ↓; it hides in the overview, speaker-view previews and the slide PDFs. The running timer's small box moves up above it. `_extensions/classroom/filter.lua`: adds it to every deck (`down-arrow: false` turns it off). `README.md`: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: AI instructions: real photos first for vocab pictures
 - **Asked for:** "When adding vocabulary, prefer high quality creative Commons or public source images. Wikimedia, unsplash, etc. generate original images when the public source images don't provide a high quality image that is distinct, clear, and memorable ... New one should be reserved for cases where we don't have a good way to illustrate the point."
 - **Why:** many vocab words are clearer and more memorable as a real image than as a generated drawing.
