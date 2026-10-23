@@ -6,15 +6,16 @@
     Name picker     picks a student from a class list, everyone once before anyone twice
     Groups          random groups from a class list (groups of n, or n groups)
     Scoreboard      points for teams (names, colors, + and −); narrow, it stacks each team
-    Voice level     0 Silent to 4 Presenter
+    Voice level     0 Silent to 4 Presenter; 🔊 adds a noise meter: the room's sound level from
+                    the microphone, a "too loud" line with an alarm and a red flash, and a count
+    Slide size      the space around the slides, and standard or wide (16:9), on this screen
     Traffic light   red, yellow, green
-    Noise meter     the room's sound level from the microphone, with a "too loud" line,
-                    and how many times the class went over it
     QR code         a code for this deck's address (or any link) for students' tablets
     Stopwatch       counts up
     Dice            1 to 6 dice
 
-  Drag a panel by its title bar; drag the corner to make it bigger (everything inside grows).
+  Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
+  Narrow panels (scoreboard, voice level) change to a layout that stacks.
   Which panels are open, where they are, the scores and the other settings are remembered in
   this browser, so they come back in the next slide deck. Nothing is sent anywhere. Class lists
   too: they stay in this browser, never in the course files or on the website.
@@ -54,10 +55,11 @@
     return el;
   }
 
-  function beep(freq, length, volume) {
+  function beep(freq, length, volume, type, delay) {
     try {
       const ctx = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)());
-      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
+      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + (delay || 0);
+      o.type = type || "sine";
       o.frequency.value = freq;
       g.gain.setValueAtTime(volume || 0.15, t);
       g.gain.exponentialRampToValueAtTime(0.001, t + length);
@@ -177,7 +179,7 @@
 
   // Who's here today: tap the students who are away (it starts fresh each day).
   function attendance(k, done) {
-    const grid = h("div", { class: "ct-here-grid" });
+    const grid = h("div", { class: "ct-here-grid ct-nodrag" });
     function paint() {
       const away = absentToday(k);
       grid.textContent = "";
@@ -289,7 +291,7 @@
           const bar = classBar(c, function (n) { show("edit", n); });
           if (m === "here") { body.append(bar, attendance(k, function () { show("groups"); })); return; }
           const s = load("groups", { by: "size", n: 4 });
-          const cards = h("div", { class: "ct-group-cards" });
+          const cards = h("div", { class: "ct-group-cards ct-nodrag" });
           // Columns and rows from the number of groups, so the text can be as big as the panel allows.
           const count = (k.groups || []).length, cols = count <= 4 ? Math.max(count, 1) : count <= 6 ? 3 : count <= 8 ? 4 : 5;
           cards.style.setProperty("--cols", cols);
@@ -385,8 +387,10 @@
     },
 
     voice: {
-      title: "Voice level", icon: "🤫", w: 340, h: 260, minW: 260, minH: 180, keys: ["voice"],
-      build: function (body) {
+      title: "Voice level", icon: "🤫", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count"],
+      build: function (body, panel, grow) {
+        // The voice level, and (🔊) a noise meter under it: the room's sound level from the microphone,
+        // a "too loud" line, an alarm and a red flash over the line, and a count of the times.
         const LEVELS = [
           { icon: "🤫", label: "Silent", color: "#C8372D" },
           { icon: "💬", label: "Whisper", color: "#ff8c0f" },
@@ -394,20 +398,162 @@
           { icon: "👥", label: "Group talk", color: "#2e9e4f" },
           { icon: "🎤", label: "Presenter", color: "#0087ff" },
         ];
+        const NOISE_HEIGHT = 170;   // the panel grows by this much when the noise meter is turned on
         const big = h("div", { class: "ct-voice-big" });
         const picks = h("div", { class: "ct-voice-picks" });
         LEVELS.forEach(function (l, i) {
           picks.append(h("button", { class: "ct-voice-pick", style: "--lvl:" + l.color, title: l.label, text: i,
             onclick: function () { save("voice", i); paint(); } }));
         });
-        body.append(big, picks);
+        let noiseOn = load("noise-on", false);
+        const toggle = h("button", { class: "ct-voice-pick ct-noise-toggle", title: "Noise meter", "aria-label": "Noise meter", text: "🔊",
+          onclick: function () {
+            noiseOn = !noiseOn;
+            save("noise-on", noiseOn);
+            grow(noiseOn ? NOISE_HEIGHT : -NOISE_HEIGHT);
+            if (noiseOn) start(); else stop();
+            paint();
+          } });
+        picks.append(toggle);
+
+        let limit = load("noise-limit", 60), alarmOn = load("noise-beep", true), times = load("noise-count", 0);
+        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false;
+        const face = h("span", { class: "ct-noise-face", text: "🙂" });
+        const fill = h("div", { class: "ct-noise-fill" });
+        const meter = h("div", { class: "ct-noise-meter" }, fill, h("div", { class: "ct-noise-line" }));
+        const status = h("span", { class: "ct-noise-status", text: "Press Start to use the microphone." });
+        // How many times the class went over the line (kept until Reset, also in the next deck).
+        const count = h("span", { class: "ct-noise-count", title: "Times it was too loud" });
+        const resetCount = sureButton("Reset", function () { times = 0; save("noise-count", 0); paintCount(); });
+        resetCount.classList.add("ct-small");
+        const go = h("button", { class: "ct-btn ct-primary", text: "Start", onclick: function () { stream ? stop() : start(); } });
+        const slider = h("input", { type: "range", min: 10, max: 95, value: limit, "aria-label": "Too loud at",
+          oninput: function () { limit = +slider.value; save("noise-limit", limit); paintLine(); } });
+        const alarmBtn = h("button", { class: "ct-btn ct-small", title: "Alarm when too loud", onclick: function () {
+          alarmOn = !alarmOn; save("noise-beep", alarmOn); alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        } });
+        alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        const noise = h("div", { class: "ct-noise" },
+          h("div", { class: "ct-noise-top" }, face, meter),
+          h("div", { class: "ct-noise-info" }, status, h("span", { class: "ct-noise-tally" }, count, resetCount)),
+          h("div", { class: "ct-foot" }, go, h("label", { class: "ct-noise-limit" }, "Too loud at ", slider), alarmBtn));
+        body.append(big, picks, noise);
+
         function paint() {
           const i = load("voice", 0), l = LEVELS[i] || LEVELS[0];
           big.style.setProperty("--lvl", l.color);
           big.textContent = "";
           big.append(h("span", { class: "ct-voice-num", text: i }), h("span", { class: "ct-voice-icon", text: l.icon }),
             h("span", { class: "ct-voice-label", text: l.label }));
-          Array.prototype.forEach.call(picks.children, function (b, j) { b.classList.toggle("ct-on", j === i); });
+          Array.prototype.forEach.call(picks.children, function (b, j) { b.classList.toggle("ct-on", j === i || (b === toggle && noiseOn)); });
+          noise.hidden = !noiseOn;
+        }
+        function paintCount() { count.textContent = "Times too loud: " + times; }
+        function paintLine() { meter.style.setProperty("--limit", limit + "%"); }
+        function fmt(ms) {
+          const s = Math.floor(ms / 1000);
+          return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+        }
+        function alarm() {
+          [0, 0.22, 0.44].forEach(function (t) { beep(988, 0.18, 0.5, "square", t); });
+        }
+        async function start() {
+          if (stream) return;
+          if (!window.isSecureContext || !navigator.mediaDevices) {
+            status.textContent = "The microphone works only on http://localhost or an https:// site.";
+            return;
+          }
+          try {
+            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+          } catch (e) {
+            status.textContent = e.name === "NotAllowedError"
+              ? "The browser blocked the microphone. Allow it with the icon in the address bar."
+              : "No microphone found.";
+            return;
+          }
+          if (!noiseOn) { stop(); return; }   // turned off while the browser was asking
+          ctx = new (window.AudioContext || window.webkitAudioContext)();
+          const analyser = ctx.createAnalyser();
+          analyser.fftSize = 2048;
+          ctx.createMediaStreamSource(stream).connect(analyser);
+          const data = new Float32Array(analyser.fftSize);
+          quietSince = Date.now(); loudSince = 0; loud = false;
+          go.textContent = "Stop";
+          function frame() {
+            analyser.getFloatTimeDomainData(data);
+            let sum = 0;
+            for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
+            const db = 20 * Math.log10(Math.sqrt(sum / data.length) || 1e-6);   // about −60 (quiet) to 0 (very loud)
+            const now = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
+            level = now > level ? level * 0.6 + now * 0.4 : level * 0.94 + now * 0.06;   // rise fast, fall slowly
+            const t = Date.now();
+            if (level > limit) {
+              if (!loudSince) loudSince = t;
+              if (!loud && t - loudSince > 1000) {
+                loud = true;
+                times = load("noise-count", 0) + 1;
+                save("noise-count", times);
+                paintCount();
+                if (alarmOn) alarm();
+              }
+            } else {
+              loudSince = 0;
+              if (loud) { loud = false; quietSince = t; }
+            }
+            meter.style.setProperty("--pct", level + "%");
+            const zone = level > limit ? "loud" : level > limit * 0.75 ? "near" : "ok";
+            meter.dataset.zone = zone;
+            face.textContent = loud ? "😣" : zone === "near" ? "😐" : "🙂";
+            panel.classList.toggle("ct-loud", loud);
+            status.textContent = loud ? "Too loud!" : "Quiet for " + fmt(t - quietSince);
+            raf = requestAnimationFrame(frame);
+          }
+          frame();
+        }
+        function stop() {
+          cancelAnimationFrame(raf);
+          if (stream) stream.getTracks().forEach(function (tr) { tr.stop(); });
+          if (ctx) ctx.close();
+          stream = ctx = null; level = 0;
+          meter.style.setProperty("--pct", "0%");
+          face.textContent = "🙂";
+          panel.classList.remove("ct-loud");
+          go.textContent = "Start";
+          status.textContent = "Microphone off.";
+        }
+        paint(); paintCount(); paintLine();
+        return {
+          refresh: function () { times = load("noise-count", 0); paintCount(); paint(); },
+          close: stop,
+        };
+      },
+    },
+
+    slide: {
+      title: "Slide size", icon: "📐", w: 340, h: 190, minW: 220, minH: 170, keys: ["slide"],
+      build: function (body) {
+        // Changes how this screen shows the slides: the space around them, and their shape.
+        // Saved as { margin: 0 to 0.3, wide: true for 16:9 }; the deck files don't change.
+        const label = h("div", { class: "ct-slide-label" });
+        const slider = h("input", { type: "range", min: 0, max: 30, "aria-label": "Space around the slide", oninput: function () {
+          const s = slideSetting();
+          s.margin = +slider.value / 100;
+          save("slide", s); applySlide(s); paint();
+        } });
+        const normal = h("button", { class: "ct-btn ct-small", text: "Standard", onclick: function () { setWide(false); } });
+        const wide = h("button", { class: "ct-btn ct-small", text: "Wide (16:9)", onclick: function () { setWide(true); } });
+        body.append(label, h("div", { class: "ct-slide-range" }, slider),
+          h("div", { class: "ct-foot" }, normal, wide, h("button", { class: "ct-btn ct-small", text: "Reset", onclick: function () {
+            try { localStorage.removeItem(PREFIX + "slide"); } catch (e) { /* private window */ }
+            applySlide(slideSetting()); paint();
+          } })));
+        function setWide(on) { const s = slideSetting(); s.wide = on; save("slide", s); applySlide(s); paint(); }
+        function paint() {
+          const s = slideSetting();
+          slider.value = Math.round(s.margin * 100);
+          label.textContent = "Space around the slide: " + Math.round(s.margin * 100) + "%";
+          normal.classList.toggle("ct-primary", !s.wide);
+          wide.classList.toggle("ct-primary", !!s.wide);
         }
         paint();
         return { refresh: paint };
@@ -439,105 +585,6 @@
         }
         paint();
         return { refresh: paint };
-      },
-    },
-
-    noise: {
-      title: "Noise meter", icon: "🔊", w: 420, h: 260, minW: 320, minH: 210, keys: ["noise-count"],
-      build: function (body, panel) {
-        let limit = load("noise-limit", 60), beepOn = load("noise-beep", false), times = load("noise-count", 0);
-        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false;
-        const face = h("span", { class: "ct-noise-face", text: "🙂" });
-        const fill = h("div", { class: "ct-noise-fill" });
-        const line = h("div", { class: "ct-noise-line" });
-        const meter = h("div", { class: "ct-noise-meter" }, fill, line);
-        const status = h("span", { class: "ct-noise-status", text: "Press Start to use the microphone." });
-        // How many times the class went over the line (kept until Reset, also in the next deck).
-        const count = h("span", { class: "ct-noise-count", title: "Times it was too loud" });
-        function paintCount() { count.textContent = "Times too loud: " + times; }
-        paintCount();
-        const resetCount = sureButton("Reset", function () { times = 0; save("noise-count", 0); paintCount(); });
-        resetCount.classList.add("ct-small");
-        const go = h("button", { class: "ct-btn ct-primary", text: "Start", onclick: function () { stream ? stop() : start(); } });
-        const slider = h("input", { type: "range", min: 10, max: 95, value: limit, "aria-label": "Too loud at",
-          oninput: function () { limit = +slider.value; save("noise-limit", limit); paintLine(); } });
-        const beepBtn = h("button", { class: "ct-btn", title: "Beep when too loud", onclick: function () {
-          beepOn = !beepOn; save("noise-beep", beepOn); beepBtn.textContent = beepOn ? "🔔" : "🔕";
-        } });
-        beepBtn.textContent = beepOn ? "🔔" : "🔕";
-        body.append(h("div", { class: "ct-noise-top" }, face, meter),
-          h("div", { class: "ct-noise-info" }, status, h("span", { class: "ct-noise-tally" }, count, resetCount)),
-          h("div", { class: "ct-foot" }, go, h("label", { class: "ct-noise-limit" }, "Too loud at ", slider), beepBtn));
-        function paintLine() { line.style.left = limit + "%"; }
-        paintLine();
-
-        function fmt(ms) {
-          const s = Math.floor(ms / 1000);
-          return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-        }
-        async function start() {
-          if (!window.isSecureContext || !navigator.mediaDevices) {
-            status.textContent = "The microphone works only on http://localhost or an https:// site.";
-            return;
-          }
-          try {
-            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
-          } catch (e) {
-            status.textContent = e.name === "NotAllowedError"
-              ? "The browser blocked the microphone. Allow it with the icon in the address bar."
-              : "No microphone found.";
-            return;
-          }
-          ctx = new (window.AudioContext || window.webkitAudioContext)();
-          const analyser = ctx.createAnalyser();
-          analyser.fftSize = 2048;
-          ctx.createMediaStreamSource(stream).connect(analyser);
-          const data = new Float32Array(analyser.fftSize);
-          quietSince = Date.now(); loudSince = 0; loud = false;
-          go.textContent = "Stop";
-          function frame() {
-            analyser.getFloatTimeDomainData(data);
-            let sum = 0;
-            for (let i = 0; i < data.length; i++) sum += data[i] * data[i];
-            const db = 20 * Math.log10(Math.sqrt(sum / data.length) || 1e-6);   // about −60 (quiet) to 0 (very loud)
-            const now = Math.min(100, Math.max(0, (db + 60) / 60 * 100));
-            level = now > level ? level * 0.6 + now * 0.4 : level * 0.94 + now * 0.06;   // rise fast, fall slowly
-            const t = Date.now();
-            if (level > limit) {
-              if (!loudSince) loudSince = t;
-              if (!loud && t - loudSince > 1000) {
-                loud = true;
-                times = load("noise-count", 0) + 1;
-                save("noise-count", times);
-                paintCount();
-                if (beepOn) beep(660, 0.5, 0.2);
-              }
-            } else {
-              loudSince = 0;
-              if (loud) { loud = false; quietSince = t; }
-            }
-            fill.style.width = level + "%";
-            const zone = level > limit ? "loud" : level > limit * 0.75 ? "near" : "ok";
-            meter.dataset.zone = zone;
-            face.textContent = loud ? "😣" : zone === "near" ? "😐" : "🙂";
-            panel.classList.toggle("ct-loud", loud);
-            status.textContent = loud ? "Too loud!" : "Quiet for " + fmt(t - quietSince);
-            raf = requestAnimationFrame(frame);
-          }
-          frame();
-        }
-        function stop() {
-          cancelAnimationFrame(raf);
-          if (stream) stream.getTracks().forEach(function (tr) { tr.stop(); });
-          if (ctx) ctx.close();
-          stream = ctx = null; level = 0;
-          fill.style.width = "0";
-          face.textContent = "🙂";
-          panel.classList.remove("ct-loud");
-          go.textContent = "Start";
-          status.textContent = "Microphone off.";
-        }
-        return { close: stop, refresh: function () { times = load("noise-count", 0); paintCount(); } };
       },
     },
 
@@ -670,6 +717,24 @@
     },
   };
 
+  /* ---------------- Slide size (applied in every deck, even with its panel closed) ---------------- */
+
+  const DECK = window.Reveal ? Reveal.getConfig() : {};
+  const DECK_SIZE = { margin: DECK.margin == null ? 0.04 : DECK.margin, width: DECK.width || 960, height: DECK.height || 700 };
+  function slideSetting() { return load("slide", { margin: DECK_SIZE.margin, wide: false }); }
+  function applySlide(s) {
+    if (!window.Reveal) return;
+    Reveal.configure({
+      margin: s.margin,
+      width: s.wide ? Math.round(DECK_SIZE.height * 16 / 9) : DECK_SIZE.width,   // same height: nothing new to overflow
+      height: DECK_SIZE.height,
+    });
+  }
+  if (window.Reveal && load("slide", null)) {
+    if (Reveal.isReady()) applySlide(slideSetting());
+    else Reveal.on("ready", function () { applySlide(slideSetting()); });
+  }
+
   /* ---------------- Panels ---------------- */
 
   const layer = h("div", { id: "ct-layer" });
@@ -696,14 +761,21 @@
     panel.style.width = p.w + "px"; panel.style.height = p.h + "px";
   }
 
-  // Drag `handle` to change the panel's position (move) or size (resize).
+  // Move a panel by dragging any empty part of it (not a button, field or list that scrolls);
+  // the drag starts after a few pixels, so taps still work. Resize it with the corner grip.
+  const NO_DRAG = "button, input, select, textarea, label, a, .ct-nodrag, .ct-grip";
   function dragger(panel, id, handle, resize) {
     handle.addEventListener("pointerdown", function (e) {
-      if (e.button !== 0 || e.target.closest("button")) return;
+      if (e.button !== 0 || (!resize && e.target.closest(NO_DRAG))) return;
       e.preventDefault();
-      handle.setPointerCapture(e.pointerId);
       const p = layout.pos[id], sx = e.clientX, sy = e.clientY, start = Object.assign({}, p);
+      let dragging = resize;
       function move(ev) {
+        if (!dragging) {
+          if (Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) < 6) return;
+          dragging = true;
+          panel.classList.add("ct-dragging");
+        }
         if (resize) {   // the corner stays on the screen
           p.w = Math.min(start.w + ev.clientX - sx, window.innerWidth - p.x - 4);
           p.h = Math.min(start.h + ev.clientY - sy, window.innerHeight - p.y - 4);
@@ -712,14 +784,15 @@
         place(panel, clampPos(p, TOOLS[id]));
       }
       function up() {
-        handle.removeEventListener("pointermove", move);
-        handle.removeEventListener("pointerup", up);
-        handle.removeEventListener("pointercancel", up);
-        saveLayout();
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
+        panel.classList.remove("ct-dragging");
+        if (dragging) saveLayout();
       }
-      handle.addEventListener("pointermove", move);
-      handle.addEventListener("pointerup", up);
-      handle.addEventListener("pointercancel", up);
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
     });
   }
 
@@ -729,19 +802,23 @@
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
     const n = Object.keys(open).length;
     const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
-    const head = h("div", { class: "ct-head" },
-      h("span", { class: "ct-title", text: tool.icon + " " + tool.title }),
-      h("button", { class: "ct-close", "aria-label": "Close", title: "Close", text: "×", onclick: function () { closeTool(id); } }));
+    const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", text: "×", onclick: function () { closeTool(id); } });
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
-    const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title }, head, body, grip);
+    const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title },
+      h("div", { class: "ct-handle", "aria-hidden": "true" }), close, body, grip);
     panel.addEventListener("pointerdown", function () { panel.style.zIndex = ++zTop; });
     place(panel, clampPos(p, tool));
     panel.style.zIndex = ++zTop;
     layer.append(panel);
-    dragger(panel, id, head, false);
+    dragger(panel, id, panel, false);
     dragger(panel, id, grip, true);
-    open[id] = { panel: panel, api: tool.build(body, panel) || {} };
+    function grow(dh) {   // a tool that shows more (the noise meter) makes its panel taller, or shorter again
+      p.h = Math.max(tool.minH, p.h + dh);
+      place(panel, clampPos(p, tool));
+      saveLayout();
+    }
+    open[id] = { panel: panel, api: tool.build(body, panel, grow) || {} };
     saveLayout();
     paintMenu();
   }
@@ -825,7 +902,7 @@
     if (layer.parentNode !== home) home.append(layer);
   });
 
-  // Bring back the panels that were open in the last deck.
-  (layout.open || []).forEach(openTool);
+  // Bring back the panels that were open in the last deck (the old noise meter is now in Voice level).
+  (layout.open || []).map(function (id) { return id === "noise" ? "voice" : id; }).forEach(openTool);
   paintMenu();
 })();

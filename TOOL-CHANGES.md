@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Toolbox: slide size, voice level with the noise meter, windows without title bars
+- **Asked for:** "Try adding the margin tool. We can see how it works and remove later if it sucks." "Merge noise meter and voice level tools into one (set voice level, and optionally enable noise meter). Also make the warning sound louder and add a visual cue flash the whole meter box red when triggered. Like the score box, this needs a vertical version." "For the gadgets ... they don't need the top bar and label. Give them a more modern look with no name and just a light x to close them."
+- **Why:** the slide margins are narrow, and the right amount depends on the screen. Fewer, cleaner windows on the board.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: new **Slide size** tool: a slider for the space around the slide (0–30%) and Standard / Wide (16:9), applied live with `Reveal.configure`. It's saved per computer and applied in every deck, even with the window closed. Reset goes back to the deck's own size. **Voice level** now holds the noise meter: 🔊 turns it on (and makes the window taller) or off (and stops the microphone). The alarm is louder (three square-wave beeps) and on by default. An old saved "noise meter" window opens as Voice level. Windows have no title bar: drag any empty part (after 6px, so taps still work), and a light × closes them.
+  - `_extensions/classroom/toolbox/toolbox.css`: windows have a small grab bar and a light ×. When it's too loud, a red layer flashes over the whole window. Below 260px wide, the voice level stacks and the noise meter stands up. Styles for Slide size.
+  - `README.md`: the tool table and how to move windows.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Toolbox: name picker, groups, a narrow scoreboard, a noise count
 - **Asked for:** "name lists and let the teacher add more classes and quickly switch between them. Include a small note saying that this is stored in the browser so no one complains about pipl compliance." "For the group points gadget - add a vertical orientation when it's resized to be narrow. So the group name appears above the score and -/+ buttons. That way it will fit in the margin better." "For the noise meter add a function to count how many times is triggered."
 - **Why:** name pickers and group makers need class lists, and the students have no class numbers. Lists must stay off the public site and out of the repo (PIPL). The scoreboard should fit in the slide margin.

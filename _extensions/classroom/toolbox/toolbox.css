@@ -83,35 +83,45 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 16px;
   background: #fff;
-  box-shadow: 0 8px 30px rgba(0, 20, 60, 0.3), 0 0 0 1px rgba(0, 52, 119, 0.12);
-}
-.ct-head {
-  display: flex;
-  align-items: center;
-  flex: none;
-  height: 36px;
-  padding: 0 4px 0 12px;
-  background: var(--ct-navy);
-  color: #fff;
+  box-shadow: 0 10px 32px rgba(0, 20, 60, 0.22), 0 0 0 1px rgba(0, 52, 119, 0.1);
   cursor: grab;
-  touch-action: none;
+  touch-action: none;       /* drag with a finger moves the panel, not the page */
   user-select: none;
 }
-.ct-head:active { cursor: grabbing; }
-.ct-title { flex: 1; font-size: 17px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ct-panel.ct-dragging { cursor: grabbing; box-shadow: 0 16px 44px rgba(0, 20, 60, 0.3), 0 0 0 1px rgba(0, 52, 119, 0.14); }
+.ct-panel button, .ct-panel input, .ct-panel select, .ct-panel textarea, .ct-panel label { cursor: pointer; }
+.ct-panel input:not([type]), .ct-panel input[type="url"], .ct-panel textarea { cursor: text; user-select: text; }
+.ct-nodrag { cursor: auto; touch-action: pan-y; }
+/* A small bar at the top shows where to grab; × closes. Both stay light so the tool is what you see. */
+.ct-handle {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 36px;
+  height: 4px;
+  margin-left: -18px;
+  border-radius: 2px;
+  background: rgba(0, 52, 119, 0.14);
+  pointer-events: none;
+}
 .ct-close {
-  width: 34px;
-  height: 30px;
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  z-index: 2;
+  width: 26px;
+  height: 22px;
+  padding: 0;
   border: 0;
-  border-radius: 8px;
+  border-radius: 6px;
   background: transparent;
-  color: #fff;
-  font-size: 24px !important;
+  color: rgba(0, 52, 119, 0.35);
+  font-size: 20px !important;
   line-height: 1;
 }
-.ct-close:hover { background: rgba(255, 255, 255, 0.18); }
+.ct-close:hover { background: rgba(0, 52, 119, 0.08); color: var(--ct-navy); }
 .ct-body {
   position: relative;
   flex: 1;
@@ -119,7 +129,7 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   display: flex;
   flex-direction: column;
   container-type: size;
-  padding: 8px 10px;
+  padding: 22px 10px 8px;   /* room at the top for the grab bar and × */
 }
 .ct-grip {
   position: absolute;
@@ -132,8 +142,20 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   background: linear-gradient(135deg, transparent 55%, rgba(0, 52, 119, 0.35) 55%, rgba(0, 52, 119, 0.35) 62%,
     transparent 62%, transparent 72%, rgba(0, 52, 119, 0.35) 72%, rgba(0, 52, 119, 0.35) 79%, transparent 79%);
 }
-.ct-panel.ct-loud { box-shadow: 0 0 0 6px var(--ct-red), 0 8px 30px rgba(0, 20, 60, 0.3); animation: ct-flash 0.8s ease-in-out infinite; }
-@keyframes ct-flash { 50% { box-shadow: 0 0 0 6px transparent, 0 8px 30px rgba(0, 20, 60, 0.3); } }
+/* Too loud: the whole panel flashes red. */
+.ct-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  background: var(--ct-red);
+  opacity: 0;
+  pointer-events: none;
+}
+.ct-panel.ct-loud::after { animation: ct-flash 0.7s ease-in-out infinite; }
+.ct-panel.ct-loud { box-shadow: 0 0 0 5px var(--ct-red), 0 10px 32px rgba(0, 20, 60, 0.3); }
+@keyframes ct-flash { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.6; } }
 
 /* Shared bits */
 .ct-foot {
@@ -206,7 +228,8 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
 }
 .ct-round.ct-plus { background: var(--team); color: #fff; }
 
-/* ---- Voice level ---- */
+/* ---- Voice level (and the noise meter under it) ---- */
+.ct-body.ct-voice { container-name: ct-voice; }
 .ct-voice-big {
   flex: 1;
   min-height: 0;
@@ -223,6 +246,7 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
 .ct-voice-num {
   display: grid;
   place-items: center;
+  flex: none;
   width: 1.5em;
   height: 1.5em;
   border-radius: 50%;
@@ -230,22 +254,27 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   color: #fff;
 }
 .ct-voice-icon { font-size: 1.2em; }
-.ct-voice-label { color: color-mix(in srgb, var(--lvl) 70%, #000); line-height: 1; }
-.ct-voice-picks { display: flex; justify-content: center; gap: 3cqw; padding: 3cqh 0 1cqh; flex: none; }
+.ct-voice-label { color: color-mix(in srgb, var(--lvl) 70%, #000); line-height: 1; text-align: center; }
+.ct-voice-picks { display: flex; justify-content: center; gap: 2.5cqw; padding: 3cqh 0 1cqh; flex: none; }
 .ct-voice-pick {
-  width: min(16cqh, 14cqw);
-  height: min(16cqh, 14cqw);
-  min-width: 34px;
-  min-height: 34px;
+  width: min(16cqh, 13cqw);
+  height: min(16cqh, 13cqw);
+  min-width: 30px;
+  min-height: 30px;
   padding: 0;
   border: 3px solid var(--lvl);
   border-radius: 50%;
   background: #fff;
   color: var(--lvl);
-  font-size: clamp(16px, 8cqmin, 34px) !important;
+  font-size: clamp(15px, 8cqmin, 34px) !important;
   font-weight: 700 !important;
 }
 .ct-voice-pick.ct-on { background: var(--lvl); color: #fff; }
+.ct-noise-toggle { --lvl: #8a94a3; margin-left: 2cqw; font-size: clamp(13px, 6cqmin, 28px) !important; }
+.ct-noise-toggle.ct-on { --lvl: var(--ct-navy); }
+/* With the noise meter on, the voice level takes the top half. */
+.ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-big { font-size: min(10cqh, 10cqw); }
+.ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-pick { width: min(9cqh, 13cqw); height: min(9cqh, 13cqw); }
 
 /* ---- Traffic light ---- */
 .ct-body.ct-traffic { align-items: center; }
@@ -281,22 +310,26 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
 .ct-traffic-label.ct-yellow { color: #a87a00; }
 .ct-traffic-label.ct-green { color: #1f8a40; }
 
-/* ---- Noise meter ---- */
-.ct-noise-top { flex: 1; min-height: 0; display: flex; align-items: center; gap: 3cqw; }
+/* Noise meter: a box of its own size, so what's inside scales with it */
+.ct-noise { flex: 1.15; min-height: 0; display: flex; flex-direction: column; container-type: size; margin-top: 6px; }
+.ct-noise[hidden] { display: none; }
+.ct-noise-top { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 3cqw; }
 .ct-noise-face { font-size: min(34cqh, 16cqw); line-height: 1; }
 .ct-noise-meter {
+  --pct: 0%;
+  --limit: 60%;
   position: relative;
   flex: 1;
   height: min(30cqh, 40%);
-  min-height: 24px;
+  min-height: 22px;
   border-radius: 999px;
   background: #e8edf3;
   overflow: hidden;
 }
-.ct-noise-fill { height: 100%; width: 0; border-radius: inherit; background: var(--ct-green); transition: background 0.3s; }
+.ct-noise-fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--pct); border-radius: inherit; background: var(--ct-green); transition: background 0.3s; }
 .ct-noise-meter[data-zone="near"] .ct-noise-fill { background: #e0a800; }
 .ct-noise-meter[data-zone="loud"] .ct-noise-fill { background: var(--ct-red); }
-.ct-noise-line { position: absolute; top: 0; bottom: 0; width: 4px; margin-left: -2px; background: var(--ct-navy); }
+.ct-noise-line { position: absolute; top: 0; bottom: 0; left: var(--limit); width: 4px; margin-left: -2px; background: var(--ct-navy); }
 .ct-noise-info {
   flex: none;
   display: flex;
@@ -305,7 +338,7 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
   flex-wrap: wrap;
   gap: 0.2em 0.8em;
   padding: 0.2em 0;
-  font-size: clamp(14px, min(9cqh, 5.5cqw), 34px);
+  font-size: clamp(13px, min(12cqh, 5.5cqw), 34px);
 }
 .ct-noise-status { font-weight: 700; }
 .ct-noise-tally { display: inline-flex; align-items: center; gap: 0.4em; font-weight: 600; }
@@ -313,6 +346,32 @@ body:has(#ct-launch):has(.slide-chalkboard-buttons) #slide-clock { left: 172px; 
 .ct-panel.ct-loud .ct-noise-status { color: var(--ct-red); }
 .ct-noise-limit { display: inline-flex; align-items: center; gap: 0.3em; font-size: 0.85em; font-weight: 600; }
 .ct-noise-limit input { width: 7em; accent-color: var(--ct-navy); }
+
+/* Voice level, narrow (a column in the slide margin): everything stacks, and the meter stands up. */
+@container ct-voice (max-width: 260px) {
+  .ct-voice-big { flex-direction: column; gap: 0.15em; font-size: min(11cqh, 22cqw); }
+  .ct-voice-label { font-size: 0.7em; }
+  .ct-voice-picks { display: grid; grid-template-columns: repeat(3, auto); justify-content: center; gap: 6px; }
+  .ct-voice-pick { width: min(12cqh, 22cqw); height: min(12cqh, 22cqw); }
+  .ct-noise-toggle { margin-left: 0; }
+  .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-big { font-size: min(6cqh, 22cqw); }
+  .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-pick { width: min(7cqh, 22cqw); height: min(7cqh, 22cqw); }
+  .ct-noise { flex: 1.6; }
+  .ct-noise-top { gap: 8px; }
+  .ct-noise-face { font-size: min(14cqh, 26cqw); }
+  .ct-noise-meter { flex: none; width: min(30cqw, 60px); height: 100%; }
+  .ct-noise-fill { top: auto; right: 0; width: auto; height: var(--pct); }
+  .ct-noise-line { top: auto; right: 0; bottom: var(--limit); left: 0; width: auto; height: 4px; margin: 0 0 -2px; }
+  .ct-noise-info { flex-direction: column; justify-content: center; text-align: center; font-size: clamp(12px, 9cqw, 18px); }
+  .ct-noise .ct-foot { flex-direction: column; padding: 4px 0 0; font-size: 13px; }
+  .ct-noise-limit { flex-direction: column; }
+  .ct-noise-limit input { width: 100%; }
+}
+
+/* ---- Slide size ---- */
+.ct-slide-label { flex: 1; display: grid; place-items: center; text-align: center; font-size: clamp(14px, min(14cqh, 7cqw), 26px); font-weight: 700; }
+.ct-slide-range { flex: none; padding: 4px 8px; }
+.ct-slide-range input { width: 100%; accent-color: var(--ct-navy); }
 
 /* ---- QR code ---- */
 .ct-body.ct-qr { align-items: center; }
