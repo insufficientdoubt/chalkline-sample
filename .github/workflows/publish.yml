@@ -33,8 +33,12 @@ jobs:
       - name: Python packages
         run: pip install -r requirements.txt
 
-      - name: Chinese font for slide PDFs (web pages and PDFs otherwise use brand/fonts/)
-        run: sudo apt-get update -q && sudo apt-get install -y -q fonts-noto-cjk
+      - name: Chinese font for slide PDFs (the project's own Noto Sans SC, so nothing to download)
+        run: |
+          mkdir -p ~/.local/share/fonts
+          cp brand/fonts/print/*.otf ~/.local/share/fonts/
+          fc-cache -f
+          fc-list | grep -i "Noto Sans SC"
 
       - uses: quarto-dev/quarto-actions/setup@v2
         with:

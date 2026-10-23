@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: The online build uses the project's own Chinese font
+- **Asked for:** "Why does it need to reinstall the font", after the publish build hung twice on downloading it.
+- **Why:** each GitHub build starts on a fresh computer, so it downloaded the Chinese font package from Ubuntu every time; today that download hung and the site didn't update.
+- **Changed:** `.github/workflows/publish.yml`: instead of `apt-get install fonts-noto-cjk`, copy `brand/fonts/print/NotoSansSC-*.otf` (already in the project) into the build computer's font folder. Takes about a second, needs no network, and the slide PDFs use the same Chinese font as the worksheets.
+- **Who it helps:** probably every Chalkline course that publishes with GitHub Pages.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Slides show the student copy of a PDF, even on the teacher site
 - **Asked for:** "the slides should always default to showing the Student version. Teachers never need to project the teacher version in a normal context. I can imagine a time like when giving professional development when you might want that but the default behavior would be the Student version."
 - **Why:** so answer keys don't end up on the board.
