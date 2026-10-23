@@ -6,6 +6,10 @@ description: "Drag a triangle's corners, slide a parabola, graph lines in PhET, 
 order: 1
 audience: [teacher, student]
 format: revealjs
+title-slide-attributes:
+  data-background-color: "#003477"
+  data-background-image: images/title-math.svg
+  data-background-opacity: "0.55"      # the drawing, dimmed, so the title stays readable
 resources:
   - embeds/**
 ---
