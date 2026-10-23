@@ -1,5 +1,5 @@
 /*
-  Slide games: Snowman, Picture reveal, Jeopardy and Quick-fire. Each one is a
+  Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire, Matching and Memory. Each one is a
   <div class="cg-game" data-game="..." data-config="{json}"> made by shortcodes.lua
   (words from the vocab list) or filter.lua (questions you write in a ::: div).
 
@@ -507,6 +507,141 @@
     return function () { begin(!!cfg.random); };   // reset: back to Start (new questions if random)
   }
 
+  /* ---------------- Matching and Memory: pairs ----------------
+     A pair is a word and its partner: its meaning (with="meaning") or its picture (with="picture").
+     From the vocab list (random, count pairs), or written: ::: {.matching} / {.memory} with "a | b" lines. */
+
+  function makePairs(cfg, prefer) {
+    if (!cfg.random) return list(cfg.pairs).map(function (p, i) { return { id: i, a: p.q, b: p.a, image: "" }; });
+    const usePicture = (cfg.with || prefer) === "picture";
+    const pool = shuffle(list(cfg.words).filter(function (w) { return usePicture ? w.image : w.hint; }));
+    return pool.slice(0, cfg.count || 6).map(function (w, i) {
+      return { id: i, a: w.word, b: usePicture ? "" : w.hint, image: usePicture ? w.image : "" };
+    });
+  }
+  function partner(p) {   // the other side of a pair: its picture, or its words
+    return p.image ? h("img", { src: p.image, alt: "" }) : h("span", { text: p.b });
+  }
+
+  // Matching: tap a word, then its partner (or the other way round). A right pair locks in, in its
+  // own color; a wrong one shakes. It counts the tries.
+  function matching(root, cfg) {
+    let pairs, matched, tries, sel;
+    const left = h("div", { class: "cg-match-col" });
+    const right = h("div", { class: "cg-match-col cg-match-right" });
+    const status = h("div", { class: "cg-status" });
+    root.append(h("div", { class: "cg-match" }, left, right), status,
+      h("div", { class: "cg-tools" }, button("Show the answers", showAll),
+        cfg.random ? button("🔀 New words", start, "cg-new") : ""));
+
+    function item(p, side) {
+      return h("button", { class: "cg-match-item cg-side-" + side, "data-id": p.id, onclick: function (e) { tap(e.currentTarget, side, p.id); } },
+        side === "a" ? h("span", { text: p.a }) : partner(p));
+    }
+    function start() {
+      pairs = makePairs(cfg, "meaning");
+      matched = 0; tries = 0; sel = null;
+      left.textContent = ""; right.textContent = "";
+      pairs.forEach(function (p) { left.append(item(p, "a")); });
+      shuffle(pairs).forEach(function (p) { right.append(item(p, "b")); });
+      root.classList.toggle("cg-match-pictures", pairs.some(function (p) { return p.image; }));
+      paint();
+    }
+    function paint() {
+      status.textContent = matched === pairs.length && pairs.length
+        ? "All matched in " + tries + (tries === 1 ? " try!" : " tries!")
+        : "Matched " + matched + " of " + pairs.length + "  ·  Tries: " + tries;
+    }
+    function lock(id) {
+      root.querySelectorAll('.cg-match-item[data-id="' + id + '"]').forEach(function (el) {
+        el.classList.add("cg-matched");
+        el.classList.remove("cg-selected");
+        el.style.setProperty("--pair", COLORS[id % COLORS.length]);
+        el.disabled = true;
+      });
+    }
+    function tap(el, side, id) {
+      if (!sel || sel.side === side) {   // first pick (or a new pick on the same side)
+        if (sel) sel.el.classList.remove("cg-selected");
+        sel = { el: el, side: side, id: id };
+        el.classList.add("cg-selected");
+        return;
+      }
+      tries++;
+      if (sel.id === id) { lock(id); matched++; beep(660, 0.12, 0.1); if (matched === pairs.length) cheer(); }
+      else {
+        const a = sel.el;
+        [a, el].forEach(function (x) { x.classList.add("cg-wrong-pair"); });
+        setTimeout(function () { [a, el].forEach(function (x) { x.classList.remove("cg-wrong-pair", "cg-selected"); }); }, 600);
+        beep(220, 0.2, 0.1);
+      }
+      sel.el.classList.remove("cg-selected");
+      sel = null;
+      paint();
+    }
+    function showAll() { pairs.forEach(function (p) { lock(p.id); }); matched = pairs.length; paint(); }
+    start();
+    return start;
+  }
+
+  // Memory: cards face down; turn over two. A word and its partner stay face up; two that don't
+  // match turn back over. It counts the turns.
+  function memory(root, cfg) {
+    let pairs, open, found, turns, busy;
+    const grid = h("div", { class: "cg-memory-grid" });
+    const status = h("div", { class: "cg-status" });
+    root.append(grid, status, h("div", { class: "cg-tools" }, button("Show all the cards", showAll),
+      cfg.random ? button("🔀 New cards", start, "cg-new") : ""));
+
+    function start() {
+      pairs = makePairs(cfg, "picture");
+      open = []; found = 0; turns = 0; busy = false;
+      grid.textContent = "";
+      const cards = [];
+      pairs.forEach(function (p) {
+        cards.push({ id: p.id, face: h("span", { class: "cg-card-word", text: p.a }) });
+        cards.push({ id: p.id, face: partner(p) });
+      });
+      grid.style.setProperty("--cols", cards.length > 12 ? 5 : 4);
+      shuffle(cards).forEach(function (c, i) {
+        const card = h("button", { class: "cg-card", "data-id": c.id, "aria-label": "Card " + (i + 1) },
+          h("span", { class: "cg-card-inner" },
+            h("span", { class: "cg-card-back", text: i + 1 }),
+            h("span", { class: "cg-card-front" }, c.face)));
+        card.addEventListener("click", function () { flip(card); });
+        grid.append(card);
+      });
+      paint();
+    }
+    function paint() {
+      status.textContent = found === pairs.length && pairs.length
+        ? "All pairs found in " + turns + (turns === 1 ? " turn!" : " turns!")
+        : "Pairs found: " + found + " of " + pairs.length + "  ·  Turns: " + turns;
+    }
+    function flip(card) {
+      if (busy || card.classList.contains("cg-up")) return;
+      card.classList.add("cg-up");
+      open.push(card);
+      if (open.length < 2) return;
+      turns++;
+      const [a, b] = open;
+      open = [];
+      if (a.dataset.id === b.dataset.id) {
+        [a, b].forEach(function (c) { c.classList.add("cg-found"); c.style.setProperty("--pair", COLORS[+c.dataset.id % COLORS.length]); });
+        found++;
+        beep(660, 0.12, 0.1);
+        if (found === pairs.length) cheer();
+      } else {
+        busy = true;
+        setTimeout(function () { a.classList.remove("cg-up"); b.classList.remove("cg-up"); busy = false; }, 1300);
+      }
+      paint();
+    }
+    function showAll() { grid.querySelectorAll(".cg-card").forEach(function (c) { c.classList.add("cg-up"); }); }
+    start();
+    return start;
+  }
+
   /* ---------------- Review games page: choose a game and a unit, then play ----------------
      config: { words: every vocab word, with its units; units: [{ unit, title }]; home: the overview }.
      The last choice is remembered in this browser. */
@@ -514,9 +649,11 @@
   // Simple line icons (24 × 24, drawn in the text color), so the header looks the same everywhere.
   const PICKS = [
     { id: "snowman", label: "Snowman", icon: '<circle cx="12" cy="7" r="3.5"/><circle cx="12" cy="16" r="5"/><path d="M4 11l4 2M20 11l-4 2"/>' },
-    { id: "picture-reveal", label: "Picture reveal", icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' },
+    { id: "picture-reveal", label: "Picture", icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="15.5" cy="8.5" r="1.5"/>' },
     { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
     { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
+    { id: "matching", label: "Matching", icon: '<circle cx="5" cy="6" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 6.8l10 10.4M7 17.2L17 6.8"/>' },
+    { id: "memory", label: "Memory", icon: '<rect x="2.5" y="5" width="9" height="14" rx="1.5"/><rect x="12.5" y="5" width="9" height="14" rx="1.5"/><path d="M7 10.5v3M17 10.5v3"/>' },
   ];
   function icon(paths) {
     const span = h("span", { class: "cg-pick-icon", "aria-hidden": "true" });
@@ -535,7 +672,7 @@
       choose({ unit: +unitMenu.value });
     } });
     const unitRow = h("div", { class: "cg-pick-side" },
-      h("label", { class: "cg-pick-label" }, "Unit", unitMenu),
+      unitMenu,   // its first choice, "All units", says what it is
       cfg.home ? h("a", { class: "cg-pick-home", href: cfg.home, text: "← Overview" }) : "");
     const stage = h("div", { class: "cg-pick-stage" });
     root.append(h("div", { class: "cg-pick-bar" }, gameRow, unitRow), stage);
@@ -563,41 +700,49 @@
       if (choice.unit && !units.some(function (u) { return u.unit === choice.unit; })) choice.unit = 0;
       paintBar();
       const pool = words.filter(function (w) {
-        return (!choice.unit || list(w.units).indexOf(choice.unit) >= 0) && (choice.game !== "picture-reveal" || w.image);
+        return (!choice.unit || list(w.units).indexOf(choice.unit) >= 0) && (!/picture-reveal|memory/.test(choice.game) || w.image);
       });
       const unit = units.find(function (u) { return u.unit === choice.unit; });
       const el = h("div", { class: "cg-game cg-" + choice.game, "data-prevent-swipe": true });
       stage.textContent = "";
       stage.append(el);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
-      reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: 5, seconds: 10, tiles: 16,
+      reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: /match|memory/.test(choice.game) ? 6 : 5, seconds: 10, tiles: 16,
         title: (unit ? unit.title : "Vocab") + " quick-fire" });
     }
-    // On this page the buttons are plain words: take off a leading emoji ("🔀 New word" -> "New word"),
-    // also on buttons a game adds later (the clue card, the end of a quick-fire).
-    function plain(node) {
-      node.querySelectorAll("button").forEach(function (b) {
-        const first = b.firstChild;
-        if (first && first.nodeType === 3) {
-          const text = first.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u, "");
-          first.textContent = text || "New board";   // a button that was only an emoji (Jeopardy's 🔀)
-        }
-      });
-    }
-    new MutationObserver(function () { plain(stage); }).observe(stage, { childList: true, subtree: true });
-    root.classList.add("cg-plain");
     play();
     return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
   }
 
   /* ---------------- Start every game on the page ---------------- */
 
-  const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia, "picker": gamePicker };
+  const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia,
+    "matching": matching, "memory": memory, "picker": gamePicker };
+  // A calm look: buttons are plain words. Take off a leading emoji ("🔀 New word" -> "New word"),
+  // also on buttons a game adds later (the clue card, the end of a quick-fire).
+  function calm(root) {
+    function plain() {
+      root.querySelectorAll("button").forEach(function (b) {
+        const first = b.firstChild;
+        if (first && first.nodeType === 3 && /^[\p{Extended_Pictographic}\uFE0F\u200D]/u.test(first.textContent)) {
+          const text = first.textContent.replace(/^[\p{Extended_Pictographic}\uFE0F\u200D]+\s*/u, "");
+          first.textContent = text || "New board";   // a button that was only an emoji (Jeopardy's 🔀)
+        }
+      });
+    }
+    root.classList.add("cg-plain");
+    plain();
+    new MutationObserver(plain).observe(root, { childList: true, subtree: true });
+  }
+
   const resets = [];
   document.querySelectorAll(".cg-game").forEach(function (el) {
     let cfg = {};
     try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
-    if (GAMES[el.dataset.game]) resets.push(GAMES[el.dataset.game](el, cfg));
+    if (GAMES[el.dataset.game]) {
+      resets.push(GAMES[el.dataset.game](el, cfg));
+      calm(el);
+    }
   });
   // The toolbox's "Reset for the next class" starts every game in the deck again.
   document.addEventListener("chalkline:reset", function (e) {
