@@ -18,6 +18,7 @@ website:
   draft-mode: gone
   # ---- Everything below is written by scripts/catalog.py before each render. Don't edit by hand. ----
   drafts:
+  - course/review-games.qmd
   - course/units/01-ancient-greece/athens-vs-sparta.qmd
   - course/units/01-ancient-greece/class-vote.qmd
   - course/units/01-ancient-greece/greek-ideas-slides.qmd

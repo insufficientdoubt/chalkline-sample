@@ -76,7 +76,7 @@
   window.addEventListener("keydown", function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || /input|textarea|select/i.test((document.activeElement || {}).tagName)) return;
     for (const k of keyHandlers) {
-      if (onCurrentSlide(k.el) && k.fn(e)) { e.preventDefault(); e.stopImmediatePropagation(); return; }
+      if (k.el.isConnected && onCurrentSlide(k.el) && k.fn(e)) { e.preventDefault(); e.stopImmediatePropagation(); return; }
     }
   }, true);
 
@@ -507,9 +507,66 @@
     return function () { begin(!!cfg.random); };   // reset: back to Start (new questions if random)
   }
 
+  /* ---------------- Review games page: choose a game and a unit, then play ----------------
+     config: { words: every vocab word, with its units; units: [{ unit, title }]; home: the overview }.
+     The last choice is remembered in this browser. */
+
+  const PICKS = [
+    { id: "snowman", icon: "⛄", label: "Snowman" },
+    { id: "picture-reveal", icon: "🖼️", label: "Picture reveal" },
+    { id: "jeopardy", icon: "🏆", label: "Jeopardy" },
+    { id: "trivia", icon: "⚡", label: "Quick-fire" },
+  ];
+
+  function gamePicker(root, cfg) {
+    const words = list(cfg.words), units = list(cfg.units);
+    let choice = { game: "snowman", unit: 0 }, reset = null;
+    try { choice = Object.assign(choice, JSON.parse(localStorage.getItem("chalkline-games:picker")) || {}); } catch (e) { /* first visit */ }
+    const gameRow = h("div", { class: "cg-pick-row" });
+    const unitRow = h("div", { class: "cg-pick-row cg-pick-units" });
+    const stage = h("div", { class: "cg-pick-stage" });
+    root.append(h("div", { class: "cg-pick-bar" }, gameRow, unitRow), stage);
+
+    function choose(change) {
+      Object.assign(choice, change);
+      try { localStorage.setItem("chalkline-games:picker", JSON.stringify(choice)); } catch (e) { /* private window */ }
+      play();
+    }
+    function paintBar() {
+      gameRow.textContent = "";
+      PICKS.forEach(function (g, i) {
+        gameRow.append(h("button", { class: "cg-pick" + (g.id === choice.game ? " cg-on" : ""), style: "--pick:" + COLORS[i],
+          onclick: function () { choose({ game: g.id }); } }, h("span", { class: "cg-pick-icon", text: g.icon }), g.label));
+      });
+      if (cfg.home) gameRow.append(h("a", { class: "cg-pick-home", href: cfg.home, title: "Back to the overview", text: "⌂" }));
+      unitRow.textContent = "";
+      [{ unit: 0, title: "All units" }].concat(units).forEach(function (u) {
+        unitRow.append(h("button", { class: "cg-pick-unit" + (u.unit === choice.unit ? " cg-on" : ""),
+          onclick: function () { choose({ unit: u.unit }); } }, u.unit ? h("b", { text: u.unit }) : "", u.title));
+      });
+    }
+    function play() {
+      if (!PICKS.some(function (g) { return g.id === choice.game; })) choice.game = "snowman";
+      if (choice.unit && !units.some(function (u) { return u.unit === choice.unit; })) choice.unit = 0;
+      paintBar();
+      const pool = words.filter(function (w) {
+        return (!choice.unit || list(w.units).indexOf(choice.unit) >= 0) && (choice.game !== "picture-reveal" || w.image);
+      });
+      const unit = units.find(function (u) { return u.unit === choice.unit; });
+      const el = h("div", { class: "cg-game cg-" + choice.game, "data-prevent-swipe": true });
+      stage.textContent = "";
+      stage.append(el);
+      if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
+      reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: 5, seconds: 10, tiles: 16,
+        title: (unit ? unit.title : "Vocab") + " quick-fire" });
+    }
+    play();
+    return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
+  }
+
   /* ---------------- Start every game on the page ---------------- */
 
-  const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia };
+  const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia, "picker": gamePicker };
   const resets = [];
   document.querySelectorAll(".cg-game").forEach(function (el) {
     let cfg = {};

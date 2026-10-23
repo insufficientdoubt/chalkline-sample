@@ -309,3 +309,62 @@
 
 @keyframes cg-pop { 0% { transform: scale(0.85); opacity: 0; } 60% { transform: scale(1.04); opacity: 1; } 100% { transform: scale(1); } }
 @keyframes cg-shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+/* ---- Review games page: choose a game and a unit ---- */
+.reveal .cg-picker { margin: 0; }
+.reveal section:has(> .cg-picker) > h2 { display: none; }   /* the page's slide has no title: the games start at the top */
+.reveal .cg-picker .cg-game { margin-top: 0; }
+.reveal .cg-pick-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 3px solid #e3eaf3; }
+.reveal .cg-pick-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.reveal .cg-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px 6px 12px;
+  border: 3px solid var(--pick);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--pick);
+  font-size: 24px;
+  font-weight: 800;
+}
+.reveal .cg-pick:hover { background: color-mix(in srgb, var(--pick) 10%, #fff); }
+.reveal .cg-pick.cg-on { background: var(--pick); color: #fff; box-shadow: 0 4px 14px rgba(0, 20, 60, 0.2); }
+.reveal .cg-pick-icon { font-size: 1.1em; }
+.reveal .cg-pick-home {
+  margin-left: auto;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #eef3f9;
+  color: var(--cg-navy);
+  font-size: 26px;
+  text-decoration: none;
+}
+.reveal .cg-pick-home:hover { background: #dfe8f3; }
+.reveal .cg-pick-units { gap: 6px; }
+.reveal .cg-pick-unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 14px;
+  border: 2px solid #c9d5e3;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cg-navy);
+  font-size: 19px;
+  font-weight: 700;
+}
+.reveal .cg-pick-unit b {
+  display: grid;
+  place-items: center;
+  width: 1.35em;
+  height: 1.35em;
+  border-radius: 50%;
+  background: #e3eaf3;
+  font-size: 0.85em;
+}
+.reveal .cg-pick-unit.cg-on { border-color: var(--cg-navy); background: var(--cg-navy); color: #fff; }
+.reveal .cg-pick-unit.cg-on b { background: rgba(255, 255, 255, 0.25); }
