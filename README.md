@@ -327,6 +327,50 @@ Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
 
+## Timelines and labelling
+
+Three slide types for history (or any subject), all in **Unit 2 › Rome on a Timeline** (`course/units/02-ancient-rome/rome-timeline-slides.qmd`); its speaker notes show how each is written.
+
+**A timeline to teach with.** One slide holds all the events, each with a date, a title, a photo and some text. A big card shows one event above the timeline: **‹ ›** go through them in order, tapping an event (or dragging along the line) jumps to it, and tapping the card **zooms in** to the whole photo and everything you wrote. Events are sorted by date for you ("509 BC", "AD 80", "1453").
+
+```markdown
+::: {.timeline-interactive #rome title="Ancient Rome"}
+
+::: {.event date="509 BC" title="Rome becomes a republic" image="images/senate.jpg" slide="the-republic"}
+The Romans send away their last king.     ← the first paragraph is the card's summary
+
+Two consuls lead Rome, for one year each. ← everything shows when you zoom in
+:::
+
+::: {.event date="27 BC" title="Augustus, the first emperor" image="images/augustus.jpg"}
+...
+:::
+
+:::
+```
+
+**A timeline across several slides:** give an event `slide="..."` (the id of a slide, from `## The Republic {#the-republic}`). That slide then gets a **timeline strip** along its bottom, by itself, showing where it is in the story. Tap any event on the strip to see its card, then **Go to this slide** or **The timeline** (back to the big one, on that event). The zoomed card on the big timeline gets **Go to this slide** too. Leave a little room at the bottom of those slides for the strip.
+
+**Put it on the timeline (students).** The events without their dates: students drag each one onto the line at its year (or tap it, then tap the line). **Check** marks each one green, or red with its real date and a green dot where it belongs, and says whether the order is right. Write it as a list (or use `::: {.event}` divs):
+
+```markdown
+::: {.timeline-activity}
+- 509 BC | Rome becomes a republic ![](images/senate.jpg)
+- 27 BC | Augustus, the first emperor
+:::
+```
+
+Options: `tolerance="25"` (years off that still count; the usual is 5% of the timeline), `snap="10"`, `start="600 BC" end="AD 200"`. Plain `::: {.timeline}` is still the simple styled list.
+
+**Label it.** A photo with numbered dots and a bank of labels: students drag each label onto its dot (or tap the label, then the dot). A right label stays, joined to its dot; a wrong one shakes and shows its reason. Each line is the label, a `|`, where its dot goes (`x,y`: percent from the left and from the top), and an optional reason. To find a place, press **L** on the slide and tap the photo: it shows (and copies) the `x,y`.
+
+```markdown
+::: {.label-it image="images/pont-du-gard.jpg"}
+- Water channel | 40,15 | The water flowed in a covered channel along the very top.
+- River | 12,82 | The aqueduct crosses the Gardon River.
+:::
+```
+
 ## Tap-to-vote polls
 
 Any slide can have a poll that students answer by tapping the board (or you click while counting hands). It needs no server and no student devices. There are three types:

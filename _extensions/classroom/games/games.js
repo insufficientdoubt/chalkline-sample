@@ -1227,15 +1227,27 @@
     new MutationObserver(plain).observe(root, { childList: true, subtree: true });
   }
 
+  // Other files add games too (timeline.js: timelines and Label it), with these helpers.
+  window.ChalklineGames = {
+    h: h, list: list, shuffle: shuffle, button: button, beep: beep, cheer: cheer, COLORS: COLORS,
+    keyHandlers: keyHandlers, onCurrentSlide: onCurrentSlide,
+    add: function (name, fn) { GAMES[name] = fn; },
+  };
+
+  // Start the games once every game file has loaded (they all load at the end of the page).
   const resets = [];
-  document.querySelectorAll(".cg-game").forEach(function (el) {
-    let cfg = {};
-    try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
-    if (GAMES[el.dataset.game]) {
-      resets.push(GAMES[el.dataset.game](el, cfg));
-      calm(el);
-    }
-  });
+  function startAll() {
+    document.querySelectorAll(".cg-game").forEach(function (el) {
+      let cfg = {};
+      try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
+      if (GAMES[el.dataset.game]) {
+        resets.push(GAMES[el.dataset.game](el, cfg));
+        calm(el);
+      }
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", startAll);
+  else setTimeout(startAll, 0);
   // The toolbox's "Reset for the next class" starts every game in the deck again.
   document.addEventListener("chalkline:reset", function (e) {
     if (e.detail && e.detail.games) resets.forEach(function (r) { if (r) r(); });

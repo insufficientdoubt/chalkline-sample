@@ -16,6 +16,22 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Timelines (to teach with, across slides, and for students) and Label it
+- **Asked for:** "A timeline template slide ... for introducing a timeline when teaching. It should have all the events preloaded with photos and allow the speaker to scrub through them chronologically, or to click on any item to pull up more information on it (like a zoom-in function). A timeline activity slide for students where they have to place items correctly on the timeline ... the correct order and they have to slide it to the correct year. A labeling activity slide. Using a photograph students need to drag labels onto the correct region ... do whatever is best practice." And: "An option for a timeline to run across multiple slides ... the timeline can be an automatic insert and then later on you can use the timeline element to click on it and either get the info back from the slides or go directly to the slide."
+- **Why:** to teach chronology, and for labelling activities.
+- **Changed:**
+  - `_extensions/classroom/games/timeline.js` and `timeline.css` (new):
+    - **Timeline to teach with:** a big card above the line; ‹ ›, tap or drag along the line; tap the card to zoom in.
+    - **Strips:** on slides that events link to. Tap an event for its card, then **Go to this slide** or **The timeline**.
+    - **Timeline activity:** drag events onto the line at their year (or tap, then tap the line). Check marks each one (tolerance, snap) and the order.
+    - **Label it:** numbered dots on a photo; drag or tap labels on; feedback with reasons; L finds and copies a place. Wide photos use the whole width.
+    - Dates like "509 BC", "AD 80" and "c. 9600 BC" are read and sorted; there's no "AD 0".
+  - `_extensions/classroom/games/games.js`: shares its helpers (`window.ChalklineGames`) so timeline.js can add games, and starts the games once the page has loaded. `games.lua`: loads timeline.js and timeline.css.
+  - `_extensions/classroom/filter.lua`: `::: {.timeline-interactive}` and `::: {.timeline-activity}` (events as `::: {.event}` divs, or a list) and `::: {.label-it}`. A new pass gives each timeline an id and puts a strip on every slide an event links to. Plain `::: {.timeline}` stays the simple styled list.
+  - `course/units/02-ancient-rome/rome-timeline-slides.qmd` (new demo deck), `README.md`, the Start-here slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Sort it: a reason for each item, feedback straight away, pictures
 - **Asked for:** "Definitely add the option for immediate feedback if the kid gets the answer wrong, a little explanation of why. I think a third group support for both is fine but we'll already have that if we support multiple groups. And yes I want the option for pictures as items." (After: "So we can sort based on characteristics that are not specifically listed in the vocabulary. For example in a biology class sorting animals by habitat.")
 - **Why:** to use Sort it for higher-order sorts, with feedback that teaches.

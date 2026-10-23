@@ -237,7 +237,7 @@ Each one is a working example in this course. Click to jump there.
 
 ::: {.feature-list}
 ::: {.new-features}
-[New]{.new-badge} 🎮 **Nine games:** [see them all](../01-ancient-greece/review-games-slides.html) · 🎲 [**Review games:** any game, any unit](../review-games.html)<br>🧰 **Toolbox** on every slide (press **W**): name picker, scoreboard, noise meter and more
+[New]{.new-badge} 🎮 **Nine games:** [see them all](../01-ancient-greece/review-games-slides.html) · 🎲 [**Review games:** any game, any unit](../review-games.html)<br>🕰️ **Timelines and labelling:** [a timeline to teach with](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline) · [put it in order](../02-ancient-rome/rome-timeline-slides.html#/put-rome-on-the-timeline) · [label a photo](../02-ancient-rome/rome-timeline-slides.html#/label-the-aqueduct)<br>🧰 **Toolbox** on every slide (press **W**): name picker, scoreboard, noise meter and more
 :::
 
 :::: {.columns}
