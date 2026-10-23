@@ -16,6 +16,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Download a PDF with its ink
+- **Asked for:** "How difficult is it to add a download function for the edited PDFs?", then "build it with pdf-lib".
+- **Why:** to keep or share a worksheet after writing on it in class.
+- **Changed:**
+  - `_extensions/pdf-viewer/pdf-lib.esm.min.js` and `LICENSE-pdf-lib.txt` (new): pdf-lib 1.17.1 (MIT), which adds the ink to a copy of the PDF in the browser. It loads only when someone presses Download, so slides don't load any slower.
+  - `_extensions/pdf-viewer/pdf-viewer.js`: a ⬇ button in the viewer, the gallery and the large window saves `<name>-annotated.pdf`. Pen and highlighter marks go in as lines (sharp, see-through highlighter); typed English as real text; typed text the built-in PDF fonts can't show (Chinese) as a picture. Rotated pages are handled.
+  - `_extensions/pdf-viewer/pdf-viewer.css`: in a narrow viewer the "open in a new tab" button hides to make room (the large window still has it).
+  - `_extensions/pdf-viewer/pdf-viewer.lua`, `README.md`: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Zoom and a text tool in the PDF viewer
 - **Asked for:** "Add a zoom function for the viewer. I think it's fine on the classroom display, but a bit tough on the teachers laptop. Also for annotation - add a text tool."
 - **Why:** the worksheet is hard to read on a laptop screen.

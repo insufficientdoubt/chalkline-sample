@@ -26,7 +26,10 @@
 }
 .pdfv-viewer { height: 75vh; container-type: inline-size; }
 .reveal .pdfv-viewer { height: 560px; --pdfv-btn: 40px; }   /* a reveal.js slide is 700px tall */
-@container (max-width: 520px) { .pdfv-viewer .pdfv-title { visibility: hidden; } }   /* narrow: room for the buttons */
+@container (max-width: 520px) {   /* narrow: room for the buttons (⤢ and ⬇ are still there) */
+  .pdfv-viewer .pdfv-title { visibility: hidden; }
+  .pdfv-viewer .pdfv-openlink { display: none; }
+}
 
 .pdfv-fallback { margin: auto; }
 .pdfv-error { margin: auto; padding: 1em; text-align: center; color: #5b6774; font-size: 18px; }
