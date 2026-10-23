@@ -46,7 +46,7 @@ Press **Lift**, or drag the **Lift** slider. Point out:
 - The claw (and the yellow cube) **stays level** the whole time: the two blue bars are a parallelogram.
 - The pink dotted line is the claw's path: an **arc**. The claw moves forward, then back, as it goes up. Ask: *why could that be a problem near a goal?*
 - Change the **bar length**: longer bars lift higher, but need more motor power (or rubber bands to help).
-- **Robot length** (back to front) is measured along the floor, now and at its **widest in the full swing** (the orange "widest" mark). Set the red **horizontal limit** to your competition's rule (there's no height limit, only length): a lift can start inside the limit and still swing past it. The 4-bar is widest when its bars are level.
+- **Robot length** (back to front) is measured along the floor, in **inches first, then cm**: the game is American, so the rules are in inches. Two fixed lines show the rules: the robot must **start within 20 in (50.8 cm)** (orange) and can **never be wider than 24 in (61.0 cm)** (red). There's no height limit. A lift can start inside 20 in and still swing past 24 in: watch the orange "widest" mark. The 4-bar is widest when its bars are level.
 :::
 
 ## The 6-bar lift {#six-bar-lift}
@@ -59,7 +59,7 @@ Two 4-bars that **share a bar**: 6 bars in all (count them with the class: tower
 - The first 4-bar's **top bar is twice as long** (purple). It keeps going and becomes the second 4-bar's bottom bar.
 - The first 4-bar's **end bar is extra tall** (green). It crosses the purple bar (the X) and is the "tower" for the second 4-bar's top bar (orange).
 
-Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with the same bars, and the claw stays level. But it also reaches **further forward** as it goes up: on a small robot, it can tip over. Lower it all the way: that folded shape is how VEX shows it. Check the **robot length**: with the same bars, the 6-bar swings much wider than the 4-bar, so it's the first to break a horizontal limit.
+Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with the same bars, and the claw stays level. But it also reaches **further forward** as it goes up: on a small robot, it can tip over. Lower it all the way: that folded shape is how VEX shows it. Check the **robot length**: with 25 cm bars, the 6-bar breaks **both** rules (over 20 in at the start, over 24 in at its widest). Ask: *what could we change?* Try shorter bars: at 20 cm it stays under 24 in but still starts too wide; at 15 cm it passes both, but it doesn't lift as high. That's the trade-off.
 :::
 
 ## The DR4B: floor to top {#dr4b}
@@ -71,7 +71,7 @@ Both 4-bars tilt together, so it lifts **about twice as high** as a 4-bar with t
 
 This is why youth robotics teams like it: put it at **one end of the robot** with the claw **facing out**, and it can fold right down to pick things up **off the floor**, then stretch **all the way up** to stack or score. Press **Lift** and watch the extension (the purple arrow): with 25 cm bars it goes from 1 cm to 59 cm.
 
-And the robot **never gets longer**: the robot length stays the same through the whole swing, so a DR4B is the easiest lift to keep inside a horizontal limit. Real DR4Bs use rubber bands to help hold the weight up.
+And the robot **never gets longer**: the robot length stays the same through the whole swing (16.5 in), so a DR4B is the easiest lift to keep inside the 20 in and 24 in rules. Real DR4Bs use rubber bands to help hold the weight up.
 :::
 
 ## Lift words

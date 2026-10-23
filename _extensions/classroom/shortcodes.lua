@@ -323,12 +323,13 @@ return {
         return pandoc.Div({ pandoc.Para({ button(label, file, { "btn" }) }),
                             pandoc.Para({ pandoc.Str(note) }) }, pandoc.Attr("", { "packet-card", cls }))
       end
+      -- the student copy first: printing it for class is a teacher's first move; the answer keys come second
       return pandoc.Div({
-        card("packet-teacher", "🔑 Teacher edition (PDF)", "With answer keys and teacher notes. For you, not for students.", teacher_file),
-        card("packet-student", "🎒 Student copy (PDF)", "No answer keys. Print this one for class. All " .. count .. ".", name),
+        card("packet-student", "Student copy (PDF)", "No answer keys. Print this one for class. All " .. count .. ".", name),
+        card("packet-teacher", "Teacher edition (PDF)", "With answer keys and teacher notes. For you, not for students.", teacher_file),
       }, pandoc.Attr("", { "packet-cards" }))
     end
-    return pandoc.Para({ button("📄 Unit packet (PDF)", name, { "btn", "btn-primary" }),
+    return pandoc.Para({ button("Unit packet (PDF)", name, { "btn", "btn-primary", "packet-one" }),
                          pandoc.Span({ pandoc.Str(" · all " .. count .. " in one file, ready to print") },
                                      pandoc.Attr("", { "text-muted" })) })
   end,
@@ -383,7 +384,9 @@ return {
     for _, o in ipairs(list) do
       table.insert(items, { pandoc.Plain(pandoc.Inlines(pandoc.utils.stringify(o))) })
     end
-    return pandoc.BulletList(items)
+    if not quarto.doc.is_format("html") then return pandoc.BulletList(items) end
+    return pandoc.Div({ pandoc.Div({ pandoc.Plain({ pandoc.Str("In this unit") }) }, pandoc.Attr("", { "objectives-head" })),
+                        pandoc.BulletList(items) }, pandoc.Attr("", { "objectives" }))
   end,
 
   -- Slide games. See games/games.js for how each one plays.

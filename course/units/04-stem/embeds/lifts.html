@@ -14,7 +14,8 @@
   .stat small { display: block; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; }
   .ok { color: var(--ok); font-weight: 700; }
   .over { border-color: var(--bad); background: #fbecec; }
-  #widest { display: block; font-size: 15px; }
+  #widest, #start { display: block; font-size: 15px; }
+  .rules { font-size: 14px; color: var(--muted); }
   .over .big, .bad { color: var(--bad); font-weight: 700; }
   label.row { display: grid; gap: 2px; font-weight: 600; }
   #about { font-size: 15px; }
@@ -34,8 +35,8 @@
       <div class="stat"><small id="heightLabel">Extension</small><span class="big" id="ext"></span></div>
       <div class="stat"><small>The claw</small>Height off the floor: <b id="height"></b><br>Moves forward: <b id="reach"></b></div>
       <div class="stat" id="lengthBox"><small>Robot length (back to front)</small><span class="big" id="length"></span>
-        <span id="widest"></span></div>
-      <label class="row">Horizontal limit (no height limit): <span id="limitV"></span><input type="range" id="limit" min="35" max="90" value="55"></label>
+        <span id="start"></span><span id="widest"></span>
+        <span class="rules">Rules: start within 20 in, never wider than 24 in. No height limit.</span></div>
       <label class="row">Lift <input type="range" id="lift" min="0" max="100" value="0"></label>
       <label class="row">Bar length: <span id="lenV"></span><input type="range" id="len" min="15" max="40" value="25"></label>
       <div id="about" class="note"></div>
@@ -50,8 +51,11 @@
       6-bar: two stages stacked, both tilted the same way: about twice the height of a 4-bar.
       DR4B (double reverse four-bar): two stages, the top one tilted the OTHER way, so the claw goes
             straight up. Extension = how far the claw has gone up from its lowest point.
-    Sizes are in cm; 1 cm is SCALE drawing units.
+    Sizes are in cm; 1 cm is SCALE drawing units. The size rules are in inches (the game is American),
+    so the robot's length shows inches first, then cm.
   */
+  const IN = 2.54, START_IN = 20, MAX_IN = 24;   // the robot must start within 20 in and never be wider than 24 in
+  const both = function (cm) { return (cm / IN).toFixed(1) + " in (" + cm.toFixed(1) + " cm)"; };
   const SCALE = 8, GROUND = 560, TOWER_X = 260, TOWER_H = 22, GAP = 7;   // tower height, bar spacing (cm)
   const MODES = {
     four: { lo: -30, hi: 60, about: "<b>4-bar:</b> one parallelogram. The claw stays level, but it moves forward and back as it lifts (an arc)." },
@@ -117,12 +121,14 @@
     return { back: Math.min.apply(null, xs), front: Math.max.apply(null, xs) };
   }
   function length(sp) { return (sp.front - sp.back) / SCALE; }
-  let widest = null;   // the widest pose in the full swing: { len, x, at }
+  let widest = null, startLen = 0, origin = 0;   // the widest pose in the full swing ({ len, x, at }), the length at the start, where the limits are measured from
   function findWidest() {
-    widest = null;
+    widest = null; origin = Infinity;
     for (let p = 0; p <= 100; p += 1) {
       const sp = span(solve(angle(p))), n = length(sp);
       if (!widest || n > widest.len) widest = { len: n, x: sp.front, at: p };
+      if (p === 0) startLen = n;
+      origin = Math.min(origin, sp.back);
     }
   }
   function clawPoint(s) { return [s.end[0][0] + FACE() * (OUT() + 26), s.end[1][1]]; }   // the claw's grip, level with the lower pin
@@ -159,22 +165,27 @@
     // the motor, on the tower's lower pivot
     el("circle", { cx: s.stages[0][1][0], cy: s.stages[0][1][1], r: 13, fill: "none", stroke: "#10233f", "stroke-width": 2, "stroke-dasharray": "4 3" }, g);
 
-    // the robot's length along the floor, the widest point in the swing, and the horizontal limit
-    // (measured from the robot's back-most point; height doesn't count)
-    const sp = span(s), limitCm = +document.getElementById("limit").value, limitX = sp.back + limitCm * SCALE, yy = GROUND + 24;
-    el("line", { x1: limitX, x2: limitX, y1: 40, y2: GROUND + 40, stroke: "#c23b3b", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, dim);
-    el("text", { x: limitX + 6, y: 58, "font-size": 16, "font-weight": 700, fill: "#c23b3b" }, dim).textContent = "horizontal limit " + limitCm + " cm";
+    // the robot's length along the floor, the widest point in the swing, and the two size limits:
+    // 20 in at the start, 24 in at any time (measured from the robot's back-most point; height doesn't count)
+    const sp = span(s), yy = GROUND + 24;
+    [[START_IN, "#e07b00", "start: 20 in (50.8 cm)", 30], [MAX_IN, "#c23b3b", "max: 24 in (61.0 cm)", 52]].forEach(function (lim) {
+      const x = origin + lim[0] * IN * SCALE;
+      el("line", { x1: x, x2: x, y1: lim[3] - 16, y2: GROUND + 40, stroke: lim[1], "stroke-width": 2.5, "stroke-dasharray": "8 6" }, dim);
+      el("text", { x: x + 6, y: lim[3], "font-size": 15, "font-weight": 700, fill: lim[1] }, dim).textContent = lim[2];
+    });
     el("line", { x1: sp.back, x2: sp.front, y1: yy, y2: yy, stroke: "#10233f", "stroke-width": 2.5, "marker-start": "url(#arrowDark)", "marker-end": "url(#arrowDark)" }, dim);
-    el("text", { x: (sp.back + sp.front) / 2 - 34, y: yy - 6, "font-size": 15, "font-weight": 700, fill: "#10233f" }, dim).textContent = length(sp).toFixed(0) + " cm";
+    el("text", { x: (sp.back + sp.front) / 2 - 34, y: yy - 6, "font-size": 15, "font-weight": 700, fill: "#10233f" }, dim).textContent = (length(sp) / IN).toFixed(1) + " in";
     if (widest) {
       el("line", { x1: widest.x, x2: widest.x, y1: GROUND - 2, y2: GROUND + 36, stroke: "#ff8c0f", "stroke-width": 3 }, dim);
       el("text", { x: widest.x + 5, y: GROUND + 36, "font-size": 13, "font-weight": 700, fill: "#b85d00" }, dim).textContent = "widest";
     }
-    const over = length(sp) > limitCm + 0.05, overEver = widest && widest.len > limitCm + 0.05;
-    document.getElementById("length").textContent = length(sp).toFixed(1) + " cm";
+    const over = length(sp) > MAX_IN * IN + 0.05, overEver = widest && widest.len > MAX_IN * IN + 0.05, overStart = startLen > START_IN * IN + 0.05;
+    document.getElementById("length").textContent = both(length(sp));
     document.getElementById("lengthBox").classList.toggle("over", over);
+    document.getElementById("start").innerHTML = "At the start: <b class=\"" + (overStart ? "bad" : "ok") + "\">" + both(startLen) +
+      (overStart ? ", over 20 in" : " ✓") + "</b>";
     document.getElementById("widest").innerHTML = widest ? "Widest in the full swing: <b class=\"" + (overEver ? "bad" : "ok") + "\">" +
-      widest.len.toFixed(1) + " cm" + (overEver ? " (over the limit by " + (widest.len - limitCm).toFixed(1) + ")" : " ✓") + "</b>" : "";
+      both(widest.len) + (overEver ? ", over 24 in by " + (widest.len / IN - MAX_IN).toFixed(1) + " in" : " ✓") + "</b>" : "";
 
     // numbers
     const low = clawPoint(solve(angle(0))), now = clawPoint(s);
@@ -216,9 +227,6 @@
   document.querySelectorAll("[data-mode]").forEach(function (b) { b.onclick = function () { setMode(b.dataset.mode); }; });
   const lift = document.getElementById("lift"), len = document.getElementById("len"), play = document.getElementById("play");
   lift.oninput = function () { t = +lift.value; playing = false; play.textContent = "▶ Lift"; draw(); };
-  const limit = document.getElementById("limit");
-  limit.oninput = function () { document.getElementById("limitV").textContent = limit.value + " cm"; draw(); };
-  document.getElementById("limitV").textContent = limit.value + " cm";
   len.oninput = function () { L = +len.value; document.getElementById("lenV").textContent = L + " cm"; tracePath(); draw(); };
   play.onclick = function () { playing = !playing; play.textContent = playing ? "❚❚ Stop" : "▶ Lift"; };
   document.getElementById("lenV").textContent = L + " cm";

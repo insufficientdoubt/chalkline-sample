@@ -8,6 +8,23 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: Unit pages and the rest of the site match the new overview
+- **Asked for:** "Make sure the unit pages and everything in that interface matches."
+- **Why:** one look across the site, after the overview restyle.
+- **Changed:**
+  - `brand/styles.scss`:
+    - The title banner on every web page is the same card as the overview's header (soft gradient, small breadcrumbs, a short orange rule).
+    - Section headings lose the blue band (a short blue bar instead).
+    - Callout boxes are rounded cards.
+    - Material tables are a rounded card, with one colour per type, the same as the overview (a bar on the left edge, the type in colour). The 📊/📦/🔑/🎒 emoji are gone.
+    - The packet cards put the Student copy first in solid green and the Teacher edition in muted orange, with line icons. On the student site, the single "Unit packet" button is green.
+  - `_extensions/classroom/shortcodes.lua`:
+    - `{{< packet >}}`: no emoji, and the student copy first.
+    - `{{< objectives >}}`: a card headed "In this unit", with green ticks (web only; PDFs keep the plain list).
+  - `brand/type-colors.html`: tags every table row with its type (`row-t-worksheet`, …), not just slides and packets.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Overview: the student copy is the main packet button
 - **Asked for:** "I'd like the student edition to be green and this teacher edition to be that muted Orange ... Teachers first move is to print the student edition and the second move is to reference the one with answer keys (if they ever do). So the UI should reflect those priorities."
 - **Why:** printing the student copy is what teachers do most; the answer keys come second.
