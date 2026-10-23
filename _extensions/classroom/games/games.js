@@ -179,6 +179,7 @@
       return true;
     } });
     start();
+    return start;   // reset: a fresh game (a new word if it's random)
   }
 
   /* ---------------- Picture reveal ---------------- */
@@ -226,6 +227,7 @@
       cheer();
     }
     start();
+    return start;
   }
 
   /* ---------------- Jeopardy ---------------- */
@@ -365,6 +367,7 @@
     }
     if (useTeams) setTeams(cfg.teams || 2);
     start();
+    return start;   // reset: scores to 0, turn to team 1, every square back (a new board if it's random)
   }
 
   /* ---------------- Quick-fire (trivia) ---------------- */
@@ -466,14 +469,20 @@
       if (right === qs.length) cheer();
     }
     begin(true);
+    return function () { begin(!!cfg.random); };   // reset: back to Start (new questions if random)
   }
 
   /* ---------------- Start every game on the page ---------------- */
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia };
+  const resets = [];
   document.querySelectorAll(".cg-game").forEach(function (el) {
     let cfg = {};
     try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
-    if (GAMES[el.dataset.game]) GAMES[el.dataset.game](el, cfg);
+    if (GAMES[el.dataset.game]) resets.push(GAMES[el.dataset.game](el, cfg));
+  });
+  // The toolbox's "Reset for the next class" starts every game in the deck again.
+  document.addEventListener("chalkline:reset", function (e) {
+    if (e.detail && e.detail.games) resets.forEach(function (r) { if (r) r(); });
   });
 })();

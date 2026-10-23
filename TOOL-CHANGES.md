@@ -16,6 +16,18 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Reset for the next class
+- **Asked for:** "Add a global reset for the deck. Teachers should be able to reset all the games at once when they go to the next class."
+- **Why:** to start fresh with the next class.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`, `toolbox.css`: **↺ Reset for the next class…** at the bottom of the toolbox menu. It opens a checklist of what's in the deck: games, poll votes and timers (ticked), pen marks on PDFs and toolbox scores (not ticked), and going back to the first slide (ticked). It sends one `chalkline:reset` event, and the toolbox part resets scores, the noise count, the stopwatch and picked names.
+  - `_extensions/classroom/games/games.js`: every game resets on the event (random games get a new word or board).
+  - `_extensions/classroom/poll.html`: votes go back to 0 (no "Sure?" needed). `_extensions/classroom/countdown.html`: timers stop and go back to the start.
+  - `_extensions/pdf-viewer/pdf-viewer.js`: clears the ink on every page of the deck's PDFs, including viewers on slides not shown yet.
+  - `README.md`: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Jeopardy: teams, turns and scores
 - **Asked for:** "For the jeopardy game - add support for 2-4 teams and score keeping/ turn taking (highlight the current team)."
 - **Why:** not given (Jeopardy is usually played in teams).

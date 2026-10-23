@@ -256,11 +256,13 @@ Every slide deck has a toolbox: press **W**, or the four-squares button in the b
 
 **Class lists** (name picker and groups): choose **+ New class…** in the class menu, type a name for the class (like 7A) and paste the students' names, one on each line (a column copied from a spreadsheet works). Add as many classes as you like and switch between them with the class menu at the top; both tools follow it. **Edit** changes or deletes the current class. **Who's here?** marks students who are away today, so they aren't picked or put in a group; it starts fresh the next day.
 
+**Reset for the next class:** at the bottom of the toolbox menu (**W**). It starts this deck again: every game, poll and timer back to the beginning, and back to the first slide. Two more you can tick: the pen marks on the deck's PDF worksheets, and the toolbox's scores, noise count, stopwatch and picked names. It only shows what the deck has.
+
 Open windows, where they are, the scores, the class lists and the settings are remembered **only in that browser on that computer**, so they come back in the next deck and the next lesson. Names are never uploaded or put in the course files or on the website (each class list shows a note saying so). That also means a class list typed on one computer isn't on another, and clearing the browser's data deletes it: keep your own copy of each list to paste in again. To hide the toolbox in one deck, add `classroom-tools: false` to its labels.
 
 ## Slide games
 
-Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
+Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
 | Game | How it plays |
 |---|---|
