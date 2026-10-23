@@ -1,6 +1,6 @@
 // PDF viewer: draws PDFs with pdf.js into the boxes that the pdf-viewer shortcode leaves
 // (see pdf-viewer.lua). Three parts:
-//   Viewer   one page at a time, with ‹ › buttons and pens   (layout="viewer")
+//   Viewer   one page at a time, with ‹ › buttons, zoom and pens (layout="viewer")
 //   Gallery  every page as a thumbnail                       (layout="gallery")
 //   Popup    one big page in a window you can drag and resize; opened from either
 // Ink is saved per PDF page in this browser (localStorage) and shows wherever that page is
@@ -39,6 +39,8 @@ const PENS = {
   black: { label: "Black pen",   color: "#111827", width: 0.004 },
   hi:    { label: "Highlighter", color: "#facc15", width: 0.024, alpha: 0.4 },
 };
+const TEXT_SIZE = 0.028;        // typed text: letter height as a fraction of the page width
+const ZOOMS = [1, 1.25, 1.5, 2, 2.5, 3, 4];   // 1 = the whole page fits
 const STORE = "pdf-viewer-ink:";
 const inkMemory = new Map();   // works even where localStorage is blocked
 const pageViews = new Set();   // every page on screen, to redraw ink drawn somewhere else
@@ -75,6 +77,9 @@ const ICONS = {
   big: '<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>',
   open: '<path d="M14 4h6v6M20 4L10 14"/><path d="M18 14v6H4V6h6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
+  text: '<path d="M5 7V5h14v2M12 5v14M9 19h6"/>',
+  zoomIn: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6M10.5 7.5v6"/>',
+  zoomOut: '<circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.5-4.5M7.5 10.5h6"/>',
 };
 function button(icon, label, onClick, cls = "") {
   const b = document.createElement("button");
@@ -96,31 +101,33 @@ function el(tag, cls, text) {
 // ---- One PDF page on screen: the page itself, with an ink layer on top ----
 
 class PageView {
-  constructor(url, getTool) {
+  // owner: the viewer or popup whose pen bar says what a touch does (owner.tool: a pen,
+  // "text", "eraser" or null = drawing off; owner.color: the text color). null: no drawing.
+  constructor(url, owner) {
     this.url = url;
     this.n = 0;
-    this.getTool = getTool;   // () => pen name, "eraser" or null; null = drawing off
+    this.owner = owner;
     this.el = el("div", "pdfv-page");
     this.pdf = el("canvas", "pdfv-pdf");
     this.ink = el("canvas", "pdfv-ink");
     this.el.append(this.pdf, this.ink);
     pageViews.add(this);
-    if (getTool) this.listen();
+    if (owner) this.listen();
   }
 
-  // Fit page n into a box of w × h (layout pixels) and draw it sharp at the real screen size.
-  async show(doc, n, w, h) {
+  // Fit page n into a box of w × h (layout pixels), times `zoom`, and draw it sharp at the real screen size.
+  async show(doc, n, w, h, zoom = 1) {
     this.n = n;
     const page = await doc.getPage(n);
     const base = page.getViewport({ scale: 1 });
-    const fit = Math.max(0.05, Math.min(w / base.width, h / base.height));
+    const fit = Math.max(0.05, Math.min(w / base.width, h / base.height)) * zoom;
     this.w = Math.round(base.width * fit);
     this.h = Math.round(base.height * fit);
     this.el.style.width = this.w + "px";
     this.el.style.height = this.h + "px";
     // reveal.js scales the whole slide, so the page can be bigger on screen than its layout size
-    const zoom = (this.el.getBoundingClientRect().width / this.w) || 1;
-    const px = Math.min(4, zoom * (window.devicePixelRatio || 1));
+    const scale = (this.el.getBoundingClientRect().width / this.w) || 1;
+    const px = Math.min(4, scale * (window.devicePixelRatio || 1), 4096 / Math.max(this.w, this.h));   // browsers limit canvas size
     const viewport = page.getViewport({ scale: fit * px });
     for (const c of [this.pdf, this.ink]) {
       c.width = Math.round(viewport.width);
@@ -137,7 +144,15 @@ class PageView {
     ctx.clearRect(0, 0, c.width, c.height);
     if (!this.n) return;
     ctx.lineCap = ctx.lineJoin = "round";
+    ctx.textBaseline = "top";
     for (const s of readInk(this.url, this.n)) {
+      if (s.s != null) {   // typed text
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = s.c;
+        ctx.font = this.font(s.f * c.width);
+        ctx.fillText(s.s, s.p[0] * c.width, s.p[1] * c.height);
+        continue;
+      }
       ctx.globalAlpha = s.a || 1;
       ctx.strokeStyle = s.c;
       ctx.lineWidth = Math.max(1, s.w * c.width);
@@ -148,6 +163,41 @@ class PageView {
       ctx.stroke();
     }
     ctx.globalAlpha = 1;
+  }
+
+  font(size) {
+    return "600 " + size + "px " + getComputedStyle(this.el).fontFamily;
+  }
+
+  // Text tool: a box to type in where the page was tapped. Enter (or tapping elsewhere) keeps it.
+  typeAt(e) {
+    const [x, y] = this.spot(e), color = this.owner.color, f = TEXT_SIZE;
+    const box = el("input", "pdfv-text");
+    box.type = "text";
+    box.setAttribute("aria-label", "Type on the page");
+    Object.assign(box.style, { left: x * 100 + "%", top: y * 100 + "%", color, fontSize: f * this.w + "px" });
+    this.el.append(box);
+    let done = false;
+    const finish = (keep) => {
+      if (done) return;
+      done = true;
+      const text = box.value.trim();
+      box.remove();
+      if (!keep || !text) return;
+      const ctx = this.ink.getContext("2d");
+      ctx.font = this.font(f * this.ink.width);
+      const tw = ctx.measureText(text).width / this.ink.width;
+      const strokes = readInk(this.url, this.n);
+      strokes.push({ c: color, f, p: [+x.toFixed(4), +y.toFixed(4)], s: text, tw: +tw.toFixed(4) });
+      writeInk(this.url, this.n, strokes);
+    };
+    box.addEventListener("keydown", (ev) => {
+      ev.stopPropagation();   // typing isn't a slide shortcut
+      if (ev.key === "Enter") finish(true);
+      else if (ev.key === "Escape") finish(false);
+    });
+    box.addEventListener("blur", () => finish(true));
+    box.focus();
   }
 
   // Where a pointer is on the page, as fractions
@@ -170,6 +220,10 @@ class PageView {
       for (let k = 1; k <= steps; k++) spots.push([x0 + (x - x0) * k / steps, (y0 + (y - y0) * k / steps) * ratio]);
       const strokes = readInk(this.url, this.n);
       const kept = strokes.filter((s) => {
+        if (s.s != null) {   // typed text: rub anywhere over it
+          const tx = s.p[0], ty = s.p[1] * ratio;
+          return !spots.some(([ex, ey]) => ex > tx - reach && ex < tx + s.tw + reach && ey > ty - reach && ey < ty + s.f * 1.2 + reach);
+        }
         for (let i = 0; i < s.p.length; i += 2) {   // near any part of the line, not just its points
           const j = Math.max(0, i - 2);
           for (const [ex, ey] of spots) {
@@ -181,10 +235,11 @@ class PageView {
       if (kept.length !== strokes.length) { inkMemory.set(inkKey(this.url, this.n), kept); redraw(); }
     };
     ink.addEventListener("pointerdown", (e) => {
-      const tool = this.getTool();
+      const tool = this.owner.tool;
       if (!tool || !this.n) return;
       e.preventDefault();
       e.stopPropagation();
+      if (tool === "text") { this.typeAt(e); return; }
       ink.setPointerCapture(e.pointerId);
       if (tool === "eraser") { erasing = true; last = null; erase(e); return; }
       const pen = PENS[tool];
@@ -225,10 +280,14 @@ function penBar(owner) {
   const bar = el("div", "pdfv-pens");
   const buttons = {};
   owner.tool = null;
+  owner.color = PENS.red.color;
   const pick = (tool) => {
     owner.tool = owner.tool === tool ? null : tool;   // tap the same pen again: drawing off
+    if (PENS[tool] && !PENS[tool].alpha) owner.color = PENS[tool].color;   // text is in the last pen's color
+    buttons.text.style.setProperty("--pen", owner.color);
     for (const [name, b] of Object.entries(buttons)) b.setAttribute("aria-pressed", String(name === (owner.tool || "hand")));
     owner.root.classList.toggle("pdfv-drawing", !!owner.tool);
+    owner.root.dataset.tool = owner.tool || "";
   };
   buttons.hand = button("hand", "Drawing off", () => pick(null));
   bar.append(buttons.hand);
@@ -238,7 +297,9 @@ function penBar(owner) {
     buttons[name] = b;
     bar.append(b);
   }
-  buttons.eraser = button("eraser", "Eraser: rub out a line", () => pick("eraser"));
+  buttons.text = button("text", "Text: tap the page, then type (in the last pen's color)", () => pick("text"), "pdfv-textbtn");
+  buttons.eraser = button("eraser", "Eraser: rub out a line or text", () => pick("eraser"));
+  bar.append(buttons.text);
   bar.append(buttons.eraser,
     button("undo", "Undo the last line", () => {
       const strokes = readInk(owner.url, owner.n);
@@ -255,6 +316,60 @@ function showError(root, title) {
   root.replaceChildren(el("p", "pdfv-error", "This PDF isn't available here: " + title + "."));
 }
 
+// ---- Zoom (viewer and popup): − 100% + buttons, Ctrl/⌘ + scroll or a trackpad pinch; drag to move around ----
+
+function zoomBar(owner) {
+  const bar = el("div", "pdfv-zoom");
+  owner.zoom = 1;
+  const out = button("zoomOut", "Zoom out", () => step(-1));
+  const label = el("button", "pdfv-btn pdfv-zoom-label", "100%");
+  label.type = "button";
+  label.title = "Fit the whole page";
+  label.addEventListener("click", (e) => { e.stopPropagation(); set(1); });
+  const inn = button("zoomIn", "Zoom in", () => step(1));
+  const step = (d) => {
+    const i = ZOOMS.findIndex((z) => z >= owner.zoom - 1e-6);
+    set(ZOOMS[Math.min(Math.max(0, i + d), ZOOMS.length - 1)]);
+  };
+  const set = async (z) => {
+    if (z === owner.zoom || !owner.doc) return;
+    const st = owner.stage;   // keep the middle of what's showing in the middle
+    const fx = (st.scrollLeft + st.clientWidth / 2) / st.scrollWidth, fy = (st.scrollTop + st.clientHeight / 2) / st.scrollHeight;
+    owner.zoom = z;
+    label.textContent = Math.round(z * 100) + "%";
+    out.disabled = z === ZOOMS[0];
+    inn.disabled = z === ZOOMS[ZOOMS.length - 1];
+    owner.root.classList.toggle("pdfv-zoomed", z > 1);
+    await owner.go(owner.n);
+    st.scrollLeft = fx * st.scrollWidth - st.clientWidth / 2;
+    st.scrollTop = fy * st.scrollHeight - st.clientHeight / 2;
+  };
+  owner.zoomStep = step;
+  owner.zoomTo = set;
+  out.disabled = true;
+  let wait = 0;
+  owner.stage.addEventListener("wheel", (e) => {
+    if (!e.ctrlKey && !e.metaKey) return;   // a trackpad pinch arrives as Ctrl + scroll
+    e.preventDefault();
+    if (Date.now() - wait < 150) return;
+    wait = Date.now();
+    step(e.deltaY < 0 ? 1 : -1);
+  }, { passive: false });
+  // Zoomed in with drawing off: drag with the mouse to move around (fingers scroll by themselves)
+  owner.stage.addEventListener("pointerdown", (e) => {
+    if (owner.zoom === 1 || owner.tool || e.pointerType !== "mouse") return;
+    const st = owner.stage, start = { x: e.clientX, y: e.clientY, l: st.scrollLeft, t: st.scrollTop };
+    st.setPointerCapture(e.pointerId);
+    st.classList.add("pdfv-panning");
+    const move = (ev) => { st.scrollLeft = start.l - (ev.clientX - start.x); st.scrollTop = start.t - (ev.clientY - start.y); };
+    const up = () => { st.classList.remove("pdfv-panning"); st.removeEventListener("pointermove", move); st.removeEventListener("pointerup", up); };
+    st.addEventListener("pointermove", move);
+    st.addEventListener("pointerup", up);
+  });
+  bar.append(out, label, inn);
+  return bar;
+}
+
 // ---- Viewer: one page at a time ----
 
 class Viewer {
@@ -263,13 +378,13 @@ class Viewer {
     this.title = root.dataset.title;
     this.n = parseInt(root.dataset.page, 10) || 1;
     this.stage = el("div", "pdfv-stage");
-    this.page = new PageView(null, () => this.tool);
+    this.page = new PageView(null, this);
     this.stage.append(this.page.el);
     this.prev = button("prev", "Previous page", () => this.go(this.n - 1));
     this.next = button("next", "Next page", () => this.go(this.n + 1));
     this.count = el("span", "pdfv-count");
     const nav = el("div", "pdfv-bar");
-    nav.append(this.prev, this.count, this.next, el("span", "pdfv-title", this.title),
+    nav.append(this.prev, this.count, this.next, zoomBar(this), el("span", "pdfv-title", this.title),
       button("big", "Open large", () => popup.open(this.url, this.title, this.n)),
       openLink(() => this.url));
     root.replaceChildren(...(root.dataset.ink === "false" ? [] : [penBar(this)]), this.stage, nav);
@@ -285,7 +400,7 @@ class Viewer {
     this.count.textContent = this.n + " / " + this.doc.numPages;
     this.prev.disabled = this.n === 1;
     this.next.disabled = this.n === this.doc.numPages;
-    await this.page.show(this.doc, this.n, this.stage.clientWidth, this.stage.clientHeight);
+    await this.page.show(this.doc, this.n, this.stage.clientWidth, this.stage.clientHeight, this.zoom);
   }
   refresh() { return this.go(this.n); }
 }
@@ -344,8 +459,9 @@ const popup = {
     const head = el("div", "pdfv-bar pdfv-head");
     head.append(this.title, this.prev, this.count, this.next, button("close", "Close (Esc)", () => this.close()));
     this.stage = el("div", "pdfv-stage");
-    this.page = new PageView(null, () => this.tool);
+    this.page = new PageView(null, this);
     this.stage.append(this.page.el);
+    head.insertBefore(zoomBar(this), head.lastChild);
     const grip = el("div", "pdfv-grip");
     grip.title = "Drag to resize";
     root.append(head, penBar(this), this.stage, grip);
@@ -383,7 +499,15 @@ const popup = {
     });
 
     addEventListener("keydown", (e) => {
-      if (!this.isOpen) return;
+      if (!this.isOpen || e.target.closest("input, textarea")) return;
+      const zoomKey = { "+": 1, "=": 1, "-": -1 }[e.key];
+      if (zoomKey || e.key === "0") {
+        if (zoomKey) this.zoomStep(zoomKey);
+        else this.zoomTo(1);
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
       const step = { ArrowLeft: -1, ArrowUp: -1, PageUp: -1, ArrowRight: 1, ArrowDown: 1, PageDown: 1, " ": 1 }[e.key];
       if (step) this.go(this.n + step);
       else if (e.key === "Escape") this.close();
@@ -418,7 +542,7 @@ const popup = {
     this.count.textContent = this.n + " / " + this.doc.numPages;
     this.prev.disabled = this.n === 1;
     this.next.disabled = this.n === this.doc.numPages;
-    await this.page.show(this.doc, this.n, this.stage.clientWidth, this.stage.clientHeight);
+    await this.page.show(this.doc, this.n, this.stage.clientWidth, this.stage.clientHeight, this.zoom);
   },
 };
 

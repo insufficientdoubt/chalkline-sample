@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Zoom and a text tool in the PDF viewer
+- **Asked for:** "Add a zoom function for the viewer. I think it's fine on the classroom display, but a bit tough on the teachers laptop. Also for annotation - add a text tool."
+- **Why:** the worksheet is hard to read on a laptop screen.
+- **Changed:**
+  - `_extensions/pdf-viewer/pdf-viewer.js`: zoom (− 100% + in the viewer's bottom bar and the large window's title bar, 100–400%; Ctrl/⌘ + scroll or a trackpad pinch; + − 0 keys in the large window; tap 100% to fit the page again). Zoomed in, the page scrolls, or drag it with the mouse. A **T** text tool: tap the page, type, Enter; the text is in the last pen's color, saved with the ink, and the eraser and undo remove it. Typing doesn't trigger slide shortcuts.
+  - `_extensions/pdf-viewer/pdf-viewer.css`: a scrollable page area, the typing box, zoom buttons; buttons on slides are 40px so everything fits in a narrow column (the title hides when the viewer is narrow).
+  - `_extensions/pdf-viewer/pdf-viewer.lua`, `README.md`: documented.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The online build uses the project's own Chinese font
 - **Asked for:** "Why does it need to reinstall the font", after the publish build hung twice on downloading it.
 - **Why:** each GitHub build starts on a fresh computer, so it downloaded the Chinese font package from Ubuntu every time; today that download hung and the site didn't update.
