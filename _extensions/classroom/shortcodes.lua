@@ -27,6 +27,14 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          Terms come from vocab/data/vocab.csv
                                          (via scripts/vocab_terms.py). PDF/Word: the word in bold.
 
+  {{< snowman >}}                        slide games (slides only). A random word from the vocab
+  {{< picture-reveal >}}                 list, with 🔀 for a new one; unit=1 for one unit's words;
+  {{< jeopardy unit=1 >}}                or name a word: {{< snowman "democracy" >}}. Your own
+  {{< trivia unit=1 >}}                  word: {{< snowman "Parthenon" hint="..." image="..." >}}.
+                                         Your own Jeopardy and quick-fire questions: a ::: div
+                                         (see filter.lua). Options: tiles=16 (picture-reveal),
+                                         rows=4 (jeopardy), count=5 seconds=10 title="..." (trivia).
+
 Quarto's built-in {{< pagebreak >}} also works everywhere.
 ]]
 
@@ -53,10 +61,10 @@ local function include_once(file)
 end
 
 -- VEX vocab terms, loaded once from generated/vocab-terms.json and looked up by ID, term or "also called" name.
-local vex_vocab
+local vex_vocab, vex_list
 local function vocab_lookup(key)
   if not vex_vocab then
-    vex_vocab = {}
+    vex_vocab, vex_list = {}, {}
     local path = (quarto.project.directory or ".") .. "/generated/vocab-terms.json"
     local f = io.open(path, "r")
     if not f then
@@ -66,6 +74,7 @@ local function vocab_lookup(key)
     local data = quarto.json.decode(f:read("a"))
     f:close()
     for _, t in ipairs(data.terms) do
+      table.insert(vex_list, t)
       for _, k in ipairs({ t.id, t.term, table.unpack(t.aka or {}) }) do
         local lk = k:lower()
         if vex_vocab[lk] == nil then vex_vocab[lk] = t end
@@ -73,6 +82,53 @@ local function vocab_lookup(key)
     end
   end
   return vex_vocab[key:lower()]
+end
+
+-- Slide games (games/): settings for a game from its shortcode. Three ways to choose the words:
+--   {{< snowman >}}                     a random word from the whole vocab list (🔀 gives a new one)
+--   {{< snowman unit=1 >}}              a random word from unit 1's list (🔀 too)
+--   {{< snowman "democracy" >}}         this vocab word: its picture and definition are the hint
+--   {{< snowman "Parthenon" hint="A famous temple in Athens" image="images/parthenon.jpg" >}}
+--                                       your own word (hint and image optional)
+-- No 中文: games are review, and 中文 stays out of review materials.
+local games = dofile(quarto.utils.resolve_path("games/games.lua"))
+
+local function game_word(t, up)
+  return { word = t.term, hint = t.definition, image = t.image ~= "" and (up .. t.image) or "", example = t.example or "" }
+end
+
+local function game_config(args, kwargs, kind)
+  local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+  local image = str(kwargs["image"], nil)
+  if image and not image:match("^%a+://") then   -- so the picture is copied to the site (the path is from this file)
+    quarto.doc.add_resource(pandoc.path.join({ pandoc.path.directory(quarto.doc.input_file), image }))
+  end
+  local word = str(args[1], nil)
+  if word then
+    local t = vocab_lookup(word)
+    local w = t and game_word(t, up) or { word = word, hint = "", image = "", example = "" }
+    w.hint = str(kwargs["hint"], w.hint)
+    w.image = image or w.image
+    if kind == "picture-reveal" and w.image == "" then
+      quarto.log.warning(kind .. ' shortcode: "' .. word .. '" has no picture; add image="..."')
+    end
+    return { words = { w }, random = false }
+  end
+  vocab_lookup("")   -- loads the list
+  local unit = tonumber(str(kwargs["unit"], ""))
+  local words = {}
+  for _, t in ipairs(vex_list or {}) do
+    local in_unit = not unit
+    for _, u in ipairs(t.units or {}) do
+      if u == unit then in_unit = true end
+    end
+    if in_unit and (kind ~= "picture-reveal" or t.image ~= "") then table.insert(words, game_word(t, up)) end
+  end
+  if #words == 0 then
+    quarto.log.warning(kind .. " shortcode: no vocab words" .. (unit and (" for unit " .. unit) or "") ..
+      " (is the unit's list in course/vocab/?)")
+  end
+  return { words = words, random = true }
 end
 
 -- Outside PDFs: page counts from generated/pdf-pages.json, and paths from the project root.
@@ -319,6 +375,37 @@ return {
       table.insert(items, { pandoc.Plain(pandoc.Inlines(pandoc.utils.stringify(o))) })
     end
     return pandoc.BulletList(items)
+  end,
+
+  -- Slide games. See games/games.js for how each one plays.
+  ["snowman"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Snowman") end
+    return games.div("snowman", game_config(args, kwargs, "snowman"))
+  end,
+
+  ["picture-reveal"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Picture reveal") end
+    local c = game_config(args, kwargs, "picture-reveal")
+    c.tiles = tonumber(str(kwargs["tiles"], "16")) or 16
+    return games.div("picture-reveal", c)
+  end,
+
+  -- Jeopardy and quick-fire from the vocab list. To write your own questions, use a ::: div
+  -- (filter.lua): ::: {.jeopardy} and ::: {.trivia}.
+  ["jeopardy"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Jeopardy") end
+    local c = game_config({}, kwargs, "jeopardy")
+    c.rows = tonumber(str(kwargs["rows"], "4")) or 4
+    return games.div("jeopardy", c)
+  end,
+
+  ["trivia"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Quick-fire questions") end
+    local c = game_config({}, kwargs, "trivia")
+    c.count = tonumber(str(kwargs["count"], "5")) or 5
+    c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
+    c.title = str(kwargs["title"], "Quick-fire!")
+    return games.div("trivia", c)
   end,
 
   ["timer"] = function(args)
