@@ -7,7 +7,6 @@ Things we've talked about but not built yet. Add to this list; move an idea out 
 - **Heads up / Taboo.** A big word card for one student who faces the class; classmates describe the word without saying it (or without the "don't say" words under it). A timer, and *Got it* / *Pass* buttons that count. Good speaking practice for English learners. From the vocab list: the word, with its meaning hidden for the teacher.
 - **Spin the wheel.** A colorful wheel that spins and stops on one slice: a question type, a topic, a team, or a student from the name picker's class list. Looks great on a smartboard.
 - **Odd one out.** Four pictures or words; students say which doesn't belong, and why. No single right answer, so it's good for talking. From the vocab list: three words from one topic and one from another.
-- **Put it in order.** Drag events onto a timeline, or the steps of a process into order, then check. Fits history units well (Republic → Empire, the stages of a dig).
 - **Zoom in.** A photo starts zoomed in close; each tap zooms out a little. "What is it?"
 - **Who wants to be a millionaire.** A question ladder with lifelines: 50:50, and "ask the class", using the tap-to-vote poll.
 

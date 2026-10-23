@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Build the sentence, Fill in the blanks, Put it in order, a Venn diagram, and a Spotlight
+- **Asked for:** whiteboard learning activities: "build those five" (a sentence builder, fill in the blanks, put it in order, a Venn layout for Sort it, and a spotlight; a screen shade was dropped because fragments already do it).
+- **Why:** "Are there any obvious learning activities that work well with interactive whiteboards that we should include?"
+- **Changed:** `_extensions/classroom/games/activities.js` and `activities.css` (new): the three activities, each working by drag or by tap-then-tap. `games.lua`: loads them. `timeline.js`: shares its drag helper. `filter.lua`: reads `::: {.sentence-builder}`, `{.fill-blanks}`, `{.put-in-order}` and Sort it's `layout="venn"`. `games.js` and `games.css`: the Venn layout. `toolbox/toolbox.js` and `toolbox.css`: a 🔦 Spotlight tool (not reopened in the next deck). A new demo deck in Unit 2, the Start here catalogue (46 features), README and IDEAS.md updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The clock is a toolbox tool; see-through grey tool windows
 - **Asked for:** "Remember the clock we have on each side? Make it into one of the new teacher tools so we can drag it around. have it always on by default and have it have a gray translucent background. Actually give all of the teacher tools a grey translucent background."
 - **Why:** not given (the fixed corner clock couldn't be moved).

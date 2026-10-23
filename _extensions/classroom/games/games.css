@@ -660,3 +660,36 @@
 .reveal .cg-sort-why b { color: #a5262a; }
 .reveal .cg-sort-why.cg-pop { animation: cg-pop 0.3s ease-out; }
 .reveal .cg-sort-pictures .cg-sort-col { min-height: 210px; }
+
+/* Sort it, layout="venn": two overlapping circles; the three groups are left, both, right. */
+.reveal .cg-sort-cols.cg-venn { position: relative; grid-template-columns: 37fr 26fr 37fr; gap: 0; min-height: 300px; }
+.reveal .cg-venn-circle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 63%;
+  border: 4px solid var(--cat);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--cat) 7%, transparent);
+  pointer-events: none;
+}
+.reveal .cg-venn-a { left: 0; }
+.reveal .cg-venn-b { right: 0; }
+.reveal .cg-venn .cg-sort-col {
+  position: relative;
+  z-index: 1;
+  align-content: center;
+  min-height: 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.reveal .cg-venn .cg-sort-col:first-of-type { padding-left: 16%; }
+.reveal .cg-venn .cg-sort-col:last-of-type { padding-right: 16%; }
+.reveal .cg-venn .cg-sort-col.cg-target:hover { background: color-mix(in srgb, var(--cat) 10%, transparent); box-shadow: none; }
+.reveal .cg-venn .cg-sort-head { position: absolute; top: 12px; left: 0; right: 0; }
+.reveal .cg-venn .cg-sort-col:first-of-type .cg-sort-head { padding-left: 10%; }
+.reveal .cg-venn .cg-sort-col:last-of-type .cg-sort-head { padding-right: 10%; }
+.reveal .cg-venn .cg-sort-col:nth-of-type(2) .cg-sort-head { top: 46px; font-size: 19px; }
+.reveal .cg-venn .cg-sort-chip { font-size: 18px; padding: 4px 10px; }

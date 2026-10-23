@@ -611,3 +611,6 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 /* ---- Clock ---- */
 .ct-body.ct-clock { justify-content: center; align-items: center; padding: 10px 8px 4px; }
 .ct-clock-time { font-size: min(62cqh, 30cqw); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap; }
+
+/* ---- Spotlight: the dark screen with a hole in it, under the tool windows ---- */
+.ct-spot-shade { position: fixed; inset: 0; z-index: 0; cursor: move; touch-action: none; }

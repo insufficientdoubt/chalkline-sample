@@ -84,6 +84,8 @@ end
 --   - **Athens**                            its items under it. An item can have a picture, and a
 --     - Democracy | Citizens voted          reason after a | (shown when it goes in the wrong group).
 --     - ![Parthenon](images/parthenon.jpg)  feedback="end": no feedback until Check.
+--                                           layout="venn": a Venn diagram of three groups, in the
+--                                           order left, both, right.
 --   ::: {.matching}  or  ::: {.memory}     pairs to match: a word, a |, then its partner
 --   - democracy | Citizens vote on laws
 --   :::
@@ -194,7 +196,38 @@ local function label_config(el)
   return { image = el.attributes["image"] or "", labels = labels }
 end
 
+-- Learning activities (activities.js):
+--   ::: {.sentence-builder}           one sentence a line; words mix up. Keep words together with /
+--   - The Romans / built / long roads.   ("The Romans" stays one tile). After a |, a hint; a picture too.
+--   :::
+--   ::: {.fill-blanks extra="king, temple"}   a text with the missing words in [square brackets];
+--   The Romans built [aqueducts] to carry [water].   extra= adds wrong words to the word bank.
+--   :::
+--   ::: {.put-in-order first="First" last="Last"}   in the right order; they mix up. A picture and a
+--   - Dig a channel | reason (after a |, shown once they're in order) are optional.
+--   :::
+local function activity_from_div(el)
+  if el.classes:includes("sentence-builder") then
+    local sentences = {}
+    for _, item in ipairs(list_items(el.content)) do
+      local it = sort_item(item)
+      table.insert(sentences, { text = it.text, hint = it.why, image = it.image })
+    end
+    return games.div("sentence-builder", { sentences = sentences })
+  end
+  if el.classes:includes("fill-blanks") then
+    el.content:walk({ Image = function(img) picture(img.src) end })
+    return games.div("fill-blanks", { html = pandoc.write(pandoc.Pandoc(el.content), "html"), extra = el.attributes["extra"] or "" })
+  end
+  local items = {}
+  for _, item in ipairs(list_items(el.content)) do table.insert(items, sort_item(item)) end
+  return games.div("put-in-order", { items = items, first = el.attributes["first"] or "", last = el.attributes["last"] or "" })
+end
+
 local function game_from_div(el)
+  for _, cls in ipairs({ "sentence-builder", "fill-blanks", "put-in-order" }) do
+    if el.classes:includes(cls) then return activity_from_div(el) end
+  end
   if el.classes:includes("timeline-interactive") then return games.div("timeline", timeline_config(el)) end
   if el.classes:includes("timeline-activity") then return games.div("timeline-activity", timeline_config(el)) end
   if el.classes:includes("label-it") then return games.div("label-it", label_config(el)) end
@@ -218,7 +251,8 @@ local function game_from_div(el)
       for _, c in ipairs(list_items(item)) do table.insert(items, sort_item(c)) end
       table.insert(groups, { name = item[1] and pandoc.utils.stringify(item[1]) or "", items = items })
     end
-    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now" })
+    return games.div("sort", { groups = groups, random = false, feedback = el.attributes["feedback"] or "now",
+      layout = el.attributes["layout"] or "" })   -- layout="venn": three groups, the middle one is "both"
   end
   local kind = el.classes:includes("matching") and "matching" or el.classes:includes("memory") and "memory" or nil
   if kind then
@@ -234,7 +268,8 @@ end
 
 local function Div(el)
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
-                           ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it" }) do
+                           ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
+                           ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do
     if el.classes:includes(cls) then
       if quarto.doc.is_format("revealjs") then return game_from_div(el) end
       return games.placeholder(name)
