@@ -2,6 +2,11 @@
 
 Things we've talked about but not built yet. Add to this list; move an idea out when it's built (and log it in `TOOL-CHANGES.md`).
 
+## To do next
+
+- **A new intro deck: everything interactive.** One deck that walks a new teacher through every interactive option now in Chalkline (review games, learning activities, timelines, Label it, polls, the toolbox, the chalkboard, PDF worksheets), each with a live example and one line on how to write it. The Start here catalogue slide lists them; this would *teach* them.
+- **An intro piece: "lists are the secret".** A short deck (or a section of the one above) that drives home the big idea: **make lists of your course's vocabulary and key facts first** (words and meanings, dates and events, people and what they did, places and pictures). Once a list exists, it becomes a quick, reusable activity in minutes: snowman, matching, memory, bingo, Jeopardy, sort it, timelines, flashcards, quizzes. Show one list turning into five activities. The vocab list (`vocab/data/vocab.csv`) is the model.
+
 ## Review games
 
 - **Heads up / Taboo.** A big word card for one student who faces the class; classmates describe the word without saying it (or without the "don't say" words under it). A timer, and *Got it* / *Pass* buttons that count. Good speaking practice for English learners. From the vocab list: the word, with its meaning hidden for the teacher.
