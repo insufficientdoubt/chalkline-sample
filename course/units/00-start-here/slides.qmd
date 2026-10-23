@@ -234,6 +234,10 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 Each one is a working example in this course. Click to jump there.
 
 ::: {.feature-list}
+::: {.new-features}
+[New]{.new-badge} 📑 [**PDF gallery:** every page, tap one to see it big](../01-ancient-greece/city-states-slides.html#/unit-printables) · 📄 [**A worksheet on a slide:** turn pages, write on it](../01-ancient-greece/city-states-slides.html#/worksheet-on-a-slide) · 🖍️ [**Chalkboard:** draw on any slide](../01-ancient-greece/city-states-slides.html#/draw-on-the-slide)
+:::
+
 :::: {.columns}
 ::: {.column width="50%"}
 - 👆 **Fragments:** [reveal answers one click at a time](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)
@@ -257,6 +261,9 @@ Each one is a working example in this course. Click to jump there.
   .reveal .feature-list { font-size: 0.74em; }
   .reveal .feature-list li { margin-bottom: 0.35em; }
   .reveal .feature-list a { color: #0068c4; text-decoration: underline; text-underline-offset: 3px; }
+  .reveal .new-features { background: #fff4e5; border: 2px solid #ff8c0f; border-radius: 10px; padding: 0.35em 0.7em; margin-bottom: 0.5em; line-height: 1.6; }
+  .reveal .new-features p { margin: 0; }
+  .reveal .new-badge { background: #ff8c0f; color: #fff; font-weight: 700; border-radius: 999px; padding: 0.05em 0.6em; margin-right: 0.3em; }
 </style>
 ```
 
@@ -265,7 +272,7 @@ These links jump between slide decks, too: any slide can link to any other slide
 :::
 
 ::: notes
-Every link opens the example slide in another deck: press the browser's Back button to return here. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
+Every link opens the example slide in another deck: press the browser's Back button to return here. The orange **New** row is the newest: PDFs on slides (a gallery, or one page at a time, with pens for touch screens) and the chalkboard. In a slide, a link to another deck is just `[text](../01-ancient-greece/city-states-slides.html#/athens-or-sparta)`.
 :::
 
 ## It always looks like your school

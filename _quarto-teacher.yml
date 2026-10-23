@@ -11,3 +11,7 @@ website:
   title: "Chalkline Sample (TEACHER)"
 
 edition: Teacher Edition       # printed on the corner tab of teacher PDFs
+
+pdf-viewer:                    # slides show the student copy of a PDF (no answer keys) when there is one:
+  prefer: "{name}-student.pdf" # scripts/packets.py writes it next to the teacher edition. To show the
+                               # teacher edition on a slide (say, for training), add prefer=false to it.
