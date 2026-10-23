@@ -6,8 +6,9 @@
     Name picker     picks a student from a class list, everyone once before anyone twice
     Groups          random groups from a class list (groups of n, or n groups)
     Scoreboard      points for teams (names, colors, + and −); narrow, it stacks each team
-    Voice level     0 Silent to 4 Presenter; 🔊 adds a noise meter: the room's sound level from
-                    the microphone, a "too loud" line with an alarm and a red flash, and a count
+    Voice level     0 Silent to 4 Presenter; the microphone button adds a noise meter: the room's
+                    sound level, with a "too loud" line set by the voice level, an alarm and a
+                    red flash over it, and a count of the times
     Slide size      the space around the slides, and standard or wide (16:9), on this screen
     Traffic light   red, yellow, green
     QR code         a code for this deck's address (or any link) for students' tablets
@@ -387,18 +388,22 @@
     },
 
     voice: {
-      title: "Voice level", icon: "🤫", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count"],
+      title: "Voice level", icon: "🤫", w: 400, h: 250, minW: 150, minH: 200, keys: ["voice", "noise-count", "noise-sense"],
       build: function (body, panel, grow) {
-        // The voice level, and (🔊) a noise meter under it: the room's sound level from the microphone,
-        // a "too loud" line, an alarm and a red flash over the line, and a count of the times.
+        // The voice level, and (the microphone button) a noise meter under it. The voice level sets
+        // the "too loud" line: Silent is strict, Presenter allows the most. The meter also counts the
+        // times the class went over the line, and flashes and beeps when it does.
         const LEVELS = [
-          { icon: "🤫", label: "Silent", color: "#C8372D" },
-          { icon: "💬", label: "Whisper", color: "#ff8c0f" },
-          { icon: "🧑‍🤝‍🧑", label: "Partner talk", color: "#d4a000" },
-          { icon: "👥", label: "Group talk", color: "#2e9e4f" },
-          { icon: "🎤", label: "Presenter", color: "#0087ff" },
+          { icon: "🤫", label: "Silent", color: "#C8372D", limit: 22 },
+          { icon: "💬", label: "Whisper", color: "#ff8c0f", limit: 34 },
+          { icon: "🧑‍🤝‍🧑", label: "Partner talk", color: "#d4a000", limit: 47 },
+          { icon: "👥", label: "Group talk", color: "#2e9e4f", limit: 60 },
+          { icon: "🎤", label: "Presenter", color: "#0087ff", limit: 74 },
         ];
-        const NOISE_HEIGHT = 170;   // the panel grows by this much when the noise meter is turned on
+        const NOISE_HEIGHT = 150;   // the panel grows by this much when the noise meter is turned on
+        const MIC = '<svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2.2" ' +
+          'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/>' +
+          '<path d="M5.5 11a6.5 6.5 0 0013 0M12 17.5V21"/></svg>';
         const big = h("div", { class: "ct-voice-big" });
         const picks = h("div", { class: "ct-voice-picks" });
         LEVELS.forEach(function (l, i) {
@@ -406,7 +411,7 @@
             onclick: function () { save("voice", i); paint(); } }));
         });
         let noiseOn = load("noise-on", false);
-        const toggle = h("button", { class: "ct-voice-pick ct-noise-toggle", title: "Noise meter", "aria-label": "Noise meter", text: "🔊",
+        const toggle = h("button", { class: "ct-voice-pick ct-noise-toggle", title: "Noise meter on/off", "aria-label": "Noise meter",
           onclick: function () {
             noiseOn = !noiseOn;
             save("noise-on", noiseOn);
@@ -414,42 +419,61 @@
             if (noiseOn) start(); else stop();
             paint();
           } });
+        toggle.innerHTML = MIC;
         picks.append(toggle);
 
-        let limit = load("noise-limit", 60), alarmOn = load("noise-beep", true), times = load("noise-count", 0);
-        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false;
+        // Microphones differ: "sensitivity" (−3 to +3) moves every level's line together.
+        let sense = load("noise-sense", 0), alarmOn = load("noise-beep", true), times = load("noise-count", 0);
+        let stream = null, ctx = null, raf = 0, level = 0, loudSince = 0, quietSince = 0, loud = false, limit = 50;
         const face = h("span", { class: "ct-noise-face", text: "🙂" });
-        const fill = h("div", { class: "ct-noise-fill" });
-        const meter = h("div", { class: "ct-noise-meter" }, fill, h("div", { class: "ct-noise-line" }));
-        const status = h("span", { class: "ct-noise-status", text: "Press Start to use the microphone." });
-        // How many times the class went over the line (kept until Reset, also in the next deck).
-        const count = h("span", { class: "ct-noise-count", title: "Times it was too loud" });
-        const resetCount = sureButton("Reset", function () { times = 0; save("noise-count", 0); paintCount(); });
-        resetCount.classList.add("ct-small");
-        const go = h("button", { class: "ct-btn ct-primary", text: "Start", onclick: function () { stream ? stop() : start(); } });
-        const slider = h("input", { type: "range", min: 10, max: 95, value: limit, "aria-label": "Too loud at",
-          oninput: function () { limit = +slider.value; save("noise-limit", limit); paintLine(); } });
-        const alarmBtn = h("button", { class: "ct-btn ct-small", title: "Alarm when too loud", onclick: function () {
-          alarmOn = !alarmOn; save("noise-beep", alarmOn); alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        const meter = h("div", { class: "ct-noise-meter" }, h("div", { class: "ct-noise-fill" }),
+          h("div", { class: "ct-noise-line" }, h("span", { class: "ct-noise-flag" })));
+        const status = h("span", { class: "ct-noise-chip ct-noise-status", text: "Microphone off" });
+        // How many times the class went over the line (kept until reset, also in the next deck).
+        const count = h("span", { class: "ct-noise-count" });
+        const resetCount = h("button", { class: "ct-noise-mini", title: "Count from 0 again", "aria-label": "Reset the count", text: "↺",
+          onclick: function () { times = 0; save("noise-count", 0); paintCount(); } });
+        const go = h("button", { class: "ct-noise-mini ct-noise-go", title: "Microphone on/off", onclick: function () { stream ? stop() : start(); } });
+        const alarmBtn = h("button", { class: "ct-noise-mini", title: "Beep when too loud", onclick: function () {
+          alarmOn = !alarmOn; save("noise-beep", alarmOn); paintButtons();
         } });
-        alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        const senseLabel = h("span", { class: "ct-noise-sense-value" });
+        const settings = h("div", { class: "ct-noise-settings", hidden: true },
+          h("span", { text: "Microphone sensitivity" }),
+          h("button", { class: "ct-noise-mini", text: "−", "aria-label": "Less sensitive", onclick: function () { setSense(sense - 1); } }),
+          senseLabel,
+          h("button", { class: "ct-noise-mini", text: "+", "aria-label": "More sensitive", onclick: function () { setSense(sense + 1); } }));
+        const gear = h("button", { class: "ct-noise-mini", title: "Microphone sensitivity", text: "⚙", onclick: function () { settings.hidden = !settings.hidden; } });
         const noise = h("div", { class: "ct-noise" },
           h("div", { class: "ct-noise-top" }, face, meter),
-          h("div", { class: "ct-noise-info" }, status, h("span", { class: "ct-noise-tally" }, count, resetCount)),
-          h("div", { class: "ct-foot" }, go, h("label", { class: "ct-noise-limit" }, "Too loud at ", slider), alarmBtn));
+          h("div", { class: "ct-noise-info" }, status,
+            h("span", { class: "ct-noise-chip" }, count, resetCount),
+            h("span", { class: "ct-noise-buttons" }, go, alarmBtn, gear)),
+          settings);
         body.append(big, picks, noise);
 
+        function setSense(n) { sense = Math.max(-3, Math.min(3, n)); save("noise-sense", sense); paint(); }
         function paint() {
           const i = load("voice", 0), l = LEVELS[i] || LEVELS[0];
-          big.style.setProperty("--lvl", l.color);
+          // More sensitive = a lower line (each step is 6 on the meter's 0 to 100 scale).
+          limit = Math.max(8, Math.min(95, l.limit - sense * 6));
+          panel.style.setProperty("--lvl", l.color);
           big.textContent = "";
           big.append(h("span", { class: "ct-voice-num", text: i }), h("span", { class: "ct-voice-icon", text: l.icon }),
             h("span", { class: "ct-voice-label", text: l.label }));
           Array.prototype.forEach.call(picks.children, function (b, j) { b.classList.toggle("ct-on", j === i || (b === toggle && noiseOn)); });
+          meter.style.setProperty("--limit", limit + "%");
+          meter.querySelector(".ct-noise-flag").textContent = l.icon;
+          senseLabel.textContent = sense > 0 ? "+" + sense : String(sense);
           noise.hidden = !noiseOn;
+          paintButtons();
         }
-        function paintCount() { count.textContent = "Times too loud: " + times; }
-        function paintLine() { meter.style.setProperty("--limit", limit + "%"); }
+        function paintButtons() {
+          go.innerHTML = stream ? '<span class="ct-noise-stop"></span>' : MIC;
+          go.classList.toggle("ct-on", !!stream);
+          alarmBtn.textContent = alarmOn ? "🔔" : "🔕";
+        }
+        function paintCount() { count.textContent = "Too loud: " + times; }
         function fmt(ms) {
           const s = Math.floor(ms / 1000);
           return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
@@ -460,15 +484,13 @@
         async function start() {
           if (stream) return;
           if (!window.isSecureContext || !navigator.mediaDevices) {
-            status.textContent = "The microphone works only on http://localhost or an https:// site.";
+            status.textContent = "Needs localhost or https://";
             return;
           }
           try {
             stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
           } catch (e) {
-            status.textContent = e.name === "NotAllowedError"
-              ? "The browser blocked the microphone. Allow it with the icon in the address bar."
-              : "No microphone found.";
+            status.textContent = e.name === "NotAllowedError" ? "Microphone blocked: allow it in the address bar" : "No microphone found";
             return;
           }
           if (!noiseOn) { stop(); return; }   // turned off while the browser was asking
@@ -478,7 +500,7 @@
           ctx.createMediaStreamSource(stream).connect(analyser);
           const data = new Float32Array(analyser.fftSize);
           quietSince = Date.now(); loudSince = 0; loud = false;
-          go.textContent = "Stop";
+          paintButtons();
           function frame() {
             analyser.getFloatTimeDomainData(data);
             let sum = 0;
@@ -501,7 +523,7 @@
               if (loud) { loud = false; quietSince = t; }
             }
             meter.style.setProperty("--pct", level + "%");
-            const zone = level > limit ? "loud" : level > limit * 0.75 ? "near" : "ok";
+            const zone = level > limit ? "loud" : level > limit * 0.8 ? "near" : "ok";
             meter.dataset.zone = zone;
             face.textContent = loud ? "😣" : zone === "near" ? "😐" : "🙂";
             panel.classList.toggle("ct-loud", loud);
@@ -516,14 +538,15 @@
           if (ctx) ctx.close();
           stream = ctx = null; level = 0;
           meter.style.setProperty("--pct", "0%");
+          meter.dataset.zone = "ok";
           face.textContent = "🙂";
           panel.classList.remove("ct-loud");
-          go.textContent = "Start";
-          status.textContent = "Microphone off.";
+          status.textContent = "Microphone off";
+          paintButtons();
         }
-        paint(); paintCount(); paintLine();
+        paint(); paintCount();
         return {
-          refresh: function () { times = load("noise-count", 0); paintCount(); paint(); },
+          refresh: function () { times = load("noise-count", 0); sense = load("noise-sense", 0); paintCount(); paint(); },
           close: stop,
         };
       },

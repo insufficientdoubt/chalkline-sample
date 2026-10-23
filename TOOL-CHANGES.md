@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Noise meter: the voice level sets the line; a cleaner look
+- **Asked for:** "For the noise meter: the target sound level should be set by the voice level instruction. Not a separate slider. Also just put a bit of effort into making it look nicer/more cohesion."
+- **Why:** the voice level already says how loud the room should be.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.js`: each voice level has a "too loud" line (Silent 22 to Presenter 74 on the meter's 0–100 scale), and picking a level moves it. The "Too loud at" slider is gone. Because microphones differ, ⚙ opens a **microphone sensitivity** setting (−3 to +3, saved) that moves every level's line together. The noise-meter button is a drawn microphone instead of 🔊. `toolbox.css`: the meter uses the level's color, with the track tinted up to the line and red after it, and the level's icon on the line. The status and count are chips, and Start/Stop, beep and ⚙ are small round buttons on one row. The "nearly too loud" color is amber, with no color transition (it flickered into olive). The narrow layout matches. `README.md`: updated.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Reset for the next class
 - **Asked for:** "Add a global reset for the deck. Teachers should be able to reset all the games at once when they go to the next class."
 - **Why:** to start fresh with the next class.
