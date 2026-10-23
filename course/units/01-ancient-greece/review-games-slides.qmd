@@ -1,0 +1,171 @@
+---
+title: "Greek Word Games"
+subtitle: "希腊词汇游戏 · Ancient Greece review"
+type: slides
+description: "Review games for the unit: Snowman (guess the word), Picture reveal, Jeopardy and Quick-fire questions. Copy any slide to make your own."
+order: 3
+audience: [teacher, student]
+format: revealjs
+title-slide-attributes:
+  data-background-color: "#003477"
+  data-background-image: images/acropolis-parthenon.jpg
+  data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
+---
+
+# Snowman ⛄
+
+Guess the word, one letter at a time.
+
+Every wrong letter melts part of the snowman!
+
+Press **↓** to play.
+
+::: notes
+Tap the letters on the board, or type them on the keyboard. **💡 Hint** shows the picture and the meaning.
+
+To make your own: `{{{< snowman "democracy" >}}}` (a vocab word), `{{{< snowman "Parthenon" hint="..." image="images/..." >}}}` (your own word), or `{{{< snowman unit=1 >}}}` (a random word from the unit, with a **🔀 New word** button). These slides go down (↓): a word, then a slide about it, then the next word.
+:::
+
+## Word 1
+
+{{< snowman "democracy" >}}
+
+## Democracy
+
+:::: {.columns}
+::: {.column width="55%"}
+- {{< vocab "democracy" text="Democracy" >}}: the people decide.
+- In Athens, {{< vocab "citizen" text="citizens" >}} met in the {{< vocab "assembly" >}}.
+- They {{< vocab "vote" text="voted" >}} on laws by raising their hands.
+- Only free men born in Athens could vote.
+:::
+::: {.column width="45%"}
+![](images/GRC-003.svg){fig-alt="Drawing of people raising their hands to vote"}
+:::
+::::
+
+## Word 2
+
+{{< snowman "Parthenon" hint="A famous temple in Athens, for the goddess Athena." image="images/parthenon-west.jpg" >}}
+
+## The Parthenon
+
+:::: {.columns}
+::: {.column width="50%"}
+- A {{< vocab "temple" >}} for **Athena**, the goddess of Athens.
+- It stands on a hill called the **Acropolis**.
+- The Greeks built it from white marble, from 447 to 432 BC.
+- It has rows of tall {{< vocab "column" text="columns" >}}.
+:::
+::: {.column width="50%"}
+![](images/parthenon-west.jpg){.photo fig-alt="The Parthenon, a ruined marble temple with rows of columns, under a blue sky"}
+:::
+::::
+
+## Word 3: a surprise!
+
+{{< snowman unit=1 >}}
+
+::: notes
+A random word from this unit. Press **🔀 New word** to play again with another word.
+:::
+
+# Picture reveal 🖼️
+
+A picture is hiding under the tiles.
+
+Open one tile at a time. Who can guess it first?
+
+Press **↓** to play.
+
+::: notes
+Fewer tiles opened = a better guess. Tap **Show the answer** when someone gets it.
+
+To make your own: `{{{< picture-reveal "aqueduct" >}}}` (a vocab word's picture), `{{{< picture-reveal "Parthenon" image="images/parthenon-west.jpg" >}}}` (your own picture), or `{{{< picture-reveal unit=1 >}}}` (random, with **🔀 New picture**). Add `tiles=9` or `tiles=25` for fewer or more tiles.
+:::
+
+## What is it?
+
+{{< picture-reveal "theater" image="images/epidaurus-theatre.jpg" tiles=9 >}}
+
+## Which word is it?
+
+{{< picture-reveal unit=1 >}}
+
+# Jeopardy 🏆
+
+Choose a category and a number.
+
+Bigger numbers are harder questions.
+
+Press **↓** to play.
+
+::: notes
+Teams take turns choosing a square. Read the clue, give the team time to answer, then tap **Show the answer**.
+
+To make your own board, write a list: each category in **bold**, and under it one line per clue: the clue, a `|`, then the answer. The first clue is worth 100, the next 200, and so on. `{{{< jeopardy unit=1 >}}}` makes a board from the unit's vocab instead, with **🔀 New board**.
+:::
+
+## Ancient Greece
+
+::: {.jeopardy}
+- **Places**
+  - Land with water on three sides | a peninsula
+  - This city had the first democracy | Athens
+  - Boys here left home at 7 to train as soldiers | Sparta
+  - The Olympic Games were held here | Olympia
+- **Gods**
+  - The king of the gods | Zeus
+  - The goddess of wisdom | Athena
+  - The god of the sea | Poseidon
+  - The gods lived on this mountain | Mount Olympus
+- **Buildings**
+  - A tall post that holds up a roof | a column
+  - A building for a god or goddess | a temple
+  - A famous temple in Athens | the Parthenon
+  - An outdoor place for plays | a theater
+- **Ideas**
+  - People choose by raising their hands | vote
+  - A story about gods and heroes | a myth
+  - A thinker who asks big questions | a philosopher
+  - Sports contests to honor Zeus | the Olympic Games
+:::
+
+## Vocab Jeopardy
+
+{{< jeopardy unit=1 >}}
+
+# Quick-fire ⚡
+
+A question pops up. Answer fast!
+
+The teacher points to you. Say the answer out loud.
+
+Press **↓** to play.
+
+::: notes
+Point to a student, let them answer, then tap **Show the answer** and mark it **✓ Right** or **✗ Wrong**. The game keeps the score.
+
+To make your own: `::: {.trivia title="..." seconds="10"}`, then one line per question: the question, a `|`, then the answer (one or two words is best). `seconds="0"` turns the timer off. `{{{< trivia unit=1 >}}}` asks about the unit's vocab instead, with **🔀 New questions**.
+:::
+
+## Greece review
+
+::: {.trivia title="Ancient Greece review" seconds="10"}
+- Which city had the first democracy? | Athens
+- Greek stories about gods and heroes are called… | myths
+- The Olympic Games honored which god? | Zeus
+- Which city-state trained boys to be soldiers? | Sparta
+- What is land with water on three sides? | a peninsula
+:::
+
+## Vocab quick-fire
+
+{{< trivia unit=1 title="Vocab quick-fire" >}}
+
+# Picture credits {.credits}
+
+- **Title:** the Acropolis and the Parthenon, photo by Jebulon, CC0, via Wikimedia Commons.
+- **The Parthenon:** photo by User:Mountain, public domain, via Wikimedia Commons.
+- **Theater of Epidaurus:** photo by Olecorre, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0), via Wikimedia Commons.
+- Drawings: original, made for this course. Full list: `images/CREDITS.md`.

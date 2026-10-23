@@ -10,6 +10,7 @@ Slides (reveal.js):
       classroom-tools:
         qr-site: "https://example.github.io/my-course/"   # the QR code points here, not at localhost
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
+  - turns  ::: {.jeopardy}  and  ::: {.trivia}  into slide games (see below and games/games.js)
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
 function in brand/typst/typst-template.typ, with the div's attributes passed
@@ -70,7 +71,58 @@ local function value_heading_html(el)
     '</span> <span class="value-pinyin">' .. html_escape(pinyin) .. '</span></div>')
 end
 
+-- Slide games you write yourself (the vocab versions are shortcodes, in shortcodes.lua):
+--   ::: {.jeopardy}                       ::: {.trivia seconds="10" title="Greece review"}
+--   - **Places**                          - Which city had the first democracy? | Athens
+--     - Land with sea on three sides | peninsula     - ...
+--     - ... (each row is worth more)      :::
+--   - **People**
+--     - ...
+--   :::
+-- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values.
+local games = dofile(quarto.utils.resolve_path("games/games.lua"))
+
+local function list_items(blocks)
+  for _, b in ipairs(blocks) do
+    if b.t == "BulletList" or b.t == "OrderedList" then return b.content end
+  end
+  return {}
+end
+
+local function clue(item)
+  local text = {}
+  for _, b in ipairs(item) do
+    if b.t == "Plain" or b.t == "Para" then table.insert(text, pandoc.utils.stringify(b)) end
+  end
+  local q, a = games.split(table.concat(text, " "))
+  if a == "" then quarto.log.warning('game: no answer after "|" in: ' .. q) end
+  return { q = q, a = a }
+end
+
+local function game_from_div(el)
+  if el.classes:includes("jeopardy") then
+    local categories = {}
+    for _, item in ipairs(list_items(el.content)) do
+      local name = item[1] and pandoc.utils.stringify(item[1]) or ""
+      local clues = {}
+      for _, c in ipairs(list_items(item)) do table.insert(clues, clue(c)) end
+      table.insert(categories, { name = name, clues = clues })
+    end
+    local points = {}
+    for n in (el.attributes["points"] or ""):gmatch("%d+") do table.insert(points, tonumber(n)) end
+    return games.div("jeopardy", { categories = categories, points = points, random = false })
+  end
+  local questions = {}
+  for _, item in ipairs(list_items(el.content)) do table.insert(questions, clue(item)) end
+  return games.div("trivia", { questions = questions, random = false,
+    seconds = tonumber(el.attributes["seconds"] or "10") or 10, title = el.attributes["title"] or "Quick-fire!" })
+end
+
 local function Div(el)
+  if el.classes:includes("jeopardy") or el.classes:includes("trivia") then
+    if quarto.doc.is_format("revealjs") then return game_from_div(el) end
+    return games.placeholder(el.classes:includes("jeopardy") and "Jeopardy" or "Quick-fire questions")
+  end
   if quarto.doc.is_format("typst") then
     for cls, fn in pairs(TYPST_FUNCTIONS) do
       if el.classes:includes(cls) then return to_typst(el, fn) end

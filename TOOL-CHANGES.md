@@ -16,6 +16,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-23: Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire
+- **Asked for:** "build snowman hangman, picture reveal and jeopardy. Do not integrate these with the group score tools ... Keep them separate. Give teachers the option of having random vocabulary, unit specific vocabulary, or writing the answers in the shortcode directly. If it's random ... a replay button ... If it's not random then it shouldn't have that." Also "a trivia style game ... the teacher would just point to the student and they would answer orally and then reveal the answer and mark it as right or wrong but keep score."
+- **Why:** templates for interactive review on the board.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`, `games.css` (new): the four games. Typed letters go to Snowman, not to the slide shortcuts. 🔀 appears only when the word is random. Quick-fire keeps its own score and has a timer that runs out. No 中文 anywhere (review material).
+  - `_extensions/classroom/games/games.lua` (new): shared helpers that turn a game into a `<div>` with its settings, plus a one-line note outside slides.
+  - `_extensions/classroom/shortcodes.lua`: `{{< snowman >}}`, `{{< picture-reveal >}}`, `{{< jeopardy >}}` and `{{< trivia >}}`, with random words (all vocab or `unit=N`), a named vocab word, or your own word, hint and image (copied to the site).
+  - `_extensions/classroom/filter.lua`: `::: {.jeopardy}` and `::: {.trivia}` with your own clues (`clue | answer` lists).
+  - `scripts/vocab_terms.py`: each term now also gets its unit numbers (from `course/vocab/*.yml`) and its example sentence (for "Fill the gap").
+  - `_quarto-parent.yml`: the overview script added the new deck to the list kept off the family site (it's for teachers and students).
+  - `README.md`: a "Slide games" section.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Toolbox: slide size, voice level with the noise meter, windows without title bars
 - **Asked for:** "Try adding the margin tool. We can see how it works and remove later if it sucks." "Merge noise meter and voice level tools into one (set voice level, and optionally enable noise meter). Also make the warning sound louder and add a visual cue flash the whole meter box red when triggered. Like the score box, this needs a vertical version." "For the gadgets ... they don't need the top bar and label. Give them a more modern look with no name and just a light x to close them."
 - **Why:** the slide margins are narrow, and the right amount depends on the screen. Fewer, cleaner windows on the board.

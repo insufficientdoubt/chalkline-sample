@@ -256,6 +256,46 @@ Every slide deck has a toolbox: press **W**, or the four-squares button in the b
 
 Open windows, where they are, the scores, the class lists and the settings are remembered **only in that browser on that computer**, so they come back in the next deck and the next lesson. Names are never uploaded or put in the course files or on the website (each class list shows a note saying so). That also means a class list typed on one computer isn't on another, and clearing the browser's data deletes it: keep your own copy of each list to paste in again. To hide the toolbox in one deck, add `classroom-tools: false` to its labels.
 
+## Slide games
+
+Four review games for slides. See them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
+
+| Game | How it plays |
+|---|---|
+| ⛄ **Snowman** | Guess the word one letter at a time (tap the letters, or type them). Each wrong letter melts part of the snowman: 7 wrong letters and it's a puddle. **💡 Hint** shows the picture and meaning. |
+| 🖼️ **Picture reveal** | A picture hides under numbered tiles. Open one tile at a time until someone guesses it. |
+| 🏆 **Jeopardy** | A board of categories and points. Tap a square for the clue, then **Show the answer**. Used squares go grey. |
+| ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
+
+**Choosing the words.** Every game can use the vocab list, or words you write yourself:
+
+| Write | You get |
+|---|---|
+| `{{< snowman >}}` | a random word from the whole vocab list, with a **🔀 New word** button |
+| `{{< snowman unit=1 >}}` | a random word from unit 1's list (`course/vocab/`), with **🔀** |
+| `{{< snowman "democracy" >}}` | that vocab word (its picture and meaning are the hint); no 🔀 |
+| `{{< snowman "Parthenon" hint="A temple in Athens" image="images/parthenon-west.jpg" >}}` | your own word, hint and picture; no 🔀 |
+
+`{{< picture-reveal >}}` works the same way (add `tiles=9` or `tiles=25`). `{{< jeopardy unit=1 >}}` makes a board from a unit's vocab (columns: *What's the word?*, *Picture*, *Fill the gap*) and `{{< trivia unit=1 >}}` asks 5 questions about it (`count=8`, `seconds=15`, `title="..."`); both have 🔀 for new ones. To write your own:
+
+```markdown
+::: {.jeopardy}
+- **Places**
+  - Land with water on three sides | a peninsula
+  - This city had the first democracy | Athens
+- **Gods**
+  - The king of the gods | Zeus
+  - The goddess of wisdom | Athena
+:::
+
+::: {.trivia title="Greece review" seconds="10"}
+- Which city had the first democracy? | Athens
+- The Olympic Games honored which god? | Zeus
+:::
+```
+
+Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
+
 ## Tap-to-vote polls
 
 Any slide can have a poll that students answer by tapping the board (or you click while counting hands). It needs no server and no student devices. There are three types:
