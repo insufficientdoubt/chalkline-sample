@@ -8,6 +8,21 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-23: Overview: colour coding back, and a more polished look
+- **Asked for:** "I think we still need some level of color highlighting to make it quick for teachers to find the right materials. I just wanted to be a bit more modern and restrained. The whole thing should feel a bit more polished than the default quarto look."
+- **Why:** colour helps teachers find the right materials fast; the first restyle was too plain.
+- **Changed:**
+  - `brand/styles.scss`:
+    - Each type has one colour, used three ways: a bar on the row's left edge, the icon tile and the type label. Slides (teal) and packets (orange) stand out most, with solid tiles and orange packet buttons, as before.
+    - A new page header replaces Quarto's title banner on the overview: course name, season, counts and the next events as date cards.
+    - The teacher-site warning is now a slim notice with a key icon.
+    - The Everything table keeps teal and orange bars for slides and packets, and the Categories list is quieter.
+    - Sidebar, on every page: slide decks get a small teal presentation icon instead of 📊, and the current page shows as a soft pill.
+  - `scripts/catalog.py`: filter chips above the units (All, Slides, Worksheets, …, Outside links, each with its colour and count). The rows say what the chips match. `markdown_season()` builds the new header.
+  - `index.qmd`: the chips' script (it shows one kind and hides units with none of it), the teacher notice, and a shorter intro.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: The overview in the new style
 - **Asked for:** "Rebuild the overview with the new styles."
 - **Why:** not given. (The overview still had the old look: tables, coloured rows and emoji, while the catalogue, tools and games now share one design.)

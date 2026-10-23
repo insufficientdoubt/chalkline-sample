@@ -368,11 +368,12 @@ def _item(item, show_unit=False):
         acts.append(_link(item, "ov-source", escape(item["source"]) + _icon("external-link")))
     elif item["pdf"] and item["pdf"] != item["path"]:
         acts.append(f'<a class="ov-btn" href="{escape(item["pdf"])}" title="Download the PDF">{_icon("file-down")}PDF</a>')
-    return (f'<li class="ov-item ov-t-{kind.lower()}">'
+    group = "link" if _outside(item) else kind.lower()
+    return (f'<li class="ov-item ov-t-{kind.lower()}{" ov-outside" if _outside(item) else ""}" data-f="{group}">'
             f'<span class="ov-badge">{_icon(icon)}</span>'
             f'<span class="ov-main">{_link(item, "ov-title", escape(item["title"]))}'
             f'<span class="ov-desc">{escape(item["description"])}</span></span>'
-            f'<span class="ov-kind">{label}</span>'
+            f'<span class="ov-kind">{label if show_unit else ("Outside link" if _outside(item) else label)}</span>'
             f'<span class="ov-acts">{"".join(acts)}</span></li>')
 
 
@@ -400,9 +401,23 @@ def built_catalog():
     return load_catalog()
 
 
+def _chips(items):
+    """Buttons that show only one kind of document (index.qmd's script does the filtering)."""
+    rows = [i for i in items if i["type"] != "Packet"]
+    groups = [(label.lower(), label + ("s" if label in ("Worksheet", "Checklist", "Handout", "Poster") else ""))
+              for label, _ in sorted(TYPES.values(), key=lambda t: t[1])]
+    chips = [f'<button type="button" class="ov-chip ov-on" data-f="all">All<span>{len(rows)}</span></button>']
+    for key, label in groups + [("link", "Outside links")]:
+        n = sum(1 for i in rows if ("link" if _outside(i) else i["type"].lower()) == key)
+        if n:
+            cls = "ov-t-reference ov-outside" if key == "link" else f"ov-t-{key}"
+            chips.append(f'<button type="button" class="ov-chip {cls}" data-f="{key}"><i></i>{label}<span>{n}</span></button>')
+    return _html('<div class="ov-chips" role="group" aria-label="Show only">' + "".join(chips) + "</div>")
+
+
 def markdown_by_unit():
     items = built_catalog()
-    out = []
+    out = [_chips(items)]
     groups = [(u["short"], u) for u in load_units()] + [(YEAR_GROUP[0], None)]
     for name, unit in groups:
         group = [i for i in items if i["unit"] == name]
@@ -446,21 +461,29 @@ def markdown_learning():
 
 
 def markdown_season():
-    """Season name and upcoming events, from course/season.yml."""
+    """The page's header: course name, season, what's in it, and the next two events (course/season.yml)."""
     import datetime
     season = yaml.safe_load((COURSE / "season.yml").read_text(encoding="utf-8"))
     today = datetime.date.today()
     upcoming = [e for e in season.get("events", []) if e["date"] >= today]
     # Optional keys: a course without teams or a game just leaves them out of season.yml.
-    name = " ".join(escape(x) for x in [season.get("name", ""), season.get("name_zh", "")] if x)
-    rest = [season.get("season"), season.get("game"),
-            f"Teams {season['team_numbers']}" if season.get("team_numbers") else None]
-    facts = "".join(f"<span>{escape(str(x))}</span>" for x in rest if x)
+    zh = f' <span class="ov-hero-zh">{escape(season["name_zh"])}</span>' if season.get("name_zh") else ""
+    items = [i for i in built_catalog() if i["source"] == "School"]
+    units = [u for u in load_units() if u.get("number")]
+    decks = sum(1 for i in items if i["type"] == "Slides")
+    prints = sum(1 for i in items if i["type"].lower() in PACKET_TYPES | {"poster"})
+    facts = [season.get("season"), season.get("game"),
+             f"Teams {season['team_numbers']}" if season.get("team_numbers") else None,
+             f"{len(units)} units" if units else None,
+             f"{decks} slide decks" if decks else None, f"{prints} printables" if prints else None]
+    meta = "".join(f"<span>{escape(str(x))}</span>" for x in facts if x)
     events = ""
     for e in upcoming[:2]:   # ("%-d" for the day doesn't work on Windows, so the day number is added separately)
         days = (e["date"] - today).days
         when = "today" if days == 0 else "tomorrow" if days == 1 else f"in {days} days"
-        events += (f'<div class="ov-event">{_icon("calendar-days")}<span><b>{escape(e["name"])}</b>'
-                   f'<small>{e["date"]:%b} {e["date"].day} · {when}</small></span></div>')
+        events += (f'<div class="ov-event"><span class="ov-date"><small>{e["date"]:%b}</small>{e["date"].day}</span>'
+                   f'<span><b>{escape(e["name"])}</b><small>{when}</small></span></div>')
     events = f'<div class="ov-events"><span class="ov-events-label">Coming up</span>{events}</div>' if events else ""
-    return _html(f'<div class="ov-season"><div class="ov-season-name"><b>{name}</b>{facts}</div>{events}</div>')
+    return _html(f'<div class="ov-hero"><div class="ov-hero-main"><span class="ov-eyebrow">Course overview</span>'
+                 f'<div class="ov-hero-title">{escape(season.get("name", ""))}{zh}</div>'
+                 f'<div class="ov-hero-meta">{meta}</div></div>{events}</div>')

@@ -229,7 +229,17 @@ tr.row-slides .type-cell::before { content: "📊 "; }
 tr.row-packet .type-cell::before { content: "📦 "; }
 tr.row-slides .badge-type { background: var(--brand-turquoise, #14d7cd); color: var(--brand-navy, #003477); }
 tr.row-packet .badge-type { background: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); }
-.sidebar-slides .menu-text::before { content: "📊 "; }
+// Sidebar: slide decks get a small teal presentation icon (Lucide), drawn with a mask so it takes the color
+.sidebar-slides .menu-text::before {
+  content: ""; display: inline-block; width: 0.95em; height: 0.95em; margin-right: 0.35em; vertical-align: -0.12em;
+  background: #0b9a94;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20'/%3E%3Cpath d='M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3'/%3E%3Cpath d='m7 21 5-5 5 5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 3h20'/%3E%3Cpath d='M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3'/%3E%3Cpath d='m7 21 5-5 5 5'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+// Sidebar: the current page as a soft pill, quieter hover
+#quarto-sidebar .sidebar-item .sidebar-link { border-radius: 7px; padding-left: 0.45rem; padding-right: 0.45rem; transition: background 0.12s; }
+#quarto-sidebar .sidebar-item .sidebar-link:hover { background: #eef2f6; }
+#quarto-sidebar .sidebar-item .sidebar-link.active { background: var(--ui-accent-soft, #e6edf7); font-weight: 600; }
 // Packets on unit pages. The teacher site shows two cards that must never be confused:
 // the teacher edition (solid orange, 🔑) and the student copy (white, orange outline, 🎒).
 a.btn[href$="-packet.pdf"] { background: var(--brand-orange, #ff8c0f); border-color: var(--brand-orange, #ff8c0f); color: var(--brand-navy, #003477); font-weight: 600; }
@@ -249,159 +259,224 @@ tr.row-packet-teacher .type-cell::before { content: "🔑 "; }
 tr.row-packet-student .type-cell::before { content: "🎒 "; }
 
 // ---- Overview (index.qmd; built by scripts/catalog.py) ------------------------
-// The same design values as the classroom tools (_extensions/classroom/ui/ui.css): white cards,
-// thin borders, line icons, one quiet color per type. No emoji.
+// The same design values as the classroom tools (_extensions/classroom/ui/ui.css). One color per type,
+// used three ways so a teacher can find the right thing fast: a bar on the row's left edge, the icon's
+// tile, and the type label. Slides (teal) and packets (orange) keep the colors they always had.
 
 .overview {
   --ov-ink: var(--ui-ink, #10233f);
   --ov-muted: var(--ui-muted, #5b6b80);
   --ov-line: var(--ui-line, #d6dee8);
+  --ov-faint: #e9eef3;
   --ov-soft: var(--ui-soft, #f3f5f8);
   --ov-navy: var(--brand-navy, #003477);
-  --ov-shadow: 0 1px 2px rgba(16, 35, 63, 0.06);
+  --ov-shadow: 0 1px 2px rgba(16, 35, 63, 0.05), 0 2px 8px rgba(16, 35, 63, 0.04);
   color: var(--ov-ink);
 }
 .ov-icon { width: 1em; height: 1em; flex: none; vertical-align: -0.125em; }
 
-// One color per type: the icon's tile and nothing else
-.ov-t-packet { --t: #d97706; }
-.ov-t-slides { --t: #0a9396; }
-.ov-t-worksheet { --t: #0087ff; }
-.ov-t-checklist { --t: #23824a; }
-.ov-t-handout { --t: #7c5cdb; }
-.ov-t-poster { --t: #d6457a; }
-.ov-t-reference { --t: #4b6584; }
-.ov-t-vocab { --t: #c2410c; }
+.ov-t-packet { --t: #e07b00; }
+.ov-t-slides { --t: #0b9a94; }
+.ov-t-worksheet { --t: #2f6fde; }
+.ov-t-checklist { --t: #1f8a4c; }
+.ov-t-handout { --t: #7b55d6; }
+.ov-t-poster { --t: #d0457a; }
+.ov-t-reference { --t: #8a6a1f; }
+.ov-t-vocab { --t: #c8432b; }
+.ov-outside { --t: #7a8799; }
 
-// Season and the next events
-.ov-season {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.8rem 1.5rem;
-  margin: 0 0 1.2rem;
+// The page's own header replaces Quarto's title banner here
+body:has(.ov-hero) #title-block-header { display: none; }
+.ov-hero {
+  position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between;
+  gap: 1.2rem 2rem; margin: 0.4rem 0 1.4rem; padding: 1.5rem 1.6rem 1.4rem; overflow: hidden;
+  border-radius: 16px; color: #fff;
+  background:
+    radial-gradient(120% 140% at 100% 0%, rgba(0, 135, 255, 0.35) 0%, transparent 55%),
+    linear-gradient(135deg, #00306e 0%, var(--brand-navy, #003477) 60%, #0a2a57 100%);
+  box-shadow: 0 10px 30px rgba(0, 52, 119, 0.18);
 }
-.ov-season-name { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.3rem 0.8rem; font-size: 1.05rem; }
-.ov-season-name b { color: var(--ov-navy); font-size: 1.15em; }
-.ov-season-name span { color: var(--ov-muted); }
+.ov-eyebrow { display: block; margin-bottom: 0.25rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.65); }
+.ov-hero-title { font-family: var(--bs-headings-font-family, inherit); font-size: clamp(1.6rem, 3.2vw, 2.2rem); font-weight: 700; line-height: 1.15; }
+.ov-hero-title::after {   // the orange sun from the logo, as a short rule
+  content: ""; display: block; width: 3.5rem; height: 3px; margin-top: 0.55rem; border-radius: 3px; background: var(--brand-orange, #ff8c0f);
+}
+.ov-hero-zh { white-space: nowrap; font-weight: 500; color: rgba(255, 255, 255, 0.8); }
+.ov-hero-meta {
+  display: flex; flex-wrap: wrap; gap: 0.3rem 0; margin-top: 0.55rem; color: rgba(255, 255, 255, 0.78); font-size: 0.95rem;
+  span + span::before { content: "·"; margin: 0 0.55rem; color: rgba(255, 255, 255, 0.4); }
+}
 .ov-events { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
-.ov-events-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ov-muted); margin-right: 0.2rem; }
+.ov-events-label { width: 100%; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.65); }
 .ov-event {
-  display: flex; align-items: center; gap: 0.55rem; padding: 0.4rem 0.8rem 0.4rem 0.65rem;
-  border: 1px solid var(--ov-line); border-radius: 10px; background: #fff; box-shadow: var(--ov-shadow);
+  display: flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+  border-radius: 12px; background: rgba(255, 255, 255, 0.1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
   line-height: 1.2;
-  .ov-icon { font-size: 1.25rem; color: var(--brand-orange, #ff8c0f); }
   b { display: block; font-weight: 600; }
-  small { color: var(--ov-muted); }
+  small { color: rgba(255, 255, 255, 0.7); }
 }
-.ov-intro { color: var(--ov-muted); max-width: 52rem; }
+.ov-date {
+  display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 9px; background: #fff;
+  color: var(--ov-navy); font-weight: 700; font-size: 1.05rem; line-height: 1;
+  small { display: block; margin-bottom: 1px; font-size: 0.62rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--brand-orange, #e07b00); }
+}
+.ov-notice {
+  display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1.1rem; padding: 0.55rem 0.9rem;
+  border: 1px solid #f3c58f; border-radius: 10px; background: #fff7ee; color: #6b3a00; font-size: 0.92rem;
+  &::before {   // Lucide key-round
+    content: ""; flex: none; width: 1.1rem; height: 1.1rem; background: #e07b00;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z'/%3E%3Ccircle cx='16.5' cy='7.5' r='.5' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z'/%3E%3Ccircle cx='16.5' cy='7.5' r='.5' fill='black'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  p { margin: 0; }
+}
+.ov-intro { color: var(--ov-muted); max-width: 52rem; font-size: 0.95rem; }
 
 // Tabs: a segmented control (a grey track, the chosen tab raised in white)
 .overview .panel-tabset > .nav-tabs {
   display: inline-flex; width: fit-content; gap: 2px; padding: 3px; margin-bottom: 1rem;
-  border: 0; border-radius: 10px; background: var(--ov-soft);
+  border: 0; border-radius: 10px; background: #eaeef3;
   .nav-link {
-    border: 0; border-radius: 8px; padding: 0.35rem 1rem; color: var(--ov-muted); font-weight: 600;
+    border: 0; border-radius: 8px; padding: 0.38rem 1.05rem; color: var(--ov-muted); font-weight: 600;
     &:hover { color: var(--ov-ink); }
     &.active { background: #fff; color: var(--ov-navy); box-shadow: 0 1px 2px rgba(16, 35, 63, 0.12), 0 0 0 1px rgba(16, 35, 63, 0.06); }
   }
 }
 .overview .panel-tabset .tab-content { border: 0; padding: 0; }
 
+// Filter chips: show only one kind of document
+.ov-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 1rem; }
+.ov-chip {
+  display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.4rem 0.25rem 0.65rem;
+  border: 1px solid var(--ov-line); border-radius: 999px; background: #fff; color: var(--ov-ink);
+  font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.15s, border-color 0.15s;
+  i { width: 0.6rem; height: 0.6rem; border-radius: 50%; background: var(--t); }
+  span { min-width: 1.5rem; padding: 0 0.35rem; border-radius: 999px; background: var(--ov-soft); color: var(--ov-muted); font-size: 0.75rem; text-align: center; }
+  &:hover { border-color: var(--ui-line-strong, #aebdd0); }
+  &.ov-on { background: color-mix(in srgb, var(--t, #003477) 10%, #fff); border-color: var(--t, var(--ov-navy)); color: var(--t, var(--ov-navy)); }
+  &.ov-on span { background: var(--t, var(--ov-navy)); color: #fff; }
+}
+.ov-unit[hidden], .ov-item[hidden] { display: none; }
+
 // A unit: a card with its header (number, title, packet buttons) and its documents
 .ov-unit {
-  margin: 0 0 1.1rem; border: 1px solid var(--ov-line); border-radius: 14px; background: #fff;
+  margin: 0 0 1rem; border: 1px solid var(--ov-line); border-radius: 14px; background: #fff;
   box-shadow: var(--ov-shadow); overflow: hidden;
 }
 .ov-unit-head, .ov-type-head {
-  display: flex; align-items: center; gap: 0.9rem; padding: 0.9rem 1.1rem;
-  border-bottom: 1px solid var(--ov-line); background: linear-gradient(#fbfcfd, #f6f8fa);
+  display: flex; align-items: center; gap: 0.9rem; padding: 0.95rem 1.15rem;
+  border-bottom: 1px solid var(--ov-faint);
 }
 .ov-unit-head:last-child { border-bottom: 0; }
 .ov-num {
   flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px;
-  background: var(--ov-navy); color: #fff; font-weight: 700; font-size: 1.15rem;
+  background: var(--ov-navy); color: #fff; font-weight: 700; font-size: 1.1rem;
   .ov-icon { font-size: 1.2rem; }
 }
 .ov-num-icon { background: var(--brand-orange, #ff8c0f); }
 .ov-unit-text {
   flex: 1; min-width: 0;
   // reset the site's banded h3 so it reads as a card title
-  h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.2rem; line-height: 1.25; }
+  h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.15rem; line-height: 1.25; }
   h3 a { color: var(--ov-navy); text-decoration: none; }
-  h3 a:hover { text-decoration: underline; }
-  p { margin: 0.15rem 0 0; color: var(--ov-muted); font-size: 0.92rem; }
+  h3 a:hover { color: var(--brand-blue, #0087ff); }
+  p { margin: 0.15rem 0 0; color: var(--ov-muted); font-size: 0.9rem; }
 }
-.ov-type-head h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.1rem; color: var(--ov-navy); }
-.ov-count {
-  margin-left: -0.4rem; padding: 0 0.45rem; border-radius: 999px; background: var(--ov-soft);
-  color: var(--ov-muted); font-size: 0.78rem; font-weight: 700;
+.ov-type-head {
+  box-shadow: inset 4px 0 0 var(--t);
+  h3 { margin: 0; padding: 0; border: 0; background: none; font-size: 1.05rem; color: var(--ov-ink); }
 }
+.ov-count { padding: 0 0.45rem; border-radius: 999px; background: var(--ov-soft); color: var(--ov-muted); font-size: 0.75rem; font-weight: 700; }
 
-// Packet buttons in a unit's header: the teacher edition solid, the student copy outlined
+// Packet buttons in a unit's header, in packet orange: the teacher edition solid, the student copy outlined
 .ov-packs { flex: none; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem; }
 .ov-packs:empty { display: none; }
 .ov-pack {
-  display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.75rem;
-  border: 1px solid var(--ov-line); border-radius: 8px; background: #fff; color: var(--ov-navy);
-  font-size: 0.88rem; font-weight: 600; text-decoration: none; line-height: 1.15; box-shadow: var(--ov-shadow);
-  .ov-icon { font-size: 1.05rem; color: #d97706; }
-  small { display: block; font-size: 0.72rem; font-weight: 600; color: var(--ov-muted); }
-  &:hover { border-color: var(--ui-line-strong, #aebdd0); color: var(--ov-navy); }
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.38rem 0.8rem 0.38rem 0.65rem;
+  border: 1px solid #f3c58f; border-radius: 9px; background: #fff7ee; color: #8a4500;
+  font-size: 0.86rem; font-weight: 600; text-decoration: none; line-height: 1.15;
+  .ov-icon { font-size: 1.1rem; color: #e07b00; }
+  small { display: block; font-size: 0.7rem; font-weight: 600; opacity: 0.75; }
+  &:hover { background: #ffefdc; border-color: #e9a65c; color: #8a4500; }
 }
 .ov-pack-teacher {
-  background: var(--ov-navy); border-color: var(--ov-navy); color: #fff;
-  .ov-icon { color: var(--brand-orange, #ff8c0f); }
-  small { color: rgba(255, 255, 255, 0.75); }
-  &:hover { background: #0a4389; color: #fff; }
+  background: #e07b00; border-color: #e07b00; color: #fff;
+  .ov-icon { color: #fff; }
+  &:hover { background: #c96d00; border-color: #c96d00; color: #fff; }
 }
 
-// A document: icon tile, title and description, what it is, PDF button
+// A document: colored edge, icon tile, title and description, type label, PDF button
 .ov-list { list-style: none; margin: 0; padding: 0; }
 .ov-item {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) 7.5rem 5rem; align-items: center; gap: 0.3rem 0.9rem;
-  padding: 0.65rem 1.1rem; border-top: 1px solid #edf1f5;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) 7.2rem 4.6rem; align-items: center; gap: 0.25rem 0.9rem;
+  padding: 0.62rem 1.15rem; border-top: 1px solid var(--ov-faint);
+  box-shadow: inset 3px 0 0 var(--t, transparent);
+  transition: background 0.12s;
   &:first-child { border-top: 0; }
-  &:hover { background: #f8fafc; }
+  &:hover { background: color-mix(in srgb, var(--t, #003477) 4%, #fff); }
 }
 .ov-badge {
-  display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 8px;
-  color: var(--t, var(--ov-navy)); background: color-mix(in srgb, var(--t, #003477) 11%, #fff);
-  .ov-icon { font-size: 1.15rem; }
+  display: grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 9px;
+  color: var(--t, var(--ov-navy)); background: color-mix(in srgb, var(--t, #003477) 13%, #fff);
+  .ov-icon { font-size: 1.12rem; }
 }
+.ov-t-slides .ov-badge, .ov-t-packet .ov-badge { background: var(--t); color: #fff; }   // the two most-used kinds stand out
 .ov-main { display: flex; flex-direction: column; min-width: 0; line-height: 1.3; }
 .ov-title { font-weight: 600; color: var(--ov-ink); text-decoration: none; }
-.ov-title:hover { color: var(--brand-blue, #0087ff); text-decoration: underline; }
-.ov-desc { color: var(--ov-muted); font-size: 0.88rem; }
-.ov-kind { color: var(--ov-muted); font-size: 0.82rem; }
+.ov-title:hover { color: var(--brand-blue, #0087ff); text-decoration: underline; text-underline-offset: 2px; }
+.ov-desc { color: var(--ov-muted); font-size: 0.87rem; }
+.ov-kind {
+  justify-self: start; padding: 0.1rem 0.55rem; border-radius: 999px; white-space: nowrap;
+  background: color-mix(in srgb, var(--t, #003477) 10%, #fff); color: color-mix(in srgb, var(--t, #003477) 82%, #000);
+  font-size: 0.76rem; font-weight: 600;
+}
 .ov-acts { display: flex; justify-content: flex-end; }
 .ov-btn, .ov-source {
-  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.55rem; border: 1px solid var(--ov-line);
-  border-radius: 8px; background: #fff; color: var(--ov-navy); font-size: 0.8rem; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.22rem 0.55rem; border: 1px solid var(--ov-line);
+  border-radius: 8px; background: #fff; color: var(--ov-navy); font-size: 0.78rem; font-weight: 600;
   text-decoration: none; white-space: nowrap;
   &:hover { border-color: var(--ui-line-strong, #aebdd0); background: var(--ui-focus-soft, #eaf4ff); color: var(--ov-navy); }
 }
-.ov-source { border-style: dashed; color: var(--ov-muted); .ov-icon { order: 1; } }
+.ov-source { color: var(--ov-muted); .ov-icon { order: 1; } }
 
 // Families: each unit's goals
 .ov-goals {
-  margin: 0; padding: 0.7rem 1.1rem 0.8rem 2.6rem;
+  margin: 0; padding: 0.7rem 1.15rem 0.85rem 2.6rem;
   li { margin: 0.2rem 0; }
-  li::marker { color: #23824a; }
+  li::marker { color: #1f8a4c; }
 }
 
 // The Categories filter works on the Everything tab only, so it shows only there (index.qmd's script)
 body.ov-filters-off #quarto-margin-sidebar .quarto-listing-category-title,
 body.ov-filters-off #quarto-margin-sidebar .quarto-listing-category { display: none; }
-
-// Everything tab: Quarto's table and filters, in the same quiet style
-.overview .quarto-listing-table {
-  border: 1px solid var(--ov-line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--ov-shadow);
-  thead th { background: #f6f8fa; color: var(--ov-muted); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; border-bottom: 1px solid var(--ov-line); }
-  td { border-color: #edf1f5; }
+body:has(.overview) {
+  #quarto-margin-sidebar .quarto-listing-category-title { font-family: inherit; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ui-muted, #5b6b80); }
+  .quarto-listing-category .category { padding: 0.12rem 0.55rem; margin: 0 0 1px -0.55rem; border-radius: 7px; font-size: 0.9rem; cursor: pointer; }
+  .quarto-listing-category .category:hover { background: #eef2f6; }
+  .quarto-listing-category .category.active { background: var(--ui-accent-soft, #e6edf7); color: var(--brand-navy, #003477); font-weight: 600; }
+  .quarto-category-count { color: var(--ui-muted, #5b6b80); font-size: 0.85em; }
 }
-.overview tr.row-slides > td, .overview tr.row-packet > td, .overview tr.row-packet-teacher > td { background: none !important; box-shadow: none; }
-.overview tr .type-cell::before { content: none !important; }
-.overview tr .type-cell { font-weight: 600; }
+
+// Everything tab: Quarto's table and its controls, in the same style. Slides and packets keep their color.
+.overview {
+  .quarto-listing-filter .input-group, .quarto-listing-sort .input-group { border-radius: 9px; overflow: hidden; box-shadow: var(--ov-shadow); }
+  .quarto-listing-filter input, .quarto-listing-sort select { border-color: var(--ov-line); }
+  .quarto-listing-table {
+    border: 1px solid var(--ov-line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--ov-shadow);
+    thead th { background: #f7f9fb; color: var(--ov-muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--ov-line); }
+    td { border-color: var(--ov-faint); font-size: 0.92rem; }
+    td a { font-weight: 600; text-decoration: none; }
+  }
+  tr.row-slides > td, tr.row-packet > td, tr.row-packet-teacher > td { background: none !important; }
+  tr.row-slides > td:first-child { box-shadow: inset 3px 0 0 #0b9a94; }
+  tr.row-packet > td:first-child { box-shadow: inset 3px 0 0 #e07b00; }
+  tr .type-cell::before { content: none !important; }
+  tr.row-slides .type-cell { color: #08746f; }
+  tr.row-packet .type-cell { color: #a85c00; }
+}
 
 @media (max-width: 760px) {
+  .ov-hero { padding: 1.2rem 1.1rem 1.2rem; }
   .ov-unit-head { flex-wrap: wrap; }
   .ov-packs { width: 100%; justify-content: flex-start; }
   .ov-item { grid-template-columns: auto minmax(0, 1fr) auto; }
