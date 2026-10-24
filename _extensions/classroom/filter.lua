@@ -55,6 +55,31 @@ local function is_teacher()
   return false
 end
 
+-- The course's units, packets and vocab words, for the toolbox's Vocab and Packet tools: read from
+-- generated/ (units.json and packets.json from scripts/catalog.py, vocab-terms.json from
+-- scripts/vocab_terms.py) and put in the page as JSON. Paths are from the project root; `root` is
+-- the way up to it from this deck, and `unit` is this deck's unit folder, if it's in one.
+local function course_data()
+  local dir = (quarto.project.directory or ".") .. "/generated/"
+  local function read(name)
+    local f = io.open(dir .. name, "r")
+    if not f then return nil end
+    local ok, value = pcall(quarto.json.decode, f:read("a"))
+    f:close()
+    return ok and value or nil
+  end
+  local here = quarto.doc.input_file and pandoc.path.make_relative(quarto.doc.input_file, quarto.project.directory or "."):gsub("\\", "/") or ""
+  local data = { root = string.rep("../", select(2, here:gsub("/", ""))), unit = here:match("^course/units/([^/]+)/"), units = {}, words = {} }
+  local packets = read("packets.json") or {}
+  for _, u in ipairs(read("units.json") or {}) do
+    table.insert(data.units, { id = u.id, number = u.number, title = u.short, packet = packets[u.id] and packets[u.id].pdf or nil })
+  end
+  for _, w in ipairs((read("vocab-terms.json") or {}).terms or {}) do
+    table.insert(data.words, { term = w.term, zh = w.zh, def = w.definition, example = w.example, image = w.image, url = w.url, units = w.units })
+  end
+  return '<script type="application/json" id="chalkline-course">' .. quarto.json.encode(data):gsub("</", "<\\/") .. '</script>'
+end
+
 local function typst_string(s)
   return '"' .. s:gsub("\\", "\\\\"):gsub('"', '\\"') .. '"'
 end
@@ -339,6 +364,14 @@ local function Meta(meta)
       tags["chalkline-page"] = rel:gsub("\\", "/"):gsub("%.qmd$", ".html")
     end
     if off then tags["chalkline-clock"] = "off" end
+    quarto.doc.include_text("after-body", course_data())   -- for Vocab and Packet
+    quarto.doc.add_html_dependency({   -- the PDF viewer, for Packet (the same files as {{< pdf-viewer >}})
+      name = "pdf-viewer",
+      version = "1.0.0",
+      scripts = { { path = "../pdf-viewer/pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
+      stylesheets = { "../pdf-viewer/pdf-viewer.css" },
+      resources = { "../pdf-viewer/pdf.min.mjs", "../pdf-viewer/pdf.worker.min.mjs", "../pdf-viewer/pdf-lib.esm.min.js" },
+    })
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",

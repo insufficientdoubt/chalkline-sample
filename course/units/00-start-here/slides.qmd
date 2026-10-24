@@ -176,7 +176,7 @@ One label decides who sees a file: `audience: [teacher, student, parent]`. Leave
 - A **timer** on any slide (press **T**)
 - A **clock** you can drag anywhere (press **K**)
 - **Speaker notes** in a second window (press **S**)
-- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight, music
+- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight, music, and the unit's **vocab** and **packet** on any slide
 - **Tap-to-vote polls**: no devices, no accounts
 - **Games**: Snowman, Picture reveal, Jeopardy, Quick-fire (see Unit 1)
 :::
@@ -228,7 +228,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**61 ready-made features,** all working in this course today: 48 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
+[**63 ready-made features,** all working in this course today: 50 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -261,9 +261,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 :::
 
 ::: {.cat-box .cat-tools}
-[Toolbox on every slide: press W]{.cat-head} [14]{.cat-n}
+[Toolbox on every slide: press W]{.cat-head} [16]{.cat-n}
 
-[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"} [Music from YouTube]{.chip .chip-key data-icon="music"}
+[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"} [Music from YouTube]{.chip .chip-key data-icon="music"} [Unit vocab, any slide]{.chip .chip-key data-icon="book-a"} [Unit packet, any slide]{.chip .chip-key data-icon="files"}
 :::
 
 ::::

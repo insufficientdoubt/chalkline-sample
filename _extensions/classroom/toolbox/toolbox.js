@@ -17,6 +17,8 @@
     Spotlight       darkens the screen except a circle you drag, to show where to look
     Dice            1 to 6 dice
     Music           YouTube's player for a song or playlist; ⋯ (or a right-click) to change it or pop it out
+    Vocab           the unit's words in a sidebar; tap one for its card (picture, 中文, meaning, 🔊)
+    Packet          the unit packet as pages in a sidebar; tap one to open it large (zoom, pens)
 
   Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
   Narrow panels (scoreboard, voice level) change to a layout that stacks.
@@ -65,6 +67,24 @@
       if (c != null && c !== false) el.append(c);
     }
     return el;
+  }
+
+  // The course's units, packets and vocab words (filter.lua puts them in each teacher deck as JSON)
+  let courseData;
+  function course() {
+    if (courseData === undefined) {
+      const el = document.getElementById("chalkline-course");
+      try { courseData = el ? JSON.parse(el.textContent) : null; } catch (e) { courseData = null; }
+    }
+    return courseData;
+  }
+  // A unit menu for Vocab and Packet: starts on this deck's unit
+  function unitMenu(units, value, extra, onchange) {
+    const pick = h("select", { class: "ct-input ct-pick", "aria-label": "Unit", onchange: function () { onchange(pick.value); } });
+    units.forEach(function (u) { pick.append(h("option", { value: u.id, text: u.title })); });
+    if (extra) pick.append(h("option", { value: extra[0], text: extra[1] }));
+    pick.value = value;
+    return pick;
   }
 
   function beep(freq, length, volume, type, delay) {
@@ -769,6 +789,107 @@
       },
     },
 
+    vocab: {
+      title: "Vocab", icon: "book-a", w: 230, h: 520, minW: 170, minH: 200, keys: [],
+      // A sidebar at the right edge, the screen's full height, until it's dragged
+      start: function () { return { x: window.innerWidth - 238, y: 8, h: window.innerHeight - 16 }; },
+      build: function (body, panel) {
+        // The unit's words, always at hand while students work or talk: just the words (no meanings
+        // or 中文), to point at. Tap one for its card beside the list: picture, word, 中文, meaning and
+        // an example, with 🔊 to read it aloud. Starts on this deck's unit; the menu picks another,
+        // or all of them. The words come from vocab/data/vocab.csv.
+        const data = course();
+        if (!data || !data.words.length) { body.append(h("div", { class: "ct-empty", text: "This course has no vocab list yet." })); return {}; }
+        const inUnit = function (w, u) { return (w.units || []).indexOf(u.number) >= 0; };
+        const units = data.units.filter(function (u) { return data.words.some(function (w) { return inUnit(w, u); }); });
+        let unit = units.some(function (u) { return u.id === data.unit; }) ? data.unit : "all";
+        const list = h("div", { class: "ct-vocab-list ct-nodrag" });
+        body.append(unitMenu(units, unit, ["all", "All units"], function (v) { unit = v; hideCard(); paint(); }), list);
+        let card = null, current = null;
+
+        function paint() {
+          list.textContent = "";
+          const u = units.find(function (x) { return x.id === unit; });
+          data.words.filter(function (w) { return !u || inUnit(w, u); }).forEach(function (w) {
+            const b = h("button", { class: "ct-vocab-word", text: w.term, onclick: function () { if (current === w) hideCard(); else showCard(w, b); } });
+            list.append(b);
+          });
+        }
+        function say(text, lang) {
+          return h("button", { class: "ct-say", "aria-label": "Read it aloud", title: "Read it aloud", onclick: function () {
+            const s = window.speechSynthesis;
+            if (!s) return;
+            s.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = lang; u.rate = 0.9;
+            s.speak(u);
+          } }, "🔊");
+        }
+        function showCard(w, button) {
+          hideCard();
+          current = w;
+          button.classList.add("ct-on");
+          card = h("div", { class: "ct-vcard", role: "dialog", "aria-label": w.term },
+            h("button", { class: "ct-close", "aria-label": "Close", title: "Close (Esc)", onclick: hideCard }, icon("x")),
+            w.image ? h("img", { src: data.root + w.image, alt: "" }) : null,
+            h("div", { class: "ct-vcard-term" }, w.term, say(w.term, "en-US")),
+            w.zh ? h("div", { class: "ct-vcard-zh" }, w.zh, say(w.zh, "zh-CN")) : null,
+            h("div", { class: "ct-vcard-def", text: w.def }),
+            w.example ? h("div", { class: "ct-vcard-ex", text: w.example }) : null,
+            w.url ? h("a", { class: "ct-vcard-link", href: data.root + w.url, target: "_blank", rel: "noopener", text: "In the vocab app ↗" }) : null);
+          card.style.zIndex = ++zTop;
+          layer.append(card);
+          // beside the list, on the side with room, level with the word
+          const p = panel.getBoundingClientRect(), b = button.getBoundingClientRect(), c = card.getBoundingClientRect();
+          const x = p.left >= c.width + 16 ? p.left - c.width - 8 : Math.min(p.right + 8, window.innerWidth - c.width - 8);
+          card.style.left = Math.max(8, x) + "px";
+          card.style.top = Math.max(8, Math.min(b.top - 24, window.innerHeight - c.height - 8)) + "px";
+        }
+        function hideCard() {
+          if (card) card.remove();
+          card = current = null;
+          list.querySelectorAll(".ct-on").forEach(function (x) { x.classList.remove("ct-on"); });
+        }
+        function esc(e) { if (e.key === "Escape" && card) { e.preventDefault(); e.stopImmediatePropagation(); hideCard(); } }
+        window.addEventListener("keydown", esc, true);
+        paint();
+        return { close: function () { hideCard(); window.removeEventListener("keydown", esc, true); } };
+      },
+    },
+
+    packet: {
+      title: "Packet", icon: "files", w: 220, h: 520, minW: 170, minH: 240, keys: [],
+      // A sidebar at the left edge, above the menu buttons and the clock, until it's dragged
+      start: function () { return { x: 8, y: 8, h: Math.max(240, window.innerHeight - 190) }; },
+      build: function (body) {
+        // The unit packet as pages: tap one to open it large, in the PDF viewer's window (zoom, pens,
+        // arrow keys to turn pages). The student copy, or the teacher edition with the answer keys.
+        // Starts on this deck's unit; the menu picks another.
+        const data = course();
+        const units = data ? data.units.filter(function (u) { return u.packet; }) : [];
+        if (!units.length) { body.append(h("div", { class: "ct-empty", text: "This course has no unit packets yet." })); return {}; }
+        let unit = (units.find(function (u) { return u.id === data.unit; }) || units[0]).id, teacher = false;
+        const key = h("button", { class: "ct-btn ct-small ct-packet-key", "aria-pressed": "false", text: "Answer key",
+          title: "Show the teacher edition, with the answer keys", onclick: function () {
+            teacher = !teacher; key.setAttribute("aria-pressed", String(teacher)); paint();
+          } });
+        const pages = h("div", { class: "ct-packet-pages ct-nodrag" });
+        body.append(h("div", { class: "ct-packet-head" }, unitMenu(units, unit, null, function (v) { unit = v; paint(); }), key), pages);
+
+        function paint() {
+          const u = units.find(function (x) { return x.id === unit; });
+          const box = h("div", { class: "pdfv pdfv-gallery", "data-layout": "gallery", "data-ink": "true", "data-prevent-swipe": "",
+            "data-src": data.root + (teacher ? u.packet.replace(/-packet\.pdf$/, "-teacher-packet.pdf") : u.packet),
+            "data-title": u.title + (teacher ? " · Teacher edition" : " · Packet") });
+          pages.replaceChildren(box);
+          if (window.PdfViewer) window.PdfViewer.start(box);
+          else document.addEventListener("pdf-viewer-ready", function () { window.PdfViewer.start(box); }, { once: true });
+        }
+        paint();
+        return {};
+      },
+    },
+
     music: {
       title: "Music", icon: "music", w: 340, h: 240, minW: 230, minH: 236, keys: [],
       build: function (body, panel) {
@@ -1035,7 +1156,7 @@
     const n = Object.keys(open).length;
     const saved = layout.pos[id];
     if (tool.start && (!saved || saved.auto || (tool.oldDefault && tool.oldDefault(saved)))) {
-      layout.pos[id] = Object.assign(tool.start(), { w: tool.w, h: tool.h, auto: true });   // until it's dragged
+      layout.pos[id] = Object.assign({ w: tool.w, h: tool.h }, tool.start(), { auto: true });   // until it's dragged (start may size it too)
     }
     const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
     const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", onclick: function () { closeTool(id); } }, icon("x"));

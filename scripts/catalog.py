@@ -298,6 +298,8 @@ def main():
     print(f"catalog: {len(items)} items -> {OUT.name}")
     packets = {p["id"]: {"pdf": p["pdf"], "files": p["files"], "extras": p["extras"]} for p in load_packets()}
     write_if_changed(OUT.parent / "packets.json", json.dumps(packets, indent=1))
+    units = [{"id": u["id"], "number": u["number"], "short": u["short"]} for u in load_units()]
+    write_if_changed(OUT.parent / "units.json", json.dumps(units, ensure_ascii=False, indent=1))   # for the toolbox's Vocab and Packet (filter.lua)
     write_if_changed(OUT.parent / "pdf-pages.json", json.dumps(pdf_pages(), indent=1))
     write_student_profile(student_drafts())
 

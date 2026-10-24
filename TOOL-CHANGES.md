@@ -8,6 +8,24 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Vocab and Packet in the toolbox: the unit's words and worksheets on any slide
+- **Asked for:** "a sidebar that has the entire vocabulary list for the unit ... click on an item to pull up its card ... The second one is a similar thing for the worksheets. Make the unit packet available as a series of preview pages that you can click on to pop out."
+- **Why:** "These two features will allow teachers to access the vocabulary and the worksheets on any slide without planning in advance when teaching."
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`:
+    - **Vocab** is a sidebar at the right edge (full height until it's dragged) with the unit's words only. Tapping one shows its card beside the list: picture, word, 中文, meaning, example, 🔊, and a link to the vocab app.
+    - **Packet** is a sidebar at the left edge with the unit packet's pages. Tapping one opens it large in the PDF viewer's window, and **Answer key** switches to the teacher edition.
+    - Both start on the deck's unit and have a unit menu.
+    - A tool's `start()` can now set its starting size too.
+  - `_extensions/classroom/toolbox/toolbox.css`: the sidebars and the card.
+  - `_extensions/classroom/filter.lua`: puts the course's units, packets and vocab words into each teacher deck as JSON, and loads the PDF viewer there.
+  - `_extensions/pdf-viewer/pdf-viewer.js`: `window.PdfViewer.start(box)` starts a viewer added later (and a box never starts twice).
+  - `scripts/catalog.py`: also writes `generated/units.json`.
+  - `_extensions/classroom/ui/icons.js`: book-a and files icons.
+  - `README.md`: Vocab and Packet rows. (Content: the Start Here catalogue and toolbox list.)
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Quick reference: links open in a pop-up
 - **Asked for:** "Can we make it so clicking on those opens them in a pop-up?"
 - **Why:** to show a worksheet or another deck without leaving the slides.
