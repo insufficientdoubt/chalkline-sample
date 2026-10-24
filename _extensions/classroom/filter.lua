@@ -6,6 +6,8 @@ Slides (reveal.js):
   - the clock is a toolbox tool, open in every deck (clock: false leaves it closed in a deck)
   - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
   - makes a {{< video >}} without a width or height fill the room left on its slide (video-fit.html)
+  - speaker notes (::: notes) and the classroom toolbox are in the TEACHER build only
+    (--profile teacher); the student and family sites leave them out
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
@@ -40,6 +42,15 @@ local function include_once(file)
   if included[file] then return end
   included[file] = true
   quarto.doc.include_file("after-body", quarto.utils.resolve_path(file))
+end
+
+-- The teacher build (quarto render --profile teacher): the only one with the classroom toolbox and
+-- speaker notes. The student and family sites get neither.
+local function is_teacher()
+  for _, profile in ipairs(quarto.project.profile or {}) do
+    if profile == "teacher" then return true end
+  end
+  return false
 end
 
 local function typst_string(s)
@@ -268,6 +279,8 @@ local function game_from_div(el)
 end
 
 local function Div(el)
+  -- Speaker notes are for the teacher: the student and family builds leave them out
+  if el.classes:includes("notes") and not is_teacher() then return {} end
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
                            ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
                            ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do
@@ -305,14 +318,15 @@ local function Meta(meta)
   -- Slides: a {{< video >}} with no size of its own fills the room left on its slide.
   if quarto.doc.is_format("revealjs") then include_once("video-fit.html") end
   -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
+  -- Teacher build only: students and families never see it.
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
-  if quarto.doc.is_format("revealjs") and not tools_off then
+  if quarto.doc.is_format("revealjs") then games.ui() end
+  if quarto.doc.is_format("revealjs") and not tools_off and is_teacher() then
     local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
     local tags = {}
     if site ~= "" then tags["chalkline-qr-site"] = site end
     if off then tags["chalkline-clock"] = "off" end
-    games.ui()
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",

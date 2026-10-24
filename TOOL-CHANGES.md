@@ -8,6 +8,15 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Toolbox and speaker notes: teacher site only
+- **Asked for:** "The teacher toolkit doesn't go on any parent or student facing site. Neither do speaker notes from the teacher."
+- **Why:** they're for the teacher. On the student site, anyone could press S and read the notes, or open the class lists in the toolbox.
+- **Changed:**
+  - `_extensions/classroom/filter.lua`: the classroom toolbox (and its clock) is added only in the teacher build (`--profile teacher`). `::: notes` divs are removed from every other build. The shared design styles still load for the games on every site.
+  - `README.md`: says so under the toolbox and speaker view.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Videos: centered, in their own shape, Shorts full height
 - **Asked for:** "It looks like the horizontal videos aren't centered and the vertical videos aren't going as tall as they ought to."
 - **Why:** the first version made each video a box as wide as its space, but reveal.js caps embeds at 95% of the slide, so they sat left of center, and a Short in a wide box had black bars. It also took height away for text in the *other* column.
