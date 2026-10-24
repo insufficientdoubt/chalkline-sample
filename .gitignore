@@ -1,7 +1,8 @@
 # Quarto build output (rebuilt any time with `quarto render`)
 _site/
 _site-teacher/
-_site-parent/   # old family-site builds (that site is gone); keeps them out of git
+# old family-site builds (that site is gone): keep them out of git
+_site-parent/
 .quarto/
 *_files/
 /.luarc.json
