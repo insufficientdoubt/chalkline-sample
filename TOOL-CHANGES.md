@@ -8,6 +8,16 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Videos fill their slide
+- **Asked for:** "my YouTube videos didn't fill the slide ... Do you have to use an iframe or can {{< video>}} fill the space?"
+- **Why:** the videos came out tiny (the browser's default 300 × 150 box), because Quarto gives `{{< video >}}` no size on slides, and its `aspect-ratio` option is ignored there.
+- **Changed:**
+  - `_extensions/classroom/video-fit.html` (new): on each slide, a YouTube or Vimeo video with no width or height of its own fills the room left: full width (or its column's) and the height under the title and any text. Videos stacked in one place share the height. A video with its own `width`/`height` keeps them.
+  - `_extensions/classroom/filter.lua`: adds it to every deck.
+  - `README.md`: a "Videos on slides" section.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: Unit pages and the rest of the site match the new overview
 - **Asked for:** "Make sure the unit pages and everything in that interface matches."
 - **Why:** one look across the site, after the overview restyle.
