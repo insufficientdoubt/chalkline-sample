@@ -8,6 +8,13 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Vocab sidebar: a clean list instead of white pills
+- **Asked for:** "Especially the vocab list... the list of white ovoids on grey look a bit like the old iPhone interface. I'd like something clean, modern, legible."
+- **Why:** the pills on a grey see-through panel looked dated.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.css`: the Vocab and Packet sidebars are solid white; the words are a plain list with thin lines between them, bigger text, and the chosen word marked with a blue bar; a word count above the list; the unit menu is a flat box with its own arrow; the word card has its picture in a soft rounded box, a larger word, round speaker buttons and the example set off with a line; the Packet's pages sit straight on the white, without the grey box. `_extensions/classroom/toolbox/toolbox.js`: the word count, the speaker buttons use a line icon instead of the 🔊 emoji, the unit menu's arrow. `_extensions/classroom/ui/icons.js`: two Lucide icons (chevron-down, arrow-up-right).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: A more modern look for the teacher tools
 - **Asked for:** "I still don't love the overall look and feel of the teacher tools. We moved to a more modern design style for the UI. Can you work on updating the design style of the teacher tools to look a bit more modern and nice?"
 - **Why:** to match the newer, more polished look of the rest of the interface.

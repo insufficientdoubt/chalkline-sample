@@ -80,11 +80,11 @@
   }
   // A unit menu for Vocab and Packet: starts on this deck's unit
   function unitMenu(units, value, extra, onchange) {
-    const pick = h("select", { class: "ct-input ct-pick", "aria-label": "Unit", onchange: function () { onchange(pick.value); } });
+    const pick = h("select", { class: "ct-pick", "aria-label": "Unit", onchange: function () { onchange(pick.value); } });
     units.forEach(function (u) { pick.append(h("option", { value: u.id, text: u.title })); });
     if (extra) pick.append(h("option", { value: extra[0], text: extra[1] }));
     pick.value = value;
-    return pick;
+    return h("label", { class: "ct-pick-box" }, pick, h("span", { class: "ct-pick-arrow" }, icon("chevron-down")));
   }
 
   function beep(freq, length, volume, type, delay) {
@@ -803,14 +803,16 @@
         const inUnit = function (w, u) { return (w.units || []).indexOf(u.number) >= 0; };
         const units = data.units.filter(function (u) { return data.words.some(function (w) { return inUnit(w, u); }); });
         let unit = units.some(function (u) { return u.id === data.unit; }) ? data.unit : "all";
-        const list = h("div", { class: "ct-vocab-list ct-nodrag" });
-        body.append(unitMenu(units, unit, ["all", "All units"], function (v) { unit = v; hideCard(); paint(); }), list);
+        const list = h("div", { class: "ct-vocab-list ct-nodrag" }), count = h("div", { class: "ct-vocab-count" });
+        body.append(unitMenu(units, unit, ["all", "All units"], function (v) { unit = v; hideCard(); paint(); }), count, list);
         let card = null, current = null;
 
         function paint() {
           list.textContent = "";
           const u = units.find(function (x) { return x.id === unit; });
-          data.words.filter(function (w) { return !u || inUnit(w, u); }).forEach(function (w) {
+          const words = data.words.filter(function (w) { return !u || inUnit(w, u); });
+          count.textContent = words.length + (words.length === 1 ? " word" : " words");
+          words.forEach(function (w) {
             const b = h("button", { class: "ct-vocab-word", text: w.term, onclick: function () { if (current === w) hideCard(); else showCard(w, b); } });
             list.append(b);
           });
@@ -823,7 +825,7 @@
             const u = new SpeechSynthesisUtterance(text);
             u.lang = lang; u.rate = 0.9;
             s.speak(u);
-          } }, "🔊");
+          } }, icon("volume-2"));
         }
         function showCard(w, button) {
           hideCard();
@@ -831,12 +833,13 @@
           button.classList.add("ct-on");
           card = h("div", { class: "ct-vcard", role: "dialog", "aria-label": w.term },
             h("button", { class: "ct-close", "aria-label": "Close", title: "Close (Esc)", onclick: hideCard }, icon("x")),
-            w.image ? h("img", { src: data.root + w.image, alt: "" }) : null,
-            h("div", { class: "ct-vcard-term" }, w.term, say(w.term, "en-US")),
-            w.zh ? h("div", { class: "ct-vcard-zh" }, w.zh, say(w.zh, "zh-CN")) : null,
-            h("div", { class: "ct-vcard-def", text: w.def }),
-            w.example ? h("div", { class: "ct-vcard-ex", text: w.example }) : null,
-            w.url ? h("a", { class: "ct-vcard-link", href: data.root + w.url, target: "_blank", rel: "noopener", text: "In the vocab app ↗" }) : null);
+            w.image ? h("div", { class: "ct-vcard-pic" }, h("img", { src: data.root + w.image, alt: "" })) : null,
+            h("div", { class: "ct-vcard-text" },
+              h("div", { class: "ct-vcard-term" }, h("span", { text: w.term }), say(w.term, "en-US")),
+              w.zh ? h("div", { class: "ct-vcard-zh" }, h("span", { text: w.zh }), say(w.zh, "zh-CN")) : null,
+              h("div", { class: "ct-vcard-def", text: w.def }),
+              w.example ? h("div", { class: "ct-vcard-ex", text: w.example }) : null,
+              w.url ? h("a", { class: "ct-vcard-link", href: data.root + w.url, target: "_blank", rel: "noopener" }, "In the vocab app", icon("arrow-up-right")) : null));
           card.style.zIndex = ++zTop;
           layer.append(card);
           // beside the list, on the side with room, level with the word

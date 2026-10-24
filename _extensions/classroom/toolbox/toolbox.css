@@ -735,36 +735,64 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-music-pop { margin-top: 4px; border-top: 1px solid var(--ui-line); border-radius: 0 0 var(--ui-r-sm) var(--ui-r-sm); padding-top: 7px; color: var(--ui-accent); font-weight: 600; }
 .ct-music-error { color: var(--ui-bad); font-weight: 600; }
 
-/* ---- Vocab and Packet: sidebars ---- */
-.ct-body.ct-vocab, .ct-body.ct-packet { gap: 6px; padding: 8px; }
-.ct-pick { width: 100%; min-width: 0; padding: 4px 6px; font-size: 14px; }
-.ct-empty { padding: 10px; color: var(--ui-muted); font-size: 14px; }
-.ct-vocab-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
-.ct-vocab-word {
-  flex: none; padding: 6px 10px; border: 1px solid transparent; border-radius: var(--ui-r-sm); background: var(--ui-surface);
-  color: var(--ui-ink); text-align: left; font-size: clamp(14px, 8cqw, 22px); font-weight: 600 !important; cursor: pointer;
+/* ---- Vocab and Packet: sidebars. Solid white, so the words read cleanly over any slide. ---- */
+.ct-panel:has(.ct-vocab), .ct-panel:has(.ct-packet) { background: #fff; }
+.ct-body.ct-vocab, .ct-body.ct-packet { gap: 8px; padding: 10px 0 0; }
+.ct-body.ct-packet { padding: 10px 10px 10px; }
+.ct-vocab > .ct-pick-box { margin: 0 10px; }
+.ct-pick-box { position: relative; display: block; flex: none; }
+.ct-pick {
+  width: 100%; min-width: 0; height: 36px; padding: 0 30px 0 12px;
+  border: 1px solid var(--ui-line); border-radius: 10px; background: var(--ui-soft);
+  color: var(--ui-ink); font-family: inherit; font-size: 15px; font-weight: 600; appearance: none; -webkit-appearance: none; cursor: pointer;
 }
-.ct-vocab-word:hover { border-color: var(--ui-line-strong); }
-.ct-vocab-word.ct-on { border-color: var(--ui-accent); background: var(--ui-accent); color: #fff; }
+.ct-pick:hover { border-color: var(--ui-line-strong); }
+.ct-pick:focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 1px; }
+.ct-pick-arrow { position: absolute; right: 10px; top: 50%; display: inline-flex; color: var(--ui-muted); font-size: 16px; transform: translateY(-50%); pointer-events: none; }
+.ct-empty { padding: 10px; color: var(--ui-muted); font-size: 14px; }
+.ct-vocab-count {
+  flex: none; padding: 4px 16px 6px; border-bottom: 1px solid var(--ui-line);
+  color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+}
+/* The words: a plain list with thin lines between, big enough to read from across the room */
+.ct-vocab-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; padding-bottom: 14px; }
+.ct-vocab-word {
+  position: relative; flex: none; padding: 9px 16px; border: 0; border-bottom: 1px solid #eef1f5; border-radius: 0; background: transparent;
+  color: var(--ui-ink); text-align: left; font-size: clamp(16px, 9cqw, 24px) !important; font-weight: 600 !important; line-height: 1.2; cursor: pointer;
+  transition: background 0.1s, color 0.1s;
+}
+.ct-vocab-word:hover { background: var(--ui-soft); }
+.ct-vocab-word.ct-on { background: var(--ui-accent-soft); color: var(--ui-accent); }
+.ct-vocab-word.ct-on::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--ui-accent); }
+/* The word's card, beside the list */
 .ct-vcard {
-  position: fixed; width: 380px; max-height: calc(100vh - 16px); overflow: auto; padding: 14px 16px 16px;
-  border-radius: var(--ui-r-lg); background: var(--ui-surface); box-shadow: var(--ui-shadow); color: var(--ui-ink); pointer-events: auto;
+  position: fixed; width: 380px; max-height: calc(100vh - 16px); overflow: auto; padding: 10px;
+  border-radius: 18px; background: #fff; color: var(--ui-ink); pointer-events: auto;
+  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 16px 40px rgba(16, 35, 63, 0.22), 0 0 0 1px rgba(16, 35, 63, 0.07);
   font-family: "Source Sans 3", system-ui, -apple-system, "PingFang SC", sans-serif;
 }
-.ct-vcard img { display: block; width: 100%; height: 200px; margin: 6px 0 10px; object-fit: contain; }
-.ct-vcard-term { font-size: 30px; font-weight: 700; line-height: 1.15; color: var(--ui-accent); }
-.ct-vcard-zh { margin-top: 2px; font-size: 22px; color: #52606d; }
-.ct-vcard-def { margin-top: 8px; font-size: 19px; line-height: 1.35; }
-.ct-vcard-ex { margin-top: 6px; color: var(--ui-muted); font-size: 16px; font-style: italic; }
-.ct-vcard-link { display: inline-block; margin-top: 10px; color: var(--ui-focus); font-size: 14px; font-weight: 600; text-decoration: none; }
-.ct-say { margin-left: 6px; padding: 0 2px; border: 0; background: none; font-size: 0.65em; vertical-align: middle; opacity: 0.7; cursor: pointer; }
-.ct-say:hover { opacity: 1; }
+.ct-vcard > .ct-close { position: absolute; top: 16px; right: 16px; z-index: 1; background: rgba(255, 255, 255, 0.85); }
+.ct-vcard-pic { display: grid; place-items: center; height: 210px; border-radius: 12px; background: var(--ui-soft); overflow: hidden; }
+.ct-vcard-pic img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.ct-vcard-text { padding: 12px 8px 6px; }
+.ct-vcard-term { display: flex; align-items: center; gap: 8px; font-size: 32px; font-weight: 700; line-height: 1.1; color: var(--ui-ink); }
+.ct-vcard-zh { display: flex; align-items: center; gap: 8px; margin-top: 4px; font-size: 22px; color: var(--ui-muted); }
+.ct-vcard-def { margin-top: 12px; font-size: 19px; line-height: 1.4; }
+.ct-vcard-ex { margin-top: 8px; padding-left: 10px; border-left: 3px solid var(--ui-line); color: var(--ui-muted); font-size: 16px; line-height: 1.4; font-style: italic; }
+.ct-vcard-link { display: inline-flex; align-items: center; gap: 3px; margin-top: 14px; color: var(--ui-focus); font-size: 14px; font-weight: 600; text-decoration: none; }
+.ct-vcard-link:hover { text-decoration: underline; }
+.ct-say {
+  flex: none; display: inline-grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%;
+  background: var(--ui-accent-soft); color: var(--ui-accent); font-size: 16px !important; cursor: pointer; transition: background 0.1s;
+}
+.ct-say:hover { background: #d3e0f1; }
+.ct-vcard-zh .ct-say { width: 26px; height: 26px; background: var(--ui-soft); font-size: 14px !important; color: var(--ui-muted); }
 .ct-packet-head { flex: none; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.ct-packet-head .ct-pick { flex: 1 1 100%; }
-.ct-packet-key { flex: none; font-size: 12px; white-space: nowrap; }
+.ct-packet-head .ct-pick-box { flex: 1 1 100%; }
+.ct-packet-key { flex: none; font-size: 13px; white-space: nowrap; }
 .ct-packet-key[aria-pressed="true"] { border-color: #e07b00; background: #fff7ee; color: #8a4500; }
 .ct-packet-pages { flex: 1; min-height: 0; display: flex; }
-.ct-packet-pages .pdfv { flex: 1; min-width: 0; min-height: 0; padding: 4px; border-radius: var(--ui-r-sm); }
+.ct-packet-pages .pdfv { flex: 1; min-width: 0; min-height: 0; padding: 0; border: 0; border-radius: 0; background: transparent; }
 .ct-packet-pages .pdfv-strip { flex: 1; min-height: 0; flex-direction: column; align-items: center; overflow-x: hidden; overflow-y: auto; }
 .ct-packet-pages .pdfv-thumb { width: 100%; height: auto !important; aspect-ratio: 0.66; }
 .ct-packet-pages .pdfv-bar { flex-wrap: wrap; font-size: 12px; }
