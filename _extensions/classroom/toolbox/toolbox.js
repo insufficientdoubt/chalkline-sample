@@ -760,12 +760,14 @@
     },
 
     music: {
-      title: "Music", icon: "music", w: 320, h: 400, minW: 220, minH: 260, keys: [],
-      build: function (body) {
+      title: "Music", icon: "music", w: 400, h: 240, minW: 370, minH: 236, keys: [],
+      build: function (body, panel, grow) {
         // Classroom music from YouTube: paste a link (a song or a playlist); big buttons to play, skip
-        // and change the volume. The video shows small above them (YouTube's rules don't allow hiding
-        // it); make the panel as small as you like. It keeps playing as you change slides. The last
-        // links are remembered in this browser: { link, recent: [links], titles: {link: title}, volume }.
+        // and change the volume, beside the video. The video stays at least 200 × 200 px: YouTube's
+        // rules for embedded players don't allow hiding it or playing only its sound. "Pop out" opens
+        // the song on YouTube itself, in its own small window, which you can minimize. It keeps playing
+        // as you change slides. The link box, the last songs and Pop out fold away under "Song".
+        // Remembered in this browser: { link, recent: [links], titles: {link: title}, volume }.
         const state = function () { return Object.assign({ link: "", recent: [], titles: {}, volume: 50 }, load("music", {})); };
         const screen = h("div", { class: "ct-music-screen" });
         const title = h("div", { class: "ct-music-title" });
@@ -777,18 +779,37 @@
           onkeydown: function (e) { if (e.key === "Enter") use(field.value, true); } });
         const linkRow = h("div", { class: "ct-music-link" }, field, h("button", { class: "ct-btn ct-primary", text: "Play", onclick: function () { use(field.value, true); } }));
         const recent = h("div", { class: "ct-music-recent" });
-        body.append(screen, title,
-          h("div", { class: "ct-music-controls" }, back, play, next),
-          h("div", { class: "ct-music-volume" },
-            h("button", { class: "ct-btn ct-music-big", "aria-label": "Quieter", title: "Quieter", onclick: function () { volume(-10); } }, icon("volume-1")),
-            level,
-            h("button", { class: "ct-btn ct-music-big", "aria-label": "Louder", title: "Louder", onclick: function () { volume(10); } }, icon("volume-2"))),
-          linkRow,
+        const DRAWER = 96;   // how much taller the panel gets with the drawer open
+        const drawer = h("div", { class: "ct-music-drawer", hidden: true }, linkRow,
           h("div", { class: "ct-music-foot" },
-            h("button", { class: "ct-btn ct-small", text: "Change song", onclick: function () {
-              linkRow.hidden = !linkRow.hidden;
-              if (!linkRow.hidden) { field.value = state().link; field.select(); }
-            } }), recent));
+            h("button", { class: "ct-btn ct-small", text: "Pop out", title: "Open this song on YouTube in its own small window (you can minimize it)", onclick: popOut }),
+            recent));
+        const songBtn = h("button", { class: "ct-btn ct-small ct-music-song", "aria-expanded": "false", text: "Song ▾", onclick: function () { showDrawer(drawer.hidden); } });
+        body.append(h("div", { class: "ct-music-main" }, screen,
+          h("div", { class: "ct-music-side" }, title,
+            h("div", { class: "ct-music-controls" }, back, play, next),
+            h("div", { class: "ct-music-volume" },
+              h("button", { class: "ct-btn ct-music-big", "aria-label": "Quieter", title: "Quieter", onclick: function () { volume(-10); } }, icon("volume-1")),
+              level,
+              h("button", { class: "ct-btn ct-music-big", "aria-label": "Louder", title: "Louder", onclick: function () { volume(10); } }, icon("volume-2"))),
+            songBtn)),
+          drawer);
+
+        function showDrawer(on) {
+          if (on === !drawer.hidden) return;
+          drawer.hidden = !on;
+          songBtn.setAttribute("aria-expanded", on ? "true" : "false");
+          songBtn.textContent = on ? "Song ▴" : "Song ▾";
+          grow(on ? DRAWER : -DRAWER);
+          if (on) { field.value = state().link; field.select(); }
+        }
+        function popOut() {
+          const v = parse(state().link);
+          if (!v) { showDrawer(true); return; }
+          const url = "https://www.youtube.com/" + (v.id ? "watch?v=" + v.id + (v.list ? "&list=" + v.list : "") : "playlist?list=" + v.list);
+          if (player && ready) player.pauseVideo();   // one at a time
+          window.open(url, "chalkline-music", "width=520,height=380");
+        }
 
         let player = null, ready = false;
 
@@ -825,12 +846,12 @@
 
         function use(link, start) {
           const v = parse(link);
-          if (!v) { title.textContent = "That isn't a YouTube link."; linkRow.hidden = false; return; }
+          if (!v) { title.textContent = "That isn't a YouTube link."; showDrawer(true); return; }
           const s = state();
           s.link = link.trim();
           s.recent = [s.link].concat(s.recent.filter(function (x) { return x !== s.link; })).slice(0, 4);
           save("music", s);
-          linkRow.hidden = true;
+          showDrawer(false);
           paintRecent();
           title.textContent = "…";
           api(function () {
@@ -855,7 +876,7 @@
         function toggle() {
           if (!player || !ready) {
             if (state().link) use(state().link, true);
-            else { linkRow.hidden = false; field.focus(); }
+            else showDrawer(true);
             return;
           }
           if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
@@ -886,7 +907,7 @@
           if (data && data.title) {
             title.textContent = data.title;
             if (s.titles[s.link] !== data.title) { s.titles[s.link] = data.title; save("music", s); paintRecent(); }
-          } else if (!player) title.textContent = s.link ? (s.titles[s.link] || "Ready: press play") : "Paste a YouTube link below";
+          } else if (!player) title.textContent = s.link ? (s.titles[s.link] || "Ready: press play") : "Add a song: press Song";
         }
         function paintRecent() {
           const s = state();
@@ -897,7 +918,6 @@
           });
         }
 
-        linkRow.hidden = !!state().link;
         paint(); paintRecent();
         if (state().link) use(state().link, false);   // ready to go, not playing yet
         return { close: function () { if (player && player.destroy) player.destroy(); player = null; } };

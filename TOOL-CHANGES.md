@@ -8,6 +8,16 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Music: a compact strip, and Pop out
+- **Asked for:** "The music player works, but it's still a bit bulky. Any ideas for how to make a more streamlined version? Or let it get minimized to just a little round icon", then "1 sounds good" (the compact strip), and "can't we just keep playing the YouTube stream but hide the actual video?"
+- **Why:** smaller on the board. Hiding the video while YouTube keeps playing breaks YouTube's rules for embedded players (they can't be hidden, smaller than 200 × 200, or used for sound only), so Chalkline doesn't do it. Pop out gets the same result through YouTube itself.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: the Music panel is a short strip (400 × 240 instead of 320 × 400). The video tile is on the left (never under 200 × 200), with the big buttons beside it. The link box and last songs fold away under **Song** (the panel grows only while it's open). **Pop out** opens the song on YouTube in its own small window (which can be minimized) and pauses the one in the panel.
+  - `_extensions/classroom/toolbox/toolbox.css`: the strip layout.
+  - `README.md`: the Music row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Music in the toolbox: a small YouTube player with big buttons
 - **Asked for:** "a tiny floating YouTube player with oversized controls in the teacher tools for classroom music. Or just a plain embedded YouTube player is fine if it's resizable."
 - **Why:** classroom music (clean-up songs, work music) without leaving the slides.
