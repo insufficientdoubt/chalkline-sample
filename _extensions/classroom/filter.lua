@@ -5,6 +5,7 @@ this file turns them into the right thing for each output format.
 Slides (reveal.js):
   - the clock is a toolbox tool, open in every deck (clock: false leaves it closed in a deck)
   - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
+  - makes a {{< video >}} without a width or height fill the room left on its slide (video-fit.html)
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
@@ -301,6 +302,8 @@ local function Meta(meta)
   local down = meta["down-arrow"]
   local down_off = down ~= nil and pandoc.utils.stringify(down) == "false"
   if quarto.doc.is_format("revealjs") and not down_off then include_once("down-arrow.html") end
+  -- Slides: a {{< video >}} with no size of its own fills the room left on its slide.
+  if quarto.doc.is_format("revealjs") then include_once("video-fit.html") end
   -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"

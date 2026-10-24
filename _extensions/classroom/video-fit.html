@@ -1,0 +1,44 @@
+<!--
+  Videos fill their slide: a {{< video >}} (YouTube or Vimeo) with no width or height of its own
+  takes the full width of where it sits (the slide, or its column) and all the height left on the
+  slide under the title and around any text. So a plain {{< video URL >}} just fills the space,
+  in a column too (a YouTube Short in a narrow column comes out tall). Give the video a width or
+  a height and it keeps yours. Added to every deck by filter.lua.
+-->
+<script>
+(function () {
+  const SEL = ['youtube.com/embed', 'youtube-nocookie.com/embed', 'player.vimeo.com']
+    .map(function (s) { return 'iframe[src*="' + s + '"], iframe[data-src*="' + s + '"]'; }).join(", ");
+
+  function fit(slide) {
+    if (!slide || !window.Reveal) return;
+    const vids = Array.prototype.filter.call(slide.querySelectorAll(SEL), function (f) {
+      return !f.hasAttribute("width") && !f.hasAttribute("height");
+    });
+    if (!vids.length) return;
+    vids.forEach(function (f) { f.style.display = "block"; f.style.width = "100%"; f.style.height = "0px"; });
+    // what's on the slide besides the videos: the lowest bottom edge, in slide units
+    const scale = Reveal.getScale ? Reveal.getScale() : 1, top = slide.getBoundingClientRect().top;
+    let used = 0;
+    slide.querySelectorAll(":scope > *, .column > *").forEach(function (el) {
+      if (el.matches("aside, .notes, script, style")) return;
+      const r = el.getBoundingClientRect();
+      if (r.height) used = Math.max(used, (r.bottom - top) / scale);
+    });
+    const room = Math.max(200, (Reveal.getConfig().height || 700) - used - 20);
+    // videos stacked in the same place share the height; videos in different columns each get all of it
+    const groups = new Map();
+    vids.forEach(function (f) { const k = f.closest(".column") || slide; groups.set(k, (groups.get(k) || 0) + 1); });
+    vids.forEach(function (f) { f.style.height = Math.floor(room / groups.get(f.closest(".column") || slide)) + "px"; });
+  }
+
+  function current() { fit(Reveal.getCurrentSlide()); }
+  function start() {
+    Reveal.on("slidechanged", current);
+    Reveal.on("resize", current);
+    current();
+  }
+  if (window.Reveal && Reveal.isReady && Reveal.isReady()) start();
+  else if (window.Reveal) Reveal.on("ready", start);
+})();
+</script>

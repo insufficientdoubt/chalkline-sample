@@ -231,6 +231,10 @@ Poster options are listed in [brand/README.md](brand/README.md).
 
 Put `{{< timer 20 >}}` on a slide. It has Start/Pause, Reset and +1 min buttons (or press **T**), turns orange at 5 minutes and red at 1 minute, chimes at zero, and keeps running in a small box at the bottom of the screen if you change slides.
 
+## Videos on slides
+
+Put `{{< video https://www.youtube.com/watch?v=... >}}` on a slide (YouTube, including Shorts, or Vimeo). It fills the room left on the slide: the full width (or its column's width) and all the height under the title and any text. So a Short in a narrow column comes out tall, and a normal video fills the slide. To choose the size yourself, add `width` and/or `height`, for example `{{< video URL width="100%" height="400" >}}`; then it keeps yours.
+
 ## Clock and transitions
 
 When a slide has another slide below it (a column of slides: a `#` heading with `##` slides under it), a bouncing **↓** button shows at the bottom of the screen; click it or press ↓. Turn it off for one deck with `down-arrow: false`.
