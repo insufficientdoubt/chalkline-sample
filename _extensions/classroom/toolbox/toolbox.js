@@ -5,14 +5,14 @@
 
     Name picker     picks a student from a class list, everyone once before anyone twice
     Groups          random groups from a class list (groups of n, or n groups)
-    Scoreboard      points for teams (names, colors, + and −); narrow, it stacks each team
+    Scoreboard      points for teams (names, colors, + and −); narrow, it stacks each team   tools/scoreboard.js
     Voice level     0 Silent to 4 Presenter; the microphone button adds a noise meter: the room's
                     sound level, with a "too loud" line set by the voice level, an alarm and a
                     red flash over it, and a count of the times
     Slide size      the space around the slides, and standard or wide (16:9), on this screen
-    Traffic light   red, yellow, green
+    Traffic light   red, yellow, green; side by side when it's wide                         tools/traffic.js
     QR code         a code for this deck's address (or any link) for students' tablets
-    Stopwatch       counts up
+    Stopwatch       counts up                                                              tools/stopwatch.js
     Clock           the time; open unless you close it (K shows and hides it)
     Spotlight       darkens the screen except a circle you drag, to show where to look
     Dice            1 to 6 dice
@@ -20,6 +20,8 @@
     Vocab           the unit's words in a sidebar; tap one for its card (picture, 中文, meaning, 🔊)
     Packet          the unit packet as pages in a sidebar; tap one to open it large (zoom, pens)
 
+  The tools in tools/*.js are web components (see kit.js): the way to build the others as they're
+  redesigned. A panel has no title bar: × shows when you point at it.
   Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
   Narrow panels (scoreboard, voice level) change to a layout that stacks.
   Which panels are open, where they are, the scores and the other settings are remembered in
@@ -35,39 +37,8 @@
   const BASE = document.currentScript ? document.currentScript.src.replace(/[^/]*$/, "") : "";
   const PREFIX = "chalkline-tools:";
 
-  function load(key, fallback) {
-    try {
-      const v = localStorage.getItem(PREFIX + key);
-      return v ? JSON.parse(v) : fallback;
-    } catch (e) { return fallback; }
-  }
-  function save(key, value) {
-    try { localStorage.setItem(PREFIX + key, JSON.stringify(value)); } catch (e) { /* private window */ }
-  }
-
-  // Tiny element builder: h("div", {class: "x", onclick: fn}, child, "text", ...)
-  // A line icon (ui/icons.js, Lucide). The toolbox's controls use these; the voice levels keep
-  // their emoji, which are pictures for the students.
-  function icon(name) {
-    return window.ChalklineIcons ? ChalklineIcons.el(name) : document.createTextNode("");
-  }
-
-  function h(tag, attrs) {
-    const el = document.createElement(tag);
-    for (const k in attrs || {}) {
-      const v = attrs[k];
-      if (v == null || v === false) continue;
-      if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
-      else if (k === "text") el.textContent = v;
-      else if (k === "style") el.style.cssText = v;
-      else el.setAttribute(k, v === true ? "" : v);
-    }
-    for (let i = 2; i < arguments.length; i++) {
-      const c = arguments[i];
-      if (c != null && c !== false) el.append(c);
-    }
-    return el;
-  }
+  // The shared kit (kit.js): storage, the element builder, icons, sounds, the button that asks twice
+  const { load, save, h, icon, beep, sureButton, COLORS } = window.ChalklineToolbox;
 
   // The course's units, packets and vocab words (filter.lua puts them in each teacher deck as JSON)
   let courseData;
@@ -85,30 +56,6 @@
     if (extra) pick.append(h("option", { value: extra[0], text: extra[1] }));
     pick.value = value;
     return h("label", { class: "ct-pick-box" }, pick, h("span", { class: "ct-pick-arrow" }, icon("chevron-down")));
-  }
-
-  function beep(freq, length, volume, type, delay) {
-    try {
-      const ctx = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)());
-      const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime + (delay || 0);
-      o.type = type || "sine";
-      o.frequency.value = freq;
-      g.gain.setValueAtTime(volume || 0.15, t);
-      g.gain.exponentialRampToValueAtTime(0.001, t + length);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(t); o.stop(t + length);
-    } catch (e) { /* no sound available */ }
-  }
-
-  // A button that needs a second tap within 3 seconds ("Reset" → "Sure?").
-  function sureButton(label, action) {
-    let armed = null;
-    const b = h("button", { class: "ct-btn", text: label, onclick: function () {
-      if (armed) { clearTimeout(armed); armed = null; b.textContent = label; b.classList.remove("ct-armed"); action(); return; }
-      b.textContent = "Sure?"; b.classList.add("ct-armed");
-      armed = setTimeout(function () { armed = null; b.textContent = label; b.classList.remove("ct-armed"); }, 3000);
-    } });
-    return b;
   }
 
   /* ---------------- Class lists (name picker and groups) ----------------
@@ -239,8 +186,6 @@
      return { refresh(), close() }: refresh redraws after another tab changes the saved state,
      close tidies up (stops the microphone, timers). */
 
-  const COLORS = ["#0087ff", "#ff8c0f", "#2e9e4f", "#7b4fc9", "#C8372D", "#1a9e9e", "#d6458f", "#003477"];
-
   const TOOLS = {
     picker: {
       title: "Name picker", icon: "hand", w: 400, h: 280, minW: 260, minH: 230, keys: ["classes"],
@@ -360,61 +305,6 @@
         }
         show("groups");
         return { refresh: function () { if (mode !== "edit") show(mode); } };
-      },
-    },
-
-    scoreboard: {
-      title: "Scoreboard", icon: "trophy", w: 360, h: 300, minW: 150, minH: 230, keys: ["scores"],
-      build: function (body) {
-        function state() {
-          return load("scores", { sound: true, teams: [1, 2, 3, 4].map(function (n) { return { name: "Team " + n, score: 0 }; }) });
-        }
-        let s = state();
-        const rows = h("div", { class: "ct-score-rows" });
-        const soundBtn = h("button", { class: "ct-btn", title: "Sound on/off", onclick: function () {
-          s.sound = !s.sound; save("scores", s); paint();
-        } });
-        const addBtn = h("button", { class: "ct-btn", text: "+ Team", onclick: function () {
-          if (s.teams.length >= 8) return;
-          s.teams.push({ name: "Team " + (s.teams.length + 1), score: 0 }); save("scores", s); paint();
-        } });
-        const removeBtn = sureButton("− Team", function () {
-          if (s.teams.length <= 1) return;
-          s.teams.pop(); save("scores", s); paint();
-        });
-        body.append(rows, h("div", { class: "ct-foot" }, addBtn, removeBtn,
-          sureButton("Reset", function () { s.teams.forEach(function (t) { t.score = 0; }); save("scores", s); paint(); }),
-          soundBtn));
-
-        function change(i, by) {
-          s.teams[i].score += by;
-          save("scores", s);
-          if (s.sound) beep(by > 0 ? 880 : 330, 0.25, 0.12);
-          paint();
-          const el = rows.children[i] && rows.children[i].querySelector(".ct-score");
-          if (el) { el.classList.remove("ct-pop"); void el.offsetWidth; el.classList.add("ct-pop"); }
-        }
-        function paint() {
-          rows.textContent = "";
-          rows.style.setProperty("--rows", s.teams.length);
-          const top = Math.max.apply(null, s.teams.map(function (t) { return t.score; }));
-          const leaders = s.teams.filter(function (t) { return t.score === top; }).length;
-          s.teams.forEach(function (t, i) {
-            const name = h("input", { class: "ct-team-name", value: t.name, maxlength: 24, "aria-label": "Team name",
-              onchange: function () { t.name = name.value.trim() || "Team " + (i + 1); save("scores", s); },
-              onkeydown: function (e) { if (e.key === "Enter") name.blur(); } });
-            name.value = t.name;
-            rows.append(h("div", { class: "ct-score-row", style: "--team:" + COLORS[i % COLORS.length] },
-              h("button", { class: "ct-round ct-minus", "aria-label": "Minus one", text: "−", onclick: function () { change(i, -1); } }),
-              name,
-              h("span", { class: "ct-crown" }, top > 0 && leaders === 1 && t.score === top ? icon("crown") : ""),
-              h("span", { class: "ct-score", text: t.score }),
-              h("button", { class: "ct-round ct-plus", "aria-label": "Plus one", text: "+", onclick: function () { change(i, 1); } })));
-          });
-          soundBtn.replaceChildren(icon(s.sound ? "bell" : "bell-off"));
-        }
-        paint();
-        return { refresh: function () { s = state(); paint(); } };
       },
     },
 
@@ -586,7 +476,7 @@
     clock: {
       // The time, in a window you can drag and resize. Open in every deck unless you close it
       // (or press K); clock: false in a deck's labels leaves it closed there.
-      title: "Clock", icon: "clock", w: 128, h: 52, minW: 100, minH: 44, keys: [], bare: true,
+      title: "Clock", icon: "clock", w: 128, h: 52, minW: 100, minH: 44, keys: [],
       // Where it starts: off the slide, so it covers nothing. In the space beside the slide (left,
       // above the menu buttons; or right, under the slide number) when there's room; if not, the
       // top-right corner. It moves with the screen until it's dragged.
@@ -674,34 +564,6 @@
       },
     },
 
-    traffic: {
-      title: "Traffic light", icon: "traffic-cone", w: 220, h: 380, minW: 150, minH: 250, keys: ["traffic"],
-      build: function (body) {
-        const LIGHTS = [
-          { id: "red", label: "Stop" },
-          { id: "yellow", label: "Get ready" },
-          { id: "green", label: "Go" },
-        ];
-        const box = h("div", { class: "ct-traffic-box" });
-        const caption = h("div", { class: "ct-traffic-label" });
-        LIGHTS.forEach(function (l) {
-          box.append(h("button", { class: "ct-light ct-" + l.id, "aria-label": l.label, onclick: function () {
-            save("traffic", load("traffic", "") === l.id ? "" : l.id); paint();
-          } }));
-        });
-        body.append(box, caption);
-        function paint() {
-          const on = load("traffic", "");
-          Array.prototype.forEach.call(box.children, function (b, i) { b.classList.toggle("ct-on", LIGHTS[i].id === on); });
-          const l = LIGHTS.find(function (x) { return x.id === on; });
-          caption.textContent = l ? l.label : "";
-          caption.className = "ct-traffic-label" + (l ? " ct-" + l.id : "");
-        }
-        paint();
-        return { refresh: paint };
-      },
-    },
-
     qr: {
       title: "QR code", icon: "qr-code", w: 300, h: 360, minW: 220, minH: 260, keys: [],
       build: function (body) {
@@ -758,37 +620,6 @@
       },
     },
 
-    stopwatch: {
-      title: "Stopwatch", icon: "timer", w: 320, h: 200, minW: 220, minH: 150, keys: ["stopwatch"],
-      build: function (body) {
-        // Saved as { since: start time while running, or 0; done: ms counted before that }.
-        const time = h("div", { class: "ct-sw-time" });
-        const go = h("button", { class: "ct-btn ct-primary", onclick: function () {
-          const s = load("stopwatch", { since: 0, done: 0 });
-          if (s.since) save("stopwatch", { since: 0, done: s.done + Date.now() - s.since });
-          else save("stopwatch", { since: Date.now(), done: s.done });
-          paint();
-        } });
-        body.append(time, h("div", { class: "ct-foot" }, go,
-          h("button", { class: "ct-btn", text: "Reset", onclick: function () {
-            const s = load("stopwatch", { since: 0, done: 0 });
-            save("stopwatch", { since: s.since ? Date.now() : 0, done: 0 }); paint();
-          } })));
-        function paint() {
-          const s = load("stopwatch", { since: 0, done: 0 });
-          const ms = s.done + (s.since ? Date.now() - s.since : 0);
-          const sec = Math.floor(ms / 1000), hrs = Math.floor(sec / 3600), min = Math.floor(sec / 60) % 60;
-          time.textContent = (hrs ? hrs + ":" + String(min).padStart(2, "0") : min) + ":" +
-            String(sec % 60).padStart(2, "0") + "." + Math.floor(ms / 100) % 10;
-          go.textContent = s.since ? "Pause" : ms ? "Resume" : "Start";
-          time.classList.toggle("ct-running", !!s.since);
-        }
-        paint();
-        const timer = setInterval(paint, 100);
-        return { refresh: paint, close: function () { clearInterval(timer); } };
-      },
-    },
-
     vocab: {
       title: "Vocab", icon: "book-a", w: 230, h: 520, minW: 170, minH: 200, keys: [],
       // A sidebar at the right edge, the screen's full height, until it's dragged
@@ -832,7 +663,7 @@
           current = w;
           button.classList.add("ct-on");
           card = h("div", { class: "ct-vcard", role: "dialog", "aria-label": w.term },
-            h("button", { class: "ct-close", "aria-label": "Close", title: "Close (Esc)", onclick: hideCard }, icon("x")),
+            h("button", { class: "ct-ctrl ct-close", "aria-label": "Close", title: "Close (Esc)", onclick: hideCard }, icon("x")),
             w.image ? h("div", { class: "ct-vcard-pic" }, h("img", { src: data.root + w.image, alt: "" })) : null,
             h("div", { class: "ct-vcard-text" },
               h("div", { class: "ct-vcard-term" }, h("span", { text: w.term }), say(w.term, "en-US")),
@@ -906,10 +737,10 @@
         const state = function () { return Object.assign({ link: "", recent: [], titles: {} }, load("music", {})); };
         const screen = h("div", { class: "ct-music-screen" });
         const menu = h("div", { class: "ct-music-menu", role: "menu", hidden: true });
-        const more = h("button", { class: "ct-close ct-music-more", "aria-label": "Music menu", title: "Change the song, recent songs, pop out",
+        const more = h("button", { class: "ct-ctrl ct-music-more", "aria-label": "Music menu", title: "Change the song, recent songs, pop out",
           onclick: function (e) { e.stopPropagation(); showMenu(menu.hidden); } }, icon("ellipsis"));
-        const head = panel.querySelector(".ct-head");
-        if (head) head.insertBefore(more, head.lastChild); else panel.append(more);
+        const ctrls = panel.querySelector(".ct-ctrls");
+        ctrls.insertBefore(more, ctrls.lastChild);
         body.append(screen, menu);
         panel.addEventListener("contextmenu", function (e) { e.preventDefault(); showMenu(true); });
         function outside(e) { if (!menu.hidden && !menu.contains(e.target) && !more.contains(e.target)) showMenu(false); }
@@ -1073,6 +904,8 @@
       },
     },
   };
+  // The tools in their own files (tools/*.js): web components, each with its own tag and styles
+  Object.assign(TOOLS, window.ChalklineToolbox.tools);
 
   /* ---------------- Slide size (applied in every deck, even with its panel closed) ---------------- */
 
@@ -1121,9 +954,12 @@
   // Move a panel by dragging any empty part of it (not a button, field or list that scrolls);
   // the drag starts after a few pixels, so taps still work. Resize it with the corner grip.
   const NO_DRAG = "button, input, select, textarea, label, a, .ct-nodrag, .ct-grip";
+  function fromControl(e) {   // the path, not just the target: inside a tool's web component too
+    return e.composedPath().some(function (n) { return n.nodeType === 1 && n.matches(NO_DRAG); });
+  }
   function dragger(panel, id, handle, resize) {
     handle.addEventListener("pointerdown", function (e) {
-      if (e.button !== 0 || (!resize && e.target.closest(NO_DRAG))) return;
+      if (e.button !== 0 || (!resize && fromControl(e))) return;
       e.preventDefault();
       const p = layout.pos[id], sx = e.clientX, sy = e.clientY, start = Object.assign({}, p);
       let dragging = resize;
@@ -1163,15 +999,13 @@
       layout.pos[id] = Object.assign({ w: tool.w, h: tool.h }, tool.start(), { auto: true });   // until it's dragged (start may size it too)
     }
     const p = layout.pos[id] || (layout.pos[id] = { x: 80 + 36 * n, y: 70 + 36 * n, w: tool.w, h: tool.h });
-    const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", onclick: function () { closeTool(id); } }, icon("x"));
+    const close = h("button", { class: "ct-ctrl ct-close", "aria-label": "Close " + tool.title, title: "Close", onclick: function () { closeTool(id); } }, icon("x"));
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
-    // A header with the tool's icon and name (also where you grab it); the clock is too small for one
-    const head = tool.bare ? h("div", { class: "ct-handle", "aria-hidden": "true" })
-      : h("div", { class: "ct-head" }, h("span", { class: "ct-head-icon" }, icon(tool.icon)), h("span", { class: "ct-head-title", text: tool.title }));
-    const panel = h("div", { class: "ct-panel" + (tool.bare ? " ct-bare" : ""), role: "dialog", "aria-label": tool.title },
-      head, body, grip);
-    (tool.bare ? panel : head).append(close);
+    // No title bar: the tool is the message. × (and a tool's own extras) show when you point at it.
+    // A free tool draws its own card (the traffic light's case), so it has no white card around it.
+    const panel = h("div", { class: "ct-panel" + (tool.free ? " ct-free" : ""), role: "dialog", "aria-label": tool.title },
+      body, h("div", { class: "ct-ctrls" }, close), grip);
     panel.addEventListener("pointerdown", function () { panel.style.zIndex = ++zTop; });
     place(panel, clampPos(p, tool));
     panel.style.zIndex = ++zTop;
@@ -1183,7 +1017,14 @@
       place(panel, clampPos(p, tool));
       saveLayout();
     }
-    open[id] = { panel: panel, api: tool.build(body, panel, grow) || {} };
+    let api;
+    if (tool.element) {   // a tool in its own file: its web component fills the panel
+      const el = document.createElement(tool.element);
+      body.append(el);
+      api = { refresh: function () { el.refresh(); }, close: function () { el.close(); } };
+    }
+    else api = tool.build(body, panel, grow) || {};
+    open[id] = { panel: panel, api: api };
     if (id === "clock") save("clock-off", false);
     saveLayout();
     paintMenu();
@@ -1202,7 +1043,7 @@
 
   // Clicked buttons give the focus back to the slides, so Space and the arrows still change slides.
   layer.addEventListener("click", function (e) {
-    const b = e.target.closest("button");
+    const b = e.composedPath().find(function (n) { return n.tagName === "BUTTON"; });   // inside a web component too
     if (b) b.blur();
   });
 

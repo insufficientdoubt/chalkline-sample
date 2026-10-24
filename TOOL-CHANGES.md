@@ -8,6 +8,20 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Classroom tools without title bars; traffic light, stopwatch and scoreboard redesigned as web components
+- **Asked for:** "What if we get away from the window card frame and make them look more like tiles or cards... We definitely don't need them to have titles. The content is the message." And: "Are there any standard ways to build this kind of thing that would help give it a little more of a modern structure without bringing in a lot of extra overhead? Or is DIY better?" Agreed plan: no titles, the content is the card, starting with two or three tools; built as web components (no library), one tool at a time.
+- **Why:** the windows still looked dated; the tools should look like objects on the board, not windows. Web components seal each tool's styles in, so the slides' styles stop breaking the tools, and give each tool its own small file.
+- **Changed:**
+  - `_extensions/classroom/toolbox/kit.js` (new): the shared kit (storage, element builder, icons, sounds, the ask-twice button, team colors), the button style (now pills), and `ToolElement`, the base for a tool built as a web component.
+  - `_extensions/classroom/toolbox/tools/traffic.js`, `stopwatch.js`, `scoreboard.js` (new): the three tools, moved out of `toolbox.js` and redesigned. The traffic light is its dark case (lights side by side when it's wide); the stopwatch is one time tile that turns dark blue while it runs, with round ▶/⏸ and ↺ buttons; the scoreboard is solid team bars, with its buttons showing when you point at it.
+  - `_extensions/classroom/toolbox/toolbox.js`: no title bar; × (and Music's ⋯) on the top-right corner when you point at a tool; a tool marked `free` has no white card around it; tools from `tools/` are added to the menu; dragging and keyboard checks look inside web components; the shared helpers now come from `kit.js`.
+  - `_extensions/classroom/toolbox/toolbox.css`: plain white cards with soft shadows, the corner controls, the resize mark only on hover; the old title bar, button, scoreboard, traffic light and stopwatch styles removed.
+  - `_extensions/classroom/filter.lua`: loads `kit.js` and the three tools before `toolbox.js`.
+  - `_extensions/classroom/ui/icons.js`: play and pause icons.
+  - `README.md`: the toolbox paragraph. `IDEAS.md`: the plan for the other tools.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Vocab sidebar: a clean list instead of white pills
 - **Asked for:** "Especially the vocab list... the list of white ovoids on grey look a bit like the old iPhone interface. I'd like something clean, modern, legible."
 - **Why:** the pills on a grey see-through panel looked dated.

@@ -375,8 +375,12 @@ local function Meta(meta)
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",
-      scripts = {   -- the icons first: the toolbox uses them as it starts
+      scripts = {   -- the icons and the kit first, then the tools in their own files, then the toolbox
         { path = "ui/icons.js", afterBody = true },
+        { path = "toolbox/kit.js", afterBody = true },
+        { path = "toolbox/tools/traffic.js", afterBody = true },
+        { path = "toolbox/tools/stopwatch.js", afterBody = true },
+        { path = "toolbox/tools/scoreboard.js", afterBody = true },
         { path = "toolbox/toolbox.js", afterBody = true },
       },
       stylesheets = { "toolbox/toolbox.css" },

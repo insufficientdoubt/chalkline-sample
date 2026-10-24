@@ -253,7 +253,7 @@ Press **S** during a slideshow to open speaker view: your notes, the next slide,
 
 ## Classroom tools (scoreboard, voice level, …)
 
-Every slide deck in the **teacher** site has a toolbox (the student site leaves it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. The windows are light grey and a little see-through, so the slide shows faintly behind them. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
+Every slide deck in the **teacher** site has a toolbox (the student site leaves it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. There are no title bars: the tool itself is what shows. Drag a tool by any empty part of it; point at it and a × appears on its top-right corner (it closes the tool), with a small corner mark at the bottom right: drag that to make it bigger (everything inside grows, so it can fill the board). Most tools sit on a white card; the traffic light, stopwatch and scoreboard are their own card (the light's dark case, the time tile, the team bars). Made narrow, the scoreboard and the voice level stack, to fit in the slide margin; made wide, the traffic light's lights line up side by side.
 
 | Tool | What it does |
 |---|---|

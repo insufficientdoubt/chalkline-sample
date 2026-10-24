@@ -94,71 +94,25 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 }
 .ct-menu-action:hover { background: var(--ui-soft); color: var(--ui-ink); }
 
-/* ---- Panels: frosted white cards, a little see-through, with the tool's name on top ---- */
+/* ---- Panels: no title bar, the tool is the message. A white card, or (free) the tool's own card. ---- */
 .ct-panel {
   position: fixed;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.92);   /* the slide shows faintly behind */
-  -webkit-backdrop-filter: blur(14px) saturate(1.3);
-  backdrop-filter: blur(14px) saturate(1.3);
-  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 12px 32px rgba(16, 35, 63, 0.18), 0 0 0 1px rgba(16, 35, 63, 0.08);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 35, 63, 0.1), 0 16px 40px rgba(16, 35, 63, 0.26);
   color: var(--ui-ink);
   cursor: grab;
   touch-action: none;       /* drag with a finger moves the panel, not the page */
   user-select: none;
 }
-.ct-panel.ct-dragging { cursor: grabbing; box-shadow: 0 2px 4px rgba(16, 35, 63, 0.08), 0 20px 48px rgba(16, 35, 63, 0.28), 0 0 0 1px rgba(16, 35, 63, 0.12); }
+.ct-panel.ct-free { background: transparent; box-shadow: none; }
+.ct-panel.ct-dragging { cursor: grabbing; }
+.ct-panel.ct-dragging:not(.ct-free) { box-shadow: 0 2px 6px rgba(16, 35, 63, 0.12), 0 24px 56px rgba(16, 35, 63, 0.34); }
 .ct-panel button, .ct-panel input, .ct-panel select, .ct-panel textarea, .ct-panel label { cursor: pointer; }
 .ct-panel input:not([type]), .ct-panel input[type="url"], .ct-panel textarea { cursor: text; user-select: text; }
 .ct-nodrag { cursor: auto; touch-action: pan-y; }
-/* The header: the tool's icon and name, and ×. Grab it (or any empty part of the panel) to move it. */
-.ct-head {
-  flex: none;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  height: 32px;
-  padding: 0 4px 0 12px;
-  border-bottom: 1px solid rgba(16, 35, 63, 0.07);
-  color: var(--ui-muted);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.01em;
-}
-.ct-head-icon { display: inline-flex; font-size: 15px; color: var(--ui-accent); }
-.ct-head-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* The clock has no header: a small bar shows where to grab it */
-.ct-handle {
-  position: absolute;
-  top: 6px;
-  left: 50%;
-  width: 32px;
-  height: 4px;
-  margin-left: -16px;
-  border-radius: 2px;
-  background: rgba(16, 35, 63, 0.14);
-  pointer-events: none;
-}
-.ct-close {
-  flex: none;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  border: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 8px;
-  background: transparent;
-  color: var(--ui-muted);
-  opacity: 0.75;
-  font-size: 15px !important;
-  line-height: 1;
-}
-.ct-close:hover { background: rgba(16, 35, 63, 0.08); color: var(--ui-ink); opacity: 1; }
-.ct-bare > .ct-close { position: absolute; top: 2px; right: 4px; z-index: 2; width: 24px; height: 22px; opacity: 0.55; }
 .ct-body {
   position: relative;
   flex: 1;
@@ -166,15 +120,46 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   display: flex;
   flex-direction: column;
   container-type: size;
-  padding: 10px 10px 10px;
+  overflow: hidden;
+  border-radius: inherit;
+  padding: 14px;
 }
-.ct-bare .ct-body { padding-top: 16px; }   /* room for the grab bar and × */
-/* Resize from the bottom-right corner: a small corner mark, clearer on hover */
+.ct-free > .ct-body { padding: 0; overflow: visible; }
+/* × (and a tool's extras, like Music's ⋯): on the top-right corner, half outside, so they never cover the
+   tool. They show when you point at the panel; always, on a touch screen. */
+.ct-ctrls {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  z-index: 3;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.ct-panel:hover > .ct-ctrls, .ct-panel:focus-within > .ct-ctrls { opacity: 1; }
+@media (hover: none) { .ct-ctrls { opacity: 0.7; } }
+.ct-ctrl {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--ui-muted);
+  box-shadow: 0 1px 4px rgba(16, 35, 63, 0.25);
+  font-size: 15px !important;
+  line-height: 1;
+}
+.ct-ctrl:hover { background: #fff; color: var(--ui-ink); }
+/* Resize from the bottom-right corner: a small corner mark, when you point at the panel */
 .ct-grip {
   position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 2;
+  z-index: 3;
   width: 22px;
   height: 22px;
   cursor: nwse-resize;
@@ -187,13 +172,14 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   bottom: 6px;
   width: 8px;
   height: 8px;
-  border-right: 2px solid rgba(16, 35, 63, 0.3);
-  border-bottom: 2px solid rgba(16, 35, 63, 0.3);
+  border-right: 2px solid rgba(16, 35, 63, 0.35);
+  border-bottom: 2px solid rgba(16, 35, 63, 0.35);
   border-bottom-right-radius: 3px;
-  opacity: 0.5;
+  opacity: 0;
   transition: opacity 0.15s;
 }
-.ct-panel:hover .ct-grip::after { opacity: 1; }
+.ct-free > .ct-grip::after { border-color: rgba(255, 255, 255, 0.9); filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.6)); }
+.ct-panel:hover > .ct-grip::after { opacity: 1; }
 /* Too loud: the whole panel flashes red. */
 .ct-panel::after {
   content: "";
@@ -209,7 +195,7 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-panel.ct-loud { box-shadow: 0 0 0 5px var(--ct-red), 0 10px 32px rgba(0, 20, 60, 0.3); }
 @keyframes ct-flash { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.6; } }
 
-/* Shared bits: one set of buttons for every tool, sized to the panel */
+/* A row of buttons, sized to the panel (the buttons' own style is in kit.js) */
 .ct-foot {
   display: flex;
   align-items: center;
@@ -220,75 +206,6 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   padding: 6px 14px 0;
   font-size: clamp(14px, 6.5cqmin, 26px);
 }
-.ct-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.35em;
-  min-height: 2.1em;
-  padding: 0.25em 1em;
-  border: 1px solid var(--ui-line);
-  border-radius: 10px;
-  background: #fff;
-  color: var(--ui-ink);
-  font-weight: 600 !important;
-  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06);
-  transition: background 0.12s, border-color 0.12s, transform 0.06s;
-}
-.ct-btn:hover { border-color: var(--ui-line-strong); background: var(--ui-soft); }
-.ct-btn:active { transform: translateY(1px); }
-.ct-btn.ct-primary { border-color: var(--ui-accent); background: var(--ui-accent); color: #fff; box-shadow: 0 1px 2px rgba(0, 52, 119, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
-.ct-btn.ct-primary:hover { background: var(--ui-accent-hover); }
-.ct-btn.ct-small { min-height: 1.8em; padding: 0.1em 0.75em; }
-.ct-btn.ct-armed { background: var(--ct-red); border-color: var(--ct-red); color: #fff; }
-.ct-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
-
-/* ---- Scoreboard ---- */
-.ct-score-rows { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 1.5cqh; }
-.ct-score-row {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  align-items: center;
-  gap: 0.35em;
-  padding: 0 0.3em;
-  border-left: 0.3em solid var(--team);
-  border-radius: 0.3em;
-  background: color-mix(in srgb, var(--team) 10%, #fff);
-  font-size: min(calc(58cqh / var(--rows)), 9cqw);
-}
-.ct-team-name {
-  flex: 1;
-  min-width: 0;
-  padding: 0 0.15em;
-  border: 0;
-  border-radius: 0.15em;
-  background: transparent;
-  color: var(--ct-navy);
-  font: inherit;
-  font-size: 0.7em;
-  font-weight: 600;
-}
-.ct-team-name:focus { outline: 2px solid var(--team); background: #fff; }
-.ct-crown { display: inline-flex; font-size: 0.6em; color: #d99a00; }
-.ct-score { min-width: 1.6em; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--team); }
-.ct-score.ct-pop { animation: ct-pop 0.35s ease-out; }
-@keyframes ct-pop { 40% { transform: scale(1.35); } }
-.ct-round {
-  flex: none;
-  width: 1.15em;
-  height: 1.15em;
-  padding: 0;
-  border: 0.06em solid var(--team);
-  border-radius: 50%;
-  background: #fff;
-  color: var(--team);
-  font-size: 0.8em !important;
-  font-weight: 700 !important;
-  line-height: 1;
-}
-.ct-round.ct-plus { background: var(--team); color: #fff; }
-
 /* ---- Voice level (and the noise meter under it) ----
    --lvl is the current level's color, set on the panel: the card, the meter and the line all use it. */
 .ct-body.ct-voice { container-name: ct-voice; }
@@ -342,40 +259,6 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 /* With the noise meter on, the voice level takes less room. */
 .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-big { font-size: min(11cqh, 10cqw); }
 .ct-body.ct-voice:has(.ct-noise:not([hidden])) .ct-voice-pick { width: min(9cqh, 13cqw); height: min(9cqh, 13cqw); }
-
-/* ---- Traffic light ---- */
-.ct-body.ct-traffic { align-items: center; }
-.ct-traffic-box {
-  flex: 1;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-  width: min(42cqh, 90cqw);
-  border-radius: 1.2em;
-  background: #22262e;
-  font-size: min(3cqh, 6cqw);
-}
-.ct-light {
-  width: min(22cqh, 70cqw);
-  height: min(22cqh, 70cqw);
-  border: 0;
-  border-radius: 50%;
-  opacity: 0.22;
-  transition: opacity 0.2s, box-shadow 0.2s;
-}
-.ct-light.ct-red { background: #e5383b; }
-.ct-light.ct-yellow { background: #ffc61a; }
-.ct-light.ct-green { background: #2fbf5b; }
-.ct-light.ct-on { opacity: 1; box-shadow: 0 0 4cqh currentColor; }
-.ct-light.ct-red.ct-on { color: #e5383b; }
-.ct-light.ct-yellow.ct-on { color: #ffc61a; }
-.ct-light.ct-green.ct-on { color: #2fbf5b; }
-.ct-traffic-label { flex: none; min-height: 1.2em; padding-top: 0.15em; font-size: min(10cqh, 16cqw); font-weight: 700; line-height: 1.2; }
-.ct-traffic-label.ct-red { color: #c4262a; }
-.ct-traffic-label.ct-yellow { color: #a87a00; }
-.ct-traffic-label.ct-green { color: #1f8a40; }
 
 /* Noise meter: a box of its own size, so what's inside scales with it */
 .ct-noise {
@@ -528,20 +411,6 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 }
 .ct-qr-field[hidden] { display: none; }
 
-/* ---- Stopwatch ---- */
-.ct-sw-time {
-  flex: 1;
-  min-height: 0;
-  display: grid;
-  place-items: center;
-  font-size: min(42cqh, 19cqw);
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-  line-height: 1;
-  opacity: 0.7;
-}
-.ct-sw-time.ct-running { color: var(--ct-blue); opacity: 1; }
-
 /* ---- Dice ---- */
 .ct-dice-tray {
   flex: 1;
@@ -655,27 +524,7 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-group ul { margin: 0; padding: 0; list-style: none; line-height: 1.25; }
 .ct-group-mode { min-width: 7.5em; }
 
-/* Scoreboard, narrow (a column in the slide margin): the team name on top, − score + below it. */
-.ct-body.ct-scoreboard { container-name: ct-score; }
-@container ct-score (max-width: 250px) {
-  .ct-score-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-areas: "name name name" "minus score plus";
-    align-items: center;
-    justify-items: center;
-    row-gap: 0.05em;
-    padding: 0.15em 0.3em;
-    column-gap: 0.15em;
-    font-size: min(calc(40cqh / var(--rows)), 24cqw);
-  }
-  .ct-team-name { grid-area: name; width: 100%; text-align: center; font-size: 0.55em; }
-  .ct-crown { grid-area: name; justify-self: end; font-size: 0.45em; }
-  .ct-round { font-size: 0.6em !important; }
-  .ct-minus { grid-area: minus; }
-  .ct-score { grid-area: score; min-width: 1.1em; }
-  .ct-plus { grid-area: plus; }
-  .ct-foot { gap: 4px; padding: 4px 4px 0; font-size: 13px; }
+
 }
 
 /* ---- Reset for the next class ---- */
@@ -717,7 +566,7 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-music-ask, .ct-music-note { align-self: center; justify-self: center; width: 100%; padding: 12px; color: #fff; text-align: center; font-size: 14px; }
 .ct-music-ask { display: flex; flex-direction: column; gap: 8px; }
 .ct-music-ask .ct-music-note { padding: 0; font-weight: 600; font-size: 15px; }
-.ct-music-more { font-size: 18px !important; }   /* in the header, beside the × */
+.ct-music-more { font-size: 18px !important; }   /* beside the × */
 .ct-music-menu {
   position: absolute; top: 6px; right: 8px; z-index: 3; width: min(300px, calc(100% - 16px)); max-height: calc(100% - 30px); overflow: auto;
   display: flex; flex-direction: column; gap: 4px; padding: 8px;
@@ -771,7 +620,7 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 16px 40px rgba(16, 35, 63, 0.22), 0 0 0 1px rgba(16, 35, 63, 0.07);
   font-family: "Source Sans 3", system-ui, -apple-system, "PingFang SC", sans-serif;
 }
-.ct-vcard > .ct-close { position: absolute; top: 16px; right: 16px; z-index: 1; background: rgba(255, 255, 255, 0.85); }
+.ct-vcard > .ct-close { position: absolute; top: 16px; right: 16px; z-index: 1; }
 .ct-vcard-pic { display: grid; place-items: center; height: 210px; border-radius: 12px; background: var(--ui-soft); overflow: hidden; }
 .ct-vcard-pic img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .ct-vcard-text { padding: 12px 8px 6px; }

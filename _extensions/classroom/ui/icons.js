@@ -34,6 +34,8 @@
     "files": '<path d="M20 7h-3a2 2 0 0 1-2-2V2" /> <path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z" /> <path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8" />',
     "chevron-down": '<path d="m6 9 6 6 6-6" />',
     "arrow-up-right": '<path d="M7 7h10v10" /> <path d="M7 17 17 7" />',
+    "play": '<polygon points="6 3 20 12 6 21 6 3" />',
+    "pause": '<rect x="14" y="4" width="4" height="16" rx="1" /> <rect x="6" y="4" width="4" height="16" rx="1" />',
     "music": '<path d="M9 18V5l12-2v13" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="16" r="3" />',
   };
   function el(name) {
