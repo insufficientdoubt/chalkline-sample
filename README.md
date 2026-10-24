@@ -233,7 +233,7 @@ Put `{{< timer 20 >}}` on a slide. It has Start/Pause, Reset and +1 min buttons 
 
 ## Videos on slides
 
-Put `{{< video https://www.youtube.com/watch?v=... >}}` on a slide (YouTube, including Shorts, or Vimeo). It fills the room left on the slide: the full width (or its column's width) and all the height under the title and any text. So a Short in a narrow column comes out tall, and a normal video fills the slide. To choose the size yourself, add `width` and/or `height`, for example `{{< video URL width="100%" height="400" >}}`; then it keeps yours.
+Put `{{< video https://www.youtube.com/watch?v=... >}}` on a slide (YouTube, including Shorts, or Vimeo). It becomes as big as it can in the room it has, in its own shape, and centered: a normal video is wide (16:9); a YouTube Short (a `youtube.com/shorts/...` link) is tall (9:16). The room is the width of where it sits (the slide, or its column) and the height left there, under the title and above any text below it. So a Short in a narrow column fills the column's height, next to your text. For another shape, add `aspect-ratio="4x3"` (or `"1x1"`, `"9x16"`...). To choose the size yourself, add `width` and/or `height`, for example `{{< video URL width="100%" height="400" >}}`; then it keeps yours.
 
 ## Clock and transitions
 

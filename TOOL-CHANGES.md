@@ -8,6 +8,17 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Videos: centered, in their own shape, Shorts full height
+- **Asked for:** "It looks like the horizontal videos aren't centered and the vertical videos aren't going as tall as they ought to."
+- **Why:** the first version made each video a box as wide as its space, but reveal.js caps embeds at 95% of the slide, so they sat left of center, and a Short in a wide box had black bars. It also took height away for text in the *other* column.
+- **Changed:**
+  - `_extensions/classroom/video-shape.lua` (new, runs before Quarto turns `{{< video >}}` into a player, while the link is still the author's): marks each video wide (16:9) or tall (9:16, for `youtube.com/shorts/` links); Quarto's `aspect-ratio="9x16"` (ignored on slides) sets it by hand. Videos with their own width/height are left alone.
+  - `_extensions/classroom/_extension.yml`: runs it (`at: pre-ast`).
+  - `_extensions/classroom/video-fit.html`: each video is now as big as it can be in its own shape, centered in its column or on the slide, with the height measured only in its own column (what's above and below it).
+  - `README.md`: "Videos on slides" says how shapes work.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Videos fill their slide
 - **Asked for:** "my YouTube videos didn't fill the slide ... Do you have to use an iframe or can {{< video>}} fill the space?"
 - **Why:** the videos came out tiny (the browser's default 300 × 150 box), because Quarto gives `{{< video >}}` no size on slides, and its `aspect-ratio` option is ignored there.
