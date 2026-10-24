@@ -8,6 +8,18 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Quick reference: links open in a pop-up
+- **Asked for:** "Can we make it so clicking on those opens them in a pop-up?"
+- **Why:** to show a worksheet or another deck without leaving the slides.
+- **Changed:**
+  - `_extensions/classroom/quickref.js` (new): on a quick reference slide, decks, printables and PDFs open in a large pop-up over the slides (their name, Open in new tab, ×; Esc or a click outside closes it, without opening reveal's slide overview). Key slides in this deck still go there; outside sites open in a new tab (most refuse to be shown inside another page); Ctrl/Cmd-click is left to the browser.
+  - `_extensions/classroom/quickref.css`: the pop-up, above the toolbox.
+  - `_extensions/classroom/quickref.lua`: loads it.
+  - `_extensions/classroom/toolbox/toolbox.js`: no toolbox in a deck shown inside another page (the pop-up), so its clock and tools don't appear twice.
+  - `README.md`: the pop-up, under "Quick reference slide".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Quick reference slide: every link in a unit
 - **Asked for:** "a slide template for a grid of all links + specified instructional slides within a unit... like a 'quick reference' slide for in class use."
 - **Why:** one slide to jump from, in class, to any deck, printable or key slide in the unit.

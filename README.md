@@ -445,7 +445,7 @@ One slide with every link in the unit, for class: put it near the end of a deck.
 :::
 ```
 
-The links you list become numbered **Key slides** on the left: any slide in this deck (`#/slide-id`) or another deck (`deck.html#/slide-id`). On the right is **everything in the unit**, built from the overview's list, so it stays up to date by itself: the packet (student copy), every deck, printable and outside link, each in its type's color, with a PDF button. Leave out the list and the grid fills the slide. `unit="02-ancient-rome"` shows another unit. Example: the end of *City-States and Democracy*.
+The links you list become numbered **Key slides** on the left: any slide in this deck (`#/slide-id`) or another deck (`deck.html#/slide-id`). On the right is **everything in the unit**, built from the overview's list, so it stays up to date by itself: the packet (student copy), every deck, printable and outside link, each in its type's color, with a PDF button. Click a deck, printable or PDF and it opens in a **pop-up** over the slides (with **Open in new tab**, and × or Esc to close it), so you never lose your place. Key slides in this deck just go there; outside sites open in a new tab. Leave out the list and the grid fills the slide. `unit="02-ancient-rome"` shows another unit. Example: the end of *City-States and Democracy*.
 
 ## Tap-to-vote polls
 

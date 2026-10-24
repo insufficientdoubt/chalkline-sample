@@ -25,8 +25,10 @@
   too: they stay in this browser, never in the course files or on the website.
 */
 (function () {
-  // Speaker view previews and the slide PDF export get no tools.
+  // Speaker view previews and the slide PDF export get no tools, and nor does a deck shown inside
+  // another page (a quick reference pop-up): the tools belong to the deck you're presenting.
   if (/[?&](receiver|print-pdf)/.test(location.search)) return;
+  if (window.self !== window.top) return;
 
   const BASE = document.currentScript ? document.currentScript.src.replace(/[^/]*$/, "") : "";
   const PREFIX = "chalkline-tools:";

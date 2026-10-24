@@ -11,7 +11,8 @@ Quick reference slide: every link in a unit on one slide, for class. Write
 The links you list (any slide, in any deck: deck.html#/slide-id) become numbered "Key slides" on
 the left. On the right, a grid of everything in the unit, from generated/catalog.json (written by
 scripts/catalog.py, so it is always up to date): the packet, every deck, printable and outside link,
-each in its type's color, with a PDF link. The unit is the one this deck is in; unit="02-ancient-rome"
+each in its type's color, with a PDF link. Clicking one opens it in a pop-up over the slides
+(quickref.js); key slides in this deck just go there, and outside sites open in a new tab. The unit is the one this deck is in; unit="02-ancient-rome"
 picks another. With no list, the grid takes the whole slide. Other formats get a plain list.
 ]]
 
@@ -75,7 +76,8 @@ return function(el)
     return pandoc.BulletList(list)
   end
 
-  quarto.doc.add_html_dependency({ name = "chalkline-quickref", version = "1.0.0", stylesheets = { "quickref.css" } })
+  quarto.doc.add_html_dependency({ name = "chalkline-quickref", version = "1.0.0", stylesheets = { "quickref.css" },
+    scripts = { { path = "quickref.js", afterBody = true } } })   -- decks and printables open in a pop-up
   local out = { '<div class="qref' .. (#pins > 0 and "" or " qref-nopins") .. '">' }
   if #pins > 0 then
     table.insert(out, '<div class="qref-pins"><div class="qref-head">Key slides</div>')

@@ -36,3 +36,29 @@
 .reveal .qref-t-reference { --t: #8a6a1f; }
 .reveal .qref-t-vocab { --t: #c8432b; }
 .reveal .qref-t-link { --t: #7a8799; }
+
+/* The pop-up (quickref.js): a page, deck or PDF over the slides */
+.qref-pop {
+  position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center;   /* over the toolbox (1900), like the PDF viewer's large window */
+  background: rgba(16, 35, 63, 0.45); backdrop-filter: blur(2px);
+}
+.qref-pop-card {
+  display: flex; flex-direction: column; width: min(92vw, 1400px); height: 88vh; overflow: hidden;
+  border-radius: 14px; background: #fff; box-shadow: 0 20px 60px rgba(0, 20, 60, 0.35);
+}
+.qref-pop-bar {
+  flex: none; display: flex; align-items: center; gap: 12px; padding: 8px 10px 8px 16px;
+  border-bottom: 1px solid var(--ui-line, #d6dee8); font: 600 16px "Source Sans 3", system-ui, sans-serif; color: var(--ui-ink, #10233f);
+}
+.qref-pop-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qref-pop-tab {
+  padding: 4px 12px; border: 1px solid var(--ui-line, #d6dee8); border-radius: 8px;
+  color: var(--brand-navy, #003477); font-size: 14px; text-decoration: none;
+}
+.qref-pop-tab:hover { background: #eaf4ff; }
+.qref-pop-close {
+  width: 34px; height: 34px; border: 0; border-radius: 8px; background: transparent;
+  color: var(--ui-muted, #5b6b80); font-size: 24px; line-height: 1; cursor: pointer;
+}
+.qref-pop-close:hover { background: rgba(16, 35, 63, 0.08); color: var(--ui-ink, #10233f); }
+.qref-pop-frame { flex: 1; width: 100%; border: 0; }
