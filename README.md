@@ -150,6 +150,8 @@ audience: [teacher, student]   # who it's for; not used yet (see planning/)
 
 The unit comes from the folder the file is in. A file with no `type:` still appears, labeled "Other". Files whose names start with `_` are skipped, which is handy for drafts.
 
+**Who sees what.** Each file's `audience` label decides which sites list it: `student` for the student site, `parent` for the family site (teachers always see everything). On the teacher site's overview, turn on **Who sees it** (next to the type chips): each row shows its audience, rows on the family site turn green, and teacher-only rows are striped. The switch is remembered in your browser.
+
 **Outside resources** (a Wikipedia article, an official website) aren't files here, so they're listed in `course/links.yml`. Each one shows its `source` (here, **Wikipedia**) as a badge in the overview; the school's own materials show **School**. Outside links appear in the overview only, not on unit pages.
 
 **Slideshows open in a new tab**, so the overview stays open behind them. This works for any file whose name ends in `slides.qmd` (like `slides.qmd` or `review-slides.qmd`), so name decks that way. To turn it off, add the line `slides-new-tab: false` to `_quarto.yml` (on its own line, not indented).

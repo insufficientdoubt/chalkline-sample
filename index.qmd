@@ -95,6 +95,22 @@ document.addEventListener("DOMContentLoaded", function () {
   update();
 });
 
+// Teacher site: "Who sees it" shows each file's audience (students, families, teachers only).
+// Remembered in this browser.
+document.addEventListener("DOMContentLoaded", function () {
+  const ov = document.querySelector(".overview"), sw = document.querySelector(".ov-who-toggle");
+  if (!ov || !sw) return;
+  function set(on) {
+    ov.classList.toggle("ov-who-on", on);
+    sw.setAttribute("aria-pressed", on ? "true" : "false");
+    try { localStorage.setItem("chalkline-who", on ? "1" : ""); } catch (e) {}
+  }
+  let start = false;
+  try { start = localStorage.getItem("chalkline-who") === "1"; } catch (e) {}
+  set(start);
+  sw.addEventListener("click", function (e) { e.stopPropagation(); set(!ov.classList.contains("ov-who-on")); });
+});
+
 // The chips above the units show only one kind of document; a unit with none of that kind is hidden.
 document.addEventListener("click", function (e) {
   const chip = e.target.closest(".ov-chip");

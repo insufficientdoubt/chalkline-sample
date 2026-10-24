@@ -8,6 +8,17 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: "Who sees it" switch on the teacher overview
+- **Asked for:** "a toggleable slide highlight for teachers so that they can see which slides are shared with families/students and which aren't on the overview."
+- **Why:** to see at a glance what students and families get, before sharing.
+- **Changed:**
+  - `scripts/catalog.py`: each overview row carries its audience (Students, Families, or Teachers only, from the file's `audience` label). The teacher site gets a "Who sees it" switch at the end of the type chips. The student site's catalog now keeps only items marked for students, as the family site already did for families, so two teacher-only outside links no longer show there.
+  - `brand/styles.scss`: the switch, the audience tags, green rows for the family site, striped rows for teachers only.
+  - `index.qmd`: the switch's script (remembered in the browser).
+  - `README.md`: "Who sees what".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Toolbox and speaker notes: teacher site only
 - **Asked for:** "The teacher toolkit doesn't go on any parent or student facing site. Neither do speaker notes from the teacher."
 - **Why:** they're for the teacher. On the student site, anyone could press S and read the notes, or open the class lists in the toolbox.
