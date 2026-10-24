@@ -17,6 +17,7 @@
 | **Unit 4: STEM Sampler** | `course/units/04-stem/` | A sampler for STEM teams: math, block-coding and linkage decks with interactives you can drag (geometry, GeoGebra, PhET, Blockly, robot lifts with a DR4B that measures its extension, three rubber-band catapult releases, a linkage simulator), a math handout and two practice worksheets made from a seed. The interactive pages are in its `embeds/` folder |
 | **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
+| **The look of the interactive parts** | `_extensions/classroom/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
 | **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
 | **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |
 
@@ -25,7 +26,7 @@ Things to try once the site is open:
 - Hover or tap a word with a dotted line on any slide: its vocab card pops up.
 - Open a unit page and click **Unit packet (PDF)**: every printable in one file, ready to copy.
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
-- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch, dice and music. They float above the slides and stay put when you change slides.
+- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch, dice, music, and the unit's vocab and packet. They float above the slides and stay put when you change slides.
 - In the overview, each deck has a **PDF** too.
 - **Terminal > Run Task… > Open student site**: what students and families see, without the answer keys, speaker notes and teacher tools. Its **For families 给家长** page welcomes parents.
 - In *From Republic to Empire*, hover the boxes of the infographic: it was made in **draw.io** (`drawio/republic.drawio`), and any draw.io diagram can go in a slide the same way.
@@ -253,21 +254,23 @@ Press **S** during a slideshow to open speaker view: your notes, the next slide,
 
 ## Classroom tools (scoreboard, voice level, …)
 
-Every slide deck in the **teacher** site has a toolbox (the student site leaves it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. The windows are light grey and a little see-through, so the slide shows faintly behind them. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
+Every slide deck in the **teacher** site has a toolbox (the student site leaves it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. There are no title bars: the tool itself is what shows. Drag a tool by any empty part of it; point at it and a × appears on its top-right corner (it closes the tool), with a small corner mark at the bottom right: drag that to make it bigger (everything inside grows, so it can fill the board). The tool is its own card: the traffic light is its dark case, the stopwatch one time tile, the scoreboard one card with a band of color for each team, the voice level a card in the level's color, the dice just dice. Buttons you need now and then (the scoreboard's + Team and Reset, the dice's − and +, the QR code's Edit link) show when you point at the tool; on a touch screen they always show. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin; made wide, the traffic light's lights line up side by side.
 
 | Tool | What it does |
 |---|---|
 | 🙋 **Name picker** | Picks a student from your class list. Everyone present gets picked once before anyone is picked again (**Start again** starts a new round). |
 | 🧩 **Groups** | Random groups from your class list: **Groups of 4** or **4 groups** (tap to switch, − and + to change the number). No group is bigger than the number you choose, and sizes differ by at most one. |
-| 🏆 **Scoreboard** | Points for 1–8 teams. Tap a name to rename it; **+** and **−** change the score; 👑 marks the leader. **Reset** (tap twice) sets every score to 0. 🔔 turns the sound on or off. Make it narrow to fit in the slide margin: each team's name moves above its score. |
+| 🏆 **Scoreboard** | Points for 1–8 teams. Tap a name to rename it; **+** and **−** change the score; 👑 marks the leader. Point at it for **+ Team**, **− Team**, **Reset** (tap twice: every score back to 0) and 🔔 (the sound on or off). Make it narrow to fit in the slide margin: each team's name moves above its score. |
 | 🤫 **Voice level** | 0 Silent, 1 Whisper, 2 Partner talk, 3 Group talk, 4 Presenter. Tap a number. Tap the **microphone** button to add the **noise meter** below it (allow the microphone when asked). The bar shows how loud the room is, in the level's color. The **voice level sets the "too loud" line**: low for Silent, high for Presenter; the level's icon sits on the line. Over the line for a second, the whole window flashes red and beeps (🔔 turns the beep off). It shows how long the class has been quiet and counts the times it went over the line (↺ starts the count again; it carries on into the next deck until then). If the line is too easy or too hard to reach with your microphone, ⚙ changes the **microphone sensitivity** (−3 to +3), which moves every level's line. Nothing is recorded or sent anywhere; ■ or the microphone button turns the microphone off. |
 | 📐 **Slide size** | Changes how **this screen** shows the slides, while you watch: the **space around the slide** (slider, 0–30%) and its shape, **Standard** or **Wide (16:9)**. Kept on that computer for every deck, so the board and your laptop can differ. **Reset** goes back to the deck's own size. The deck files and slide PDFs don't change. |
 | 🚦 **Traffic light** | Tap red (Stop), yellow (Get ready) or green (Go); tap it again to turn it off. |
-| 🔳 **QR code** | A code for this deck, so students can open it on a tablet. **Edit link** makes a code for any link. On your own computer (`localhost`) the deck's address only works on that computer: the code says so. To make it point at your published site instead, add `classroom-tools: {qr-site: "https://…/"}` to `_quarto.yml`. |
-| ⏱️ **Stopwatch** | Counts up. Start, Pause, Reset. |
+| 🔳 **QR code** | A code for this deck **on the student site**, so students open it on a tablet. It never points at the teacher site, which has the answer keys. Set the student site's address once, as `student-site: "https://…/"` in `_quarto.yml`; until then the tool shows no code and says why. Point at it for **Edit link**, a code for any link. |
+| ⏱️ **Stopwatch** | Counts up. ▶ starts and pauses, ↺ goes back to 0. It turns dark blue while it runs, so the room can see it's going. |
 | 🕒 **Clock** | The time. Open in every deck unless you close it; **K** shows and hides it. |
 | 🔦 **Spotlight** | Darkens the screen except a circle, to show the class where to look. Drag the circle (or tap where it should go); the slider or the mouse wheel changes its size. The tool windows stay on top. Close the window to end it; it doesn't come back in the next deck. |
-| 🎲 **Dice** | 1–6 dice. **Roll** (or tap the dice); with more than one, it adds them up. |
+| 🎲 **Dice** | 1–6 dice, straight on the slide. Tap the dice to roll; with more than one, the total shows under them. Point at them for **Roll** and − / + (how many). |
+| 📖 **Vocab** | The unit's words in a sidebar at the right edge, always at hand while students work or talk: just the words, to point at. Tap one for its card beside the list: the picture, the word, 中文, the meaning and an example, with 🔊 to read it aloud (Esc or × closes it). It starts on this deck's unit; the menu picks another unit, or all of them. The words come from `vocab/data/vocab.csv`. |
+| 📄 **Packet** | The unit packet as page previews in a sidebar at the left edge. Tap a page to open it large, in the PDF viewer's window (zoom, pens, arrow keys to turn pages). **Answer key** switches to the teacher edition. It starts on this deck's unit; the menu picks another. |
 | 🎵 **Music** | Classroom music from YouTube: YouTube's own player (with its play, pause and volume) fills the panel; size it like any tool (YouTube's rules keep it at least 200 × 200 and visible). The first time, paste a link to a song or a playlist. Then **⋯** by the × (or a right-click on the panel's edge) opens a menu: change the song, pick one of your last songs, or **Pop out** the song into its own small YouTube window, which you can minimize while it plays. It keeps playing as you change slides (a new deck brings it back, ready to play). Needs the internet. |
 
 **Class lists** (name picker and groups): choose **+ New class…** in the class menu, type a name for the class (like 7A) and paste the students' names, one on each line (a column copied from a spreadsheet works). Add as many classes as you like and switch between them with the class menu at the top; both tools follow it. **Edit** changes or deletes the current class. **Who's here?** marks students who are away today, so they aren't picked or put in a group; it starts fresh the next day.
@@ -430,6 +433,22 @@ The Romans built [aqueducts] to carry [water] to their cities.
   - Latin | The Romans spoke Latin. The Greeks spoke Greek.
 :::
 ```
+
+## Quick reference slide
+
+One slide with every link in the unit, for class: put it near the end of a deck.
+
+```markdown
+## Quick reference
+
+::: {.quick-ref}
+- [Mountains and sea](#/mountains-and-sea)
+- [Athens or Sparta?](#/athens-or-sparta)
+- [The Olympic Games](greek-ideas-slides.html#/the-olympic-games)
+:::
+```
+
+The links you list become numbered **Key slides** on the left: any slide in this deck (`#/slide-id`) or another deck (`deck.html#/slide-id`). On the right is **everything in the unit**, built from the overview's list, so it stays up to date by itself: the packet (student copy), every deck, printable and outside link, each in its type's color, with a PDF button. Click a deck, printable or PDF and it opens in a **pop-up** over the slides (with **Open in new tab**, and × or Esc to close it), so you never lose your place. Key slides in this deck just go there; outside sites open in a new tab. Leave out the list and the grid fills the slide. `unit="02-ancient-rome"` shows another unit. Example: the end of *City-States and Democracy*.
 
 ## Tap-to-vote polls
 

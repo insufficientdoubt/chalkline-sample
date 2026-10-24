@@ -12,9 +12,11 @@ Slides (reveal.js):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
       classroom-tools:
-        qr-site: "https://example.github.io/my-course/"   # the QR code points here, not at localhost
+        qr-site: "https://example.github.io/my-course/"   # older name for student-site: (below)
+    The QR code points at the deck on the student site: student-site: "https://.../" in _quarto.yml
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
   - turns  ::: {.jeopardy}  and  ::: {.trivia}  into slide games (see below and games/games.js)
+  - turns  ::: {.quick-ref}  into a quick reference slide: key slides + everything in the unit (quickref.lua)
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
 function in brand/typst/typst-template.typ, with the div's attributes passed
@@ -51,6 +53,31 @@ local function is_teacher()
     if profile == "teacher" then return true end
   end
   return false
+end
+
+-- The course's units, packets and vocab words, for the toolbox's Vocab and Packet tools: read from
+-- generated/ (units.json and packets.json from scripts/catalog.py, vocab-terms.json from
+-- scripts/vocab_terms.py) and put in the page as JSON. Paths are from the project root; `root` is
+-- the way up to it from this deck, and `unit` is this deck's unit folder, if it's in one.
+local function course_data()
+  local dir = (quarto.project.directory or ".") .. "/generated/"
+  local function read(name)
+    local f = io.open(dir .. name, "r")
+    if not f then return nil end
+    local ok, value = pcall(quarto.json.decode, f:read("a"))
+    f:close()
+    return ok and value or nil
+  end
+  local here = quarto.doc.input_file and pandoc.path.make_relative(quarto.doc.input_file, quarto.project.directory or "."):gsub("\\", "/") or ""
+  local data = { root = string.rep("../", select(2, here:gsub("/", ""))), unit = here:match("^course/units/([^/]+)/"), units = {}, words = {} }
+  local packets = read("packets.json") or {}
+  for _, u in ipairs(read("units.json") or {}) do
+    table.insert(data.units, { id = u.id, number = u.number, title = u.short, packet = packets[u.id] and packets[u.id].pdf or nil })
+  end
+  for _, w in ipairs((read("vocab-terms.json") or {}).terms or {}) do
+    table.insert(data.words, { term = w.term, zh = w.zh, def = w.definition, example = w.example, image = w.image, url = w.url, units = w.units })
+  end
+  return '<script type="application/json" id="chalkline-course">' .. quarto.json.encode(data):gsub("</", "<\\/") .. '</script>'
 end
 
 local function typst_string(s)
@@ -104,6 +131,7 @@ end
 -- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values;
 -- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
+local quick_ref = dofile(quarto.utils.resolve_path("quickref.lua"))   -- ::: {.quick-ref}: every link in a unit on one slide
 
 local function list_items(blocks)
   for _, b in ipairs(blocks) do
@@ -281,6 +309,7 @@ end
 local function Div(el)
   -- Speaker notes are for the teacher: the student build leaves them out
   if el.classes:includes("notes") and not is_teacher() then return {} end
+  if el.classes:includes("quick-ref") then return quick_ref(el) end
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
                            ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
                            ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do
@@ -321,17 +350,51 @@ local function Meta(meta)
   -- Teacher build only: students (and families, on the student site) never see it.
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
-  if quarto.doc.is_format("revealjs") then games.ui() end
+  -- Chalkline's design layer (ui/ui.css) on every page and deck: the tools, games, vocab pop-ups
+  -- and the PDF viewer all take their colors, corners and buttons from it.
+  if quarto.doc.is_format("html") or quarto.doc.is_format("revealjs") then games.ui() end
   if quarto.doc.is_format("revealjs") and not tools_off and is_teacher() then
-    local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
+    -- The QR code sends students to this deck on the STUDENT site (never the teacher site, which has
+    -- the answer keys): `student-site:` in _quarto.yml (or the older classroom-tools: qr-site:), plus
+    -- this deck's path in the site.
+    local site = meta["student-site"] and pandoc.utils.stringify(meta["student-site"])
+      or (pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"])) or ""
     local tags = {}
-    if site ~= "" then tags["chalkline-qr-site"] = site end
+    if site ~= "" then tags["chalkline-student-site"] = site end
+    if quarto.doc.input_file and quarto.project.directory then
+      local rel = pandoc.path.make_relative(quarto.doc.input_file, quarto.project.directory)
+      tags["chalkline-page"] = rel:gsub("\\", "/"):gsub("%.qmd$", ".html")
+    end
     if off then tags["chalkline-clock"] = "off" end
+    quarto.doc.include_text("after-body", course_data())   -- for Vocab and Packet
+    quarto.doc.add_html_dependency({   -- the PDF viewer, for Packet (the same files as {{< pdf-viewer >}})
+      name = "pdf-viewer",
+      version = "1.0.0",
+      scripts = { { path = "../pdf-viewer/pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
+      stylesheets = { "../pdf-viewer/pdf-viewer.css" },
+      resources = { "../pdf-viewer/pdf.min.mjs", "../pdf-viewer/pdf.worker.min.mjs", "../pdf-viewer/pdf-lib.esm.min.js" },
+    })
     quarto.doc.add_html_dependency({
       name = "classroom-tools",
       version = "1.0.0",
-      scripts = {   -- the icons first: the toolbox uses them as it starts
+      scripts = {   -- the icons and the kit first, then the tools in their own files, then the toolbox
         { path = "ui/icons.js", afterBody = true },
+        { path = "toolbox/kit.js", afterBody = true },
+        { path = "toolbox/tools/classes.js", afterBody = true },   -- before picker and groups
+        { path = "toolbox/tools/picker.js", afterBody = true },
+        { path = "toolbox/tools/groups.js", afterBody = true },
+        { path = "toolbox/tools/scoreboard.js", afterBody = true },
+        { path = "toolbox/tools/voice.js", afterBody = true },
+        { path = "toolbox/tools/traffic.js", afterBody = true },
+        { path = "toolbox/tools/spotlight.js", afterBody = true },
+        { path = "toolbox/tools/clock.js", afterBody = true },
+        { path = "toolbox/tools/stopwatch.js", afterBody = true },
+        { path = "toolbox/tools/vocab.js", afterBody = true },
+        { path = "toolbox/tools/packet.js", afterBody = true },
+        { path = "toolbox/tools/qr.js", afterBody = true },
+        { path = "toolbox/tools/music.js", afterBody = true },
+        { path = "toolbox/tools/dice.js", afterBody = true },
+        { path = "toolbox/tools/slide.js", afterBody = true },
         { path = "toolbox/toolbox.js", afterBody = true },
       },
       stylesheets = { "toolbox/toolbox.css" },

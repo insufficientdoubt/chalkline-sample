@@ -1,5 +1,5 @@
 // PDF viewer: draws PDFs with pdf.js into the boxes that the pdf-viewer shortcode leaves
-// (see pdf-viewer.lua). Three parts:
+// (see pdf-viewer.lua), or that other code adds later and starts with window.PdfViewer.start(box). Three parts:
 //   Viewer   one page at a time, with ‹ › buttons, zoom and pens (layout="viewer")
 //   Gallery  every page as a thumbnail                       (layout="gallery")
 //   Popup    one big page in a window you can drag and resize; opened from either
@@ -698,6 +698,8 @@ const popup = {
 
 const started = [];
 async function start(root) {
+  if (root.dataset.started) return;   // a box starts once (the page's boxes, or one the toolbox adds)
+  root.dataset.started = "1";
   const part = root.dataset.layout === "gallery" ? new Gallery(root) : new Viewer(root);
   try {
     await part.start();
@@ -720,6 +722,10 @@ if (PRINT || !("IntersectionObserver" in window)) {
   });
   boxes.forEach((box) => seen.observe(box));
 }
+
+// Boxes added later (the classroom toolbox's Packet) start through this
+window.PdfViewer = { start: start };
+document.dispatchEvent(new Event("pdf-viewer-ready"));
 
 // Redraw sharp after the window (and so reveal.js's slide scale) changes size
 let resizing = 0;

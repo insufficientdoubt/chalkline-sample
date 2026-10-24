@@ -8,6 +8,115 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: One design layer for everything interactive; PDF viewer and vocab pop-ups restyled to match
+- **Asked for:** "How about improving the style of the vocab viewer and pdf viewer to match the menu and stuff. Also I feel like more of this styling work should be global instead of elements by element. What am I missing"
+- **Why:** each part had its own colors, corners and buttons, so matching them meant changing each one by hand.
+- **Changed:**
+  - `_extensions/classroom/ui/ui.css`: now the one design layer. The values (colors, a corner scale, shadows for the page, floating tools and menus) and the shared parts: `.ui-btn`, `.ui-icon-btn`, `.ui-field`, `.ui-select`, `.ui-seg`, `.ui-actions`, `.ui-card`, `.ui-pop`, `.ui-menu-item`, `.ui-label`, `.ui-empty`. Corners are a little rounder everywhere (games too), to match the tools.
+  - `_extensions/classroom/filter.lua`: loads `ui.css` on every page and deck, not only decks (the vocab pop-ups and PDF viewer are on pages too). `games/games.lua`: comment.
+  - `_extensions/classroom/toolbox/kit.js`: no copy of the button and field styles any more; each tool's web component links `ui.css` inside itself, and draws into its own box so redrawing never removes that link.
+  - `_extensions/classroom/toolbox/tools/*.js`, `toolbox.js`, `toolbox.css`: the shared parts (`.ui-btn`, `.ui-field`, `.ui-select`, `.ui-actions`, `.ui-empty`, `.ui-seg`) instead of their own; the values (`var(--ui-…)`) instead of colors and shadows typed in.
+  - `_extensions/pdf-viewer/pdf-viewer.css`: takes its values from the design layer (with its own as a fallback, so it still works in any Quarto project): a light grey panel with round corners, round icon buttons without borders, the pens in one white toolbar, a softer page shadow, the Download menu like the other menus, the large window's corner mark like the tools'.
+  - `_extensions/classroom/vocab-card.html`, `shortcodes.lua`: the vocab pop-up like the toolbox's word card: the picture in a soft rounded box, a bigger word, 中文 on its own line, round speaker buttons with a line icon instead of the 🔊 emoji, and the design layer's corners and shadow.
+  - `README.md`: where the design layer is. `IDEAS.md`: games and the vocab app next.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Every classroom tool redesigned, each a web component in its own file
+- **Asked for:** "Let's make the team one a shared rectangle with colored sections instead of a stack of rectangles. Just so it's a bit tighter visually. Other than that it looks good. Go ahead and redesign the rest of them."
+- **Why:** to finish the new look (no title bars, the content is the card) and the move to web components for every tool.
+- **Changed:**
+  - `_extensions/classroom/toolbox/tools/scoreboard.js`: one card with a band of color for each team, instead of separate bars.
+  - New tool files in `_extensions/classroom/toolbox/tools/`, each with its own styles: `voice.js` (one card: the level in its color, the levels and microphone in a white strip, the noise meter joining underneath; the card itself flashes red when too loud), `dice.js` (just the dice, a total pill, buttons on pointing), `picker.js` (the name on a big blue tile), `groups.js` (groups as tinted tiles with a colored label), `classes.js` (the class lists both share), `clock.js` (a white pill), `qr.js` (the code, with Edit link on pointing), `slide.js` (a big percentage and a Standard/Wide switch; it still applies the setting in every deck), `spotlight.js`, and `music.js`, `vocab.js`, `packet.js` (moved as they were; YouTube's player is now the card itself; these three stay in the page, without a shadow root, because YouTube's player and the PDF viewer expect that).
+  - `_extensions/classroom/toolbox/kit.js`: shared course data and unit menu, the form styles, `changed()` so one tool can tell another to redraw, `active` (no tools in speaker view or pop-ups), and tools without a shadow root.
+  - `_extensions/classroom/toolbox/toolbox.js`: now only the frame (panels, menu, layout), about 330 lines instead of 1,200; tools reach their panel through the component.
+  - `_extensions/classroom/toolbox/toolbox.css`: only the frame's styles.
+  - `_extensions/classroom/filter.lua`: loads every tool file.
+  - `README.md`: the toolbox paragraph and table. `IDEAS.md`: next steps.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Classroom tools without title bars; traffic light, stopwatch and scoreboard redesigned as web components
+- **Asked for:** "What if we get away from the window card frame and make them look more like tiles or cards... We definitely don't need them to have titles. The content is the message." And: "Are there any standard ways to build this kind of thing that would help give it a little more of a modern structure without bringing in a lot of extra overhead? Or is DIY better?" Agreed plan: no titles, the content is the card, starting with two or three tools; built as web components (no library), one tool at a time.
+- **Why:** the windows still looked dated; the tools should look like objects on the board, not windows. Web components seal each tool's styles in, so the slides' styles stop breaking the tools, and give each tool its own small file.
+- **Changed:**
+  - `_extensions/classroom/toolbox/kit.js` (new): the shared kit (storage, element builder, icons, sounds, the ask-twice button, team colors), the button style (now pills), and `ToolElement`, the base for a tool built as a web component.
+  - `_extensions/classroom/toolbox/tools/traffic.js`, `stopwatch.js`, `scoreboard.js` (new): the three tools, moved out of `toolbox.js` and redesigned. The traffic light is its dark case (lights side by side when it's wide); the stopwatch is one time tile that turns dark blue while it runs, with round ▶/⏸ and ↺ buttons; the scoreboard is solid team bars, with its buttons showing when you point at it.
+  - `_extensions/classroom/toolbox/toolbox.js`: no title bar; × (and Music's ⋯) on the top-right corner when you point at a tool; a tool marked `free` has no white card around it; tools from `tools/` are added to the menu; dragging and keyboard checks look inside web components; the shared helpers now come from `kit.js`.
+  - `_extensions/classroom/toolbox/toolbox.css`: plain white cards with soft shadows, the corner controls, the resize mark only on hover; the old title bar, button, scoreboard, traffic light and stopwatch styles removed.
+  - `_extensions/classroom/filter.lua`: loads `kit.js` and the three tools before `toolbox.js`.
+  - `_extensions/classroom/ui/icons.js`: play and pause icons.
+  - `README.md`: the toolbox paragraph. `IDEAS.md`: the plan for the other tools.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Vocab sidebar: a clean list instead of white pills
+- **Asked for:** "Especially the vocab list... the list of white ovoids on grey look a bit like the old iPhone interface. I'd like something clean, modern, legible."
+- **Why:** the pills on a grey see-through panel looked dated.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.css`: the Vocab and Packet sidebars are solid white; the words are a plain list with thin lines between them, bigger text, and the chosen word marked with a blue bar; a word count above the list; the unit menu is a flat box with its own arrow; the word card has its picture in a soft rounded box, a larger word, round speaker buttons and the example set off with a line; the Packet's pages sit straight on the white, without the grey box. `_extensions/classroom/toolbox/toolbox.js`: the word count, the speaker buttons use a line icon instead of the 🔊 emoji, the unit menu's arrow. `_extensions/classroom/ui/icons.js`: two Lucide icons (chevron-down, arrow-up-right).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: A more modern look for the teacher tools
+- **Asked for:** "I still don't love the overall look and feel of the teacher tools. We moved to a more modern design style for the UI. Can you work on updating the design style of the teacher tools to look a bit more modern and nice?"
+- **Why:** to match the newer, more polished look of the rest of the interface.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.js`: each panel now has a slim header with the tool's icon and name (the × sits in it, and Music's ⋯ too); the clock stays bare with a small grab bar. The W menu is now a grid of tiles in groups (People, Attention, Time, This unit, More), with a tick on open tools and "Close all" / "Reset for the next class…" at the bottom. `_extensions/classroom/toolbox/toolbox.css`: frosted white, slightly see-through panels with rounder corners and softer shadows; one button style for every tool (bigger, white with a border, the main button filled); a small corner mark for resizing; styles for the new menu; tool padding adjusted for the header.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Vocab and Packet in the toolbox: the unit's words and worksheets on any slide
+- **Asked for:** "a sidebar that has the entire vocabulary list for the unit ... click on an item to pull up its card ... The second one is a similar thing for the worksheets. Make the unit packet available as a series of preview pages that you can click on to pop out."
+- **Why:** "These two features will allow teachers to access the vocabulary and the worksheets on any slide without planning in advance when teaching."
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`:
+    - **Vocab** is a sidebar at the right edge (full height until it's dragged) with the unit's words only. Tapping one shows its card beside the list: picture, word, 中文, meaning, example, 🔊, and a link to the vocab app.
+    - **Packet** is a sidebar at the left edge with the unit packet's pages. Tapping one opens it large in the PDF viewer's window, and **Answer key** switches to the teacher edition.
+    - Both start on the deck's unit and have a unit menu.
+    - A tool's `start()` can now set its starting size too.
+  - `_extensions/classroom/toolbox/toolbox.css`: the sidebars and the card.
+  - `_extensions/classroom/filter.lua`: puts the course's units, packets and vocab words into each teacher deck as JSON, and loads the PDF viewer there.
+  - `_extensions/pdf-viewer/pdf-viewer.js`: `window.PdfViewer.start(box)` starts a viewer added later (and a box never starts twice).
+  - `scripts/catalog.py`: also writes `generated/units.json`.
+  - `_extensions/classroom/ui/icons.js`: book-a and files icons.
+  - `README.md`: Vocab and Packet rows. (Content: the Start Here catalogue and toolbox list.)
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Quick reference: links open in a pop-up
+- **Asked for:** "Can we make it so clicking on those opens them in a pop-up?"
+- **Why:** to show a worksheet or another deck without leaving the slides.
+- **Changed:**
+  - `_extensions/classroom/quickref.js` (new): on a quick reference slide, decks, printables and PDFs open in a large pop-up over the slides (their name, Open in new tab, ×; Esc or a click outside closes it, without opening reveal's slide overview). Key slides in this deck still go there; outside sites open in a new tab (most refuse to be shown inside another page); Ctrl/Cmd-click is left to the browser.
+  - `_extensions/classroom/quickref.css`: the pop-up, above the toolbox.
+  - `_extensions/classroom/quickref.lua`: loads it.
+  - `_extensions/classroom/toolbox/toolbox.js`: no toolbox in a deck shown inside another page (the pop-up), so its clock and tools don't appear twice.
+  - `README.md`: the pop-up, under "Quick reference slide".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Quick reference slide: every link in a unit
+- **Asked for:** "a slide template for a grid of all links + specified instructional slides within a unit... like a 'quick reference' slide for in class use."
+- **Why:** one slide to jump from, in class, to any deck, printable or key slide in the unit.
+- **Changed:**
+  - `_extensions/classroom/quickref.lua` (new): `::: {.quick-ref}` with a list of links becomes numbered "Key slides" (any slide, in this deck or another), beside a grid of everything in the unit (packet student copy, decks, printables, outside links) in the overview's type colors, with PDF buttons and a "this deck" tag. `unit="..."` picks another unit. Other formats get a plain list.
+  - `_extensions/classroom/quickref.css` (new): its layout and colors.
+  - `_extensions/classroom/filter.lua`: runs it for `.quick-ref` divs.
+  - `scripts/catalog.py`: also writes `generated/catalog.json`, which the slide reads, so it's always up to date.
+  - `README.md`: "Quick reference slide". (Content: an example at the end of *City-States and Democracy*, and a chip on the Start Here catalogue.)
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: QR codes point at the student site
+- **Asked for:** "the qr code teacher tool points at the teacher site, right? it should point at the student link (once student links actually exist...)"
+- **Why:** the toolbox only runs on the teacher site, so the QR code showed the teacher site's address, with the answer keys, to students.
+- **Changed:**
+  - `_extensions/classroom/filter.lua`: gives each deck its path in the site, and the student site's address from a new `student-site:` setting (the older `classroom-tools: qr-site:` still works).
+  - `_extensions/classroom/toolbox/toolbox.js`: the QR code is the student site's address plus this deck's path. With no student site set, it shows no code and explains why ("This deck" is greyed out; Edit link still works).
+  - `_quarto.yml`: a commented-out `student-site:` line to fill in when the student site is published.
+  - `README.md`: the QR row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Music: just YouTube's player, with a ⋯ menu
 - **Asked for:** "maybe it's better to just have the embedded player and use a context menu to change the link".
 - **Why:** since the video has to stay visible anyway, YouTube's own controls are enough. That's the smallest, plainest version.

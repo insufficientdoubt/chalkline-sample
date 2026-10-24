@@ -8,6 +8,16 @@ Things we've talked about but not built yet. Add to this list; move an idea out 
 - **A new intro deck: everything interactive.** One deck that walks a new teacher through every interactive option now in Chalkline (review games, learning activities, timelines, Label it, polls, the toolbox, the chalkboard, PDF worksheets), each with a live example and one line on how to write it. The Start here catalogue slide lists them; this would *teach* them.
 - **An intro piece: "lists are the secret".** A short deck (or a section of the one above) that drives home the big idea: **make lists of your course's vocabulary and key facts first** (words and meanings, dates and events, people and what they did, places and pictures). Once a list exists, it becomes a quick, reusable activity in minutes: snowman, matching, memory, bingo, Jeopardy, sort it, timelines, flashcards, quizzes. Show one list turning into five activities. The vocab list (`vocab/data/vocab.csv`) is the model.
 
+## Classroom tools: next steps
+
+Every tool is now a web component in its own file (`_extensions/classroom/toolbox/tools/`), with no title bar, and the content is the card. `toolbox.js` is only the frame (panels, menu, remembering). Ideas for later:
+
+- **Lit** (a small, standard library for web components, about 6 KB, no build step) if a tool's template gets long and fiddly. Not needed yet.
+- **A teacher's own tool:** with the tools in their own files, a teacher's `_extensions/my-tools/` could add a tool to the menu with one file, the same way. Part of the extension plan below.
+- **Games and activities on the shared parts:** they already take their colors and corners from `ui/ui.css`, but their buttons and menus are still their own (`games.css`, `activities.css`). Moving them onto `.ui-btn`, `.ui-seg` and `.ui-pop` would make every button in Chalkline one button.
+- **The vocab app** (`vocab/app/`) has its own colors (`brand.css`, made from `brand/`). It could load `ui/ui.css` too.
+- **Sidebars:** Vocab and Packet are still plain white sidebars; they could share one sidebar style with a search box (Vocab) and the unit's worksheets by name (Packet).
+
 ## Chalkline as a Quarto extension (after alpha)
 
 **Where we are:** alpha. A couple of teachers are trying Chalkline in their own cloned repositories. Today Chalkline's code lives inside each course (`_extensions/classroom`, `scripts/`, `brand/`, the Typst template, the launchers, the vocab app), so every course is a full copy, and a fix (like the video sizing) has to be copied into each one by hand.

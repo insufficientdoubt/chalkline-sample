@@ -176,7 +176,7 @@ One label decides who sees a file: `audience: [teacher, student, parent]`. Leave
 - A **timer** on any slide (press **T**)
 - A **clock** you can drag anywhere (press **K**)
 - **Speaker notes** in a second window (press **S**)
-- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight, music
+- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight, music, and the unit's **vocab** and **packet** on any slide
 - **Tap-to-vote polls**: no devices, no accounts
 - **Games**: Snowman, Picture reveal, Jeopardy, Quick-fire (see Unit 1)
 :::
@@ -228,7 +228,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**60 ready-made features,** all working in this course today: 47 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
+[**63 ready-made features,** all working in this course today: 50 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -249,9 +249,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 ::::
 
 ::: {.cat-box .cat-teach}
-[Teach with it]{.cat-head} [10]{.cat-n}
+[Teach with it]{.cat-head} [11]{.cat-n}
 
-[Timeline: tap to zoom in](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline){.chip} [Timeline across slides](../02-ancient-rome/rome-timeline-slides.html#/the-first-emperor){.chip} [Story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home){.chip} [Diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic){.chip} [Video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes){.chip} [Step-by-step answers](../01-ancient-greece/city-states-slides.html#/athens-or-sparta){.chip} [Zoom and glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column){.chip} [Full-screen titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide){.chip} [Photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum){.chip} [Speaker notes: press S]{.chip .chip-key}
+[Timeline: tap to zoom in](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline){.chip} [Timeline across slides](../02-ancient-rome/rome-timeline-slides.html#/the-first-emperor){.chip} [Story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home){.chip} [Diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic){.chip} [Video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes){.chip} [Step-by-step answers](../01-ancient-greece/city-states-slides.html#/athens-or-sparta){.chip} [Zoom and glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column){.chip} [Full-screen titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide){.chip} [Photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum){.chip} [Quick reference: every link in a unit](../01-ancient-greece/city-states-slides.html#/quick-reference){.chip} [Speaker notes: press S]{.chip .chip-key}
 :::
 
 ::: {.cat-box .cat-board}
@@ -261,9 +261,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 :::
 
 ::: {.cat-box .cat-tools}
-[Toolbox on every slide: press W]{.cat-head} [14]{.cat-n}
+[Toolbox on every slide: press W]{.cat-head} [16]{.cat-n}
 
-[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"} [Music from YouTube]{.chip .chip-key data-icon="music"}
+[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"} [Music from YouTube]{.chip .chip-key data-icon="music"} [Unit vocab, any slide]{.chip .chip-key data-icon="book-a"} [Unit packet, any slide]{.chip .chip-key data-icon="files"}
 :::
 
 ::::

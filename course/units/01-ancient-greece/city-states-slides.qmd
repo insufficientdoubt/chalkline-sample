@@ -246,6 +246,19 @@ Use a sentence frame:
 Who could vote in the Athenian Assembly?
 :::
 
+## Quick reference {#quick-reference}
+
+::: {.quick-ref}
+- [Mountains and sea](#/mountains-and-sea)
+- [Athens or Sparta?](#/athens-or-sparta)
+- [Worksheet: Athens vs Sparta](#/worksheet-on-a-slide)
+- [Exit ticket](#/exit-ticket)
+:::
+
+::: notes
+Every link in this unit on one slide: the key slides on the left (in this deck), everything else on the right. Click one; press the browser's Back button to come back here.
+:::
+
 ## Picture credits {.credits}
 
 - **Title:** the Acropolis of Athens, photo by Jebulon, CC0, via Wikimedia Commons.
