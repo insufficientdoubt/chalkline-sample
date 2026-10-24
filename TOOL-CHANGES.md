@@ -8,6 +8,18 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Quick reference slide: every link in a unit
+- **Asked for:** "a slide template for a grid of all links + specified instructional slides within a unit... like a 'quick reference' slide for in class use."
+- **Why:** one slide to jump from, in class, to any deck, printable or key slide in the unit.
+- **Changed:**
+  - `_extensions/classroom/quickref.lua` (new): `::: {.quick-ref}` with a list of links becomes numbered "Key slides" (any slide, in this deck or another), beside a grid of everything in the unit (packet student copy, decks, printables, outside links) in the overview's type colors, with PDF buttons and a "this deck" tag. `unit="..."` picks another unit. Other formats get a plain list.
+  - `_extensions/classroom/quickref.css` (new): its layout and colors.
+  - `_extensions/classroom/filter.lua`: runs it for `.quick-ref` divs.
+  - `scripts/catalog.py`: also writes `generated/catalog.json`, which the slide reads, so it's always up to date.
+  - `README.md`: "Quick reference slide". (Content: an example at the end of *City-States and Democracy*, and a chip on the Start Here catalogue.)
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: QR codes point at the student site
 - **Asked for:** "the qr code teacher tool points at the teacher site, right? it should point at the student link (once student links actually exist...)"
 - **Why:** the toolbox only runs on the teacher site, so the QR code showed the teacher site's address, with the answer keys, to students.

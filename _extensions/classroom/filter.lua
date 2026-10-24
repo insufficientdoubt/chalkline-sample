@@ -16,6 +16,7 @@ Slides (reveal.js):
     The QR code points at the deck on the student site: student-site: "https://.../" in _quarto.yml
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
   - turns  ::: {.jeopardy}  and  ::: {.trivia}  into slide games (see below and games/games.js)
+  - turns  ::: {.quick-ref}  into a quick reference slide: key slides + everything in the unit (quickref.lua)
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
 function in brand/typst/typst-template.typ, with the div's attributes passed
@@ -105,6 +106,7 @@ end
 -- A clue or question, a |, then its answer. jeopardy: points="100,200,300,400" sets the values;
 -- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
+local quick_ref = dofile(quarto.utils.resolve_path("quickref.lua"))   -- ::: {.quick-ref}: every link in a unit on one slide
 
 local function list_items(blocks)
   for _, b in ipairs(blocks) do
@@ -282,6 +284,7 @@ end
 local function Div(el)
   -- Speaker notes are for the teacher: the student build leaves them out
   if el.classes:includes("notes") and not is_teacher() then return {} end
+  if el.classes:includes("quick-ref") then return quick_ref(el) end
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
                            ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
                            ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do

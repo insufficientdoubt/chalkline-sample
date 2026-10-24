@@ -228,7 +228,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**60 ready-made features,** all working in this course today: 47 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
+[**61 ready-made features,** all working in this course today: 48 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -249,9 +249,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 ::::
 
 ::: {.cat-box .cat-teach}
-[Teach with it]{.cat-head} [10]{.cat-n}
+[Teach with it]{.cat-head} [11]{.cat-n}
 
-[Timeline: tap to zoom in](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline){.chip} [Timeline across slides](../02-ancient-rome/rome-timeline-slides.html#/the-first-emperor){.chip} [Story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home){.chip} [Diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic){.chip} [Video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes){.chip} [Step-by-step answers](../01-ancient-greece/city-states-slides.html#/athens-or-sparta){.chip} [Zoom and glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column){.chip} [Full-screen titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide){.chip} [Photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum){.chip} [Speaker notes: press S]{.chip .chip-key}
+[Timeline: tap to zoom in](../02-ancient-rome/rome-timeline-slides.html#/rome-timeline){.chip} [Timeline across slides](../02-ancient-rome/rome-timeline-slides.html#/the-first-emperor){.chip} [Story map](../01-ancient-greece/greek-ideas-slides.html#/the-odyssey-ten-years-to-get-home){.chip} [Diagram you can hover](../02-ancient-rome/republic-to-empire-slides.html#/republic-infographic){.chip} [Video in a slide](../01-ancient-greece/greek-ideas-slides.html#/watch-the-odyssey-in-five-minutes){.chip} [Step-by-step answers](../01-ancient-greece/city-states-slides.html#/athens-or-sparta){.chip} [Zoom and glide](../01-ancient-greece/greek-ideas-slides.html#/three-kinds-of-column){.chip} [Full-screen titles](../02-ancient-rome/roman-engineering-slides.html#/title-slide){.chip} [Photos with captions](../02-ancient-rome/roman-engineering-slides.html#/concrete-and-the-colosseum){.chip} [Quick reference: every link in a unit](../01-ancient-greece/city-states-slides.html#/quick-reference){.chip} [Speaker notes: press S]{.chip .chip-key}
 :::
 
 ::: {.cat-box .cat-board}

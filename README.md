@@ -431,6 +431,22 @@ The Romans built [aqueducts] to carry [water] to their cities.
 :::
 ```
 
+## Quick reference slide
+
+One slide with every link in the unit, for class: put it near the end of a deck.
+
+```markdown
+## Quick reference
+
+::: {.quick-ref}
+- [Mountains and sea](#/mountains-and-sea)
+- [Athens or Sparta?](#/athens-or-sparta)
+- [The Olympic Games](greek-ideas-slides.html#/the-olympic-games)
+:::
+```
+
+The links you list become numbered **Key slides** on the left: any slide in this deck (`#/slide-id`) or another deck (`deck.html#/slide-id`). On the right is **everything in the unit**, built from the overview's list, so it stays up to date by itself: the packet (student copy), every deck, printable and outside link, each in its type's color, with a PDF button. Leave out the list and the grid fills the slide. `unit="02-ancient-rome"` shows another unit. Example: the end of *City-States and Democracy*.
+
 ## Tap-to-vote polls
 
 Any slide can have a poll that students answer by tapping the board (or you click while counting hands). It needs no server and no student devices. There are three types:
