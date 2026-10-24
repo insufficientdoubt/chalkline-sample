@@ -1,5 +1,5 @@
 /*
-  Scoreboard: points for teams. Each team is a bar in its own color: its name (tap to change it),
+  Scoreboard: points for teams, in one card split into a band of color for each team: its name (tap to change it),
   − and +, and the score, big. A crown marks the one team in the lead. Point at the scoreboard for
   its buttons: + Team, − Team, Reset and the sound. Narrow (a column in the slide's margin), each
   team stacks: the name on top, − score + under it.
@@ -12,14 +12,18 @@
     class extends T.ToolElement {
       static css = `
 :host { flex: 1; min-height: 0; display: flex; flex-direction: column; container-type: size; }
-.rows { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: min(2.5cqh, 8px); }
-.row {
-  flex: 1; min-height: 0; display: flex; align-items: center; gap: 0.35em; padding: 0 0.3em 0 0.2em;
-  border-radius: min(0.4em, 18px);
-  background: color-mix(in srgb, var(--team) 86%, #000); color: #fff;
-  font-size: min(calc(56cqh / var(--rows)), 9cqw);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 2px rgba(0, 0, 0, 0.15), 0 10px 26px rgba(16, 35, 63, 0.28);
+/* One card; each team is a band of its color, with a thin line between */
+.rows {
+  flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: min(9cqmin, 22px);
+  box-shadow: 0 1px 3px rgba(16, 35, 63, 0.15), 0 16px 40px rgba(16, 35, 63, 0.3);
 }
+.row {
+  flex: 1; min-height: 0; display: flex; align-items: center; gap: 0.35em; padding: 0 0.35em 0 0.25em;
+  background: color-mix(in srgb, var(--team) 86%, #000); color: #fff;
+  font-size: min(calc(60cqh / var(--rows)), 9cqw);
+}
+.row + .row { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22); }
 .name {
   flex: 1; min-width: 0; padding: 0.05em 0.2em; border: 0; border-radius: 0.2em;
   background: transparent; color: #fff; font: inherit; font-size: 0.6em; font-weight: 700;

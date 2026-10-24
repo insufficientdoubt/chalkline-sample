@@ -8,6 +8,20 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Every classroom tool redesigned, each a web component in its own file
+- **Asked for:** "Let's make the team one a shared rectangle with colored sections instead of a stack of rectangles. Just so it's a bit tighter visually. Other than that it looks good. Go ahead and redesign the rest of them."
+- **Why:** to finish the new look (no title bars, the content is the card) and the move to web components for every tool.
+- **Changed:**
+  - `_extensions/classroom/toolbox/tools/scoreboard.js`: one card with a band of color for each team, instead of separate bars.
+  - New tool files in `_extensions/classroom/toolbox/tools/`, each with its own styles: `voice.js` (one card: the level in its color, the levels and microphone in a white strip, the noise meter joining underneath; the card itself flashes red when too loud), `dice.js` (just the dice, a total pill, buttons on pointing), `picker.js` (the name on a big blue tile), `groups.js` (groups as tinted tiles with a colored label), `classes.js` (the class lists both share), `clock.js` (a white pill), `qr.js` (the code, with Edit link on pointing), `slide.js` (a big percentage and a Standard/Wide switch; it still applies the setting in every deck), `spotlight.js`, and `music.js`, `vocab.js`, `packet.js` (moved as they were; YouTube's player is now the card itself; these three stay in the page, without a shadow root, because YouTube's player and the PDF viewer expect that).
+  - `_extensions/classroom/toolbox/kit.js`: shared course data and unit menu, the form styles, `changed()` so one tool can tell another to redraw, `active` (no tools in speaker view or pop-ups), and tools without a shadow root.
+  - `_extensions/classroom/toolbox/toolbox.js`: now only the frame (panels, menu, layout), about 330 lines instead of 1,200; tools reach their panel through the component.
+  - `_extensions/classroom/toolbox/toolbox.css`: only the frame's styles.
+  - `_extensions/classroom/filter.lua`: loads every tool file.
+  - `README.md`: the toolbox paragraph and table. `IDEAS.md`: next steps.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Classroom tools without title bars; traffic light, stopwatch and scoreboard redesigned as web components
 - **Asked for:** "What if we get away from the window card frame and make them look more like tiles or cards... We definitely don't need them to have titles. The content is the message." And: "Are there any standard ways to build this kind of thing that would help give it a little more of a modern structure without bringing in a lot of extra overhead? Or is DIY better?" Agreed plan: no titles, the content is the card, starting with two or three tools; built as web components (no library), one tool at a time.
 - **Why:** the windows still looked dated; the tools should look like objects on the board, not windows. Web components seal each tool's styles in, so the slides' styles stop breaking the tools, and give each tool its own small file.

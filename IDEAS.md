@@ -8,22 +8,13 @@ Things we've talked about but not built yet. Add to this list; move an idea out 
 - **A new intro deck: everything interactive.** One deck that walks a new teacher through every interactive option now in Chalkline (review games, learning activities, timelines, Label it, polls, the toolbox, the chalkboard, PDF worksheets), each with a live example and one line on how to write it. The Start here catalogue slide lists them; this would *teach* them.
 - **An intro piece: "lists are the secret".** A short deck (or a section of the one above) that drives home the big idea: **make lists of your course's vocabulary and key facts first** (words and meanings, dates and events, people and what they did, places and pictures). Once a list exists, it becomes a quick, reusable activity in minutes: snowman, matching, memory, bingo, Jeopardy, sort it, timelines, flashcards, quizzes. Show one list turning into five activities. The vocab list (`vocab/data/vocab.csv`) is the model.
 
-## Classroom tools: one at a time, as web components
+## Classroom tools: next steps
 
-**Where we are:** the toolbox has no title bars now; the tool is the message. The traffic light, stopwatch and scoreboard are redesigned so that *the content is the card* (the light's dark case, one time tile, the team bars), and each is a **web component** in its own file (`_extensions/classroom/toolbox/tools/`). The other tools are still inside `toolbox.js`, on a plain white card.
+Every tool is now a web component in its own file (`_extensions/classroom/toolbox/tools/`), with no title bar, and the content is the card. `toolbox.js` is only the frame (panels, menu, remembering). Ideas for later:
 
-**Why web components:** built into every browser, so no library and no build step. Each tool gets its own tag (`<ct-stopwatch>`) and its own styles sealed inside it, so the slides' styles can't break it (that has happened more than once) and its styles can't leak out. Each tool is one small file that a teacher's assistant can read and change on its own. It also suits the plan to make Chalkline a Quarto extension. `kit.js` holds what they share (storage, icons, sounds, the button style) and the base they build on.
-
-**Next, one tool at a time** (redesign the look and move it into `tools/` together, so nothing is written twice):
-
-1. Voice level: the level as one big colored tile; the noise meter under it.
-2. Dice: just the dice on the slide, with a small row of controls.
-3. Name picker and Groups: the picked name as a big card; the groups as cards.
-4. Clock, QR code, Slide size, Spotlight: small ones.
-5. Music, Vocab, Packet: the sidebars and the player.
-6. Then the toolbox itself (the panels, the menu) can shrink to the frame that holds them.
-
-If the templates in the tools get long and fiddly, **Lit** (a small, standard library for web components, about 6 KB, no build step) can be added one tool at a time. Not needed yet.
+- **Lit** (a small, standard library for web components, about 6 KB, no build step) if a tool's template gets long and fiddly. Not needed yet.
+- **A teacher's own tool:** with the tools in their own files, a teacher's `_extensions/my-tools/` could add a tool to the menu with one file, the same way. Part of the extension plan below.
+- **Sidebars:** Vocab and Packet are still plain white sidebars; they could share one sidebar style with a search box (Vocab) and the unit's worksheets by name (Packet).
 
 ## Chalkline as a Quarto extension (after alpha)
 
