@@ -586,7 +586,7 @@
     clock: {
       // The time, in a window you can drag and resize. Open in every deck unless you close it
       // (or press K); clock: false in a deck's labels leaves it closed there.
-      title: "Clock", icon: "clock", w: 128, h: 52, minW: 100, minH: 44, keys: [],
+      title: "Clock", icon: "clock", w: 128, h: 52, minW: 100, minH: 44, keys: [], bare: true,
       // Where it starts: off the slide, so it covers nothing. In the space beside the slide (left,
       // above the menu buttons; or right, under the slide number) when there's room; if not, the
       // top-right corner. It moves with the screen until it's dragged.
@@ -905,7 +905,8 @@
         const menu = h("div", { class: "ct-music-menu", role: "menu", hidden: true });
         const more = h("button", { class: "ct-close ct-music-more", "aria-label": "Music menu", title: "Change the song, recent songs, pop out",
           onclick: function (e) { e.stopPropagation(); showMenu(menu.hidden); } }, icon("ellipsis"));
-        panel.append(more);
+        const head = panel.querySelector(".ct-head");
+        if (head) head.insertBefore(more, head.lastChild); else panel.append(more);
         body.append(screen, menu);
         panel.addEventListener("contextmenu", function (e) { e.preventDefault(); showMenu(true); });
         function outside(e) { if (!menu.hidden && !menu.contains(e.target) && !more.contains(e.target)) showMenu(false); }
@@ -1162,8 +1163,12 @@
     const close = h("button", { class: "ct-close", "aria-label": "Close " + tool.title, title: "Close", onclick: function () { closeTool(id); } }, icon("x"));
     const body = h("div", { class: "ct-body ct-" + id });
     const grip = h("div", { class: "ct-grip", title: "Drag to resize" });
-    const panel = h("div", { class: "ct-panel", role: "dialog", "aria-label": tool.title },
-      h("div", { class: "ct-handle", "aria-hidden": "true" }), close, body, grip);
+    // A header with the tool's icon and name (also where you grab it); the clock is too small for one
+    const head = tool.bare ? h("div", { class: "ct-handle", "aria-hidden": "true" })
+      : h("div", { class: "ct-head" }, h("span", { class: "ct-head-icon" }, icon(tool.icon)), h("span", { class: "ct-head-title", text: tool.title }));
+    const panel = h("div", { class: "ct-panel" + (tool.bare ? " ct-bare" : ""), role: "dialog", "aria-label": tool.title },
+      head, body, grip);
+    (tool.bare ? panel : head).append(close);
     panel.addEventListener("pointerdown", function () { panel.style.zIndex = ++zTop; });
     place(panel, clampPos(p, tool));
     panel.style.zIndex = ++zTop;
@@ -1220,24 +1225,44 @@
     '<path d="M17.5 14v7M14 17.5h7"/></svg>';
   layer.append(launch, menu);
 
+  // The menu: the tools as tiles, in groups
+  const MENU = [
+    ["People", ["picker", "groups", "scoreboard"]],
+    ["Attention", ["voice", "traffic", "spotlight"]],
+    ["Time", ["clock", "stopwatch"]],
+    ["This unit", ["vocab", "packet", "qr"]],
+    ["More", ["music", "dice", "slide"]],
+  ];
   function paintMenu() {
     menu.textContent = "";
-    menu.append(h("div", { class: "ct-menu-title", text: "Classroom tools" }));
-    Object.keys(TOOLS).forEach(function (id) {
-      const t = TOOLS[id];
-      menu.append(h("button", { class: "ct-menu-item" + (open[id] ? " ct-on" : ""), role: "menuitemcheckbox",
-        "aria-checked": open[id] ? "true" : "false",
-        onclick: function () { open[id] ? closeTool(id) : openTool(id); } },
-        h("span", { class: "ct-menu-icon" }, icon(t.icon)), h("span", { text: t.title }),
-        h("span", { class: "ct-check" }, open[id] ? icon("check") : "")));
+    menu.append(h("div", { class: "ct-menu-title" }, "Classroom tools", h("kbd", { class: "ct-menu-key", title: "Press W to open and close this menu", text: "W" })));
+    const listed = [].concat.apply([], MENU.map(function (g) { return g[1]; }));
+    const groups = MENU.map(function (g) { return [g[0], g[1].slice()]; });
+    Object.keys(TOOLS).forEach(function (id) { if (listed.indexOf(id) < 0) groups[groups.length - 1][1].push(id); });   // a new tool goes under More
+    groups.forEach(function (g) {
+      const ids = g[1].filter(function (id) { return TOOLS[id]; });
+      if (!ids.length) return;
+      menu.append(h("div", { class: "ct-menu-group", text: g[0] }));
+      const grid = h("div", { class: "ct-menu-grid" });
+      ids.forEach(function (id) {
+        const t = TOOLS[id];
+        grid.append(h("button", { class: "ct-menu-item" + (open[id] ? " ct-on" : ""), role: "menuitemcheckbox",
+          "aria-checked": open[id] ? "true" : "false",
+          onclick: function () { open[id] ? closeTool(id) : openTool(id); } },
+          h("span", { class: "ct-menu-icon" }, icon(t.icon)), h("span", { class: "ct-menu-name", text: t.title }),
+          open[id] ? h("span", { class: "ct-check" }, icon("check")) : null));
+      });
+      menu.append(grid);
     });
+    const foot = h("div", { class: "ct-menu-foot" });
     if (Object.keys(open).length) {
-      menu.append(h("button", { class: "ct-menu-item ct-menu-close",
+      foot.append(h("button", { class: "ct-menu-action",
         onclick: function () { Object.keys(open).forEach(function (id) { closeTool(id); }); toggleMenu(false); } },
         icon("x"), h("span", { text: "Close all" })));
     }
-    menu.append(h("button", { class: "ct-menu-item ct-menu-reset", onclick: function () { toggleMenu(false); showReset(); } },
-      h("span", { class: "ct-menu-icon" }, icon("rotate-ccw")), h("span", { text: "Reset for the next class…" })));
+    foot.append(h("button", { class: "ct-menu-action", onclick: function () { toggleMenu(false); showReset(); } },
+      icon("rotate-ccw"), h("span", { text: "Reset for the next class…" })));
+    menu.append(foot);
   }
 
   /* ---------------- Reset for the next class ----------------

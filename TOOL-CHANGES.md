@@ -8,6 +8,13 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: A more modern look for the teacher tools
+- **Asked for:** "I still don't love the overall look and feel of the teacher tools. We moved to a more modern design style for the UI. Can you work on updating the design style of the teacher tools to look a bit more modern and nice?"
+- **Why:** to match the newer, more polished look of the rest of the interface.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.js`: each panel now has a slim header with the tool's icon and name (the × sits in it, and Music's ⋯ too); the clock stays bare with a small grab bar. The W menu is now a grid of tiles in groups (People, Attention, Time, This unit, More), with a tick on open tools and "Close all" / "Reset for the next class…" at the bottom. `_extensions/classroom/toolbox/toolbox.css`: frosted white, slightly see-through panels with rounder corners and softer shadows; one button style for every tool (bigger, white with a border, the main button filled); a small corner mark for resizing; styles for the new menu; tool padding adjusted for the header.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Vocab and Packet in the toolbox: the unit's words and worksheets on any slide
 - **Asked for:** "a sidebar that has the entire vocabulary list for the unit ... click on an item to pull up its card ... The second one is a similar thing for the worksheets. Make the unit packet available as a series of preview pages that you can click on to pop out."
 - **Why:** "These two features will allow teachers to access the vocabulary and the worksheets on any slide without planning in advance when teaching."

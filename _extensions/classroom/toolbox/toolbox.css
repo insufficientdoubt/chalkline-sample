@@ -34,100 +34,131 @@
 #ct-launch:hover { opacity: 1; background: rgba(0, 52, 119, 0.08); }
 body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 
+/* The menu: the tools as tiles, in groups (People, Attention, Time, This unit, More) */
 #ct-menu {
   position: fixed;
   left: 12px;
   bottom: 52px;
   z-index: 100000;          /* panels count up from 1 */
-  min-width: 230px;
-  padding: 6px;
-  border-radius: var(--ui-r-lg);
-  background: var(--ui-surface);
-  box-shadow: var(--ui-shadow);
+  width: 372px;
+  max-height: calc(100vh - 70px);
+  overflow: auto;
+  padding: 14px 14px 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 18px 48px rgba(16, 35, 63, 0.22), 0 0 0 1px rgba(16, 35, 63, 0.07);
   color: var(--ui-ink);
-  font-size: 19px;
+  font-size: 15px;
 }
 #ct-menu[hidden] { display: none; }
-.ct-menu-title {
-  padding: 4px 10px 6px;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ui-muted);
+.ct-menu-title { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 8px; font-size: 17px; font-weight: 700; }
+.ct-menu-key {
+  padding: 1px 7px; border: 1px solid var(--ui-line); border-bottom-width: 2px; border-radius: 6px;
+  background: var(--ui-soft); color: var(--ui-muted); font: 700 12px/1.4 inherit;
 }
+.ct-menu-group { margin: 6px 2px 6px; color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.ct-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
 .ct-menu-item {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  width: 100%;
-  min-height: 46px;
-  padding: 6px 12px;
-  border: 0;
-  border-radius: var(--ui-r-sm);
-  background: transparent;
-  color: inherit;
-  font-weight: 500;
-  text-align: left;
+  justify-content: center;
+  gap: 6px;
+  min-height: 74px;
+  padding: 10px 6px 8px;
+  border: 1px solid var(--ui-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ui-ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: center;
+  transition: border-color 0.12s, background 0.12s, transform 0.06s;
 }
-.ct-menu-item:hover { background: var(--ui-soft); }
-.ct-menu-item.ct-on { background: var(--ui-accent-soft); }
-.ct-menu-icon { display: inline-flex; justify-content: center; width: 1.4em; font-size: 1.1em; color: var(--ui-muted); }
-.ct-menu-item.ct-on .ct-menu-icon { color: var(--ui-accent); }
-.ct-check { display: inline-flex; margin-left: auto; color: var(--ui-accent); }
-.ct-menu-close { justify-content: center; gap: 8px; margin-top: 4px; border-top: 1px solid var(--ui-line); border-radius: 0 0 var(--ui-r-sm) var(--ui-r-sm); color: var(--ui-muted); }
+.ct-menu-item:hover { border-color: var(--ui-line-strong); background: var(--ui-soft); }
+.ct-menu-item:active { transform: scale(0.98); }
+.ct-menu-icon { display: inline-flex; font-size: 24px; color: var(--ui-accent); }
+.ct-menu-item.ct-on { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
+.ct-check {
+  position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 17px; height: 17px;
+  border-radius: 50%; background: var(--ui-accent); color: #fff; font-size: 11px;
+}
+.ct-menu-foot { display: flex; gap: 4px; margin-top: 6px; padding-top: 8px; border-top: 1px solid var(--ui-line); }
+.ct-menu-action {
+  flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 36px; padding: 4px 8px; white-space: nowrap;
+  border: 0; border-radius: 10px; background: transparent; color: var(--ui-muted); font-size: 13px; font-weight: 600;
+}
+.ct-menu-action:hover { background: var(--ui-soft); color: var(--ui-ink); }
 
-/* ---- Panels ---- */
+/* ---- Panels: frosted white cards, a little see-through, with the tool's name on top ---- */
 .ct-panel {
   position: fixed;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--ui-r-lg);
-  background: var(--ui-glass);   /* grey, see-through: the slide shows faintly behind */
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--ui-shadow);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);   /* the slide shows faintly behind */
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 12px 32px rgba(16, 35, 63, 0.18), 0 0 0 1px rgba(16, 35, 63, 0.08);
   color: var(--ui-ink);
   cursor: grab;
   touch-action: none;       /* drag with a finger moves the panel, not the page */
   user-select: none;
 }
-.ct-panel.ct-dragging { cursor: grabbing; box-shadow: 0 16px 44px rgba(0, 20, 60, 0.3), 0 0 0 1px rgba(0, 52, 119, 0.14); }
+.ct-panel.ct-dragging { cursor: grabbing; box-shadow: 0 2px 4px rgba(16, 35, 63, 0.08), 0 20px 48px rgba(16, 35, 63, 0.28), 0 0 0 1px rgba(16, 35, 63, 0.12); }
 .ct-panel button, .ct-panel input, .ct-panel select, .ct-panel textarea, .ct-panel label { cursor: pointer; }
 .ct-panel input:not([type]), .ct-panel input[type="url"], .ct-panel textarea { cursor: text; user-select: text; }
 .ct-nodrag { cursor: auto; touch-action: pan-y; }
-/* A small bar at the top shows where to grab; × closes. Both stay light so the tool is what you see. */
+/* The header: the tool's icon and name, and ×. Grab it (or any empty part of the panel) to move it. */
+.ct-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 32px;
+  padding: 0 4px 0 12px;
+  border-bottom: 1px solid rgba(16, 35, 63, 0.07);
+  color: var(--ui-muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.ct-head-icon { display: inline-flex; font-size: 15px; color: var(--ui-accent); }
+.ct-head-title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The clock has no header: a small bar shows where to grab it */
 .ct-handle {
   position: absolute;
   top: 6px;
   left: 50%;
-  width: 36px;
+  width: 32px;
   height: 4px;
-  margin-left: -18px;
+  margin-left: -16px;
   border-radius: 2px;
-  background: rgba(0, 52, 119, 0.14);
+  background: rgba(16, 35, 63, 0.14);
   pointer-events: none;
 }
 .ct-close {
-  position: absolute;
-  top: 2px;
-  right: 4px;
-  z-index: 2;
+  flex: none;
   width: 26px;
-  height: 22px;
+  height: 26px;
   padding: 0;
   border: 0;
   display: grid;
   place-items: center;
-  border-radius: 6px;
+  border-radius: 8px;
   background: transparent;
   color: var(--ui-muted);
-  opacity: 0.6;
+  opacity: 0.75;
   font-size: 15px !important;
   line-height: 1;
 }
-.ct-close:hover { background: rgba(16, 35, 63, 0.08); opacity: 1; }
+.ct-close:hover { background: rgba(16, 35, 63, 0.08); color: var(--ui-ink); opacity: 1; }
+.ct-bare > .ct-close { position: absolute; top: 2px; right: 4px; z-index: 2; width: 24px; height: 22px; opacity: 0.55; }
 .ct-body {
   position: relative;
   flex: 1;
@@ -135,19 +166,34 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   display: flex;
   flex-direction: column;
   container-type: size;
-  padding: 22px 10px 8px;   /* room at the top for the grab bar and × */
+  padding: 10px 10px 10px;
 }
+.ct-bare .ct-body { padding-top: 16px; }   /* room for the grab bar and × */
+/* Resize from the bottom-right corner: a small corner mark, clearer on hover */
 .ct-grip {
   position: absolute;
   right: 0;
   bottom: 0;
-  width: 26px;
-  height: 26px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
   cursor: nwse-resize;
   touch-action: none;
-  background: linear-gradient(135deg, transparent 55%, rgba(0, 52, 119, 0.35) 55%, rgba(0, 52, 119, 0.35) 62%,
-    transparent 62%, transparent 72%, rgba(0, 52, 119, 0.35) 72%, rgba(0, 52, 119, 0.35) 79%, transparent 79%);
 }
+.ct-grip::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid rgba(16, 35, 63, 0.3);
+  border-bottom: 2px solid rgba(16, 35, 63, 0.3);
+  border-bottom-right-radius: 3px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.ct-panel:hover .ct-grip::after { opacity: 1; }
 /* Too loud: the whole panel flashes red. */
 .ct-panel::after {
   content: "";
@@ -163,36 +209,39 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-panel.ct-loud { box-shadow: 0 0 0 5px var(--ct-red), 0 10px 32px rgba(0, 20, 60, 0.3); }
 @keyframes ct-flash { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.6; } }
 
-/* Shared bits */
+/* Shared bits: one set of buttons for every tool, sized to the panel */
 .ct-foot {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 8px;
   flex: none;
-  padding: 4px 18px 0;
-  font-size: clamp(13px, 5.5cqmin, 24px);
+  padding: 6px 14px 0;
+  font-size: clamp(14px, 6.5cqmin, 26px);
 }
 .ct-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.3em;
-  min-height: 2em;
-  padding: 0.2em 0.9em;
+  gap: 0.35em;
+  min-height: 2.1em;
+  padding: 0.25em 1em;
   border: 1px solid var(--ui-line);
-  border-radius: var(--ui-r-sm);
-  background: var(--ui-surface);
+  border-radius: 10px;
+  background: #fff;
   color: var(--ui-ink);
   font-weight: 600 !important;
-  box-shadow: var(--ui-shadow-sm);
+  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06);
+  transition: background 0.12s, border-color 0.12s, transform 0.06s;
 }
 .ct-btn:hover { border-color: var(--ui-line-strong); background: var(--ui-soft); }
-.ct-btn.ct-primary { border-color: var(--ui-accent); background: var(--ui-accent); color: #fff; }
+.ct-btn:active { transform: translateY(1px); }
+.ct-btn.ct-primary { border-color: var(--ui-accent); background: var(--ui-accent); color: #fff; box-shadow: 0 1px 2px rgba(0, 52, 119, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
 .ct-btn.ct-primary:hover { background: var(--ui-accent-hover); }
-.ct-btn.ct-small { min-height: 1.8em; padding: 0.1em 0.7em; }
+.ct-btn.ct-small { min-height: 1.8em; padding: 0.1em 0.75em; }
 .ct-btn.ct-armed { background: var(--ct-red); border-color: var(--ct-red); color: #fff; }
+.ct-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
 
 /* ---- Scoreboard ---- */
 .ct-score-rows { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 1.5cqh; }
@@ -662,15 +711,15 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-spot-shade { position: fixed; inset: 0; z-index: 0; cursor: move; touch-action: none; }
 
 /* ---- Music: YouTube's own player filling the panel (never under 200 × 200, YouTube's rule), and a ⋯ menu ---- */
-.ct-body.ct-music { padding-top: 22px; }
+.ct-body.ct-music { padding: 8px; }
 .ct-music-screen { flex: 1; min-width: 200px; min-height: 200px; display: grid; border-radius: var(--ui-r-sm); background: #000; overflow: hidden; }
 .ct-music-screen iframe, .ct-music-screen > div:only-child:not(.ct-music-ask):not(.ct-music-note) { display: block; width: 100%; height: 100%; border: 0; }
 .ct-music-ask, .ct-music-note { align-self: center; justify-self: center; width: 100%; padding: 12px; color: #fff; text-align: center; font-size: 14px; }
 .ct-music-ask { display: flex; flex-direction: column; gap: 8px; }
 .ct-music-ask .ct-music-note { padding: 0; font-weight: 600; font-size: 15px; }
-.ct-music-more { right: 32px; font-size: 18px !important; }   /* beside the × */
+.ct-music-more { font-size: 18px !important; }   /* in the header, beside the × */
 .ct-music-menu {
-  position: absolute; top: 24px; right: 8px; z-index: 3; width: min(300px, calc(100% - 16px)); max-height: calc(100% - 30px); overflow: auto;
+  position: absolute; top: 6px; right: 8px; z-index: 3; width: min(300px, calc(100% - 16px)); max-height: calc(100% - 30px); overflow: auto;
   display: flex; flex-direction: column; gap: 4px; padding: 8px;
   border-radius: var(--ui-r); background: var(--ui-surface); box-shadow: var(--ui-shadow); font-size: 14px;
 }
@@ -687,7 +736,7 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-music-error { color: var(--ui-bad); font-weight: 600; }
 
 /* ---- Vocab and Packet: sidebars ---- */
-.ct-body.ct-vocab, .ct-body.ct-packet { gap: 6px; padding: 22px 8px 8px; }
+.ct-body.ct-vocab, .ct-body.ct-packet { gap: 6px; padding: 8px; }
 .ct-pick { width: 100%; min-width: 0; padding: 4px 6px; font-size: 14px; }
 .ct-empty { padding: 10px; color: var(--ui-muted); font-size: 14px; }
 .ct-vocab-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
