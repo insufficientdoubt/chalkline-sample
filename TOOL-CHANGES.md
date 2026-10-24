@@ -8,6 +8,17 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Music: just YouTube's player, with a ⋯ menu
+- **Asked for:** "maybe it's better to just have the embedded player and use a context menu to change the link".
+- **Why:** since the video has to stay visible anyway, YouTube's own controls are enough. That's the smallest, plainest version.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: the Music panel is now only YouTube's player (play, pause, volume, fullscreen are YouTube's own), at 340 × 240, resizable, never under 200 × 200. A **⋯** button by the × (or a right-click on the panel's edge) opens a menu: change the song, the last five songs (by name), and Pop out. Before the first song, the link box sits in the middle of the panel. This replaces the compact strip of big buttons (entry below).
+  - `_extensions/classroom/toolbox/toolbox.css`: the player and the menu.
+  - `_extensions/classroom/ui/icons.js`: an ellipsis icon. The play, pause, skip and volume-1 icons are removed (nothing uses them now).
+  - `README.md`: the Music row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Music: a compact strip, and Pop out
 - **Asked for:** "The music player works, but it's still a bit bulky. Any ideas for how to make a more streamlined version? Or let it get minimized to just a little round icon", then "1 sounds good" (the compact strip), and "can't we just keep playing the YouTube stream but hide the actual video?"
 - **Why:** smaller on the board. Hiding the video while YouTube keeps playing breaks YouTube's rules for embedded players (they can't be hidden, smaller than 200 × 200, or used for sound only), so Chalkline doesn't do it. Pop out gets the same result through YouTube itself.
