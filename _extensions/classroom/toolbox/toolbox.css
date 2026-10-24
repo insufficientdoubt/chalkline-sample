@@ -661,26 +661,27 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 /* ---- Spotlight: the dark screen with a hole in it, under the tool windows ---- */
 .ct-spot-shade { position: fixed; inset: 0; z-index: 0; cursor: move; touch-action: none; }
 
-/* ---- Music: a small YouTube player with big buttons ---- */
-.ct-body.ct-music { gap: 6px; }
-.ct-music-screen { flex: 1; min-height: 40px; border-radius: var(--ui-r-sm); background: #000; overflow: hidden; }
-.ct-music-screen iframe, .ct-music-screen > div { display: block; width: 100%; height: 100%; border: 0; }
-.ct-music-title {
-  flex: none; min-height: 1.3em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
-  font-size: clamp(12px, 4.5cqw, 18px); font-weight: 600; color: var(--ui-ink);
+/* ---- Music: YouTube's own player filling the panel (never under 200 × 200, YouTube's rule), and a ⋯ menu ---- */
+.ct-body.ct-music { padding-top: 22px; }
+.ct-music-screen { flex: 1; min-width: 200px; min-height: 200px; display: grid; border-radius: var(--ui-r-sm); background: #000; overflow: hidden; }
+.ct-music-screen iframe, .ct-music-screen > div:only-child:not(.ct-music-ask):not(.ct-music-note) { display: block; width: 100%; height: 100%; border: 0; }
+.ct-music-ask, .ct-music-note { align-self: center; justify-self: center; width: 100%; padding: 12px; color: #fff; text-align: center; font-size: 14px; }
+.ct-music-ask { display: flex; flex-direction: column; gap: 8px; }
+.ct-music-ask .ct-music-note { padding: 0; font-weight: 600; font-size: 15px; }
+.ct-music-more { right: 32px; font-size: 18px !important; }   /* beside the × */
+.ct-music-menu {
+  position: absolute; top: 24px; right: 8px; z-index: 3; width: min(300px, calc(100% - 16px)); max-height: calc(100% - 30px); overflow: auto;
+  display: flex; flex-direction: column; gap: 4px; padding: 8px;
+  border-radius: var(--ui-r); background: var(--ui-surface); box-shadow: var(--ui-shadow); font-size: 14px;
 }
-.ct-music-controls, .ct-music-volume { flex: none; display: flex; align-items: center; justify-content: center; gap: 4cqw; }
-.ct-music-controls { font-size: clamp(18px, 9cqw, 46px); }
-.ct-music-volume { font-size: clamp(16px, 8cqw, 40px); }
-.ct-music-play, .ct-music-big { min-height: 0 !important; padding: 0 !important; border-radius: 50% !important; }
-.ct-music-play { width: 2.3em; height: 2.3em; font-size: 1em; }
-.ct-music-big { width: 1.7em; height: 1.7em; font-size: 0.9em; }
-.ct-music-play .ui-icon { width: 1.1em; height: 1.1em; }
-.ct-music-big:disabled { opacity: 0.35; cursor: default; }
-.ct-music-level { min-width: 2.8em; text-align: center; font-weight: 700; font-variant-numeric: tabular-nums; }
-.ct-music-link { flex: none; display: flex; gap: 6px; font-size: 14px; }
-.ct-music-link[hidden] { display: none; }
-.ct-music-field { flex: 1; min-width: 0; }
-.ct-music-foot { flex: none; display: flex; align-items: center; gap: 4px; overflow: hidden; font-size: 12px; }
-.ct-music-recent { display: flex; gap: 4px; min-width: 0; overflow: hidden; }
-.ct-music-chip { max-width: 9em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block !important; font-weight: 500 !important; }
+.ct-music-menu[hidden] { display: none; }
+.ct-music-menu-label { margin-top: 2px; color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.ct-music-link { display: flex; gap: 6px; }
+.ct-music-field { flex: 1; min-width: 0; font-size: 13px; }
+.ct-music-item {
+  display: block; width: 100%; padding: 5px 8px; border: 0; border-radius: var(--ui-r-sm); background: transparent;
+  color: var(--ui-ink); text-align: left; font: inherit; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; cursor: pointer;
+}
+.ct-music-item:hover { background: var(--ui-accent-soft); }
+.ct-music-pop { margin-top: 4px; border-top: 1px solid var(--ui-line); border-radius: 0 0 var(--ui-r-sm) var(--ui-r-sm); padding-top: 7px; color: var(--ui-accent); font-weight: 600; }
+.ct-music-error { color: var(--ui-bad); font-weight: 600; }
