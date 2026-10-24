@@ -44,7 +44,7 @@
     <div class="left">
       <svg id="svg" viewBox="0 0 900 600" aria-label="A robot lift"></svg>
       <div class="stat lengthBox" id="lengthBox"><div><small>Robot length (back to front)</small><span class="big" id="length"></span></div>
-        <div><span id="start"></span><span id="widest"></span><span class="rules">Rules: start within 20 in, never wider than 24 in. No height limit.</span></div></div>
+        <div><span id="start"></span><span id="widest"></span><span class="rules">Rules (VEX IQ): start inside a 20 × 15 in box; never wider than 24 in. No height limit once the match starts.</span></div></div>
     </div>
     <div class="panel box">
       <div class="stat"><small>Extension</small><span class="big" id="ext"></span>
@@ -74,7 +74,7 @@
     The size rules are in inches (the game is American), so the robot's length shows inches first.
   */
   const GROUND = 520;                             // the floor line in the picture; under it: the robot's length and the size rules
-  const IN = 2.54, START_IN = 20, MAX_IN = 24;   // the robot must start within 20 in and never be wider than 24 in
+  const IN = 2.54, START_IN = 20, START_H_IN = 15, MAX_IN = 24;   // start inside 20 in long × 15 in tall; never longer than 24 in; no height limit after the start
   const BASE = 32.5, GAP = 7, FLOOR = 1.5;        // chassis length, bar spacing, the claw's lower pin at the start (cm)
   const CHASSIS = [2, 6], WHEEL = 2;              // the chassis plate (bottom and top, cm), wheel radius
   const FINGER = 5.5, OUT_DR4B = 4;               // claw finger length; the DR4B's bracket holds the claw out in front of the tower
@@ -135,16 +135,22 @@
   }
 
   // The whole swing: the claw's path, the widest pose, the length at the start, and the view's scale
-  let swing = [], widest, startLen, origin, S, LEFT, TOPCM;
+  // The top of the robot in one pose: every pin, the tower, the claw's plate and fingers (cm)
+  function tallest(s) {
+    let y = H + 1.5;
+    points(s).forEach(function (q) { y = Math.max(y, q[1] + 0.6); });
+    return Math.max(y, s.end[0][1] + 1, s.end[1][1] + 3.8);
+  }
+  let swing = [], widest, startLen, startH, origin, S, LEFT, TOPCM;
   function study() {
     LO = lowest();
     swing = []; widest = null; origin = Infinity;
-    let minX = 0, maxX = BASE, maxY = H + 1;
+    let minX = 0, maxX = BASE, maxY = START_H_IN * IN + 3;   // room for the start box
     for (let p = 0; p <= 100; p++) {
       const s = solve(angle(p)), sp = span(s), n = sp.front - sp.back;
       swing.push(grip(s));
       if (!widest || n > widest.len) widest = { len: n, x: sp.front };
-      if (p === 0) startLen = n;
+      if (p === 0) { startLen = n; startH = tallest(s); }
       origin = Math.min(origin, sp.back);
       minX = Math.min(minX, sp.back); maxX = Math.max(maxX, sp.front);
       points(s).forEach(function (q) { maxY = Math.max(maxY, q[1] + 1.5); });
@@ -181,13 +187,17 @@
     el("line", { x1: 872, x2: 872, y1: GROUND, y2: Y(top), stroke: "#8a97a8", "stroke-width": 1.5 }, g);
     el("text", { x: 862, y: Y(top) - 10, "font-size": 13, fill: "#5b6b80" }, g).textContent = "cm";
 
-    // the two size rules, measured from the robot's back-most point in the swing; their labels sit
-    // on the floor, under the length measure, so they read as lengths, not heights
-    [[START_IN, "#e07b00", "start limit: 20 in (50.8 cm)", GROUND + 54], [MAX_IN, "#c23b3b", "max limit: 24 in (61.0 cm)", GROUND + 75]].forEach(function (lim) {
-      const x = X(origin + lim[0] * IN);
-      el("line", { x1: x, x2: x, y1: 10, y2: lim[3] + 4, stroke: lim[1], "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
-      el("text", { x: x - 6, y: lim[3], "text-anchor": "end", "font-size": 16, "font-weight": 700, fill: lim[1] }, g).textContent = lim[2];
-    });
+    // the size rules, measured from the robot's back-most point in the swing; their labels sit on the
+    // floor, under the length measure. The start box: 20 in long × 15 in tall (the robot must fit inside
+    // at the start). The max line: 24 in long at any time, with no limit on height.
+    const bx = X(origin), bw = START_IN * IN * S, bTop = Y(START_H_IN * IN);
+    el("rect", { x: bx, y: bTop, width: bw, height: GROUND - bTop, fill: "#e07b00", "fill-opacity": 0.05, stroke: "#e07b00", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
+    el("line", { x1: bx + bw, x2: bx + bw, y1: GROUND, y2: GROUND + 58, stroke: "#e07b00", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
+    el("text", { x: bx + bw - 6, y: GROUND + 54, "text-anchor": "end", "font-size": 16, "font-weight": 700, fill: "#e07b00" }, g).textContent = "start box: 20 × 15 in (50.8 × 38.1 cm)";
+    el("text", { x: bx + 6, y: bTop + 18, "font-size": 13, "font-weight": 700, fill: "#e07b00" }, g).textContent = "15 in (38.1 cm) tall";
+    const mx = X(origin + MAX_IN * IN);
+    el("line", { x1: mx, x2: mx, y1: 10, y2: GROUND + 79, stroke: "#c23b3b", "stroke-width": 2.5, "stroke-dasharray": "8 6" }, g);
+    el("text", { x: mx - 6, y: GROUND + 75, "text-anchor": "end", "font-size": 16, "font-weight": 700, fill: "#c23b3b" }, g).textContent = "max: 24 in (61.0 cm) long, any height";
 
     // the claw's path, bottom to top
     el("polyline", { points: swing.map(function (p) { return X(p[0]) + "," + Y(p[1]); }).join(" "), fill: "none", stroke: "#d6458f", "stroke-width": 2, "stroke-dasharray": "5 5", opacity: 0.7 }, g);
@@ -232,10 +242,11 @@
     $("ext").textContent = ext.toFixed(1) + " cm";
     $("height").textContent = now[1].toFixed(1) + " cm";
     $("reach").textContent = mode === "dr4b" ? "0 cm (straight up ✓)" : (reach > 0.05 ? "+" : "") + reach.toFixed(1) + " cm";
-    const over = len > MAX_IN * IN + 0.05, overEver = widest.len > MAX_IN * IN + 0.05, overStart = startLen > START_IN * IN + 0.05;
+    const over = len > MAX_IN * IN + 0.05, overEver = widest.len > MAX_IN * IN + 0.05, tooLong = startLen > START_IN * IN + 0.05, tooTall = startH > START_H_IN * IN + 0.05, overStart = tooLong || tooTall;
     $("length").textContent = both(len);
     $("lengthBox").classList.toggle("over", over);
-    $("start").innerHTML = "At the start: <b class=\"" + (overStart ? "bad" : "ok") + "\">" + both(startLen) + (overStart ? ", over 20 in" : " ✓") + "</b>";
+    $("start").innerHTML = "At the start: <b class=\"" + (overStart ? "bad" : "ok") + "\">" + (startLen / IN).toFixed(1) + " × " + (startH / IN).toFixed(1) +
+      " in (" + startLen.toFixed(1) + " × " + startH.toFixed(1) + " cm)" + (overStart ? ", " + [tooLong ? "over 20 in long" : "", tooTall ? "over 15 in tall" : ""].filter(Boolean).join(" and ") : " ✓") + "</b>";
     $("widest").innerHTML = "Widest in the full swing: <b class=\"" + (overEver ? "bad" : "ok") + "\">" + both(widest.len) +
       (overEver ? ", over 24 in by " + (widest.len / IN - MAX_IN).toFixed(1) + " in" : " ✓") + "</b>";
 
