@@ -11,9 +11,9 @@
     // Starts on this deck's unit; the menu picks another.
     const data = course();
     const units = data ? data.units.filter(function (u) { return u.packet; }) : [];
-    if (!units.length) { body.append(h("div", { class: "ct-empty", text: "This course has no unit packets yet." })); return {}; }
+    if (!units.length) { body.append(h("div", { class: "ui-empty", text: "This course has no unit packets yet." })); return {}; }
     let unit = (units.find(function (u) { return u.id === data.unit; }) || units[0]).id, teacher = false;
-    const key = h("button", { class: "ct-btn ct-small ct-packet-key", "aria-pressed": "false", text: "Answer key",
+    const key = h("button", { class: "ui-btn ui-small ct-packet-key", "aria-pressed": "false", text: "Answer key",
       title: "Show the teacher edition, with the answer keys", onclick: function () {
         teacher = !teacher; key.setAttribute("aria-pressed", String(teacher)); paint();
       } });
@@ -44,7 +44,7 @@
 .ct-body.ct-packet { padding: 10px; }
 ct-packet { gap: 8px; }
 .ct-packet-head { flex: none; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.ct-packet-head .ct-pick-box { flex: 1 1 100%; }
+.ct-packet-head .ui-select { flex: 1 1 100%; }
 .ct-packet-key { flex: none; font-size: 13px; white-space: nowrap; }
 .ct-packet-key[aria-pressed="true"] { border-color: #e07b00; background: #fff7ee; color: #8a4500; }
 .ct-packet-pages { flex: 1; min-height: 0; display: flex; }

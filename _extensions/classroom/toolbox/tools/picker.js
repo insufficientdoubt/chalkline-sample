@@ -11,16 +11,16 @@
       static css = C.css + `
 .stage {
   flex: 1; min-height: 0; width: 100%; padding: 0 0.3em; border: 0; border-radius: 16px; cursor: pointer;
-  background: var(--ui-accent, #003477); color: #fff;
+  background: var(--ui-accent); color: #fff;
   font-size: min(32cqh, calc(170cqw / var(--len, 7))); font-weight: 700; line-height: 1.1;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   transition: background 0.2s;
 }
-.stage.idle { background: var(--ui-soft, #f3f5f8); color: var(--ui-muted, #5b6b80); font-weight: 600; }
-.stage.rolling { background: color-mix(in srgb, var(--ui-accent, #003477) 75%, #fff); }
+.stage.idle { background: var(--ui-soft); color: var(--ui-muted); font-weight: 600; }
+.stage.rolling { background: color-mix(in srgb, var(--ui-accent) 75%, #fff); }
 .stage.won { animation: won 0.45s ease-out; }
 @keyframes won { 40% { transform: scale(1.04); } }
-.info { flex: none; padding-top: 8px; color: var(--ui-muted, #5b6b80); text-align: center; font-size: clamp(13px, 4.5cqmin, 17px); }
+.info { flex: none; padding-top: 8px; color: var(--ui-muted); text-align: center; font-size: clamp(13px, 4.5cqmin, 17px); }
 `;
       build(root) {
         this.root = root;
@@ -45,16 +45,16 @@
         set(name || "Tap to pick");
         root.append(bar, stage,
           h("div", { class: "info", text: here.length ? left.length + " of " + here.length + " not picked yet" : "Everyone is away today." }),
-          h("div", { class: "ct-foot" },
-            h("button", { class: "ct-btn ct-primary", text: "Pick", onclick: pick }),
-            h("button", { class: "ct-btn", text: "Start again", onclick: function () {
+          h("div", { class: "ui-actions" },
+            h("button", { class: "ui-btn ui-primary", text: "Pick", onclick: pick }),
+            h("button", { class: "ui-btn", text: "Start again", onclick: function () {
               const now = C.load();
               now.classes[now.current].picked = [];
               self.last = null;
               C.save(now);
               self.show("pick");
             } }),
-            h("button", { class: "ct-btn", text: "Who's here?", onclick: function () { self.show("here"); } })));
+            h("button", { class: "ui-btn", text: "Who's here?", onclick: function () { self.show("here"); } })));
 
         // Long names get a smaller font, so they fit on one line (Chinese characters count double).
         function set(text) {

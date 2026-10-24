@@ -32,7 +32,7 @@
 
   // The class menu at the top of both tools: switch class, add one, or edit this one.
   function bar(c, edit) {
-    const select = h("select", { class: "ct-pick", "aria-label": "Class", onchange: function () {
+    const select = h("select", { "aria-label": "Class", onchange: function () {
       select.blur();   // so the arrow keys change slides again
       if (select.value === "new") { edit(true); return; }
       const now = load();
@@ -43,15 +43,15 @@
     select.append(h("option", { value: "new", text: "+ New class…" }));
     select.value = String(c.current);
     return h("div", { class: "class-bar" },
-      h("label", { class: "ct-pick-box class-box" }, select, h("span", { class: "ct-pick-arrow" }, T.icon("chevron-down"))),
-      h("button", { class: "ct-btn ct-small", text: "Edit", onclick: function () { edit(false); } }));
+      h("label", { class: "ui-select class-box" }, select, h("span", { class: "ui-select-arrow" }, T.icon("chevron-down"))),
+      h("button", { class: "ui-btn ui-small", text: "Edit", onclick: function () { edit(false); } }));
   }
 
   // No classes yet.
   function none(edit) {
-    return h("div", { class: "ct-empty" },
+    return h("div", { class: "ui-empty" },
       h("p", { class: "lead", text: "Add a class list to start." }),
-      h("button", { class: "ct-btn ct-primary", text: "+ New class", onclick: function () { edit(true); } }),
+      h("button", { class: "ui-btn ui-primary", text: "+ New class", onclick: function () { edit(true); } }),
       h("p", { class: "privacy", text: PRIVACY }));
   }
 
@@ -60,13 +60,13 @@
     const c = load();
     const i = isNew || !c.classes[c.current] ? -1 : c.current;
     const k = i >= 0 ? c.classes[i] : { name: "", names: [] };
-    const name = h("input", { class: "ct-input", placeholder: "Class name, like 7A", maxlength: 30, "aria-label": "Class name" });
+    const name = h("input", { class: "ui-field", placeholder: "Class name, like 7A", maxlength: 30, "aria-label": "Class name" });
     name.value = k.name;
-    const list = h("textarea", { class: "ct-input names", "aria-label": "Names",
+    const list = h("textarea", { class: "ui-field names", "aria-label": "Names",
       placeholder: "One name on each line.\nYou can paste a column from a spreadsheet." });
     list.value = k.names.join("\n");
     const msg = h("p", { class: "privacy", text: PRIVACY });
-    const saveBtn = h("button", { class: "ct-btn ct-primary", text: "Save", onclick: function () {
+    const saveBtn = h("button", { class: "ui-btn ui-primary", text: "Save", onclick: function () {
       const names = [];
       list.value.split(/[\r\n\t]+/).forEach(function (n) {
         n = n.trim();
@@ -89,8 +89,8 @@
       done();
     } });
     root.replaceChildren(h("div", { class: "edit" }, name, list, msg,
-      h("div", { class: "ct-foot" }, saveBtn,
-        c.classes.length ? h("button", { class: "ct-btn", text: "Cancel", onclick: done }) : null,
+      h("div", { class: "ui-actions" }, saveBtn,
+        c.classes.length ? h("button", { class: "ui-btn", text: "Cancel", onclick: done }) : null,
         i >= 0 ? T.sureButton("Delete class", function () {
           const now = load();
           now.classes.splice(i, 1);
@@ -124,7 +124,7 @@
     return h("div", { class: "here" },
       h("p", { class: "hint", text: "Tap the students who are away today. This starts fresh tomorrow." }),
       grid,
-      h("div", { class: "ct-foot" }, h("button", { class: "ct-btn ct-primary", text: "Done", onclick: done })));
+      h("div", { class: "ui-actions" }, h("button", { class: "ui-btn ui-primary", text: "Done", onclick: done })));
   }
 
   const css = `
@@ -132,17 +132,17 @@
 .class-box { flex: 1; min-width: 0; }
 .edit, .here { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 8px; }
 .names { flex: 1; min-height: 60px; resize: none; line-height: 1.35; }
-.lead { color: var(--ui-ink, #10233f); font-size: 17px; font-weight: 600; }
-.privacy { margin: 0; color: var(--ui-muted, #5b6b80); font-size: 13px; line-height: 1.35; }
-.privacy.warn { color: #C8372D; font-weight: 600; }
-.hint { flex: none; margin: 0; color: var(--ui-muted, #5b6b80); font-size: clamp(13px, 4.5cqmin, 17px); }
+.lead { color: var(--ui-ink); font-size: 17px; font-weight: 600; }
+.privacy { margin: 0; color: var(--ui-muted); font-size: 13px; line-height: 1.35; }
+.privacy.warn { color: var(--ui-alarm); font-weight: 600; }
+.hint { flex: none; margin: 0; color: var(--ui-muted); font-size: clamp(13px, 4.5cqmin, 17px); }
 .here-grid { flex: 1; min-height: 0; overflow: auto; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 6px; }
 .chip {
   padding: 0.3em 0.8em; border: 0; border-radius: 999px; cursor: pointer;
   background: color-mix(in srgb, #2e9e4f 14%, #fff); color: #1d6b35;
   font-size: clamp(14px, 4.5cqmin, 19px); font-weight: 600;
 }
-.chip.away { background: var(--ui-soft, #f3f5f8); color: #8a94a3; text-decoration: line-through; }
+.chip.away { background: var(--ui-soft); color: #8a94a3; text-decoration: line-through; }
 `;
 
   T.classes = { load, save, present, shuffle, bar, none, editor, attendance, css };

@@ -24,7 +24,7 @@
   font-size: calc(var(--size) / 10);
 }
 .die span { display: block; margin: 15%; border-radius: 50%; }
-.die .pip { background: var(--ui-ink, #10233f); box-shadow: inset 0 0.08em 0.1em rgba(0, 0, 0, 0.35); }
+.die .pip { background: var(--ui-ink); box-shadow: inset 0 0.08em 0.1em rgba(0, 0, 0, 0.35); }
 .die.spin { animation: tumble 0.14s linear infinite; }
 .die.spin:nth-child(even) { animation-direction: reverse; }
 @keyframes tumble { 0% { transform: rotate(-9deg) translateY(-2%); } 50% { transform: rotate(9deg) translateY(2%); } 100% { transform: rotate(-9deg) translateY(-2%); } }
@@ -32,7 +32,7 @@
 @keyframes land { 40% { transform: scale(1.06); } }
 .total {
   flex: none; align-self: center; min-height: 1.6em; margin-top: 4cqh; padding: 0.15em 0.8em; border-radius: 999px;
-  background: #fff; color: var(--ui-ink, #10233f); box-shadow: 0 2px 10px rgba(16, 35, 63, 0.3);
+  background: #fff; color: var(--ui-ink); box-shadow: 0 2px 10px rgba(16, 35, 63, 0.3);
   font-size: clamp(14px, 9cqh, 30px); font-weight: 700; font-variant-numeric: tabular-nums;
 }
 .total:empty { visibility: hidden; }
@@ -43,8 +43,8 @@
 }
 :host(:hover) .bar, :host(:focus-within) .bar { opacity: 1; }
 @media (hover: none) { .bar { opacity: 1; } }
-.bar .ct-btn { box-shadow: 0 2px 8px rgba(16, 35, 63, 0.25); }
-.bar .ct-btn:not(.ct-primary) { background: #fff; }
+.bar .ui-btn { box-shadow: 0 2px 8px rgba(16, 35, 63, 0.25); }
+.bar .ui-btn:not(.ui-primary) { background: #fff; }
 .count { min-width: 4.2em; padding: 0.3em 0.6em; border-radius: 999px; background: #fff; text-align: center; font-weight: 600; box-shadow: 0 2px 8px rgba(16, 35, 63, 0.25); }
 `;
       build(root) {
@@ -53,10 +53,10 @@
         this.total = h("div", { class: "total", "aria-live": "polite" });
         this.count = h("span", { class: "count" });
         root.append(this.tray, this.total, h("div", { class: "bar" },
-          h("button", { class: "ct-btn ct-primary", text: "Roll", onclick: function () { self.roll(); } }),
-          h("button", { class: "ct-btn", "aria-label": "Fewer dice", text: "−", onclick: function () { self.setCount(-1); } }),
+          h("button", { class: "ui-btn ui-primary", text: "Roll", onclick: function () { self.roll(); } }),
+          h("button", { class: "ui-btn", "aria-label": "Fewer dice", text: "−", onclick: function () { self.setCount(-1); } }),
           this.count,
-          h("button", { class: "ct-btn", "aria-label": "More dice", text: "+", onclick: function () { self.setCount(1); } })));
+          h("button", { class: "ui-btn", "aria-label": "More dice", text: "+", onclick: function () { self.setCount(1); } })));
         this.paint();
       }
       state() { return T.load("dice", { values: [6, 6] }); }

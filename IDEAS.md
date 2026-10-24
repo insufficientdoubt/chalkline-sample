@@ -14,6 +14,8 @@ Every tool is now a web component in its own file (`_extensions/classroom/toolbo
 
 - **Lit** (a small, standard library for web components, about 6 KB, no build step) if a tool's template gets long and fiddly. Not needed yet.
 - **A teacher's own tool:** with the tools in their own files, a teacher's `_extensions/my-tools/` could add a tool to the menu with one file, the same way. Part of the extension plan below.
+- **Games and activities on the shared parts:** they already take their colors and corners from `ui/ui.css`, but their buttons and menus are still their own (`games.css`, `activities.css`). Moving them onto `.ui-btn`, `.ui-seg` and `.ui-pop` would make every button in Chalkline one button.
+- **The vocab app** (`vocab/app/`) has its own colors (`brand.css`, made from `brand/`). It could load `ui/ui.css` too.
 - **Sidebars:** Vocab and Packet are still plain white sidebars; they could share one sidebar style with a search box (Vocab) and the unit's worksheets by name (Packet).
 
 ## Chalkline as a Quarto extension (after alpha)

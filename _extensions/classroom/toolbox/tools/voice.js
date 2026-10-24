@@ -11,7 +11,7 @@
 (function () {
   const T = window.ChalklineToolbox;
   const LEVELS = [
-    { icon: "🤫", label: "Silent", color: "#C8372D", limit: 22 },
+    { icon: "🤫", label: "Silent", color: "var(--ui-alarm)", limit: 22 },
     { icon: "💬", label: "Whisper", color: "#e8740c", limit: 34 },
     { icon: "🧑‍🤝‍🧑", label: "Partner talk", color: "#c99700", limit: 47 },
     { icon: "👥", label: "Group talk", color: "#2e9e4f", limit: 60 },
@@ -28,7 +28,7 @@
 .card {
   position: relative; flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
   border-radius: min(9cqmin, 22px); background: #fff;
-  box-shadow: 0 1px 3px rgba(16, 35, 63, 0.12), 0 16px 40px rgba(16, 35, 63, 0.3);
+  box-shadow: var(--ui-shadow-float);
 }
 /* The level, big, in its color */
 .level {
@@ -53,7 +53,7 @@
 .pick.on { background: var(--c); color: #fff; }
 .mic { --c: #5b6b80; position: relative; margin-left: 3cqw; }
 .mic::before { content: ""; position: absolute; left: calc(-1.5cqw - 2px); top: 15%; bottom: 15%; width: 1px; background: #d6dee8; }
-.mic.on { --c: var(--ui-accent, #003477); }
+.mic.on { --c: var(--ui-accent); }
 /* With the noise meter on, the level takes less room */
 .card.noisy .level { font-size: min(11cqh, 10cqw); }
 .card.noisy .pick { width: min(9cqh, 12cqw); height: min(9cqh, 12cqw); }
@@ -73,29 +73,29 @@
 }
 .fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--pct); border-radius: inherit; background: var(--lvl); }
 .meter[data-zone="near"] .fill { background: #f0a020; }
-.meter[data-zone="loud"] .fill { background: #C8372D; }
-.line { position: absolute; top: -5px; bottom: -5px; left: var(--limit); width: 4px; margin-left: -2px; border-radius: 2px; background: var(--ui-ink, #10233f); transition: left 0.4s; }
+.meter[data-zone="loud"] .fill { background: var(--ui-alarm); }
+.line { position: absolute; top: -5px; bottom: -5px; left: var(--limit); width: 4px; margin-left: -2px; border-radius: 2px; background: var(--ui-ink); transition: left 0.4s; }
 .flag { position: absolute; bottom: 100%; left: 50%; transform: translate(-50%, -2px); font-size: 18px; line-height: 1; }
 .info { flex: none; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; font-size: clamp(12px, min(11cqh, 4cqw), 20px); }
-.chip { display: inline-flex; align-items: center; gap: 0.3em; padding: 0.2em 0.7em; border-radius: 999px; background: var(--ui-soft, #f3f5f8); font-weight: 700; white-space: nowrap; }
-.card.loud .status { background: #C8372D; color: #fff; }
+.chip { display: inline-flex; align-items: center; gap: 0.3em; padding: 0.2em 0.7em; border-radius: 999px; background: var(--ui-soft); font-weight: 700; white-space: nowrap; }
+.card.loud .status { background: var(--ui-alarm); color: #fff; }
 .buttons { display: inline-flex; gap: 4px; margin-left: auto; }
 .mini {
   display: inline-grid; place-items: center; width: 1.8em; height: 1.8em; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
-  background: var(--ui-soft, #f3f5f8); color: var(--ui-ink, #10233f); font-size: 0.9em; line-height: 1;
+  background: var(--ui-soft); color: var(--ui-ink); font-size: 0.9em; line-height: 1;
 }
 .chip .mini { width: 1.4em; height: 1.4em; background: rgba(16, 35, 63, 0.08); }
-.mini:hover { background: #e6ebf1; }
-.mini.go { background: var(--ui-accent, #003477); color: #fff; }
+.mini:hover { background: var(--ui-soft-hover); }
+.mini.go { background: var(--ui-accent); color: #fff; }
 .stop { width: 0.6em; height: 0.6em; border-radius: 2px; background: #fff; }
 .settings { flex: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; }
 .settings[hidden] { display: none; }
 .sense { min-width: 1.6em; text-align: center; }
 
 /* Too loud: the card flashes red */
-.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #C8372D; opacity: 0; pointer-events: none; }
+.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ui-alarm); opacity: 0; pointer-events: none; }
 .card.loud::after { animation: flash 0.7s ease-in-out infinite; }
-.card.loud { box-shadow: 0 0 0 5px #C8372D, 0 16px 40px rgba(16, 35, 63, 0.3); }
+.card.loud { box-shadow: 0 0 0 5px var(--ui-alarm), 0 16px 40px rgba(16, 35, 63, 0.3); }
 @keyframes flash { 0%, 100% { opacity: 0.12; } 50% { opacity: 0.55; } }
 
 /* Narrow (a column in the slide margin): everything stacks, and the meter stands up */

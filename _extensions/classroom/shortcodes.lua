@@ -258,19 +258,25 @@ return {
     include_once("vocab-card.html")
     -- Picture and link paths are from the site root; add the "../" this page needs.
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
-    local img = t.image ~= "" and ('<img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy">') or ""
-    -- 🔊 buttons read the word aloud (English, then 中文) with the computer's voices (vocab-card.html).
+    local img = t.image ~= "" and ('<span class="vc-pic"><img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy"></span>') or ""
+    -- Line icons (Lucide, like the classroom tools'): a speaker, and an arrow for the link.
+    local function svg(paths)
+      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' .. paths .. '</svg>'
+    end
+    local SPEAKER = svg('<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>')
+    local ARROW = svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>')
+    -- Speaker buttons read the word aloud (English, then 中文) with the computer's voices (vocab-card.html).
     local function say(text, lang, label)
       return '<button type="button" class="vc-say" data-lang="' .. lang .. '" data-say="' .. html_escape(text) ..
-             '" aria-label="' .. label .. '" title="' .. label .. '">🔊</button>'
+             '" aria-label="' .. label .. '" title="' .. label .. '">' .. SPEAKER .. '</button>'
     end
-    local zh = t.zh ~= "" and (' <span class="vc-zh">' .. html_escape(t.zh) .. say(t.zh, "zh-CN", "Say it in Chinese") .. '</span>') or ""
+    local zh = t.zh ~= "" and ('<span class="vc-zh">' .. html_escape(t.zh) .. say(t.zh, "zh-CN", "Say it in Chinese") .. '</span>') or ""
     return pandoc.RawInline("html",
       '<span class="vocab-term" tabindex="0">' .. html_escape(shown) ..
       '<span class="vocab-card" role="tooltip">' .. img ..
-      '<span class="vc-term">' .. html_escape(t.term) .. say(t.term, "en-US", "Say it in English") .. zh .. '</span>' ..
+      '<span class="vc-term">' .. html_escape(t.term) .. say(t.term, "en-US", "Say it in English") .. '</span>' .. zh ..
       '<span class="vc-def">' .. html_escape(t.definition) .. '</span>' ..
-      '<a class="vc-link" href="' .. html_escape(up .. t.url) .. '" target="_blank" rel="noopener">' .. html_escape(str(meta and meta["vocab-title"], "Vocab")) .. ' ↗</a>' ..
+      '<a class="vc-link" href="' .. html_escape(up .. t.url) .. '" target="_blank" rel="noopener">' .. html_escape(str(meta and meta["vocab-title"], "Vocab")) .. ARROW .. '</a>' ..
       '</span></span>')
   end,
 

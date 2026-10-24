@@ -350,7 +350,9 @@ local function Meta(meta)
   -- Teacher build only: students (and families, on the student site) never see it.
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
-  if quarto.doc.is_format("revealjs") then games.ui() end
+  -- Chalkline's design layer (ui/ui.css) on every page and deck: the tools, games, vocab pop-ups
+  -- and the PDF viewer all take their colors, corners and buttons from it.
+  if quarto.doc.is_format("html") or quarto.doc.is_format("revealjs") then games.ui() end
   if quarto.doc.is_format("revealjs") and not tools_off and is_teacher() then
     -- The QR code sends students to this deck on the STUDENT site (never the teacher site, which has
     -- the answer keys): `student-site:` in _quarto.yml (or the older classroom-tools: qr-site:), plus

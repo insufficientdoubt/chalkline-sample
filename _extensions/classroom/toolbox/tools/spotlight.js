@@ -13,8 +13,8 @@
 .row { flex: 1; display: flex; align-items: center; gap: 10px; }
 .icon { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: #fff4d6; color: #b07800; font-size: 18px; }
 .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-.label { color: var(--ui-muted, #5b6b80); font-size: 13px; font-weight: 600; }
-input { width: 100%; margin: 0; accent-color: var(--ui-accent, #003477); }
+.label { color: var(--ui-muted); font-size: 13px; font-weight: 600; }
+input { width: 100%; margin: 0; accent-color: var(--ui-accent); }
 `;
       build(root) {
         const self = this, h = T.h;

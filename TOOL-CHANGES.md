@@ -8,6 +8,20 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: One design layer for everything interactive; PDF viewer and vocab pop-ups restyled to match
+- **Asked for:** "How about improving the style of the vocab viewer and pdf viewer to match the menu and stuff. Also I feel like more of this styling work should be global instead of elements by element. What am I missing"
+- **Why:** each part had its own colors, corners and buttons, so matching them meant changing each one by hand.
+- **Changed:**
+  - `_extensions/classroom/ui/ui.css`: now the one design layer. The values (colors, a corner scale, shadows for the page, floating tools and menus) and the shared parts: `.ui-btn`, `.ui-icon-btn`, `.ui-field`, `.ui-select`, `.ui-seg`, `.ui-actions`, `.ui-card`, `.ui-pop`, `.ui-menu-item`, `.ui-label`, `.ui-empty`. Corners are a little rounder everywhere (games too), to match the tools.
+  - `_extensions/classroom/filter.lua`: loads `ui.css` on every page and deck, not only decks (the vocab pop-ups and PDF viewer are on pages too). `games/games.lua`: comment.
+  - `_extensions/classroom/toolbox/kit.js`: no copy of the button and field styles any more; each tool's web component links `ui.css` inside itself, and draws into its own box so redrawing never removes that link.
+  - `_extensions/classroom/toolbox/tools/*.js`, `toolbox.js`, `toolbox.css`: the shared parts (`.ui-btn`, `.ui-field`, `.ui-select`, `.ui-actions`, `.ui-empty`, `.ui-seg`) instead of their own; the values (`var(--ui-…)`) instead of colors and shadows typed in.
+  - `_extensions/pdf-viewer/pdf-viewer.css`: takes its values from the design layer (with its own as a fallback, so it still works in any Quarto project): a light grey panel with round corners, round icon buttons without borders, the pens in one white toolbar, a softer page shadow, the Download menu like the other menus, the large window's corner mark like the tools'.
+  - `_extensions/classroom/vocab-card.html`, `shortcodes.lua`: the vocab pop-up like the toolbox's word card: the picture in a soft rounded box, a bigger word, 中文 on its own line, round speaker buttons with a line icon instead of the 🔊 emoji, and the design layer's corners and shadow.
+  - `README.md`: where the design layer is. `IDEAS.md`: games and the vocab app next.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Every classroom tool redesigned, each a web component in its own file
 - **Asked for:** "Let's make the team one a shared rectangle with colored sections instead of a stack of rectangles. Just so it's a bit tighter visually. Other than that it looks good. Go ahead and redesign the rest of them."
 - **Why:** to finish the new look (no title bars, the content is the card) and the move to web components for every tool.

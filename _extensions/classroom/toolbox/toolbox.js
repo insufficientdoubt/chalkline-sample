@@ -236,14 +236,14 @@
         boxes[i.key].checked = i.on;
         return h("label", { class: "ct-reset-item" }, boxes[i.key], h("span", { text: i.label }));
       }),
-      h("div", { class: "ct-foot" },
-        h("button", { class: "ct-btn ct-primary", onclick: function () {
+      h("div", { class: "ui-actions" },
+        h("button", { class: "ui-btn ui-primary", onclick: function () {
           const pick = {};
           items.forEach(function (i) { pick[i.key] = boxes[i.key].checked; });
           resetAll(pick);
           close();
         } }, icon("rotate-ccw"), " Reset"),
-        h("button", { class: "ct-btn", text: "Cancel", onclick: close })));
+        h("button", { class: "ui-btn", text: "Cancel", onclick: close })));
     const shade = h("div", { class: "ct-shade", onclick: function (e) { if (e.target === shade) close(); } }, dialog);
     function close() { shade.remove(); }
     layer.append(shade);

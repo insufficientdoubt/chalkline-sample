@@ -21,8 +21,8 @@
   }, class extends T.ToolElement {
     static css = `
 .pill {
-  flex: 1; display: grid; place-items: center; border-radius: 999px; background: #fff; color: var(--ui-ink, #10233f);
-  box-shadow: 0 1px 3px rgba(16, 35, 63, 0.12), 0 10px 26px rgba(16, 35, 63, 0.28);
+  flex: 1; display: grid; place-items: center; border-radius: 999px; background: var(--ui-surface); color: var(--ui-ink);
+  box-shadow: var(--ui-shadow-float);
   font-size: min(52cqh, 24cqw); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; white-space: nowrap;
 }
 `;

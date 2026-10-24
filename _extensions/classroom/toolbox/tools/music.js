@@ -27,11 +27,11 @@
 
     // A box for a link: in the menu, and in the middle of the panel before the first song
     function linkBox(focus) {
-      const field = h("input", { class: "ct-input ct-music-field", type: "url", value: state().link,
+      const field = h("input", { class: "ui-field ct-music-field", type: "url", value: state().link,
         placeholder: "Paste a YouTube link: a song or a playlist", "aria-label": "YouTube link",
         onkeydown: function (e) { if (e.key === "Enter") use(field.value); } });
       if (focus) setTimeout(function () { field.select(); }, 0);
-      return h("div", { class: "ct-music-link" }, field, h("button", { class: "ct-btn ct-primary ct-small", text: "Play", onclick: function () { use(field.value); } }));
+      return h("div", { class: "ct-music-link" }, field, h("button", { class: "ui-btn ui-primary ui-small", text: "Play", onclick: function () { use(field.value); } }));
     }
     function showMenu(on) {
       if (!on) { menu.hidden = true; return; }
@@ -139,7 +139,7 @@
 /* YouTube's own player is the card (never under 200 × 200, YouTube's rule), and a ⋯ menu */
 .ct-music-screen {
   flex: 1; min-width: 200px; min-height: 200px; display: grid; overflow: hidden;
-  border-radius: 20px; background: #000; box-shadow: 0 1px 3px rgba(16, 35, 63, 0.15), 0 16px 40px rgba(16, 35, 63, 0.35);
+  border-radius: 20px; background: #000; box-shadow: var(--ui-shadow-float);
 }
 .ct-music-screen iframe, .ct-music-screen > div:only-child:not(.ct-music-ask):not(.ct-music-note) { display: block; width: 100%; height: 100%; border: 0; }
 .ct-music-ask, .ct-music-note { align-self: center; justify-self: center; width: 100%; padding: 12px; color: #fff; text-align: center; font-size: 14px; }

@@ -14,15 +14,15 @@
 .code svg { width: min(100cqw, 80cqh); height: min(100cqw, 80cqh); }
 .caption {
   flex: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
-  color: var(--ui-muted, #5b6b80); font-size: clamp(12px, 4.5cqmin, 18px); font-weight: 600;
+  color: var(--ui-muted); font-size: clamp(12px, 4.5cqmin, 18px); font-weight: 600;
 }
-.caption.warn { white-space: normal; color: #C8372D; line-height: 1.25; }
+.caption.warn { white-space: normal; color: var(--ui-alarm); line-height: 1.25; }
 .field { flex: none; width: 100%; margin-top: 6px; }
 .field[hidden] { display: none; }
 /* The buttons: when you point at it (always, on a touch screen) */
-.ct-foot { opacity: 0; transition: opacity 0.15s; font-size: clamp(13px, 5cqmin, 17px); }
-:host(:hover) .ct-foot, :host(:focus-within) .ct-foot { opacity: 1; }
-@media (hover: none) { .ct-foot { opacity: 1; } }
+.ui-actions { opacity: 0; transition: opacity 0.15s; font-size: clamp(13px, 5cqmin, 17px); }
+:host(:hover) .ui-actions, :host(:focus-within) .ui-actions { opacity: 1; }
+@media (hover: none) { .ui-actions { opacity: 1; } }
 `;
       build(root) {
         const self = this, h = T.h;
@@ -32,14 +32,14 @@
         this.url = this.deckUrl;
         this.code = h("div", { class: "code" });
         this.caption = h("div", { class: "caption" });
-        const field = this.field = h("input", { class: "ct-input field", type: "url", "aria-label": "Link for the QR code", hidden: true,
+        const field = this.field = h("input", { class: "ui-field field", type: "url", "aria-label": "Link for the QR code", hidden: true,
           onchange: function () { self.url = field.value.trim() || self.deckUrl; self.paint(); },
           onkeydown: function (e) { if (e.key === "Enter") field.blur(); } });
-        root.append(this.code, this.caption, field, h("div", { class: "ct-foot" },
-          h("button", { class: "ct-btn", text: "Edit link", onclick: function () {
+        root.append(this.code, this.caption, field, h("div", { class: "ui-actions" },
+          h("button", { class: "ui-btn", text: "Edit link", onclick: function () {
             field.hidden = !field.hidden; field.value = self.url; if (!field.hidden) field.select();
           } }),
-          h("button", { class: "ct-btn", text: "This deck", disabled: !this.deckUrl, title: this.deckUrl ? "This deck on the student site" : "Needs the student site's address",
+          h("button", { class: "ui-btn", text: "This deck", disabled: !this.deckUrl, title: this.deckUrl ? "This deck on the student site" : "Needs the student site's address",
             onclick: function () { self.url = self.deckUrl; field.value = self.url; self.paint(); } })));
         if (window.qrcode) this.paint();
         else {

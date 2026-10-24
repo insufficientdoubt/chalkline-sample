@@ -16,7 +16,7 @@
 .rows {
   flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden;
   border-radius: min(9cqmin, 22px);
-  box-shadow: 0 1px 3px rgba(16, 35, 63, 0.15), 0 16px 40px rgba(16, 35, 63, 0.3);
+  box-shadow: var(--ui-shadow-float);
 }
 .row {
   flex: 1; min-height: 0; display: flex; align-items: center; gap: 0.35em; padding: 0 0.35em 0 0.25em;
@@ -49,9 +49,9 @@
 }
 :host(:hover) .bar, :host(:focus-within) .bar { opacity: 1; }
 @media (hover: none) { .bar { opacity: 1; } }
-.bar .ct-btn { background: #fff; box-shadow: 0 2px 8px rgba(16, 35, 63, 0.25); }
-.bar .ct-btn:hover { background: var(--ui-soft, #f3f5f8); }
-.bar .ct-btn.ct-armed { background: #C8372D; color: #fff; }
+.bar .ui-btn { background: #fff; box-shadow: 0 2px 8px rgba(16, 35, 63, 0.25); }
+.bar .ui-btn:hover { background: var(--ui-soft); }
+.bar .ui-btn.ui-armed { background: var(--ui-alarm); color: #fff; }
 /* Narrow: each team stacks, the name on top and − score + under it */
 @container (max-width: 250px) {
   .row {
@@ -70,10 +70,10 @@
       build(root) {
         const self = this;
         this.rows = T.h("div", { class: "rows" });
-        this.soundBtn = T.h("button", { class: "ct-btn", title: "Sound on/off", "aria-label": "Sound on/off", onclick: function () {
+        this.soundBtn = T.h("button", { class: "ui-btn", title: "Sound on/off", "aria-label": "Sound on/off", onclick: function () {
           self.s.sound = !self.s.sound; self.keep(); self.paint();
         } });
-        const add = T.h("button", { class: "ct-btn", text: "+ Team", onclick: function () {
+        const add = T.h("button", { class: "ui-btn", text: "+ Team", onclick: function () {
           if (self.s.teams.length >= 8) return;
           self.s.teams.push({ name: "Team " + (self.s.teams.length + 1), score: 0 }); self.keep(); self.paint();
         } });

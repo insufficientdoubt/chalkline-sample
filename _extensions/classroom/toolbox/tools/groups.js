@@ -20,7 +20,7 @@
   background: color-mix(in srgb, var(--team) 11%, #fff);
 }
 .group-title { display: inline-block; margin-bottom: 0.15em; padding: 0 0.45em; border-radius: 999px; background: var(--team); color: #fff; font-size: 0.75em; font-weight: 700; }
-.group ul { margin: 0; padding: 0; list-style: none; line-height: 1.25; color: var(--ui-ink, #10233f); font-weight: 600; }
+.group ul { margin: 0; padding: 0; list-style: none; line-height: 1.25; color: var(--ui-ink); font-weight: 600; }
 .mode { min-width: 7.5em; }
 `;
       build(root) { this.root = root; this.mode = "groups"; this.show("groups"); }
@@ -47,13 +47,13 @@
         });
         if (!k.groups) cards.append(h("p", { class: "hint", text: C.present(k).length + " students here. Press Make groups." }));
         function setting(by, n) { T.save("groups", { by: by, n: Math.max(by === "size" ? 2 : 1, Math.min(n, 12)) }); self.show("groups"); }
-        root.append(bar, cards, h("div", { class: "ct-foot" },
-          h("button", { class: "ct-btn ct-primary", text: "Make groups", onclick: make }),
-          h("button", { class: "ct-btn ct-small", "aria-label": "Fewer", text: "−", onclick: function () { setting(s.by, s.n - 1); } }),
-          h("button", { class: "ct-btn ct-small mode", title: "Tap to switch", onclick: function () { setting(s.by === "size" ? "count" : "size", s.n); },
+        root.append(bar, cards, h("div", { class: "ui-actions" },
+          h("button", { class: "ui-btn ui-primary", text: "Make groups", onclick: make }),
+          h("button", { class: "ui-btn ui-small", "aria-label": "Fewer", text: "−", onclick: function () { setting(s.by, s.n - 1); } }),
+          h("button", { class: "ui-btn ui-small mode", title: "Tap to switch", onclick: function () { setting(s.by === "size" ? "count" : "size", s.n); },
             text: s.by === "size" ? "Groups of " + s.n : s.n + " groups" }),
-          h("button", { class: "ct-btn ct-small", "aria-label": "More", text: "+", onclick: function () { setting(s.by, s.n + 1); } }),
-          h("button", { class: "ct-btn", text: "Who's here?", onclick: function () { self.show("here"); } })));
+          h("button", { class: "ui-btn ui-small", "aria-label": "More", text: "+", onclick: function () { setting(s.by, s.n + 1); } }),
+          h("button", { class: "ui-btn", text: "Who's here?", onclick: function () { self.show("here"); } })));
 
         function make() {
           const names = C.shuffle(C.present(k));

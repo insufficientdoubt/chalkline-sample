@@ -25,12 +25,9 @@
   T.tool("slide", { title: "Slide size", icon: "ruler", w: 340, h: 180, minW: 240, minH: 160, keys: ["slide"] },
     class extends T.ToolElement {
       static css = `
-.label { flex: 1; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.35em; font-size: clamp(14px, min(12cqh, 6.5cqw), 24px); font-weight: 600; color: var(--ui-muted, #5b6b80); }
-.value { color: var(--ui-ink, #10233f); font-size: 1.6em; font-weight: 700; font-variant-numeric: tabular-nums; }
-input { width: 100%; margin: 4px 0; accent-color: var(--ui-accent, #003477); }
-.seg { display: inline-flex; padding: 3px; border-radius: 999px; background: var(--ui-soft, #f3f5f8); }
-.seg button { padding: 0.3em 0.9em; border: 0; border-radius: 999px; background: transparent; color: var(--ui-muted, #5b6b80); font-weight: 600; cursor: pointer; }
-.seg button.on { background: #fff; color: var(--ui-ink, #10233f); box-shadow: 0 1px 3px rgba(16, 35, 63, 0.18); }
+.label { flex: 1; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0 0.35em; font-size: clamp(14px, min(12cqh, 6.5cqw), 24px); font-weight: 600; color: var(--ui-muted); }
+.value { color: var(--ui-ink); font-size: 1.6em; font-weight: 700; font-variant-numeric: tabular-nums; }
+input { width: 100%; margin: 4px 0; accent-color: var(--ui-accent); }
 `;
       build(root) {
         const self = this, h = T.h;
@@ -43,8 +40,8 @@ input { width: 100%; margin: 4px 0; accent-color: var(--ui-accent, #003477); }
         this.normal = h("button", { text: "Standard", onclick: function () { self.setWide(false); } });
         this.wide = h("button", { text: "Wide (16:9)", onclick: function () { self.setWide(true); } });
         root.append(h("div", { class: "label" }, h("span", { text: "Space around the slide" }), this.value), this.slider,
-          h("div", { class: "ct-foot" }, h("div", { class: "seg" }, this.normal, this.wide),
-            h("button", { class: "ct-btn ct-small", text: "Reset", onclick: function () {
+          h("div", { class: "ui-actions" }, h("div", { class: "ui-seg" }, this.normal, this.wide),
+            h("button", { class: "ui-btn ui-small", text: "Reset", onclick: function () {
               try { localStorage.removeItem("chalkline-tools:slide"); } catch (e) { /* private window */ }
               apply(setting()); self.paint();
             } })));
@@ -55,8 +52,8 @@ input { width: 100%; margin: 4px 0; accent-color: var(--ui-accent, #003477); }
         const s = setting();
         this.slider.value = Math.round(s.margin * 100);
         this.value.textContent = Math.round(s.margin * 100) + "%";
-        this.normal.classList.toggle("on", !s.wide);
-        this.wide.classList.toggle("on", !!s.wide);
+        this.normal.classList.toggle("ui-on", !s.wide);
+        this.wide.classList.toggle("ui-on", !!s.wide);
       }
       refresh() { this.paint(); }
     });

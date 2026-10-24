@@ -17,6 +17,7 @@
 | **Unit 4: STEM Sampler** | `course/units/04-stem/` | A sampler for STEM teams: math, block-coding and linkage decks with interactives you can drag (geometry, GeoGebra, PhET, Blockly, robot lifts with a DR4B that measures its extension, three rubber-band catapult releases, a linkage simulator), a math handout and two practice worksheets made from a seed. The interactive pages are in its `embeds/` folder |
 | **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
+| **The look of the interactive parts** | `_extensions/classroom/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
 | **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
 | **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |
 

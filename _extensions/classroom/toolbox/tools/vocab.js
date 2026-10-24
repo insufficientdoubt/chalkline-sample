@@ -10,7 +10,7 @@
 
   function build(body, panel) {
     const data = course();
-    if (!data || !data.words.length) { body.append(h("div", { class: "ct-empty", text: "This course has no vocab list yet." })); return {}; }
+    if (!data || !data.words.length) { body.append(h("div", { class: "ui-empty", text: "This course has no vocab list yet." })); return {}; }
     const inUnit = function (w, u) { return (w.units || []).indexOf(u.number) >= 0; };
     const units = data.units.filter(function (u) { return data.words.some(function (w) { return inUnit(w, u); }); });
     let unit = units.some(function (u) { return u.id === data.unit; }) ? data.unit : "all";
@@ -80,7 +80,7 @@
 /* A sidebar: the unit menu, the count and the words, edge to edge */
 .ct-body.ct-vocab { padding: 10px 0 0; }
 ct-vocab { gap: 8px; }
-ct-vocab > .ct-pick-box { margin: 0 10px; }
+ct-vocab > .ui-select { margin: 0 10px; }
 .ct-vocab-count {
   flex: none; padding: 4px 16px 6px; border-bottom: 1px solid var(--ui-line);
   color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -99,7 +99,7 @@ ct-vocab > .ct-pick-box { margin: 0 10px; }
 .ct-vcard {
   position: fixed; width: 380px; max-height: calc(100vh - 16px); overflow: auto; padding: 10px;
   border-radius: 18px; background: #fff; color: var(--ui-ink); pointer-events: auto;
-  box-shadow: 0 1px 2px rgba(16, 35, 63, 0.06), 0 16px 40px rgba(16, 35, 63, 0.22), 0 0 0 1px rgba(16, 35, 63, 0.07);
+  box-shadow: var(--ui-shadow-pop);
   font-family: "Source Sans 3", system-ui, -apple-system, "PingFang SC", sans-serif;
 }
 .ct-vcard > .ct-close { position: absolute; top: 16px; right: 16px; z-index: 1; }

@@ -19,7 +19,7 @@
 
     ChalklineToolbox.tool("stopwatch", { title, icon, w, h, minW, minH, keys, free },
       class extends ChalklineToolbox.ToolElement {
-        static css = `...`;                 // its styles; kit's button styles (.ct-btn) come with it
+        static css = `...`;                 // its styles; the shared parts (.ui-btn…) come with it
         build(root) { ... }                 // draws it into root
         refresh() { ... }                   // a saved setting in keys changed (another deck): redraw
         close() { ... }                     // tidy up: stop timers
@@ -91,10 +91,10 @@
   // A button that needs a second tap within 3 seconds ("Reset" → "Sure?").
   function sureButton(label, action, cls) {
     let armed = null;
-    const b = h("button", { class: cls || "ct-btn", text: label, onclick: function () {
-      if (armed) { clearTimeout(armed); armed = null; b.textContent = label; b.classList.remove("ct-armed"); action(); return; }
-      b.textContent = "Sure?"; b.classList.add("ct-armed");
-      armed = setTimeout(function () { armed = null; b.textContent = label; b.classList.remove("ct-armed"); }, 3000);
+    const b = h("button", { class: cls || "ui-btn", text: label, onclick: function () {
+      if (armed) { clearTimeout(armed); armed = null; b.textContent = label; b.classList.remove("ui-armed"); action(); return; }
+      b.textContent = "Sure?"; b.classList.add("ui-armed");
+      armed = setTimeout(function () { armed = null; b.textContent = label; b.classList.remove("ui-armed"); }, 3000);
     } });
     return b;
   }
@@ -112,69 +112,31 @@
   }
   // A unit menu for Vocab and Packet: starts on this deck's unit
   function unitMenu(units, value, extra, onchange) {
-    const pick = h("select", { class: "ct-pick", "aria-label": "Unit", onchange: function () { onchange(pick.value); } });
+    const pick = h("select", { "aria-label": "Unit", onchange: function () { onchange(pick.value); } });
     units.forEach(function (u) { pick.append(h("option", { value: u.id, text: u.title })); });
     if (extra) pick.append(h("option", { value: extra[0], text: extra[1] }));
     pick.value = value;
-    return h("label", { class: "ct-pick-box" }, pick, h("span", { class: "ct-pick-arrow" }, icon("chevron-down")));
+    return h("label", { class: "ui-select" }, pick, h("span", { class: "ui-select-arrow" }, icon("chevron-down")));
   }
 
-  // The styles every tool shares: icons and buttons. On the page (for the tools that aren't web
-  // components yet) and inside each web component.
-  const KIT_CSS = `
-.ui-icon { display: inline-flex; flex: none; width: 1em; height: 1em; vertical-align: -0.125em; }
-.ui-icon svg { width: 100%; height: 100%; }
-.ct-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.35em;
-  min-height: 2.1em; padding: 0.25em 1em;
-  border: 0; border-radius: 999px;
-  background: var(--ui-soft, #f3f5f8); color: var(--ui-ink, #10233f);
-  font: inherit; font-weight: 600 !important; cursor: pointer;
-  transition: background 0.12s, transform 0.06s;
-}
-.ct-btn:hover { background: #e6ebf1; }
-.ct-btn:active { transform: scale(0.97); }
-.ct-btn.ct-primary { background: var(--ui-accent, #003477); color: #fff; }
-.ct-btn.ct-primary:hover { background: var(--ui-accent-hover, #0a4389); }
-.ct-btn.ct-small { min-height: 1.8em; padding: 0.1em 0.75em; }
-.ct-btn.ct-armed { background: #C8372D; color: #fff; }
-.ct-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
-/* A tool without a shadow root (Music, Vocab, Packet) fills its panel like the others */
-.ct-tool { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-/* A row of buttons, sized to the tool */
-.ct-foot {
-  flex: none; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;
-  padding-top: 8px; font-size: clamp(14px, 6.5cqmin, 24px);
-}
-/* Fields and menus */
-.ct-input {
-  padding: 8px 12px; border: 1px solid var(--ui-line, #d6dee8); border-radius: 10px;
-  background: var(--ui-soft, #f3f5f8); color: var(--ui-ink, #10233f); font: inherit; font-size: 16px;
-}
-.ct-input:focus { outline: none; border-color: var(--ui-focus, #0087ff); background: #fff; box-shadow: 0 0 0 3px var(--ui-focus-soft, #eaf4ff); }
-.ct-pick-box { position: relative; display: block; flex: none; }
-.ct-pick {
-  width: 100%; min-width: 0; height: 36px; padding: 0 30px 0 12px;
-  border: 1px solid var(--ui-line, #d6dee8); border-radius: 10px; background: var(--ui-soft, #f3f5f8);
-  color: var(--ui-ink, #10233f); font-family: inherit; font-size: 15px; font-weight: 600; appearance: none; -webkit-appearance: none; cursor: pointer;
-}
-.ct-pick:hover { border-color: var(--ui-line-strong, #aebdd0); }
-.ct-pick:focus-visible { outline: 2px solid var(--ui-focus, #0087ff); outline-offset: 1px; }
-.ct-pick-arrow { position: absolute; right: 10px; top: 50%; display: inline-flex; color: var(--ui-muted, #5b6b80); font-size: 16px; transform: translateY(-50%); pointer-events: none; }
-.ct-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 10px; color: var(--ui-muted, #5b6b80); text-align: center; font-size: 15px; }
-.ct-empty p { margin: 0; }
-`;
+  // The parts every tool shares (buttons, fields, menus) and the colors, corners and shadows are
+  // Chalkline's design layer, ui/ui.css, on the page. A web component links that same file inside
+  // itself, so its buttons look like every other button.
+  const uiLink = document.querySelector('link[href*="chalkline-ui"], link[href*="ui/ui.css"]');
+  const UI_HREF = uiLink ? uiLink.href : "";
   // Inside a web component only: a clean start (form controls take the tool's font)
   const SHADOW_CSS = `
 :host { flex: 1; min-height: 0; display: flex; flex-direction: column; container-type: size; }
+.ct-view { display: contents; }
 *, *::before, *::after { box-sizing: border-box; }
 button, input, select, textarea { font: inherit; color: inherit; }
 `;
-  const kitSheet = new CSSStyleSheet();
-  kitSheet.replaceSync(KIT_CSS);
-  document.adoptedStyleSheets = document.adoptedStyleSheets.concat(kitSheet);
   const shadowSheet = new CSSStyleSheet();
   shadowSheet.replaceSync(SHADOW_CSS);
+  // A tool without a shadow root (Music, Vocab, Packet) fills its panel like the others
+  const pageSheet = new CSSStyleSheet();
+  pageSheet.replaceSync(".ct-tool { flex: 1; min-height: 0; display: flex; flex-direction: column; }");
+  document.adoptedStyleSheets = document.adoptedStyleSheets.concat(pageSheet);
 
   // The base for a tool built as a web component.
   class ToolElement extends HTMLElement {
@@ -189,13 +151,18 @@ button, input, select, textarea { font: inherit; color: inherit; }
       }
       if (C.shadow === false) { this.classList.add("ct-tool"); this.build(this); return; }
       this.attachShadow({ mode: "open" });
-      this.shadowRoot.adoptedStyleSheets = [kitSheet, shadowSheet].concat(C.sheet ? [C.sheet] : []);
+      this.shadowRoot.adoptedStyleSheets = [shadowSheet].concat(C.sheet ? [C.sheet] : []);
+      if (UI_HREF) this.shadowRoot.append(h("link", { rel: "stylesheet", href: UI_HREF }));   // before the tool: its own styles win
+      // The tool draws into a box of its own (no box in the layout: display: contents), so a tool
+      // that clears and redraws itself never clears the link above.
+      const view = h("div", { class: "ct-view" });
+      this.shadowRoot.append(view);
       // Typing in a field stays in the field: the slides see only this element, not the field
       // inside it, so they would take W or the arrow keys as their own.
       this.shadowRoot.addEventListener("keydown", function (e) {
         if (e.composedPath()[0].matches("input, textarea, select")) e.stopPropagation();
       });
-      this.build(this.shadowRoot);
+      this.build(view);
     }
     build() {}
     refresh() {}
