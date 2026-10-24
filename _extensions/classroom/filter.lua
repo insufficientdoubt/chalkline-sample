@@ -7,7 +7,7 @@ Slides (reveal.js):
   - adds a ↓ button when a slide has another slide below it (turn off with `down-arrow: false`)
   - makes a {{< video >}} without a width or height fill the room left on its slide (video-fit.html)
   - speaker notes (::: notes) and the classroom toolbox are in the TEACHER build only
-    (--profile teacher); the student and family sites leave them out
+    (--profile teacher); the student site leaves them out
   - adds the classroom toolbox to every deck (turn off with `classroom-tools: false`):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
@@ -45,7 +45,7 @@ local function include_once(file)
 end
 
 -- The teacher build (quarto render --profile teacher): the only one with the classroom toolbox and
--- speaker notes. The student and family sites get neither.
+-- speaker notes. The student site gets neither.
 local function is_teacher()
   for _, profile in ipairs(quarto.project.profile or {}) do
     if profile == "teacher" then return true end
@@ -279,7 +279,7 @@ local function game_from_div(el)
 end
 
 local function Div(el)
-  -- Speaker notes are for the teacher: the student and family builds leave them out
+  -- Speaker notes are for the teacher: the student build leaves them out
   if el.classes:includes("notes") and not is_teacher() then return {} end
   for cls, name in pairs({ jeopardy = "Jeopardy", trivia = "Quick-fire questions", matching = "Matching", memory = "Memory", sort = "Sort it",
                            ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
@@ -318,7 +318,7 @@ local function Meta(meta)
   -- Slides: a {{< video >}} with no size of its own fills the room left on its slide.
   if quarto.doc.is_format("revealjs") then include_once("video-fit.html") end
   -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
-  -- Teacher build only: students and families never see it.
+  -- Teacher build only: students (and families, on the student site) never see it.
   local tools = meta["classroom-tools"]
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
   if quarto.doc.is_format("revealjs") then games.ui() end

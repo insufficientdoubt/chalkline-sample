@@ -1,0 +1,13 @@
+# Student profile: the student (public) site, and the default build: `quarto render` and
+# `quarto preview` use it unless you ask for --profile teacher (into _site/).
+# Layered on top of _quarto.yml. It leaves out any page whose labels don't include
+# audience: [..., student] (a teachers-only page): such pages are "drafts" here, so they're not in the
+# site, its sidebar or its search (scripts/student_site.py tidies up after). The teacher site has them all.
+#
+# Families use this site too: its "For families" page (families.qmd) welcomes them and lists the
+# files marked audience: [..., parent].
+
+website:
+  draft-mode: gone
+  # ---- Everything below is written by scripts/catalog.py before each render. Don't edit by hand. ----
+  drafts: []

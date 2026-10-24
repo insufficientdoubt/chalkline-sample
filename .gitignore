@@ -1,7 +1,6 @@
 # Quarto build output (rebuilt any time with `quarto render`)
 _site/
 _site-teacher/
-_site-parent/
 .quarto/
 *_files/
 /.luarc.json

@@ -11,7 +11,8 @@ Labels read from each document's front matter:
     description   one line, shown in the overview
     order         optional number, to sort documents within a unit
     packet        optional: false leaves a printable out of its unit packet
-    audience      optional list: teacher, student, parent (for future student/parent sites)
+    audience      list: teacher, student, parent. `student`: on the student site (else teachers only);
+                  `parent`: also listed on the student site's "For families" page
 
 Each unit folder's index.qmd describes the unit (title, unit number, objectives).
 External resources (official VEX posters, manuals, other school sites) are
@@ -29,9 +30,9 @@ A unit's index.qmd can add outside PDFs to its packet:
         title: Official scoring sheet    # shown in the packet's contents
         after: match-checklist.qmd       # optional; without it, the PDF goes at the end
 
-For the family site (`--profile parent`) the catalog holds only items marked
-`audience: [..., parent]` (and no packets). Every build also writes the list of pages the
-family site leaves out, at the end of _quarto-parent.yml.
+For the student site (the default build) the catalog holds only items marked
+`audience: [..., student]`. Every build also writes the list of pages the student site leaves
+out (teachers-only pages), at the end of _quarto-student.yml.
 
 Also importable from .qmd files:
     from catalog import load_catalog, load_units, load_packets
@@ -50,8 +51,8 @@ from genfile import write_if_changed
 ROOT = Path(__file__).resolve().parent.parent
 COURSE = ROOT / "course"
 OUT = ROOT / "generated" / "catalog.yml"
-PARENT_PROFILE = ROOT / "_quarto-parent.yml"
-PARENT_MARKER = "  # ---- Everything below is written by scripts/catalog.py"
+STUDENT_PROFILE = ROOT / "_quarto-student.yml"
+PROFILE_MARKER = "  # ---- Everything below is written by scripts/catalog.py"
 
 TYPES = {  # type -> (label, sort order)
     "packet": ("Packet", 0),
@@ -261,43 +262,34 @@ def load_catalog():
     return items
 
 
-def parent_drafts():
-    """Pages the family site leaves out: everything not marked for parents, except the
-    overview and the unit pages (their objectives are what families want to see)."""
+def student_drafts():
+    """Pages the student site leaves out: those whose `audience` label leaves out students.
+    (Unit and section pages, which have no label, always stay.)"""
     drafts = []
     for path in sorted(COURSE.rglob("*.qmd")):
-        rel = path.relative_to(ROOT)
-        if path.name.startswith("_"):
+        if path.name.startswith("_") or path.name == "index.qmd":
             continue
-        if path.name == "index.qmd" and len(rel.parts) == 4 and rel.parts[1] == "units":
-            continue   # course/units/<unit>/index.qmd
-        if path.name == "index.qmd" and any("parent" in (front_matter(q).get("audience") or [])
-                                            for q in path.parent.rglob("*.qmd") if q != path):
-            continue   # a section page (posters, say) with something for families in it
-        if "parent" in (front_matter(path).get("audience") or []):
-            continue
-        drafts.append(rel.as_posix())
+        audience = front_matter(path).get("audience")
+        if audience is not None and "student" not in audience:
+            drafts.append(path.relative_to(ROOT).as_posix())
     return drafts
 
 
-def write_parent_profile(drafts):
-    """Rewrite the generated end of _quarto-parent.yml (only if it changed)."""
-    if not PARENT_PROFILE.exists():
+def write_student_profile(drafts):
+    """Rewrite the generated end of _quarto-student.yml (only if it changed)."""
+    if not STUDENT_PROFILE.exists():
         return
-    text = PARENT_PROFILE.read_text(encoding="utf-8")
-    head = text.split(PARENT_MARKER)[0]
-    marker_line = next(l for l in text.splitlines() if l.startswith(PARENT_MARKER))
-    body = yaml.safe_dump({"drafts": drafts}, allow_unicode=True, sort_keys=False)
+    text = STUDENT_PROFILE.read_text(encoding="utf-8")
+    head = text.split(PROFILE_MARKER)[0]
+    marker_line = next(l for l in text.splitlines() if l.startswith(PROFILE_MARKER))
+    body = yaml.safe_dump({"drafts": drafts}, allow_unicode=True, sort_keys=False, default_flow_style=False)
     body = "".join("  " + line + "\n" for line in body.splitlines())
-    write_if_changed(PARENT_PROFILE, head + marker_line + "\n" + body)
+    write_if_changed(STUDENT_PROFILE, head + marker_line + "\n" + body)
 
 
 def main():
     items = load_catalog()
-    profiles = os.environ.get("QUARTO_PROFILE", "").split(",")
-    if "parent" in profiles:
-        items = [i for i in items if "parent" in (i.get("audience") or []) and i["type"] != "Packet"]
-    elif "teacher" not in profiles:   # the student site: only what's marked for students
+    if "teacher" not in os.environ.get("QUARTO_PROFILE", "").split(","):   # the student site: only what's marked for students
         items = [i for i in items if "student" in (i.get("audience") or [])]
     header = "# Generated by scripts/catalog.py before every render. Don't edit by hand.\n"
     OUT.parent.mkdir(exist_ok=True)
@@ -306,7 +298,7 @@ def main():
     packets = {p["id"]: {"pdf": p["pdf"], "files": p["files"], "extras": p["extras"]} for p in load_packets()}
     write_if_changed(OUT.parent / "packets.json", json.dumps(packets, indent=1))
     write_if_changed(OUT.parent / "pdf-pages.json", json.dumps(pdf_pages(), indent=1))
-    write_parent_profile(parent_drafts())
+    write_student_profile(student_drafts())
 
 
 if __name__ == "__main__":
@@ -371,8 +363,8 @@ def _who(item):
     chips = []
     if "student" in aud:
         chips.append(f'<span class="ov-aud ov-aud-student">{_icon("users")}Students</span>')
-    if "parent" in aud and item["type"] != "Packet":   # the family site has no packets
-        chips.append(f'<span class="ov-aud ov-aud-parent">{_icon("house")}Families</span>')
+    if "parent" in aud and item["type"] != "Packet":   # listed on the "For families" page (no packets there)
+        chips.append(f'<span class="ov-aud ov-aud-parent">{_icon("house")}For families</span>')
     if not chips:
         chips.append(f'<span class="ov-aud ov-aud-teacher">{_icon("lock")}Teachers only</span>')
     return '<span class="ov-who">' + "".join(chips) + "</span>"
@@ -443,7 +435,7 @@ def _chips(items):
         chips.append(f'<button type="button" class="ov-who-toggle" aria-pressed="false" title="Show which files students and families can see">'
                      f'{_icon("eye")}Who sees it<i></i></button>')
     return _html('<div class="ov-chips" role="group" aria-label="Show only">' + "".join(chips) + "</div>"
-                 + '<div class="ov-who-legend"><span class="ov-aud ov-aud-parent">' + _icon("house") + 'Families</span> green rows are on the family site too. '
+                 + '<div class="ov-who-legend"><span class="ov-aud ov-aud-parent">' + _icon("house") + 'For families</span> green rows are also listed on the For families page. '
                  + '<span class="ov-aud ov-aud-teacher">' + _icon("lock") + 'Teachers only</span> rows are only here. Everything else is for students.</div>')
 
 
@@ -483,6 +475,21 @@ def markdown_by_type():
                     f'<h3>{label}</h3><span class="ov-count">{len(group)}</span></header>')
             out.append(_html(f'<section class="ov-unit">{head}<ul class="ov-list">'
                              + "".join(_item(i, show_unit=True) for i in group) + "</ul></section>"))
+    return "\n".join(out)
+
+
+def markdown_family_picks():
+    """For the "For families" page: the files marked audience: [..., parent], by unit."""
+    items = [i for i in built_catalog() if "parent" in (i.get("audience") or []) and i["type"] != "Packet"]
+    out = []
+    groups = [(u["short"], u) for u in load_units()] + [(YEAR_GROUP[0], None)]
+    for name, unit in groups:
+        group = [i for i in items if i["unit"] == name]
+        if not group:
+            continue
+        title = f'<a href="{escape(unit["path"])}">{escape(unit["title"])}</a>' if unit else escape(name)
+        head = f'<header class="ov-unit-head">{_number(unit)}<div class="ov-unit-text"><h3>{title}</h3></div></header>'
+        out.append(_html(f'<section class="ov-unit">{head}<ul class="ov-list">{"".join(_item(i) for i in group)}</ul></section>'))
     return "\n".join(out)
 
 

@@ -1,0 +1,20 @@
+[
+  {
+    "listing": "/index.html",
+    "items": []
+  },
+  {
+    "listing": "/course/units/04-stem/index.html",
+    "items": [
+      "/course/units/04-stem/math-toolkit.html",
+      "/course/units/04-stem/garden-times-tables.html"
+    ]
+  },
+  {
+    "listing": "/course/units/01-ancient-greece/index.html",
+    "items": [
+      "/course/units/01-ancient-greece/city-states-slides.html",
+      "/course/units/01-ancient-greece/greek-gods-cards.html"
+    ]
+  }
+]

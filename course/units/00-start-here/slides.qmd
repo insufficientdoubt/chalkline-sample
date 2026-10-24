@@ -49,7 +49,7 @@ Ask the room: how many places does the same lesson live for you right now? Slide
 - A **web page** and a **printable PDF** of each worksheet
 - A **unit packet**: every printable in one PDF, with a cover and contents
 - A **year packet** with every unit
-- A **student**, a **teacher** and a **family** website
+- A **student** website (with a page for families) and a **teacher** website
 :::
 :::
 ::::
@@ -152,27 +152,22 @@ The words live in one spreadsheet. Slides, worksheets, the **vocab app** and Qui
 Try the pop-ups now. Then open "History vocab 词汇" in the sidebar: all 37 words from the three units, searchable in English or Chinese.
 :::
 
-## Three websites from the same files
+## Two websites from the same files
 
 :::: {.columns}
-::: {.column width="33%"}
-::: {.callout-note title="Students" icon=false}
-Slides, worksheets, vocab. No answer keys.
+::: {.column width="50%"}
+::: {.callout-note title="Students and families" icon=false}
+Slides, worksheets, vocab. No answer keys, no speaker notes, no teacher tools. A **For families** page welcomes parents with the unit goals and the files you pick for them.
 :::
 :::
-::: {.column width="33%"}
+::: {.column width="50%"}
 ::: {.callout-warning title="Teachers" icon=false}
-Everything, plus **answer keys**, **speaker notes** and teacher packets.
-:::
-:::
-::: {.column width="33%"}
-::: {.callout-tip title="Families" icon=false}
-The objectives, the **vocab app** and only the slides you choose to share.
+Everything, plus **answer keys**, **speaker notes**, the **toolbox** and teacher packets. Turn on **Who sees it** on the overview to check what students and families get.
 :::
 :::
 ::::
 
-One label decides who sees a file: `audience: [teacher, student, parent]`
+One label decides who sees a file: `audience: [teacher, student, parent]`. Leave out `student` and it stays in the teacher site; add `parent` to list it on the For families page.
 
 ## Classroom tools in every deck
 
@@ -181,7 +176,7 @@ One label decides who sees a file: `audience: [teacher, student, parent]`
 - A **timer** on any slide (press **T**)
 - A **clock** you can drag anywhere (press **K**)
 - **Speaker notes** in a second window (press **S**)
-- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight
+- A **toolbox** (press **W**): scoreboard, voice level, traffic light, noise meter, QR code, stopwatch, dice, spotlight, music
 - **Tap-to-vote polls**: no devices, no accounts
 - **Games**: Snowman, Picture reveal, Jeopardy, Quick-fire (see Unit 1)
 :::
@@ -196,7 +191,7 @@ Start the timer to show it. It keeps running in a small box if you change slides
 
 ## Try a poll
 
-::: {.poll type="choice" options="Packets | Vocab pop-ups | Family site | Slide PDFs"}
+::: {.poll type="choice" options="Packets | Vocab pop-ups | For families page | Slide PDFs"}
 Which feature will you try first?
 :::
 
@@ -233,7 +228,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**59 ready-made features,** all working in this course today: 46 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
+[**60 ready-made features,** all working in this course today: 47 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -266,9 +261,9 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 :::
 
 ::: {.cat-box .cat-tools}
-[Toolbox on every slide: press W]{.cat-head} [13]{.cat-n}
+[Toolbox on every slide: press W]{.cat-head} [14]{.cat-n}
 
-[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"}
+[Name picker]{.chip .chip-key data-icon="hand"} [Groups]{.chip .chip-key data-icon="users"} [Scoreboard]{.chip .chip-key data-icon="trophy"} [Voice level]{.chip .chip-key data-icon="volume-2"} [Noise meter]{.chip .chip-key data-icon="mic"} [Traffic light]{.chip .chip-key data-icon="traffic-cone"} [QR code]{.chip .chip-key data-icon="qr-code"} [Stopwatch]{.chip .chip-key data-icon="timer"} [Dice]{.chip .chip-key data-icon="dices"} [Slide size]{.chip .chip-key data-icon="ruler"} [Reset for the next class]{.chip .chip-key data-icon="rotate-ccw"} [Clock (K)]{.chip .chip-key data-icon="clock"} [Spotlight]{.chip .chip-key data-icon="flashlight"} [Music from YouTube]{.chip .chip-key data-icon="music"}
 :::
 
 ::::

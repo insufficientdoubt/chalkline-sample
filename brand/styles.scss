@@ -512,7 +512,7 @@ body:has(.ov-hero) #title-block-header { display: none; }
 .ov-source { color: var(--ov-muted); .ov-icon { order: 1; } }
 
 // "Who sees it" (teacher site): a switch at the end of the chips. On, each row shows its audience,
-// rows on the family site turn soft green, and teacher-only rows get a faint stripe.
+// rows listed on the For families page turn soft green, and teacher-only rows get a faint stripe.
 .ov-who-toggle {
   display: inline-flex; align-items: center; gap: 0.45rem; margin-left: auto; padding: 0.25rem 0.45rem 0.25rem 0.65rem;
   border: 1px solid var(--ov-line); border-radius: 999px; background: #fff; color: var(--ov-ink);

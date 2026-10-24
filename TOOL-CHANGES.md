@@ -8,6 +8,31 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: Music in the toolbox: a small YouTube player with big buttons
+- **Asked for:** "a tiny floating YouTube player with oversized controls in the teacher tools for classroom music. Or just a plain embedded YouTube player is fine if it's resizable."
+- **Why:** classroom music (clean-up songs, work music) without leaving the slides.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: a **Music** tool. Paste a YouTube link (a song, a Short, or a playlist). Big round buttons play/pause, go back to the start (or the previous song) and skip to the next song in a playlist; big volume down/up buttons show the level. The video shows small above the buttons, because YouTube's rules don't allow hiding it; the panel resizes like the others. It keeps playing across slides. The last four links are one-tap buttons, remembered in this browser. It uses YouTube's own player code (loaded when the tool opens), and a clear message if YouTube can't be reached or won't play a video on other sites.
+  - `_extensions/classroom/toolbox/toolbox.css`: its layout, sized to the panel.
+  - `_extensions/classroom/ui/icons.js`: Lucide music, play, pause, skip-back, skip-forward and volume-1 icons.
+  - `README.md`: the Music row in the tools table.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-24: Two sites, not three: a "For families" page instead of the family site
+- **Asked for:** "Do we actually need separate student and family sites? ... should it just be a teacher version and a student/public version", then "Yes, bundle it all".
+- **Why:** nothing on the student site is secret from families, so the family site was only a shorter list. The real line is class versus public, which needs password-protected hosting (later). One fewer build, one fewer thing to explain.
+- **Changed:**
+  - `_quarto-parent.yml` → `_quarto-student.yml`: the student profile, now the default build (`profile: default: student` in `_quarto.yml`). It leaves out any page whose `audience` label leaves out `student` (a teachers-only page), so such pages are not in the student site's pages, sidebar or search. Before, the student site had every page.
+  - `scripts/parent_site.py` → `scripts/student_site.py`: tidies the student site after a render (removes the teachers-only stubs and their PDFs, and the vocab app's teacher page).
+  - `scripts/catalog.py`: writes the student site's teachers-only list (was: the family site's list). New `markdown_family_picks()` for the families page. The "Who sees it" tag "Families" is now "For families" (listed on that page).
+  - `families.qmd` (new): **For families 给家长**, a welcome in English and 中文, the vocab app, each unit's goals, and the files marked `audience: [..., parent]`. In the sidebar (`_quarto.yml`).
+  - `index.qmd`: the family-site parts removed.
+  - `_extensions/classroom/shortcodes.lua`, `filter.lua`, `scripts/packets.py`, `scripts/build_if_needed.py`, `scripts/open_site.py`, `.vscode/tasks.json`, `.gitignore`, `brand/styles.scss`: the family site's special cases and its "Open family site" task removed.
+  - `README.md`: "Students, families and teachers" replaces "Family site".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: "Who sees it" switch on the teacher overview
 - **Asked for:** "a toggleable slide highlight for teachers so that they can see which slides are shared with families/students and which aren't on the overview."
 - **Why:** to see at a glance what students and families get, before sharing.

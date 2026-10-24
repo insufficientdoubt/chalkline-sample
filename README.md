@@ -1,6 +1,6 @@
 # Chalkline sample course
 
-**Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and three websites (students, teachers, families), all in your school's style. This is a **sample course** to try it with: three history units (Ancient Greece, Ancient Rome and Göbekli Tepe), a STEM sampler unit, a 37-word bilingual vocab list, and a slide deck about Chalkline itself.
+**Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and two websites (a student site with a page for families, and a teacher site), all in your school's style. This is a **sample course** to try it with: three history units (Ancient Greece, Ancient Rome and Göbekli Tepe), a STEM sampler unit, a 37-word bilingual vocab list, and a slide deck about Chalkline itself.
 
 **See it online:** https://insufficientdoubt.github.io/chalkline-sample/ (the teacher version, rebuilt on every push).
 
@@ -25,10 +25,9 @@ Things to try once the site is open:
 - Hover or tap a word with a dotted line on any slide: its vocab card pops up.
 - Open a unit page and click **Unit packet (PDF)**: every printable in one file, ready to copy.
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
-- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch and dice. They float above the slides and stay put when you change slides.
+- In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch, dice and music. They float above the slides and stay put when you change slides.
 - In the overview, each deck has a **PDF** too.
-- **Terminal > Run Task… > Open family site (parents)**: the version families see.
-- **Terminal > Run Task… > Open student site**: what students see, without the answer keys and teacher notes.
+- **Terminal > Run Task… > Open student site**: what students and families see, without the answer keys, speaker notes and teacher tools. Its **For families 给家长** page welcomes parents.
 - In *From Republic to Empire*, hover the boxes of the infographic: it was made in **draw.io** (`drawio/republic.drawio`), and any draw.io diagram can go in a slide the same way.
 
 ## One-time setup
@@ -98,7 +97,7 @@ You can do almost everything here by asking an AI assistant: Claude, Gemini, Cha
 
 1. Copy a unit folder, for example `course/units/01-ancient-greece`, and rename it (`03-my-unit`).
 2. In its `index.qmd`, change `title`, `short-title`, `unit` and the `objectives`. The unit appears in the sidebar and overview by itself.
-3. Edit or replace the slides and printables. Keep the labels at the top of each file: `type:` (slides, worksheet, handout, reference…), `order:` and `audience:` (who sees it: `teacher`, `student`, `parent`).
+3. Edit or replace the slides and printables. Keep the labels at the top of each file: `type:` (slides, worksheet, handout, reference…), `order:` and `audience:` (who sees it: `teacher`, `student`, `parent`; see "Students, families and teachers" below).
 4. Add your words to `vocab/data/vocab.csv` (see `vocab/README.md`), then run `python vocab/validate.py`.
 5. To use a unit's words on picture cards, import them: `python scripts/import_vex_vocab.py --unit 3 --title "My Unit" --folder 03-my-unit --ids GRC-001 GRC-002`.
 
@@ -112,7 +111,7 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 |---|---|
 | Build everything (student site) into `_site/` | `quarto render` |
 | Build the teacher site into `_site-teacher/` | `quarto render --profile teacher` |
-| Open the family site (port 4102) or student site (port 4101) | `python scripts/open_site.py parent` / `student` |
+| Open the student site (port 4101) | `python scripts/open_site.py student` |
 | Rebuild one unit's packet | `python scripts/packets.py --unit 1` |
 | Rebuild slide PDFs | `python scripts/slides_pdf.py` |
 | Check the vocab list | `python vocab/validate.py` |
@@ -130,9 +129,16 @@ packet-extras:
     after: athens-vs-sparta.qmd     # optional
 ```
 
-## Family site
+## Students, families and teachers
 
-Only files whose `audience:` includes `parent` appear on the family site, plus the unit pages (objectives) and the vocab app. In this sample that's the *City-States and Democracy* and *Roman Engineering* decks, the Greek Gods cards and the Roman Numerals reference. Hide part of a page from families with `::: {.content-hidden when-profile="parent"}`.
+There are two websites. The **student site** (`quarto render`, into `_site/`) is the one to share with students and families: no answer keys, no speaker notes, no classroom toolbox. The **teacher site** (`quarto render --profile teacher`, into `_site-teacher/`) has everything.
+
+Each file's `audience:` label decides:
+
+- `student`: the file is on the student site. Leave it out (`audience: [teacher]`) and the file is teachers only: the student site leaves it out completely (not in its pages, sidebar or search).
+- `parent`: the file is also listed on the **For families 给家长** page (`families.qmd`), which welcomes parents with each unit's goals and the vocab app. In this sample that's the *City-States and Democracy* and *Roman Engineering* decks, the Greek Gods cards and the Roman Numerals reference.
+
+Inside a page, `::: {.content-visible when-profile="teacher"}` shows something only on the teacher site (answer keys, look-fors).
 
 ## How the overview finds things
 
@@ -150,7 +156,7 @@ audience: [teacher, student]   # who it's for; not used yet (see planning/)
 
 The unit comes from the folder the file is in. A file with no `type:` still appears, labeled "Other". Files whose names start with `_` are skipped, which is handy for drafts.
 
-**Who sees what.** Each file's `audience` label decides which sites list it: `student` for the student site, `parent` for the family site (teachers always see everything). On the teacher site's overview, turn on **Who sees it** (next to the type chips): each row shows its audience, rows on the family site turn green, and teacher-only rows are striped. The switch is remembered in your browser.
+**Who sees what.** Each file's `audience` label decides which sites list it: `student` for the student site, `parent` for the For families page (teachers always see everything). On the teacher site's overview, turn on **Who sees it** (next to the type chips): each row shows its audience, rows on the For families page turn green, and teacher-only rows are striped. The switch is remembered in your browser.
 
 **Outside resources** (a Wikipedia article, an official website) aren't files here, so they're listed in `course/links.yml`. Each one shows its `source` (here, **Wikipedia**) as a badge in the overview; the school's own materials show **School**. Outside links appear in the overview only, not on unit pages.
 
@@ -243,11 +249,11 @@ When a slide has another slide below it (a column of slides: a `#` heading with 
 
 Every slide deck shows the current time in a small **🕒 Clock** window. It starts off the slide, so it covers nothing: in the space beside the slide (above the menu buttons) on a wide screen, or in the top-right corner when the slide fills the screen. It's one of the classroom tools (below): drag it anywhere, or drag its corner to make it bigger; once you have, it stays where you put it. Press **K** (or its ×) to hide it, and **K** again to show it; the choice is remembered on that computer. To leave it closed in one deck, add `clock: false` to its labels. Slides fade from one to the next; that's set under `revealjs:` in `_quarto.yml`.
 
-Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen. Speaker notes (`::: notes`) are only in the teacher site: the student and family sites leave them out, so students can't read them with **S**.
+Press **S** during a slideshow to open speaker view: your notes, the next slide, a clock and an elapsed-time timer, in a separate window for your laptop screen. Speaker notes (`::: notes`) are only in the teacher site: the student site leaves them out, so students can't read them with **S**.
 
 ## Classroom tools (scoreboard, voice level, …)
 
-Every slide deck in the **teacher** site has a toolbox (the student and family sites leave it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. The windows are light grey and a little see-through, so the slide shows faintly behind them. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
+Every slide deck in the **teacher** site has a toolbox (the student site leaves it out): press **W**, or the four-squares button in the bottom-left corner. Each tool opens in its own window **on top of the slides**, not on one slide, so it stays where you put it while you change slides. Drag a window by any empty part of it (the small bar at the top is a good place); drag its bottom-right corner to make it bigger (everything inside grows, so it can fill the board). The light × in the top-right corner closes it. The windows are light grey and a little see-through, so the slide shows faintly behind them. Made narrow, the scoreboard and the voice level stack, to fit in the slide margin.
 
 | Tool | What it does |
 |---|---|
@@ -262,6 +268,7 @@ Every slide deck in the **teacher** site has a toolbox (the student and family s
 | 🕒 **Clock** | The time. Open in every deck unless you close it; **K** shows and hides it. |
 | 🔦 **Spotlight** | Darkens the screen except a circle, to show the class where to look. Drag the circle (or tap where it should go); the slider or the mouse wheel changes its size. The tool windows stay on top. Close the window to end it; it doesn't come back in the next deck. |
 | 🎲 **Dice** | 1–6 dice. **Roll** (or tap the dice); with more than one, it adds them up. |
+| 🎵 **Music** | Classroom music from YouTube. Paste a link to a song or a playlist; big buttons play and pause, skip back and forward (in a playlist), and turn the volume down and up. The video shows small above the buttons (YouTube's rules don't allow hiding it); shrink the panel as small as you like. It keeps playing as you change slides (a new deck starts it again, ready to play). The last few links are buttons at the bottom, remembered in this browser. Needs the internet. |
 
 **Class lists** (name picker and groups): choose **+ New class…** in the class menu, type a name for the class (like 7A) and paste the students' names, one on each line (a column copied from a spreadsheet works). Add as many classes as you like and switch between them with the class menu at the top; both tools follow it. **Edit** changes or deletes the current class. **Who's here?** marks students who are away today, so they aren't picked or put in a group; it starts fresh the next day.
 

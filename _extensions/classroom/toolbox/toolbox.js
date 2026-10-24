@@ -16,6 +16,7 @@
     Clock           the time; open unless you close it (K shows and hides it)
     Spotlight       darkens the screen except a circle you drag, to show where to look
     Dice            1 to 6 dice
+    Music           a YouTube song or playlist, with big play, skip and volume buttons
 
   Drag a panel by any empty part of it; drag the corner to make it bigger (everything inside grows).
   Narrow panels (scoreboard, voice level) change to a layout that stacks.
@@ -755,6 +756,151 @@
         paint();
         const timer = setInterval(paint, 100);
         return { refresh: paint, close: function () { clearInterval(timer); } };
+      },
+    },
+
+    music: {
+      title: "Music", icon: "music", w: 320, h: 400, minW: 220, minH: 260, keys: [],
+      build: function (body) {
+        // Classroom music from YouTube: paste a link (a song or a playlist); big buttons to play, skip
+        // and change the volume. The video shows small above them (YouTube's rules don't allow hiding
+        // it); make the panel as small as you like. It keeps playing as you change slides. The last
+        // links are remembered in this browser: { link, recent: [links], titles: {link: title}, volume }.
+        const state = function () { return Object.assign({ link: "", recent: [], titles: {}, volume: 50 }, load("music", {})); };
+        const screen = h("div", { class: "ct-music-screen" });
+        const title = h("div", { class: "ct-music-title" });
+        const play = h("button", { class: "ct-btn ct-primary ct-music-play", "aria-label": "Play", onclick: toggle }, icon("play"));
+        const back = h("button", { class: "ct-btn ct-music-big", "aria-label": "Back to the start", title: "Back to the start (press again: the previous song)", onclick: previous }, icon("skip-back"));
+        const next = h("button", { class: "ct-btn ct-music-big", "aria-label": "Next song", title: "Next song (in a playlist)", onclick: function () { if (player && ready) player.nextVideo(); } }, icon("skip-forward"));
+        const level = h("span", { class: "ct-music-level" });
+        const field = h("input", { class: "ct-input ct-music-field", type: "url", placeholder: "Paste a YouTube link: a song or a playlist", "aria-label": "YouTube link",
+          onkeydown: function (e) { if (e.key === "Enter") use(field.value, true); } });
+        const linkRow = h("div", { class: "ct-music-link" }, field, h("button", { class: "ct-btn ct-primary", text: "Play", onclick: function () { use(field.value, true); } }));
+        const recent = h("div", { class: "ct-music-recent" });
+        body.append(screen, title,
+          h("div", { class: "ct-music-controls" }, back, play, next),
+          h("div", { class: "ct-music-volume" },
+            h("button", { class: "ct-btn ct-music-big", "aria-label": "Quieter", title: "Quieter", onclick: function () { volume(-10); } }, icon("volume-1")),
+            level,
+            h("button", { class: "ct-btn ct-music-big", "aria-label": "Louder", title: "Louder", onclick: function () { volume(10); } }, icon("volume-2"))),
+          linkRow,
+          h("div", { class: "ct-music-foot" },
+            h("button", { class: "ct-btn ct-small", text: "Change song", onclick: function () {
+              linkRow.hidden = !linkRow.hidden;
+              if (!linkRow.hidden) { field.value = state().link; field.select(); }
+            } }), recent));
+
+        let player = null, ready = false;
+
+        // A YouTube link to { id, list }: watch?v=, youtu.be/, shorts/, embed/, a playlist (list=), or a bare video id
+        function parse(link) {
+          link = (link || "").trim();
+          if (/^[\w-]{11}$/.test(link)) return { id: link, list: null };
+          try {
+            const u = new URL(/^\w+:\/\//.test(link) ? link : "https://" + link);
+            if (!/(^|\.)(youtube\.com|youtu\.be|youtube-nocookie\.com)$/.test(u.hostname)) return null;
+            const id = /youtu\.be$/.test(u.hostname) ? u.pathname.slice(1, 12)
+              : u.searchParams.get("v") || (u.pathname.match(/\/(shorts|embed|live)\/([\w-]{11})/) || [])[2] || null;
+            const list = u.searchParams.get("list");
+            return id || list ? { id: id, list: list } : null;
+          } catch (e) { return null; }
+        }
+
+        // YouTube's player code, loaded once for the page
+        function api(then) {
+          if (window.YT && window.YT.Player) return then();
+          const wait = window.chalklineYT = window.chalklineYT || [];
+          wait.push(then);
+          if (wait.length > 1) return;
+          const before = window.onYouTubeIframeAPIReady;
+          window.onYouTubeIframeAPIReady = function () {
+            if (before) before();
+            wait.splice(0).forEach(function (f) { f(); });
+          };
+          document.head.append(h("script", { src: "https://www.youtube.com/iframe_api", onerror: function () {
+            wait.length = 0;
+            title.textContent = "Can't reach YouTube from here.";
+          } }));
+        }
+
+        function use(link, start) {
+          const v = parse(link);
+          if (!v) { title.textContent = "That isn't a YouTube link."; linkRow.hidden = false; return; }
+          const s = state();
+          s.link = link.trim();
+          s.recent = [s.link].concat(s.recent.filter(function (x) { return x !== s.link; })).slice(0, 4);
+          save("music", s);
+          linkRow.hidden = true;
+          paintRecent();
+          title.textContent = "…";
+          api(function () {
+            // a new link gets a new player: simplest for switching between songs and playlists
+            if (player && player.destroy) player.destroy();
+            const holder = h("div", {});   // YouTube's player replaces this
+            screen.replaceChildren(holder);
+            ready = false;
+            const vars = { playsinline: 1, rel: 0, autoplay: start ? 1 : 0 };
+            if (v.list) { vars.listType = "playlist"; vars.list = v.list; }
+            player = new YT.Player(holder, {
+              width: "100%", height: "100%", videoId: v.id || undefined, playerVars: vars,
+              events: {
+                onReady: function () { ready = true; player.setVolume(state().volume); paint(); },
+                onStateChange: paint,
+                onError: function () { title.textContent = "YouTube won't play this one here (it may not allow playing on other sites)."; },
+              },
+            });
+          });
+        }
+
+        function toggle() {
+          if (!player || !ready) {
+            if (state().link) use(state().link, true);
+            else { linkRow.hidden = false; field.focus(); }
+            return;
+          }
+          if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+          else player.playVideo();
+        }
+        function previous() {
+          if (!player || !ready) return;
+          const list = player.getPlaylist && player.getPlaylist();
+          if (list && list.length > 1 && player.getCurrentTime() < 3) player.previousVideo();
+          else player.seekTo(0, true);
+        }
+        function volume(by) {
+          const s = state();
+          s.volume = Math.max(0, Math.min(100, s.volume + by));
+          save("music", s);
+          if (player && ready) { player.setVolume(s.volume); if (s.volume) player.unMute(); }
+          paint();
+        }
+
+        function paint() {
+          const s = state(), playing = !!(player && ready && window.YT && player.getPlayerState() === YT.PlayerState.PLAYING);
+          play.replaceChildren(icon(playing ? "pause" : "play"));
+          play.setAttribute("aria-label", playing ? "Pause" : "Play");
+          level.textContent = s.volume + "%";
+          const list = player && ready && player.getPlaylist && player.getPlaylist();
+          next.disabled = !(list && list.length > 1);
+          const data = player && ready && player.getVideoData ? player.getVideoData() : null;
+          if (data && data.title) {
+            title.textContent = data.title;
+            if (s.titles[s.link] !== data.title) { s.titles[s.link] = data.title; save("music", s); paintRecent(); }
+          } else if (!player) title.textContent = s.link ? (s.titles[s.link] || "Ready: press play") : "Paste a YouTube link below";
+        }
+        function paintRecent() {
+          const s = state();
+          recent.textContent = "";
+          s.recent.filter(function (x) { return x !== s.link; }).forEach(function (link) {
+            const name = s.titles[link] || link.replace(/^https?:\/\/(www\.)?/, "");
+            recent.append(h("button", { class: "ct-btn ct-small ct-music-chip", title: name, text: name, onclick: function () { use(link, true); } }));
+          });
+        }
+
+        linkRow.hidden = !!state().link;
+        paint(); paintRecent();
+        if (state().link) use(state().link, false);   // ready to go, not playing yet
+        return { close: function () { if (player && player.destroy) player.destroy(); player = null; } };
       },
     },
 

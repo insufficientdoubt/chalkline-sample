@@ -245,8 +245,6 @@ def main():
     out_dir = ROOT / os.environ.get("QUARTO_PROJECT_OUTPUT_DIR", "_site-teacher" if teacher else "_site")
 
     packets = load_packets()
-    if "parent" in os.environ.get("QUARTO_PROFILE", "").split(",") or "parent" in str(out_dir.name):
-        return   # the family site has no packets
     if in_quarto and not os.environ.get("QUARTO_PROJECT_RENDER_ALL"):
         return   # a save in the preview: packets wait (see the notes at the top)
     unit = arg("--unit")
