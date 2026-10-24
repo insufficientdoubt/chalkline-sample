@@ -306,7 +306,6 @@ return {
   ["packet"] = function()
     local teacher = false
     for _, profile in ipairs(quarto.project.profile or {}) do
-      if profile == "parent" then return pandoc.Null() end   -- the family site has no packets
       if profile == "teacher" then teacher = true end
     end
     local p = packet_for_this_page()

@@ -5,7 +5,7 @@ format: html
 toc: false
 page-layout: full
 listing:
-  - id: everything               # in the family site, only items marked for parents (scripts/catalog.py)
+  - id: everything               # every file this site has (scripts/catalog.py)
     contents: generated/catalog.yml
     type: table
     fields: [title, type, unit, source, formats, description]
@@ -27,7 +27,7 @@ listing:
 ```{python}
 #| output: asis
 import sys; sys.path.append("scripts")
-from catalog import markdown_season, markdown_by_unit, markdown_by_type, markdown_learning
+from catalog import markdown_season, markdown_by_unit, markdown_by_type
 print(markdown_season())
 ```
 
@@ -37,21 +37,6 @@ print(markdown_season())
 :::
 ::::
 
-::: {.content-visible when-profile="parent"}
-Welcome, families! This is where you can follow what your child is learning: the slides we use in class, the **vocabulary** (English with 中文) and the goals for each unit.
-
-::: {#everything}
-:::
-
-## What we're learning
-
-```{python}
-#| output: asis
-print(markdown_learning())
-```
-:::
-
-::: {.content-hidden when-profile="parent"}
 [Every slide deck, printable and poster for the course. Tap a color below to show just one kind. **Everything** has a search box and filters; **By type** groups files by kind. The search at the top of the sidebar looks inside every page.]{.ov-intro}
 
 ::: {.panel-tabset}
@@ -77,7 +62,6 @@ print(markdown_by_type())
 
 :::
 
-:::
 
 ::::
 
@@ -86,13 +70,29 @@ print(markdown_by_type())
 // The Categories filter (right margin) filters the Everything tab only: show it on that tab.
 document.addEventListener("DOMContentLoaded", function () {
   const tabs = document.querySelector(".overview .panel-tabset");
-  if (!tabs) return;   // the family site has no tabs: the list and its filter are always shown
+  if (!tabs) return;
   function update() {
     const on = tabs.querySelector(".nav-link.active");
     document.body.classList.toggle("ov-filters-off", !on || on.textContent.trim() !== "Everything");
   }
   tabs.addEventListener("shown.bs.tab", update);
   update();
+});
+
+// Teacher site: "Who sees it" shows each file's audience (students, families, teachers only).
+// Remembered in this browser.
+document.addEventListener("DOMContentLoaded", function () {
+  const ov = document.querySelector(".overview"), sw = document.querySelector(".ov-who-toggle");
+  if (!ov || !sw) return;
+  function set(on) {
+    ov.classList.toggle("ov-who-on", on);
+    sw.setAttribute("aria-pressed", on ? "true" : "false");
+    try { localStorage.setItem("chalkline-who", on ? "1" : ""); } catch (e) {}
+  }
+  let start = false;
+  try { start = localStorage.getItem("chalkline-who") === "1"; } catch (e) {}
+  set(start);
+  sw.addEventListener("click", function (e) { e.stopPropagation(); set(!ov.classList.contains("ov-who-on")); });
 });
 
 // The chips above the units show only one kind of document; a unit with none of that kind is hidden.
