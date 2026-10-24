@@ -41,6 +41,8 @@ project:
 
 brand: brand/_brand.yml      # colors, fonts, logos (see brand/README.md)
 vocab-title: "History Vocab"  # name of the vocab app, used on {{< vocab >}} pop-up links
+# student-site: "https://example.github.io/my-course/"   # the published STUDENT site: the teacher's QR codes
+#                                                      # send students there (until it's set, they show none)
 
 filters:
   - classroom                # turns content markers into slides/PDF/web output (see _extensions/classroom)

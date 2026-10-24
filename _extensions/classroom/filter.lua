@@ -12,7 +12,8 @@ Slides (reveal.js):
     scoreboard, voice level, traffic light, noise meter, QR code, stopwatch and dice,
     in panels that float above the slides (see toolbox/toolbox.js). Optional, in _quarto.yml:
       classroom-tools:
-        qr-site: "https://example.github.io/my-course/"   # the QR code points here, not at localhost
+        qr-site: "https://example.github.io/my-course/"   # older name for student-site: (below)
+    The QR code points at the deck on the student site: student-site: "https://.../" in _quarto.yml
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
   - turns  ::: {.jeopardy}  and  ::: {.trivia}  into slide games (see below and games/games.js)
 
@@ -323,9 +324,17 @@ local function Meta(meta)
   local tools_off = tools ~= nil and pandoc.utils.type(tools) ~= "table" and pandoc.utils.stringify(tools) == "false"
   if quarto.doc.is_format("revealjs") then games.ui() end
   if quarto.doc.is_format("revealjs") and not tools_off and is_teacher() then
-    local site = pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"]) or ""
+    -- The QR code sends students to this deck on the STUDENT site (never the teacher site, which has
+    -- the answer keys): `student-site:` in _quarto.yml (or the older classroom-tools: qr-site:), plus
+    -- this deck's path in the site.
+    local site = meta["student-site"] and pandoc.utils.stringify(meta["student-site"])
+      or (pandoc.utils.type(tools) == "table" and tools["qr-site"] and pandoc.utils.stringify(tools["qr-site"])) or ""
     local tags = {}
-    if site ~= "" then tags["chalkline-qr-site"] = site end
+    if site ~= "" then tags["chalkline-student-site"] = site end
+    if quarto.doc.input_file and quarto.project.directory then
+      local rel = pandoc.path.make_relative(quarto.doc.input_file, quarto.project.directory)
+      tags["chalkline-page"] = rel:gsub("\\", "/"):gsub("%.qmd$", ".html")
+    end
     if off then tags["chalkline-clock"] = "off" end
     quarto.doc.add_html_dependency({
       name = "classroom-tools",

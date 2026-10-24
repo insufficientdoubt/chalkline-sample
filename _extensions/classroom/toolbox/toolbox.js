@@ -683,11 +683,11 @@
     qr: {
       title: "QR code", icon: "qr-code", w: 300, h: 360, minW: 220, minH: 260, keys: [],
       build: function (body) {
-        const site = (document.querySelector('meta[name="chalkline-qr-site"]') || {}).content || "";
-        const local = location.protocol === "file:" || /^(localhost|127\.|\[::1\]|0\.0\.0\.0)/.test(location.hostname);
-        const deckUrl = local && site
-          ? site.replace(/\/?$/, "/") + location.pathname.replace(/^\//, "")
-          : location.origin + location.pathname;
+        // Students get this deck on the STUDENT site, never this (teacher) site with its answer keys:
+        // the student site's address (student-site: in _quarto.yml) plus this deck's path in the site.
+        const meta = function (name) { return (document.querySelector('meta[name="' + name + '"]') || {}).content || ""; };
+        const site = meta("chalkline-student-site"), page = meta("chalkline-page");
+        const deckUrl = site && page ? site.replace(/\/?$/, "/") + page.replace(/^\//, "") : "";
         let url = deckUrl;
         const code = h("div", { class: "ct-qr-code" });
         const caption = h("div", { class: "ct-qr-caption" });
@@ -698,9 +698,17 @@
           h("button", { class: "ct-btn", text: "Edit link", onclick: function () {
             field.hidden = !field.hidden; field.value = url; if (!field.hidden) field.select();
           } }),
-          h("button", { class: "ct-btn", text: "This deck", onclick: function () { url = deckUrl; field.value = url; paint(); } })));
+          h("button", { class: "ct-btn", text: "This deck", disabled: !deckUrl, title: deckUrl ? "This deck on the student site" : "Needs the student site's address",
+            onclick: function () { url = deckUrl; field.value = url; paint(); } })));
 
         function paint() {
+          if (!url) {   // no student site yet: a code for this page would open the teacher site
+            code.textContent = "";
+            caption.classList.add("ct-warn");
+            caption.textContent = "No student site yet: a code for this page would open the teacher site, with the answer keys. "
+              + "Add student-site: \"https://…/\" to _quarto.yml, or use Edit link.";
+            return;
+          }
           if (!window.qrcode) { code.textContent = "…"; return; }
           let qr;
           try {

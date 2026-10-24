@@ -8,6 +8,17 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## 2026-10-24: QR codes point at the student site
+- **Asked for:** "the qr code teacher tool points at the teacher site, right? it should point at the student link (once student links actually exist...)"
+- **Why:** the toolbox only runs on the teacher site, so the QR code showed the teacher site's address, with the answer keys, to students.
+- **Changed:**
+  - `_extensions/classroom/filter.lua`: gives each deck its path in the site, and the student site's address from a new `student-site:` setting (the older `classroom-tools: qr-site:` still works).
+  - `_extensions/classroom/toolbox/toolbox.js`: the QR code is the student site's address plus this deck's path. With no student site set, it shows no code and explains why ("This deck" is greyed out; Edit link still works).
+  - `_quarto.yml`: a commented-out `student-site:` line to fill in when the student site is published.
+  - `README.md`: the QR row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: Music: just YouTube's player, with a ⋯ menu
 - **Asked for:** "maybe it's better to just have the embedded player and use a context menu to change the link".
 - **Why:** since the video has to stay visible anyway, YouTube's own controls are enough. That's the smallest, plainest version.
