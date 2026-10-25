@@ -20,6 +20,8 @@ Every tool is now a web component in its own file (`_extensions/classroom/toolbo
 
 ## Chalkline as a Quarto extension (after alpha)
 
+The file-by-file plan is in `EXTENSION-PLAN.md`.
+
 **Where we are:** alpha. A couple of teachers are trying Chalkline in their own cloned repositories. Today Chalkline's code lives inside each course (`_extensions/classroom`, `scripts/`, `brand/`, the Typst template, the launchers, the vocab app), so every course is a full copy, and a fix (like the video sizing) has to be copied into each one by hand.
 
 **The plan:** split it in two.
