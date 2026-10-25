@@ -231,10 +231,18 @@ html.ct-dock-instant .slide-logo { transition: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal, .reveal .footer, .slide-menu-button, .slide-chalkboard-buttons, #ct-launch, #ct-menu, .slide-logo { transition: none; }
 }
-.ct-dock { cursor: auto; touch-action: auto; animation: ct-dock-in-right 0.22s ease; }
-.ct-dock-left { animation-name: ct-dock-in-left; }
-@keyframes ct-dock-in-right { from { transform: translateX(calc(100% + 16px)); } }
-@keyframes ct-dock-in-left { from { transform: translateX(calc(-100% - 16px)); } }
+/* A bar, not a window: edge to edge, square, on its own grey, with a line where it meets the slides */
+.ct-dock {
+  --ct-side-bg: #eef2f7; --ct-side-hover: #e2e8f0; --ct-side-line: #dde4ed;
+  border-radius: 0; background: var(--ct-side-bg); box-shadow: none;
+  cursor: auto; touch-action: auto; animation: ct-dock-in-right 0.22s ease;
+}
+.ct-dock-right { border-left: 1px solid var(--ui-line); }
+.ct-dock-left { border-right: 1px solid var(--ui-line); animation-name: ct-dock-in-left; }
+.ct-dock > .ct-body { border-radius: 0; }
+.ct-dock .ui-select > select, .ct-dock .ui-btn:not(:hover):not([aria-pressed="true"]) { background: var(--ui-surface); }
+@keyframes ct-dock-in-right { from { transform: translateX(100%); } }
+@keyframes ct-dock-in-left { from { transform: translateX(-100%); } }
 @media (prefers-reduced-motion: reduce) { .ct-dock { animation: none; } }
 /* Drag the inner edge to make it wider: a thin bar shows when you point at it */
 .ct-edge { position: absolute; top: 0; bottom: 0; z-index: 3; width: 12px; cursor: ew-resize; touch-action: none; }
@@ -245,9 +253,11 @@ html.ct-dock-instant .slide-logo { transition: none; }
   border-radius: 2px; background: rgba(16, 35, 63, 0.3); opacity: 0; transition: opacity 0.15s;
 }
 .ct-edge:hover::after, .ct-dock.ct-dragging > .ct-edge::after { opacity: 1; }
-.ct-dock-right > .ct-ctrls { right: auto; left: -8px; }   /* × on the inner corner, not off the screen */
+/* × in the bar's bottom corner (the slide number and the clock are at the top) */
+.ct-dock > .ct-ctrls { top: auto; bottom: 10px; right: 10px; }
 /* The chalkboard's ink layers (reveal-chalkboard) are as big as the window and take the pen's spot
    from the window's edge, so they stay put; their pen and color buttons move in beside the sidebars. */
 html.ct-docked #notescanvas, html.ct-docked #chalkboard { left: calc(-1 * var(--ct-dock-left, 0px)); width: 100vw; }
 html.ct-docked #notescanvas .palette, html.ct-docked #chalkboard .palette { translate: var(--ct-dock-left, 0px) 0; }
 html.ct-docked #notescanvas .boardhandle, html.ct-docked #chalkboard .boardhandle { translate: calc(-1 * var(--ct-dock-right, 0px)) 0; }
+.ct-dock.ct-dragging { box-shadow: none; }

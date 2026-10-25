@@ -13,7 +13,7 @@
     More        music.js (YouTube), dice.js, slide.js (Slide size)
 
   Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
-  right and left edge, and the slides move over to make room. ] and [ open and close them.
+  right and left edge, and the slides move over to make room. V and P open and close them.
 
   A tool has no title bar: the tool is the message. Point at it for × on its corner. Drag a tool by
   any empty part of it; drag the corner to make it bigger (everything inside grows). Which tools are
@@ -100,7 +100,6 @@
      not a floating panel. The slides move over to make room, and their logo, buttons and slide
      number move with them, so the sidebar covers nothing. Drag its inner edge to make it wider.
      One sidebar on each side. */
-  const GAP = 8;   // between a sidebar and the screen's edge
   const docked = { left: null, right: null };   // side -> tool id
   const root = document.documentElement;
   function dockWidth(tool, w) {
@@ -113,7 +112,7 @@
   function makeRoom(instant) {
     ["left", "right"].forEach(function (side) {
       const id = docked[side];
-      root.style.setProperty("--ct-dock-" + side, id ? layout.pos[id].w + GAP + "px" : "0px");
+      root.style.setProperty("--ct-dock-" + side, id ? layout.pos[id].w + "px" : "0px");
     });
     root.classList.toggle("ct-docked", !!(docked.left || docked.right));
     root.classList.toggle("ct-dock-instant", !!instant);
@@ -129,7 +128,7 @@
   function placeDock(panel, id) {
     const tool = TOOLS[id], p = layout.pos[id];
     p.w = dockWidth(tool, p.w);
-    panel.style.cssText = "top:" + GAP + "px;bottom:" + GAP + "px;width:" + p.w + "px;" + tool.dock + ":" + GAP + "px;z-index:" + panel.style.zIndex;
+    panel.style.cssText = "top:0;bottom:0;width:" + p.w + "px;" + tool.dock + ":0;z-index:" + panel.style.zIndex;
   }
   function edgeDragger(panel, id, edge) {
     const tool = TOOLS[id];
@@ -138,7 +137,7 @@
       e.preventDefault();
       panel.classList.add("ct-dragging");
       function move(ev) {
-        layout.pos[id].w = tool.dock === "right" ? window.innerWidth - GAP - ev.clientX : ev.clientX - GAP;
+        layout.pos[id].w = tool.dock === "right" ? window.innerWidth - ev.clientX : ev.clientX;
         placeDock(panel, id);
         makeRoom(true);
       }
@@ -204,7 +203,8 @@
     const tool = TOOLS[id], side = tool.dock;
     if (docked[side]) closeTool(docked[side]);   // one sidebar on each side
     const p = layout.pos[id] || (layout.pos[id] = {});
-    if (!p.dock) { p.dock = true; p.w = tool.w; }   // a sidebar from before was a floating panel: start fresh
+    // A floating panel from before, or a sidebar sized when the default was different: start fresh
+    if (p.dock !== tool.w) { p.dock = tool.w; p.w = tool.w; }
     const close = h("button", { class: "ct-ctrl ct-close", "aria-label": "Close " + tool.title,
       title: "Close" + (tool.key ? " (" + tool.key.key + ")" : ""), onclick: function () { closeTool(id); } }, icon("x"));
     const body = h("div", { class: "ct-body ct-" + id });
@@ -377,7 +377,8 @@
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
     Reveal.addKeyBinding({ keyCode: 75, key: "K", description: "Show/hide the clock" }, function () { open.clock ? closeTool("clock") : openTool("clock"); });
-    // A tool's own key ([ for the Packet, ] for Vocab) opens and closes it
+    // A tool's own key (P for the Packet, V for Vocab) opens and closes it, instead of reveal.js's
+    // (P: the previous slide, as ← does; V: a black screen, as B and . do)
     Object.keys(TOOLS).forEach(function (id) {
       const k = TOOLS[id].key;
       if (k) Reveal.addKeyBinding({ keyCode: k.keyCode, key: k.key, description: "Show/hide " + TOOLS[id].title }, function () { open[id] ? closeTool(id) : openTool(id); });
