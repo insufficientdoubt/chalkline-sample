@@ -25,6 +25,27 @@ Rule of thumb: **if a bug fix in this file should reach every course, it goes in
 
 Both become a single `_extension.yml` that adds the shortcodes, the filters and the formats (below). After `quarto add <owner>/chalkline`, it lands in `_extensions/<owner>/chalkline/`. (`IDEAS.md` says `_extensions/chalkline/`, but Quarto puts extensions installed from GitHub under the owner's name.) `_quarto.yml` still writes just `filters: [chalkline]`.
 
+### Games and activities → extension; the pages that show them → template
+
+| Now | Goes to | Notes |
+|---|---|---|
+| `_extensions/classroom/games/**` (every game, learning activities, timelines, Label it, their styles) | **Extension** | The game engine. A new game or a fix reaches every course with `quarto update`. |
+| The `{{< game-picker >}}`, `{{< game >}}` and activity shortcodes | **Extension** | Part of `shortcodes.lua` / `games.lua`. |
+| `course/review-games.qmd`, `course/play.qmd` | **Template** (then the course's) | Thin pages: a title, a few settings, one `{{< game-picker >}}`. A course can choose which games to show. |
+| The words, questions and pictures the games use | **Course** | They come from `vocab/data/` and `course/vocab/`, so a game is about the course's subject with no code. |
+
+### Slide templates → extension
+
+Two kinds, both in the extension:
+
+| What | Goes to | Notes |
+|---|---|---|
+| **Slide layouts**: the classes a deck uses (`.statement`, `.challenge`, `.card-grid`, `.goal`, timer slides, ...) | **Extension** (`chalkline-revealjs`) | Today they're in `brand/revealjs.scss`. A fix or a new layout reaches every course. Check each one when it moves: some were made for the robotics decks and may not be general. |
+| **Starter decks and printables**: a `.qmd` you copy to start a new deck (labels filled in, the usual slides in place) | **Extension**, in `templates/` | A small command (`new.py slides "Roman roads"`, also a VS Code task) copies one into a unit folder. The copy belongs to the course. A newer template doesn't change decks already made. |
+| A course's own starter decks | **Course** | The same command looks in a course's `templates/` folder too, so a teacher can make their own. |
+
+Rule for new templates as they come: if the deck's *design* could serve any subject, its layouts go in the extension and its starter file in `templates/`. If it's one subject's deck, it's content.
+
 ### `brand/` → split in two
 
 Most of `brand/` is **Chalkline's design**: it reads the colors and fonts from `_brand.yml` and lays out pages, slides and PDFs. Only a few files are **the school's**.
@@ -111,6 +132,7 @@ Each step leaves the sample working. Commit after each one.
 2. **Move Chalkline's styles and Typst template into the extension** as custom formats (`chalkline-html`, `chalkline-revealjs`, `chalkline-typst`). Leave `_brand.yml`, logos and an empty `brand/course.scss` in `brand/`. Compare PDFs before and after (page counts and a look at one worksheet, one poster, one deck).
 3. **Move `scripts/` into the extension** (except `import_vex_vocab.py`), and fix the pages that import them (fix 1 above). Point `pre-render`/`post-render`, the launchers, `.vscode/tasks.json` and the publish workflow at the new paths.
 4. **Move the vocab app, `validate.py` and `schema.yaml` into the extension.**
+   Add `templates/` and the `new.py` command (start with a slide deck and a worksheet).
 5. **Check:** a full `quarto render` for both profiles, the launcher on Mac and Windows, the publish workflow, a game and a vocab pop-up. At this point the sample is a course with Chalkline inside `_extensions/`, ready to split.
 6. **Make the `chalkline` repository** from `_extensions/chalkline/` (keep its git history with `git subtree split` if we want it). Tag `v0.1.0`.
 7. **Make the template repository:** this sample minus most units, with `quarto add <owner>/chalkline` done. Mark it as a template on GitHub.
