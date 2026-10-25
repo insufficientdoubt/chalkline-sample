@@ -1,5 +1,5 @@
 # Builds the TEACHER version of the site on every push to main and publishes it to GitHub Pages:
-#   https://insufficientdoubt.github.io/chalkline/
+#   https://insufficientdoubt.github.io/project-chalkline/
 # (This sample is all demo content, so its teacher version, with answer keys, is fine to show publicly.
 #  Don't publish a real course's teacher version this way: GitHub Pages sites are public.)
 

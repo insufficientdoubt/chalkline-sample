@@ -369,7 +369,7 @@ Example request: "Add a 5-question exit ticket to the Rome republic deck, with C
 :::
 ::: {.column width="48%"}
 ::: {.callout-tip title="The address" icon=false}
-`https://github.com/insufficientdoubt/chalkline`
+`https://github.com/insufficientdoubt/project-chalkline`
 :::
 
 ::: {.callout-note title="Then" icon=false}
@@ -379,11 +379,11 @@ Your site opens at **localhost:4100**, in the teacher version. Your copy is your
 ::::
 
 ::: {.small-note}
-Just want to look first? The online version: **insufficientdoubt.github.io/chalkline**
+Just want to look first? The online version: **insufficientdoubt.github.io/project-chalkline**
 :::
 
 ::: notes
-In a terminal instead of VS Code: `git clone https://github.com/insufficientdoubt/chalkline.git`, then open the folder. No GitHub account is needed to clone; you need one only to save changes back to GitHub.
+In a terminal instead of VS Code: `git clone https://github.com/insufficientdoubt/project-chalkline.git`, then open the folder. No GitHub account is needed to clone; you need one only to save changes back to GitHub.
 :::
 
 ## How this sample is organized
