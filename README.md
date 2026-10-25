@@ -2,7 +2,7 @@
 
 **Chalkline** turns plain-text lesson files into slides, web pages, printable PDFs, unit packets and two websites (a student site with a page for families, and a teacher site), all in your school's style. This is a **sample course** to try it with: three history units (Ancient Greece, Ancient Rome and Göbekli Tepe), a STEM sampler unit, a 37-word bilingual vocab list, and a slide deck about Chalkline itself.
 
-**See it online:** https://insufficientdoubt.github.io/chalkline-sample/ (the teacher version, rebuilt on every push).
+**See it online:** https://insufficientdoubt.github.io/chalkline/ (the teacher version, rebuilt on every push).
 
 > **Beta.** You're one of the first teachers to use this. Note anything confusing or broken, and tell John.
 
@@ -40,7 +40,7 @@ Things to try once the site is open:
    - [Git](https://git-scm.com/downloads)
    - [Google Chrome](https://www.google.com/chrome/) or Microsoft Edge (already on Windows), for slide PDFs
 
-2. **Get the project onto your computer.** In VS Code: **File > Open Folder…** and pick the `chalkline-sample` folder. (To download it from GitHub first, use the Command Palette, `Ctrl+Shift+P` or `Cmd+Shift+P`, then **Git: Clone**.)
+2. **Get the project onto your computer.** In VS Code: **File > Open Folder…** and pick the `chalkline` folder. (To download it from GitHub first, use the Command Palette, `Ctrl+Shift+P` or `Cmd+Shift+P`, then **Git: Clone**.)
 
 3. **Install the extensions.** VS Code will show a pop-up offering to install the recommended extensions (Quarto, Python, Jupyter). Click **Install**. If you miss it, open the Extensions panel and search `@recommended`.
 
