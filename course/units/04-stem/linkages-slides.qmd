@@ -108,7 +108,7 @@ One simulator, three lifts: use the buttons at the top. Every lift starts with t
 
 **6-bar:** two 4-bars that **share a bar**: 6 bars in all (count them: tower, purple, blue, green, orange, and the claw's end bar). The first 4-bar's top bar is twice as long (purple) and keeps going as the second 4-bar's bottom bar. The green end bar is extra tall: it crosses the purple bar (the X) and is the "tower" for the second 4-bar. It lifts **about twice as high** as a 4-bar with the same bars, but it reaches **further forward**: on a small robot, it can tip over.
 
-**DR4B** (double reverse four-bar): the tower is at the **front** of the robot, the first stage folds back over the robot, and the top stage tilts the **other way**, so the sideways movements cancel out and the claw moves **straight up and down** ("Moves forward: 0 cm"). That's why youth robotics teams like it: it picks things up **off the floor**, then stretches **all the way up** to stack or score. Try 40 cm bars: over 90 cm of extension. Real DR4Bs use rubber bands to help hold the weight up.
+**DR4B** (double reverse four-bar): the tower is at the **front** of the robot, the first stage folds back over the robot, and the top stage tilts the **other way**. Each stage has its own two pins on the tall middle bar (green), and two equal gears (1:1) join the stages, so they always tilt by the same amount. The sideways movements cancel out and the claw moves **straight up and down** ("Moves forward: 0 cm"). That's why youth robotics teams like it: it picks things up **off the floor**, then stretches **all the way up** to stack or score. Try 40 cm bars: over 90 cm of extension. Real DR4Bs use rubber bands to help hold the weight up.
 
 **The size rules** are in **inches first, then cm**, because the game is American. These are the VEX IQ rules. At the start, the robot must fit **inside a 20 in long × 15 in tall box (50.8 × 38.1 cm)** (the orange box). After that it can **never be wider than 24 in (61.0 cm)** (red line), but there's **no limit on height**: a lift can rise as high as it likes. A lift can start inside the box and still swing past 24 in: watch the orange "widest" mark. A tall tower can break the 15 in rule at the start: try a 40 cm tower.
 
@@ -133,13 +133,13 @@ One simulator, three lifts: use the buttons at the top. Every lift starts with t
 
 ## Three ways to launch {#catapult}
 
-<iframe class="stem-frame" data-src="embeds/catapult.html?mode=slip" title="Catapult mechanisms"></iframe>
+<iframe class="stem-frame" data-src="embeds/catapult.html?mode=choo" title="Catapult mechanisms"></iframe>
 
 ::: notes
 Every rubber-band catapult has the same problem: **pull the arm back** (stretching the rubber band), **hold it**, then **let go** all at once. The buttons at the top show three ways. Use **Slow motion** to watch the release.
 
-- **Slip gear**: a gear with some teeth cut off, turned by a motor. The teeth pull the arm back; when the gap comes round, the arm is free. It fires again and again by itself. (A common robot-competition launcher.)
-- **Snail cam**: a spiral-shaped wheel. It pushes the arm's tail further and further, then the tail drops off the step. Also automatic.
+- **Choo choo**: two large gears with 3 standoffs between them, turned by a motor. A standoff pushes a bar on the arm, pulling the arm back; when it slides past the end of the bar, the arm is free. It fires again and again by itself. (A common VEX IQ launcher. VEX IQ parts can't be cut, so there's no slip gear.)
+- **Drop cam** (also called a snail cam): a spiral-shaped wheel. It pushes the arm's tail further and further, then the tail drops off the step. Also automatic.
 - **Winch, latch and trigger**: wind the arm back with a string, hook it with a latch, let the string go slack, then pull the trigger. You choose *when* it fires.
 
 All three need a **stop bar**: it stops the arm, and the ball keeps going. Ask: *what happens if the stop bar is lower? Higher?* (The ball flies flatter or higher.)
@@ -148,11 +148,11 @@ All three need a **stop bar**: it stops the arm, and the ball keeps going. Ask: 
 ## Which launcher is it?
 
 ::: {.sort}
-- **Slip gear**
-  - Some teeth are cut off | A slip gear is a normal gear with a gap where some teeth were.
-  - Its teeth turn the arm's gear | The motor's gear turns the arm's gear, pulling the arm back.
-- **Snail cam**
-  - A spiral-shaped wheel with a step | A snail cam gets wider and wider, then has a sharp step.
+- **Choo choo**
+  - Standoffs between two gears | Three standoffs sit between two large gears that turn together.
+  - A standoff slides off a bar | When the standoff passes the end of the bar on the arm, the arm is free.
+- **Drop cam**
+  - A spiral-shaped wheel with a step | A drop cam gets wider and wider, then has a sharp step.
   - The arm's tail drops off a step | When the tail falls off the step, the arm is free.
 - **Latch and trigger**
   - A hook holds the arm | The latch hooks the arm, so the string can go slack.
@@ -163,12 +163,12 @@ All three need a **stop bar**: it stops the arm, and the ball keeps going. Ask: 
 
 1. Make the **arm** and the **pivot**. Add a **stop bar** where the arm should stop.
 2. Add **rubber bands** that stretch when the arm goes back.
-3. Choose a way to **pull back and hold**: a slip gear, a snail cam, or a winch and a latch.
+3. Choose a way to **pull back and hold**: a choo choo, a drop cam, or a winch and a latch.
 4. Test it. Change **one thing** at a time: the number of rubber bands, the stop bar, the pull-back angle.
 5. Record how far the ball goes. Which change made the biggest difference?
 
 ::: notes
-Tips: tie rubber bands to strong points, not thin parts. A sharp step on a cam (or a clean gap on a slip gear) releases cleanly. Keep fingers away from the arm when it's pulled back.
+Tips: tie rubber bands to strong points, not thin parts. A sharp step on a cam (or a standoff that slides cleanly off the bar) releases cleanly. Keep fingers away from the arm when it's pulled back.
 :::
 
 ## Going further: for the teacher {#going-further}
