@@ -270,6 +270,18 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Vocab and Packet are sidebars that make room, instead of floating over the slides
+- **Asked for:** "the default sizes are a bit too big. Even if I set max spacing, they cant quite fit around the slide... And top-to-bottom covers up my logo, controls, and slide number." Idea: "slide out panels from the side of the screen, activated by hotkey or a toggle, which would automatically resize the slide to make room when they came in." Other tools stay floating.
+- **Why:** the two sidebars covered the slide's edges, the logo, the slide number and the controls.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: tools can be `dock: "left"` or `"right"`: a full-height sidebar at that edge that slides in, with its inner edge to drag wider (up to 40% of the screen). The slides' area gets narrower to make room and reveal.js re-fits the slide. One sidebar per side. A tool's own `key` opens and closes it (shown on its menu tile).
+  - `_extensions/classroom/toolbox/toolbox.css`: the sidebar styles; the slides (`.reveal`), footer, logo, menu and chalkboard buttons and the toolbox button move over by `--ct-dock-left` / `--ct-dock-right`. The chalkboard's ink layers stay at the screen's edge so the pen draws where it touches (their color buttons move in beside the sidebar).
+  - `_extensions/classroom/toolbox/tools/vocab.js`, `packet.js`: docked right (key **]**) and left (key **[**), instead of floating panels placed along the edge.
+  - `_extensions/classroom/toolbox/tools/clock.js`: finds the space beside the slide inside the slides' area, so it doesn't sit under a sidebar.
+  - `README.md`: the keys and the sidebars. `IDEAS.md`: what's next for the sidebars, and a chalkboard note.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-23: A nature theme for playful worksheets
 - **Asked for:** "Give the playful worksheet a nature theme."
 - **Why:** not given.
