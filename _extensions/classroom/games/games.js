@@ -1667,8 +1667,11 @@
 
   function gamePicker(root, cfg) {
     const words = list(cfg.words), units = list(cfg.units);
-    let choice = { game: "snowman", unit: 0 }, reset = null;
-    try { choice = Object.assign(choice, JSON.parse(localStorage.getItem("chalkline-games:picker")) || {}); } catch (e) { /* first visit */ }
+    // games: only these, in this order (the Play page); every game if it's empty.
+    const picks = list(cfg.games).length ? list(cfg.games).map(function (id) { return PICKS.find(function (g) { return g.id === id; }); }).filter(Boolean) : PICKS;
+    const store = "chalkline-games:picker" + (list(cfg.games).length ? ":" + list(cfg.games).join(",") : "");
+    let choice = { game: picks[0].id, unit: 0 }, reset = null;
+    try { choice = Object.assign(choice, JSON.parse(localStorage.getItem(store)) || {}); } catch (e) { /* first visit */ }
     // The header: the games as one segmented control, then the unit menu and a link back to the overview.
     const gameRow = h("div", { class: "cg-pick-games", role: "tablist", "aria-label": "Game" });
     const unitMenu = h("select", { class: "cg-pick-select", "aria-label": "Unit", onchange: function () {
@@ -1683,12 +1686,12 @@
 
     function choose(change) {
       Object.assign(choice, change);
-      try { localStorage.setItem("chalkline-games:picker", JSON.stringify(choice)); } catch (e) { /* private window */ }
+      try { localStorage.setItem(store, JSON.stringify(choice)); } catch (e) { /* private window */ }
       play();
     }
     function paintBar() {
       gameRow.textContent = "";
-      PICKS.forEach(function (g) {
+      picks.forEach(function (g) {
         const on = g.id === choice.game;
         gameRow.append(h("button", { class: "cg-pick" + (on ? " cg-on" : ""), role: "tab", "aria-selected": on ? "true" : "false",
           onclick: function () { choose({ game: g.id }); } }, icon(g.icon), g.label));
@@ -1700,7 +1703,7 @@
       unitMenu.value = String(choice.unit);
     }
     function play() {
-      if (!PICKS.some(function (g) { return g.id === choice.game; })) choice.game = "snowman";
+      if (!picks.some(function (g) { return g.id === choice.game; })) choice.game = picks[0].id;
       if (choice.unit && !units.some(function (u) { return u.unit === choice.unit; })) choice.unit = 0;
       paintBar();
       const pool = words.filter(function (w) {
@@ -1710,6 +1713,7 @@
       const el = h("div", { class: "cg-game cg-" + choice.game, "data-prevent-swipe": true });
       stage.textContent = "";
       stage.append(el);
+      fit(el, choice.game);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
       reset = GAMES[choice.game](el, { words: pool, all: words, random: true, rows: 4, teams: 2, seconds: 10, tiles: 16,
         count: /match|memory/.test(choice.game) ? 6 : choice.game === "blitz" ? undefined : 5,
@@ -1721,6 +1725,25 @@
   }
 
   /* ---------------- Start every game on the page ---------------- */
+
+  // On a web page (not slides), a game without its own phone layout is drawn at slide size
+  // (1050 pixels wide) and scaled down to fit the page. Word Blitz lays itself out for any width.
+  const FITS_ITSELF = { blitz: true, picker: true };
+  function fit(el, kind) {
+    if (el.closest(".reveal") || FITS_ITSELF[kind] || !window.ResizeObserver) return;
+    const inner = h("div", { class: "cg-fit-inner" }), box = h("div", { class: "cg-fit" });
+    el.replaceWith(box);
+    box.append(inner);
+    inner.append(el);
+    function size() {
+      const scale = Math.min(1, box.clientWidth / 1050);
+      inner.style.transform = "scale(" + scale + ")";
+      box.style.height = Math.ceil(inner.offsetHeight * scale) + "px";
+    }
+    const watch = new ResizeObserver(size);
+    watch.observe(box);
+    watch.observe(inner);
+  }
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia,
     "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "blitz": wordBlitz,
@@ -1756,6 +1779,7 @@
       let cfg = {};
       try { cfg = JSON.parse(el.dataset.config || "{}"); } catch (e) { /* leave it empty */ }
       if (GAMES[el.dataset.game]) {
+        fit(el, el.dataset.game);
         resets.push(GAMES[el.dataset.game](el, cfg));
         calm(el);
       }

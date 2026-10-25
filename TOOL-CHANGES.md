@@ -270,6 +270,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Games on web pages, not only slides; a "Play at home" page (teachers only until turned on)
+- **Asked for:** "What would it take to make this page, and (some of?) the games mobile friendly? So a kid could play on their phone on the subway." Then: "Why does this need to be a slide at all?" Then: "yes, start with steps 1 and 2. One change - for demo purposes, make the student games page visible on the teacher build, and - let's make it disabled by default on the student page. Add a note that teachers will need to enable the student games page if they want students to play at home."
+- **Why:** the games didn't need slides (they use nothing from reveal.js); on a phone, a slide is shrunk to a thin strip.
+- **Changed:**
+  - `_extensions/classroom/games/games.css`, `activities.css`, `timeline.css`: every rule now starts with `:is(.reveal, .cg-host)` instead of `.reveal`, so the games look the same on slides and on web pages. New: `.cg-host` (the box a game sits in on a page, with the fonts slides would give it), `.cg-fit` (scale-to-fit), Word Blitz's phone layout (container queries, under 620px: one column, smaller pieces), the game menu scrolling sideways on a narrow page, and Word Blitz's hover effects only on devices with a mouse.
+  - `_extensions/classroom/games/games.lua`: `web()` (games on any HTML output, not only slides); on a web page each game sits in a `.cg-host` box. `shortcodes.lua`, `filter.lua`: the game shortcodes and ::: divs work on web pages too (PDF and Word still get one line); `{{< game-picker games="blitz,snowman" >}}` offers only those games (no Overview link on a page, which has the sidebar).
+  - `_extensions/classroom/games/games.js`: on a web page, games without their own phone layout are drawn at slide size and scaled to fit (`fit`); the picker takes a list of games and remembers its choice separately for that list.
+  - `scripts/catalog.py`: a new type, `game` ("Game" in the overview).
+  - `_quarto.yml`: **Play at home** in the sidebar. `_quarto-student.yml`: regenerated (the page is left out of the student site).
+  - `course/play.qmd` (content): the new page, with `audience: [teacher]` so it's off for students, and a teacher-only note on how to turn it on.
+  - `README.md`, `CLAUDE.md` (the `game` type), `IDEAS.md` (next steps: phone layouts for the other games, offline, tests, a shared game kit).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Word Blitz Survival: a life back at each new level
 - **Asked for:** "What's the current game logic for recovering lives? Is it just miss 3= die?" Then, of the options: "yes, a life back at each new level."
 - **Why:** so a long streak also keeps a Survival run going, not only scores more.

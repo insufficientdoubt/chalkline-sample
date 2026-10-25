@@ -51,6 +51,13 @@ The rule "log tool changes in `TOOL-CHANGES.md`" becomes "put your changes in yo
 
 **When:** before a third or fourth course, or before the alpha group grows. Each copy made before then is one more to move over.
 
+## Play at home (phones), next steps
+
+- **Phone layouts for the other one-player games**, one at a time, like Word Blitz's (container queries in `games.css`): Snowman and Scramble (the snowman smaller on top, the letters below), Memory (3 × 4 cards), Picture reveal, Matching (one column). Then take each one off the scale-to-fit list (`FITS_ITSELF` in `games.js`).
+- **Play offline (the subway):** a web app manifest and a service worker, so the Play page can be added to the home screen and keeps working with no signal (the page, the games and the vocab pictures saved on the phone).
+- **Tests:** keep the Playwright scripts that play each game (slides, desktop page, phone page) in the repo and run them on every push.
+- **A shared game kit:** the pieces Word Blitz has that other games could use (the wrong answers from the same unit and another unit, words that come back, high-score tables, timers that pause off-slide, level themes, the canvas fire), maybe on Lit.
+
 ## Review games
 
 - **Heads up / Taboo.** A big word card for one student who faces the class; classmates describe the word without saying it (or without the "don't say" words under it). A timer, and *Got it* / *Pass* buttons that count. Good speaking practice for English learners. From the vocab list: the word, with its meaning hidden for the teacher.

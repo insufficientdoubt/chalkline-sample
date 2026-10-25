@@ -66,6 +66,9 @@ website:
       - text: "Review games"
         href: course/review-games.qmd  # any game, any unit (slides)
         icon: controller
+      - text: "Play at home"
+        href: course/play.qmd    # one-player games for phones and computers; teachers only until
+        icon: phone              # you add student to its audience (see the page)
       - text: "For families 给家长"
         href: families.qmd       # a welcome, the unit goals, and the files marked for families
         icon: house-heart

@@ -63,6 +63,7 @@ TYPES = {  # type -> (label, sort order)
     "poster": ("Poster", 5),
     "reference": ("Reference", 6),
     "vocab": ("Vocab", 7),
+    "game": ("Game", 8),       # a web page of games to play (course/play.qmd)
 }
 FORMATS = {"revealjs": "Slides", "html": "Web", "typst": "PDF", "docx": "Word", "pptx": "PowerPoint"}
 YEAR_GROUP = ("Whole year", 90)   # posters and references that aren't tied to one unit

@@ -314,7 +314,7 @@ local function Div(el)
                            ["timeline-interactive"] = "Timeline", ["timeline-activity"] = "Timeline activity", ["label-it"] = "Label it",
                            ["sentence-builder"] = "Sentence builder", ["fill-blanks"] = "Fill in the blanks", ["put-in-order"] = "Put it in order" }) do
     if el.classes:includes(cls) then
-      if quarto.doc.is_format("revealjs") then return game_from_div(el) end
+      if games.web() then return game_from_div(el) end
       return games.placeholder(name)
     end
   end

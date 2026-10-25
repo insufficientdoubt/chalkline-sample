@@ -43,6 +43,8 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< blitz unit=1 >}}                   Word Blitz, like Kahoot for one player: a picture and four words
                                          (or a word and four pictures), streaks multiply, high scores
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
+                                         games="blitz,snowman" offers only those (the Play page).
+  Games work on slides and on web pages (format: html); in PDFs and Word they're one line.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
 ]]
@@ -398,12 +400,12 @@ return {
 
   -- Slide games. See games/games.js for how each one plays.
   ["snowman"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Snowman") end
+    if not games.web() then return games.placeholder("Snowman") end
     return games.div("snowman", game_config(args, kwargs, "snowman"))
   end,
 
   ["picture-reveal"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Picture reveal") end
+    if not games.web() then return games.placeholder("Picture reveal") end
     local c = game_config(args, kwargs, "picture-reveal")
     c.tiles = tonumber(str(kwargs["tiles"], "16")) or 16
     return games.div("picture-reveal", c)
@@ -412,7 +414,7 @@ return {
   -- Jeopardy and quick-fire from the vocab list. To write your own questions, use a ::: div
   -- (filter.lua): ::: {.jeopardy} and ::: {.trivia}.
   ["jeopardy"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Jeopardy") end
+    if not games.web() then return games.placeholder("Jeopardy") end
     local c = game_config({}, kwargs, "jeopardy")
     c.rows = tonumber(str(kwargs["rows"], "4")) or 4
     c.teams = tonumber(str(kwargs["teams"], "2")) or 2   -- 2 to 4 teams take turns; teams=0: no teams
@@ -420,7 +422,7 @@ return {
   end,
 
   ["trivia"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Quick-fire questions") end
+    if not games.web() then return games.placeholder("Quick-fire questions") end
     local c = game_config({}, kwargs, "trivia")
     c.count = tonumber(str(kwargs["count"], "5")) or 5
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
@@ -431,7 +433,7 @@ return {
   -- Matching (tap a word, then its partner) and Memory (turn over two cards): pairs from the vocab
   -- list. with="meaning" or "picture" chooses each word's partner; count=6 pairs.
   ["matching"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Matching") end
+    if not games.web() then return games.placeholder("Matching") end
     local c = game_config({}, kwargs, "matching")
     c.count = tonumber(str(kwargs["count"], "6")) or 6
     c.with = str(kwargs["with"], "meaning")
@@ -439,7 +441,7 @@ return {
   end,
 
   ["memory"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Memory") end
+    if not games.web() then return games.placeholder("Memory") end
     local c = game_config({}, kwargs, "memory")
     c.count = tonumber(str(kwargs["count"], "6")) or 6
     c.with = str(kwargs["with"], "picture")
@@ -448,14 +450,14 @@ return {
 
   -- Word scramble: the same words as Snowman (random, unit=1, a vocab word, or your own).
   ["scramble"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Word scramble") end
+    if not games.web() then return games.placeholder("Word scramble") end
     return games.div("scramble", game_config(args, kwargs, "scramble"))
   end,
 
   -- Sort it from the vocab list: words from several units go into their units; from one unit
   -- (unit=1), into their topics. Your own groups: ::: {.sort} (filter.lua).
   ["sort"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Sort it") end
+    if not games.web() then return games.placeholder("Sort it") end
     local c = game_config({}, kwargs, "sort")
     c.with = str(kwargs["with"], "words")              -- with="picture": the vocab pictures
     c.feedback = str(kwargs["feedback"], "now")        -- feedback="end": wait for Check
@@ -464,7 +466,7 @@ return {
 
   -- Bingo: make printable cards (in the browser) before class, then call the words in class.
   ["bingo"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Bingo") end
+    if not games.web() then return games.placeholder("Bingo") end
     local c = game_config({}, kwargs, "bingo")
     c.unit = c.unit or 0
     for _, u in ipairs(vex_units or {}) do
@@ -479,7 +481,7 @@ return {
   -- mode="survival" (3 lives): the mode it starts on; students can switch. seconds=10,
   -- ask="picture" (choose the word) or ask="word" (choose the picture); both, mixed, if not given.
   ["blitz"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Word Blitz") end
+    if not games.web() then return games.placeholder("Word Blitz") end
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
     local c = game_config({}, kwargs, "blitz")
     c.all = {}   -- every word, for the wrong answers (one of the four comes from another unit)
@@ -493,13 +495,17 @@ return {
   end,
 
   -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).
-  ["game-picker"] = function()
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Review games") end
+  -- games="blitz,snowman": only those games, the first one chosen at first (the Play page).
+  ["game-picker"] = function(args, kwargs)
+    if not games.web() then return games.placeholder("Review games") end
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
     vocab_lookup("")   -- loads the list
     local words = {}
     for _, t in ipairs(vex_list or {}) do table.insert(words, game_word(t, up)) end
-    return games.div("picker", { words = words, units = vex_units, home = up .. "index.html", random = true })
+    local only = {}
+    for id in str(kwargs and kwargs["games"], ""):gmatch("[%w-]+") do table.insert(only, id) end
+    return games.div("picker", { words = words, units = vex_units, random = true, games = only,
+      home = quarto.doc.is_format("revealjs") and (up .. "index.html") or nil })   -- a web page has the sidebar
   end,
 
   ["timer"] = function(args)

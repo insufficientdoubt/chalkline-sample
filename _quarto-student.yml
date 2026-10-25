@@ -10,4 +10,5 @@
 website:
   draft-mode: gone
   # ---- Everything below is written by scripts/catalog.py before each render. Don't edit by hand. ----
-  drafts: []
+  drafts:
+  - course/play.qmd

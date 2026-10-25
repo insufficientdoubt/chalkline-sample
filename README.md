@@ -148,7 +148,7 @@ You never edit the overview by hand. Before every render, `scripts/catalog.py` r
 ```yaml
 ---
 title: "Game Day Checklist"
-type: checklist        # slides, worksheet, checklist, handout, poster, reference or vocab
+type: checklist        # slides, worksheet, checklist, handout, poster, reference, vocab or game
 description: "One sentence shown in the overview and on the unit page."
 order: 2               # position on the unit page (slides are usually 1)
 audience: [teacher, student]   # who it's for; not used yet (see planning/)
@@ -348,6 +348,14 @@ Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.
 `{{< blitz unit=1 >}}` (Word Blitz) plays with a unit's vocab (`mode="survival"` starts on Survival, students can switch; `count=` changes Classic's number of questions; `seconds=10`, `title="..."`; `ask="picture"` shows only pictures, `ask="word"` only words). `{{< scramble >}}` takes words like `{{< snowman >}}`; `{{< sort unit=1 >}}` and `{{< bingo unit=1 >}}` use a unit's vocab (or every word, with no `unit`). More game ideas, not built yet: `IDEAS.md`.
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
+
+## Play at home (phones and computers)
+
+**Play at home** in the sidebar (`course/play.qmd`) is an ordinary web page, not slides, with the one-player games: Word Blitz, Snowman, Scramble, Memory, Picture reveal and Matching. **Word Blitz** has a phone layout, so a student can play it on a phone; the others are drawn at slide size and scaled to fit, so they're best on a tablet or computer for now.
+
+> **Teachers: this page is off for students until you turn it on.** It's on the teacher site only, so you can try it first. To let students play at home, open `course/play.qmd` and change `audience: [teacher]` to `audience: [teacher, student]` at the top, then publish the student site again. It then shows in the student site's sidebar. High scores stay on each student's own phone or computer.
+
+Any game shortcode works on a web page (`format: html`) as well as on slides; `{{< game-picker games="blitz,snowman" >}}` offers only the games you list.
 
 ## Timelines and labelling
 
