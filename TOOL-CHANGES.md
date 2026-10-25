@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: A README and changelog inside the Chalkline extension
+- **Asked for:** part of running the extension plan ("just run the whole process").
+- **Why:** so the instructions (install, update, what's where) and the list of changes go with every copy of the extension.
+- **Changed:** new `_extensions/chalkline/README.md` (install with `quarto add insufficientdoubt/project-chalkline`, *before* setting `type: chalkline`; update; never edit the installed folder; what each folder does) and `_extensions/chalkline/CHANGELOG.md` (0.1.0).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: The vocab app and the vocab checker move into the extension; templates for new decks and worksheets (step 4 of the extension plan)
 - **Asked for:** "just run the whole process, and update the repo as you complete each step". Templates: "slide templates we build? Not many of those yet, but they're coming."
 - **Why:** the vocab app is the same in every course and gets fixes; starter files make a new deck or worksheet quick and consistent.
