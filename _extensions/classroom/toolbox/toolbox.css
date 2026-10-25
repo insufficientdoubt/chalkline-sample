@@ -58,8 +58,10 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-menu-title { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 8px; font-size: 17px; font-weight: 700; }
 .ct-menu-key {
   padding: 1px 7px; border: 1px solid var(--ui-line); border-bottom-width: 2px; border-radius: 6px;
-  background: var(--ui-soft); color: var(--ui-muted); font: 700 12px/1.4 inherit;
+  background: var(--ui-soft); color: var(--ui-muted); font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.4;
 }
+/* A tool's own key (V, P) in its tile's corner; the check mark takes the other corner */
+.ct-tile-key { position: absolute; top: 6px; left: 6px; padding: 0 5px; font-size: 11px; }
 .ct-menu-group { margin: 6px 2px 6px; color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
 .ct-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
 .ct-menu-item {

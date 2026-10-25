@@ -270,6 +270,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Reset for the next class works again; smaller W; key badges on the menu tiles
+- **Asked for:** "Make the W for the classroom tools smaller, and add V and P hotkey indicators to the vocab and packet items. Also check on the reset menu, I don't think its working correctly".
+- **Why:** the W was oversized; the keys weren't shown where you pick the tools; the reset seemed broken.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: Reset with "Toolbox: scores…" ticked stopped halfway with an error (it called a class-list function that moved to `tools/classes.js` in the redesign): the noise count, stopwatch and picked names weren't cleared, it didn't go back to the first slide, and the dialog stayed open. It now uses `classes.js`. Esc closes the Reset dialog (before, it opened the slide overview behind it). A tool's key shows in its menu tile's corner; the clock's K is now its tool key, like V and P.
+  - `_extensions/classroom/toolbox/toolbox.css`: the W (and the new tile keys) at 12px: the old rule used `font: … inherit`, which browsers ignore, so the W took the slide's huge font.
+  - `_extensions/classroom/toolbox/tools/clock.js`: `key: K`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Vocab and Packet look like sidebars; V and P; Vocab search, A to Z
 - **Asked for:** "these are still styled like windows though. Can you make them styled as sidebars/side panels (so no curves or padding, just full height bars, and a different background color?" Hotkeys "P for packet, V for vocab", "default size a little smaller", and "a search function to vocab... imagine an AP course that has hundreds of words. We'd want to be able to search all units vocabulary." And "the displayed vocab should be in alphabetical order".
 - **Why:** they still looked like floating windows; a big course needs to find a word fast.

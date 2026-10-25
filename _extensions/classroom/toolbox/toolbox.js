@@ -294,6 +294,7 @@
           "aria-checked": open[id] ? "true" : "false", title: t.key ? t.title + " (" + t.key.key + ")" : null,
           onclick: function () { open[id] ? closeTool(id) : openTool(id); } },
           h("span", { class: "ct-menu-icon" }, icon(t.icon)), h("span", { class: "ct-menu-name", text: t.title }),
+          t.key ? h("kbd", { class: "ct-menu-key ct-tile-key", text: t.key.key }) : null,
           open[id] ? h("span", { class: "ct-check" }, icon("check")) : null));
       });
       menu.append(grid);
@@ -342,7 +343,11 @@
         } }, icon("rotate-ccw"), " Reset"),
         h("button", { class: "ui-btn", text: "Cancel", onclick: close })));
     const shade = h("div", { class: "ct-shade", onclick: function (e) { if (e.target === shade) close(); } }, dialog);
-    function close() { shade.remove(); }
+    function esc(e) {   // Esc closes it (and not reveal.js's slide overview)
+      if (e.key === "Escape") { e.preventDefault(); e.stopImmediatePropagation(); close(); }
+    }
+    function close() { shade.remove(); window.removeEventListener("keydown", esc, true); }
+    window.addEventListener("keydown", esc, true);
     layer.append(shade);
   }
 
@@ -353,7 +358,7 @@
       if (scores) { scores.teams.forEach(function (t) { t.score = 0; }); save("scores", scores); }
       save("noise-count", 0);
       save("stopwatch", { since: 0, done: 0 });
-      const c = loadClasses();
+      const c = window.ChalklineToolbox.classes.load();   // classes.js: the class lists
       c.classes.forEach(function (k) { k.picked = []; k.groups = null; });
       save("classes", c);
       ["scores", "noise-count", "stopwatch", "classes"].forEach(refreshTools);
@@ -376,9 +381,8 @@
   }, true);
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
-    Reveal.addKeyBinding({ keyCode: 75, key: "K", description: "Show/hide the clock" }, function () { open.clock ? closeTool("clock") : openTool("clock"); });
-    // A tool's own key (P for the Packet, V for Vocab) opens and closes it, instead of reveal.js's
-    // (P: the previous slide, as ← does; V: a black screen, as B and . do)
+    // A tool's own key opens and closes it: K the clock, P the Packet, V Vocab. P and V replace
+    // reveal.js's own (P: the previous slide, as ← does; V: a black screen, as B and . do).
     Object.keys(TOOLS).forEach(function (id) {
       const k = TOOLS[id].key;
       if (k) Reveal.addKeyBinding({ keyCode: k.keyCode, key: k.key, description: "Show/hide " + TOOLS[id].title }, function () { open[id] ? closeTool(id) : openTool(id); });
