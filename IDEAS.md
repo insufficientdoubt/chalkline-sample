@@ -10,7 +10,7 @@ Things we've talked about but not built yet. Add to this list; move an idea out 
 
 ## Classroom tools: next steps
 
-Every tool is now a web component in its own file (`_extensions/classroom/toolbox/tools/`), with no title bar, and the content is the card. `toolbox.js` is only the frame (panels, menu, remembering). Ideas for later:
+Every tool is now a web component in its own file (`_extensions/chalkline/toolbox/tools/`), with no title bar, and the content is the card. `toolbox.js` is only the frame (panels, menu, remembering). Ideas for later:
 
 - **Lit** (a small, standard library for web components, about 6 KB, no build step) if a tool's template gets long and fiddly. Not needed yet.
 - **A teacher's own tool:** with the tools in their own files, a teacher's `_extensions/my-tools/` could add a tool to the menu with one file, the same way. Part of the extension plan below.
@@ -22,7 +22,7 @@ Every tool is now a web component in its own file (`_extensions/classroom/toolbo
 
 The file-by-file plan is in `EXTENSION-PLAN.md`.
 
-**Where we are:** alpha. A couple of teachers are trying Chalkline in their own cloned repositories. Today Chalkline's code lives inside each course (`_extensions/classroom`, `scripts/`, `brand/`, the Typst template, the launchers, the vocab app), so every course is a full copy, and a fix (like the video sizing) has to be copied into each one by hand.
+**Where we are:** alpha. A couple of teachers are trying Chalkline in their own cloned repositories. Today Chalkline's code lives inside each course (`_extensions/chalkline`, `scripts/`, `brand/`, the Typst template, the launchers, the vocab app), so every course is a full copy, and a fix (like the video sizing) has to be copied into each one by hand.
 
 **The plan:** split it in two.
 

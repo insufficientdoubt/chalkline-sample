@@ -2,7 +2,7 @@
 
 The map for splitting Chalkline into **a Quarto extension** (the shared tool) and **a course template** (a starter course). The why is in `IDEAS.md` ("Chalkline as a Quarto extension"). This file says where every file goes and in what order to do the work.
 
-Status: **plan only.** Nothing has moved yet.
+Status: **step 1 done** (2026-10-25): the code is in one extension, `_extensions/chalkline/`. Next: step 2.
 
 ## The three places
 
@@ -122,13 +122,13 @@ These are places where content and tool are tangled today:
    One more: `sys.path.append("course/units/04-stem")` (3 cells) is content importing content. That's fine, it stays.
 2. **Paths fixed in the code.** The scripts and Lua filters assume `course/units/`, `course/lessons/`, `course/season.yml`, `vocab/data/vocab.csv`, `vocab/app/`. Fine for now (every Chalkline course uses this layout), but put them in one place (a `chalkline:` block in `_quarto.yml`, with these as defaults).
 3. **`brand/styles.scss` mixes Chalkline's design and the school's.** It's mostly Chalkline's, but check for sample-only touches (the sailboat icon size) and move those to `brand/course.scss`.
-4. **The extension's own name.** `_extensions/classroom` is named `classroom` in `_quarto.yml` (`filters: [classroom]`). Rename it to `chalkline` as part of step 1.
+4. ~~**The extension's own name.**~~ Done in step 1: `filters: [chalkline]`.
 
 ## Order of work
 
 Each step leaves the sample working. Commit after each one.
 
-1. **Gather into one extension, inside this repo.** Move `pdf-viewer` into `classroom`, rename it `_extensions/chalkline/`, and update `_quarto.yml`. Render, check that slides, PDFs and the overview look the same.
+1. ✅ **Gather into one extension, inside this repo.** Move `pdf-viewer` into `classroom`, rename it `_extensions/chalkline/`, and update `_quarto.yml`. Render, check that slides, PDFs and the overview look the same.
 2. **Move Chalkline's styles and Typst template into the extension** as custom formats (`chalkline-html`, `chalkline-revealjs`, `chalkline-typst`). Leave `_brand.yml`, logos and an empty `brand/course.scss` in `brand/`. Compare PDFs before and after (page counts and a look at one worksheet, one poster, one deck).
 3. **Move `scripts/` into the extension** (except `import_vex_vocab.py`), and fix the pages that import them (fix 1 above). Point `pre-render`/`post-render`, the launchers, `.vscode/tasks.json` and the publish workflow at the new paths.
 4. **Move the vocab app, `validate.py` and `schema.yaml` into the extension.**

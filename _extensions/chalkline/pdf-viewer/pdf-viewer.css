@@ -1,5 +1,5 @@
 /* PDF viewer (see pdf-viewer.lua). In a Chalkline course it takes its colors, corners and shadows
-   from Chalkline's design layer (--ui-…, classroom/ui/ui.css), so it matches the tools and menus;
+   from Chalkline's design layer (--ui-…, chalkline/ui/ui.css), so it matches the tools and menus;
    anywhere else it uses the values after the commas. */
 
 .pdfv, .pdfv-popup, .pdfv-menu {

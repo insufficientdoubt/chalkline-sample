@@ -8,6 +8,28 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## YYYY-MM-DD: short title
+- **Asked for:** what the teacher wanted, in their words if they gave them.
+- **Why:** the reason they gave, or "not given".
+- **Changed:** each file and what changed in it.
+- **Who it helps:** this course only, or probably every Chalkline course.
+- **AI assistant:** which one made the change.
+-->
+
+## 2026-10-25: One Chalkline extension (step 1 of the extension plan)
+- **Asked for:** "yes, start step 1" (of `EXTENSION-PLAN.md`: turning Chalkline into a Quarto extension that every course installs).
+- **Why:** so a fix reaches every course with `quarto update` instead of being copied by hand. Step 1 gathers the code into one folder first.
+- **Changed:**
+  - `_extensions/classroom/` renamed `_extensions/chalkline/`; `_extensions/pdf-viewer/` moved inside it as `_extensions/chalkline/pdf-viewer/`.
+  - `_extensions/chalkline/_extension.yml`: one manifest (title Chalkline, version 0.1.0) with both shortcode files; the old `pdf-viewer/_extension.yml` is gone.
+  - `_extensions/chalkline/filter.lua`, `games/games.lua`: the PDF viewer's files are at `pdf-viewer/…` (was `../pdf-viewer/…`).
+  - `_quarto.yml`: `filters: [chalkline]` (was `classroom`).
+  - Comments and docs that named the old folders: `README.md`, `brand/README.md`, `brand/styles.scss`, `scripts/catalog.py`, `IDEAS.md`, `pdf-viewer.lua`/`.css`, `course/units/04-stem/embeds/embed.css`.
+  - Checked: full teacher and student renders give the same files as before, with the same warnings.
+  - `TOOL-CHANGES.md`: the "copy this template" comment had grown around the entries from 2026-10-24 and earlier, hiding them; it wraps only the template again. No entry changed.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: One design layer for everything interactive; PDF viewer and vocab pop-ups restyled to match
 - **Asked for:** "How about improving the style of the vocab viewer and pdf viewer to match the menu and stuff. Also I feel like more of this styling work should be global instead of elements by element. What am I missing"
 - **Why:** each part had its own colors, corners and buttons, so matching them meant changing each one by hand.
@@ -261,14 +283,6 @@ Newest entries first.
 - **Changed:** `_extensions/classroom/toolbox/toolbox.css`: put back the traffic light's styles (the dark box, the three round lights, the glow on the one that's on, the coloured label). An earlier noise-meter restyle deleted them by mistake.
 - **Who it helps:** probably every Chalkline course.
 - **AI assistant:** Claude.
-
-## YYYY-MM-DD: short title
-- **Asked for:** what the teacher wanted, in their words if they gave them.
-- **Why:** the reason they gave, or "not given".
-- **Changed:** each file and what changed in it.
-- **Who it helps:** this course only, or probably every Chalkline course.
-- **AI assistant:** which one made the change.
--->
 
 ## 2026-10-25: Fix: the overview crashed on the new "game" type
 - **Asked for:** not asked; the teacher site's build failed after the Play at home change.

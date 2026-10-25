@@ -370,9 +370,9 @@ local function Meta(meta)
     quarto.doc.add_html_dependency({   -- the PDF viewer, for Packet (the same files as {{< pdf-viewer >}})
       name = "pdf-viewer",
       version = "1.0.0",
-      scripts = { { path = "../pdf-viewer/pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
-      stylesheets = { "../pdf-viewer/pdf-viewer.css" },
-      resources = { "../pdf-viewer/pdf.min.mjs", "../pdf-viewer/pdf.worker.min.mjs", "../pdf-viewer/pdf-lib.esm.min.js" },
+      scripts = { { path = "pdf-viewer/pdf-viewer.js", attribs = { type = "module" }, afterBody = true } },
+      stylesheets = { "pdf-viewer/pdf-viewer.css" },
+      resources = { "pdf-viewer/pdf.min.mjs", "pdf-viewer/pdf.worker.min.mjs", "pdf-viewer/pdf-lib.esm.min.js" },
     })
     quarto.doc.add_html_dependency({
       name = "classroom-tools",

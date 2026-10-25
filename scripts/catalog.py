@@ -315,7 +315,7 @@ if __name__ == "__main__":
 # The look is in brand/styles.scss ("Overview"), with the same design values as the classroom tools.
 # ---------------------------------------------------------------------------
 
-ICONS = {  # Lucide line icons (ISC licence: _extensions/classroom/ui/LUCIDE-LICENSE.txt), drawn inline
+ICONS = {  # Lucide line icons (ISC licence: _extensions/chalkline/ui/LUCIDE-LICENSE.txt), drawn inline
     "presentation": '<path d="M2 3h20" /> <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" /> <path d="m7 21 5-5 5 5" />',
     "file-pen-line": '<path d="m18 5-2.414-2.414A2 2 0 0 0 14.172 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2" /> <path d="M21.378 12.626a1 1 0 0 0-3.004-3.004l-4.01 4.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /> <path d="M8 18h1" />',
     "list-checks": '<path d="m3 17 2 2 4-4" /> <path d="m3 7 2 2 4-4" /> <path d="M13 6h8" /> <path d="M13 12h8" /> <path d="M13 18h8" />',

@@ -1,6 +1,6 @@
 --[[
 PDF viewer: show a PDF inside a slide or web page, drawn by pdf.js 4.10.38 (pdf.min.mjs and pdf.worker.min.mjs, Apache-2.0: LICENSE-pdfjs.txt).
-Works in any Quarto project: copy this folder into another project's _extensions/.
+Part of the Chalkline extension; it also works on its own in any Quarto project.
 
   {{< pdf-viewer "worksheet.pdf" >}}                  one page at a time, with ‹ › buttons
   {{< pdf-viewer "packet.pdf" layout="gallery" >}}    every page as a thumbnail; tap one to open

@@ -3,7 +3,7 @@
 # How this repo is organized (so it can be remixed for another subject):
 #   course/                 CONTENT  (swap this folder for a different subject)
 #   brand/                  APPEARANCE (colors, fonts, logos, page and slide layouts)
-#   _extensions/classroom/  CODE: shortcodes, polls, timer, clock, classroom toolbox
+#   _extensions/chalkline/  CODE: shortcodes, polls, timer, clock, classroom toolbox
 #   scripts/                CODE: catalog builder, vocab tools
 #   index.qmd               overview page, built automatically from every document's labels
 
@@ -45,7 +45,7 @@ vocab-title: "History Vocab"  # name of the vocab app, used on {{< vocab >}} pop
 #                                                      # send students there (until it's set, they show none)
 
 filters:
-  - classroom                # turns content markers into slides/PDF/web output (see _extensions/classroom)
+  - chalkline                # turns content markers into slides/PDF/web output (see _extensions/chalkline)
 
 website:
   title: "Chalkline Sample"

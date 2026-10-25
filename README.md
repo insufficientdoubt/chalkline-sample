@@ -17,7 +17,7 @@
 | **Unit 4: STEM Sampler** | `course/units/04-stem/` | A sampler for STEM teams: math, block-coding and linkage decks with interactives you can drag (geometry, GeoGebra, PhET, Blockly, robot lifts with a DR4B that measures its extension, three rubber-band catapult releases, a linkage simulator), a math handout and two practice worksheets made from a seed. The interactive pages are in its `embeds/` folder |
 | **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
-| **The look of the interactive parts** | `_extensions/classroom/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
+| **The look of the interactive parts** | `_extensions/chalkline/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
 | **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
 | **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |
 
@@ -196,7 +196,7 @@ The answer is 42.
 
 ## Shortcuts you can type in any lesson
 
-These come from `_extensions/classroom/`. Each one looks right on the web page, in the PDF and (where it makes sense) in slides.
+These come from `_extensions/chalkline/`. Each one looks right on the web page, in the PDF and (where it makes sense) in slides.
 
 | Type this | You get |
 |---|---|
@@ -204,7 +204,7 @@ These come from `_extensions/classroom/`. Each one looks right on the web page, 
 | `{{< drawing-box label="Side view" >}}` | A dot-grid box for sketching. Fills the rest of the PDF page unless you add `height="2in"`. |
 | `{{< objectives >}}` | The `objectives:` list from the unit's labels, as bullets. |
 | `{{< pdf "scoring-sheet.pdf" >}}` | An outside PDF saved next to this file. In the PDF version its pages go in as full pages (`pages="2-3"` picks some); on the web page you get a download link and a viewer. |
-| `{{< pdf-viewer "athens-vs-sparta.pdf" >}}` | **On a slide:** a PDF you can page through with ‹ ›, and pens for touch screens (pen, highlighter, **T** for typed text, eraser, undo, clear), and zoom (− 100% +, or Ctrl/⌘ + scroll; drag to move around). The **⬇** button offers: **With my notes** (`…-with-notes.pdf`), **Original**, or **Open in a new tab**. Ink stays on that computer until you press the bin button. ⤢ opens the page large, in a window you can drag and resize. Add `layout="gallery"` to show every page as a thumbnail: tap one to open it large. Works with a worksheet's own PDF (made by the same build) or the unit packet. Slides always show the **student copy**, even on the teacher site (it shows `athens-vs-sparta-student.pdf`, which the teacher build makes), so answer keys never go on the board. To show the teacher edition (for teacher training, say), add `prefer=false`. From `_extensions/pdf-viewer/`, which works in any Quarto project. In PDFs and Word it's just a link. |
+| `{{< pdf-viewer "athens-vs-sparta.pdf" >}}` | **On a slide:** a PDF you can page through with ‹ ›, and pens for touch screens (pen, highlighter, **T** for typed text, eraser, undo, clear), and zoom (− 100% +, or Ctrl/⌘ + scroll; drag to move around). The **⬇** button offers: **With my notes** (`…-with-notes.pdf`), **Original**, or **Open in a new tab**. Ink stays on that computer until you press the bin button. ⤢ opens the page large, in a window you can drag and resize. Add `layout="gallery"` to show every page as a thumbnail: tap one to open it large. Works with a worksheet's own PDF (made by the same build) or the unit packet. Slides always show the **student copy**, even on the teacher site (it shows `athens-vs-sparta-student.pdf`, which the teacher build makes), so answer keys never go on the board. To show the teacher edition (for teacher training, say), add `prefer=false`. From `_extensions/chalkline/pdf-viewer/`, which also works on its own in any Quarto project. In PDFs and Word it's just a link. |
 | `{{< packet >}}` | On a unit page: the **Unit packet (PDF)** button. Shows nothing if the unit has no printables. |
 | `{{< vocab "democracy" >}}` | A vocab word with a dotted underline. Hover (or tap) to see its vocab card: picture, 中文, definition and a link to the vocab app. Use a term, an "also called" name or an ID (`GRC-003`); `text="citizens"` changes the words shown. In PDFs and Word it's just bold; add `zh=true` to also print the 中文 after it (for reference sheets, never quizzes). Terms come straight from `vocab/data/vocab.csv`, read again before every render. |
 | `chalkboard:` in a deck's labels | Draw on any slide: press **C** (or the pen button, bottom left) to draw on the slide, **B** for a blank chalkboard, **Delete** to clear. Copy the three lines from the top of `course/units/01-ancient-greece/city-states-slides.qmd`. |
@@ -510,4 +510,4 @@ VS Code's **Source Control** panel (the branch icon on the left) does all of thi
 
 ## Credits
 
-Unit content is written for this sample in simple English, with facts from Wikipedia ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)); each vocab word links to the article it's based on. Vocab pictures are original drawings made by `vocab/tools/draw_icons.py`. Photos and paintings in the slides come from Wikimedia Commons (public domain, CC0 or CC BY-SA); each unit's `images/CREDITS.md` lists them, and each deck ends with a picture-credits slide. The classroom tools' line icons are from [Lucide](https://lucide.dev) (ISC licence, in `_extensions/classroom/ui/`).
+Unit content is written for this sample in simple English, with facts from Wikipedia ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)); each vocab word links to the article it's based on. Vocab pictures are original drawings made by `vocab/tools/draw_icons.py`. Photos and paintings in the slides come from Wikimedia Commons (public domain, CC0 or CC BY-SA); each unit's `images/CREDITS.md` lists them, and each deck ends with a picture-credits slide. The classroom tools' line icons are from [Lucide](https://lucide.dev) (ISC licence, in `_extensions/chalkline/ui/`).
