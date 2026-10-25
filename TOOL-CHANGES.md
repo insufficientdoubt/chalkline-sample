@@ -270,6 +270,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Word Blitz Survival: a life back at each new level
+- **Asked for:** "What's the current game logic for recovering lives? Is it just miss 3= die?" Then, of the options: "yes, a life back at each new level."
+- **Why:** so a long streak also keeps a Survival run going, not only scores more.
+- **Changed:**
+  - `_extensions/classroom/games/games.js` (Word Blitz): in Survival, reaching a new level (5, 10 or 15 in a row) gives a life back, up to 3. The heart pops back in the top bar, the level's banner says "+1 life", and the answer line shows a "+1 life" heart. The start screen says "3 lives · win one back at 5, 10 and 15 in a row".
+  - `_extensions/classroom/games/games.css`: the heart's pop and the "+1 life" pill.
+  - `README.md`, `course/units/01-ancient-greece/review-games-slides.qmd` (content): the rule.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Word Blitz: streak levels (STRAIGHT FIRE, COLD FIRE, SUPERNOVA), a heat bar, a live fire, Classic and Survival
 - **Asked for:** "Have a line at the bottom grow from center and get slowly red. At a streak of four it should be slightly shaking. The UI theme turns all oranges and red.. At a streak of five it busts into a flame effect. If you get 10 in a row... Maybe "cold fire". Switch everything to Blue theme. The multiplyer should be flat between 5x streaks ... Then a third tier at 15 correct." Then: "additive multiplier (but tiered- three questions in a row is plus 30%, 4 is + 40%.. Between five questions and nine questions it's a flat 50%, then at [ten] questions its +100%. Then at 15 it's +150%). Expressed as x(mult). classic 20 plus survival mode, go ahead. If there's less than 20 vocabulary words present in the whole course, fallback to 10."
 - **Why:** to reward long runs of right answers, and to give a station a fair leaderboard (Classic) and students at home a mode to push (Survival).

@@ -1146,7 +1146,8 @@
      A heat bar along the bottom grows toward the next level; at 4 in a row it shakes and the game
      turns orange; from 5, a fire burns along the bottom, in each level's colors.
      Two modes, each with its own high scores: Classic (20 questions, or 10 if the whole course has
-     fewer than 20 words) and Survival (3 lives; the clock gets faster every 5 questions).
+     fewer than 20 words) and Survival (3 lives, and a life back at each new level, up to 3; the
+     clock gets faster every 5 questions).
      Every word is asked once before any comes back; a word comes back the other way round
      (picture or word), and a missed word comes back sooner.
      Of the four answers, three are from the right word's unit and one from another unit, when
@@ -1407,7 +1408,7 @@
       intro.append(logo(),
         h("div", { class: "cg-blitz-title", text: cfg.title || "Word Blitz" }),
         modes,
-        h("div", { class: "cg-blitz-sub", text: mode === "survival" ? BLITZ_LIVES + " lives · the clock gets faster every 5 questions"
+        h("div", { class: "cg-blitz-sub", text: mode === "survival" ? BLITZ_LIVES + " lives · win one back at 5, 10 and 15 in a row"
           : count + " questions · " + base + " seconds each" }),
         h("div", { class: "cg-blitz-how" }, art("flame"), h("span", { text: "Get answers right in a row! 5 in a row: ×1.5. 10: ×2. 15: ×2.5." })),
         h("div", { class: "cg-tools" }, words.length ? button("Start!", countdown, "cg-big cg-blitz-go") : h("span", { text: "No words yet." })));
@@ -1436,19 +1437,23 @@
       }, 800);
     }
     function over() { return mode === "survival" ? lives <= 0 : i + 1 >= count; }
-    function hearts(lost) {
+    function heart(cls) {
+      const s = h("span", { class: "cg-blitz-heart" + (cls ? " " + cls : "") });
+      s.innerHTML = BLITZ_HEART;
+      return s;
+    }
+    // lost: the heart that just broke; gained: the one that just came back (or -1).
+    function hearts(lost, gained) {
       const box = h("span", { class: "cg-blitz-hearts", "aria-label": lives + " lives" });
       for (let k = 0; k < BLITZ_LIVES; k++) {
-        const s = h("span", { class: "cg-blitz-heart" + (k >= lives ? " cg-blitz-gone" : "") + (k === lost ? " cg-blitz-break" : "") });
-        s.innerHTML = BLITZ_HEART;
-        box.append(s);
+        box.append(heart((k >= lives ? "cg-blitz-gone" : "") + (k === lost ? " cg-blitz-break" : "") + (k === gained ? " cg-blitz-gain" : "")));
       }
       return box;
     }
-    function topLeft(lost) {
+    function topLeft(lost, gained) {
       return h("span", { class: "cg-blitz-left-top" },
         h("span", { class: "cg-blitz-num", text: mode === "survival" ? "Question " + (i + 1) : (i + 1) + " / " + count }),
-        mode === "survival" ? hearts(lost) : "");
+        mode === "survival" ? hearts(lost, gained) : "");
     }
     function next() {
       stop();
@@ -1511,13 +1516,13 @@
       }
     }
     // A new level: its banner sweeps across the game, and flames rise from the bottom.
-    function levelUp(level, m, bonus) {
+    function levelUp(level, m, bonus, life) {
       fx.textContent = "";
       fx.append(h("div", { class: "cg-blitz-glow" }), h("div", { class: "cg-blitz-band" },
         art("flame", "cg-blitz-band-flame"),
         h("span", { class: "cg-blitz-band-big", text: BLITZ_LEVELS[level] }),
         art("flame", "cg-blitz-band-flame"),
-        h("span", { class: "cg-blitz-band-small", text: streak + " in a row  " + times(m) + "  +" + bonus.toLocaleString("en-US") })));
+        h("span", { class: "cg-blitz-band-small", text: streak + " in a row  " + times(m) + "  +" + bonus.toLocaleString("en-US") + (life ? "  +1 life" : "") })));
       for (let k = 0; k < 22; k++) {
         const f = art("flame", "cg-blitz-flame"), size = 40 + Math.random() * 50;
         f.style.cssText = "left:" + (k * 4.6 + Math.random() * 3 - 2).toFixed(1) + "%;width:" + size.toFixed(0) + "px;height:" + (size * 1.33).toFixed(0) +
@@ -1542,6 +1547,8 @@
       const level = blitzLevel(streak), m = blitzMultiplier(streak);
       const bonus = ok && BLITZ_LEVELS[level] && level !== before ? BLITZ_BONUS : 0;
       const points = Math.round(points0 * m) + bonus;
+      const life = bonus > 0 && mode === "survival" && lives < BLITZ_LIVES;   // Survival: a life back at each new level
+      if (life) lives++;
       total += points;
       if (ok) right++;
       else {
@@ -1560,15 +1567,16 @@
       fb.className = "cg-blitz-feedback " + (ok ? "cg-blitz-yes" : "cg-blitz-no");
       fb.append(h("span", { text: ok ? "Correct!  +" + points.toLocaleString("en-US") : j < 0 ? "Time's up!" : "Not quite." }),
         ok && m > 1 ? h("span", { class: "cg-blitz-times", text: times(m) + (bonus ? " + bonus" : "") }) : "",
+        life ? h("span", { class: "cg-blitz-life" }, heart("cg-blitz-gain"), "+1 life") : "",
         ok ? "" : h("span", { class: "cg-blitz-was", text: "It's: " + q.w.word }),
         button(over() ? (mode === "survival" && lives <= 0 ? "Game over" : "See my score") : "Next", next, "cg-primary"));
       stage.querySelector(".cg-blitz-clock").hidden = true;
-      stage.querySelector(".cg-blitz-left-top").replaceWith(topLeft(!ok && mode === "survival" ? lives : -1));
+      stage.querySelector(".cg-blitz-left-top").replaceWith(topLeft(!ok && mode === "survival" ? lives : -1, life ? lives - 1 : -1));
       const score = stage.querySelector(".cg-blitz-score");
       score.textContent = "";
       score.append(streakMeter(), h("span", { class: "cg-blitz-total" + (ok ? " cg-blitz-up" : ""), text: total.toLocaleString("en-US") }));
       paintHeat();
-      if (bonus) levelUp(level, m, bonus);
+      if (bonus) levelUp(level, m, bonus, life);
       else if (ok) beep(880, 0.15, 0.12);
       else beep(196, 0.25, 0.12);
       phase = "feedback";

@@ -625,6 +625,10 @@
 .reveal .cg-blitz-heart path { fill: #f0444a; stroke: #fff; stroke-width: 1.5; }
 .reveal .cg-blitz-heart.cg-blitz-gone path { fill: #ddd8ec; }
 .reveal .cg-blitz-heart.cg-blitz-break { animation: cg-blitz-break 0.6s ease-out; }
+.reveal .cg-blitz-heart.cg-blitz-gain { animation: cg-blitz-gain 0.8s ease-out; }
+.reveal .cg-blitz-life { display: inline-flex; align-items: center; gap: 6px; padding: 0 12px 0 8px; border-radius: 999px; background: #ffe3e4; color: #d62f36; font-size: 22px; }
+.reveal .cg-blitz-life .cg-blitz-heart { width: 22px; height: 20px; }
+@keyframes cg-blitz-gain { 0% { transform: scale(0); } 50% { transform: scale(1.7); filter: drop-shadow(0 0 8px #ff4d6d); } 100% { transform: scale(1); } }
 @keyframes cg-blitz-break { 30% { transform: scale(1.4) rotate(-12deg); } 60% { transform: scale(0.8) rotate(8deg); } }
 .reveal .cg-blitz-score { display: flex; align-items: center; gap: 14px; }
 .reveal .cg-blitz-total { min-width: 90px; padding: 3px 16px; border-radius: 999px; background: var(--blitz-gold); color: var(--blitz-ink); font-variant-numeric: tabular-nums; text-align: center; }
