@@ -2,7 +2,7 @@
 
 The map for splitting Chalkline into **a Quarto extension** (the shared tool) and **a course template** (a starter course). The why is in `IDEAS.md` ("Chalkline as a Quarto extension"). This file says where every file went, how the pieces fit, and what's left.
 
-Status: **steps 1–5 done** (2026-10-25): this sample is now a course with all of Chalkline inside `_extensions/chalkline/`, ready to split. Steps 6–9 need the questions at the bottom answered first.
+Status: **steps 1–5 done** (2026-10-25): this sample is now a course with all of Chalkline inside `_extensions/chalkline/`. **Decision (2026-10-25): stay in one repository for now** (see "One repository for now").
 
 ## The three places
 
@@ -70,6 +70,21 @@ Tested: the whole site built with the extension moved to `_extensions/someowner/
 - **Starter files** are in `templates/`. `python chalkline.py new` (or VS Code: Run Task > New slide deck or worksheet) copies one into a unit with the title, unit and next `order:` filled in. A course's own `templates/` folder is used first.
 - **Rule for new templates:** if the deck's *design* could serve any subject, its layouts go in the extension and its starter file in `templates/`. If it's one subject's deck, it's content.
 
+## One repository for now
+
+Decided 2026-10-25: no separate `chalkline` repository yet. `quarto add` installs every extension in a repository's `_extensions/` folder, so courses install and update Chalkline straight from this one:
+
+```bash
+quarto add insufficientdoubt/project-chalkline      # only _extensions/chalkline is copied
+quarto update insufficientdoubt/project-chalkline
+```
+
+Why: a split would make testing a change slower (the copy in the sample would be an installed one, so a change means editing in one repository and testing in another, or keeping a second example course), and with a few alpha teachers its benefits (smaller downloads, versions that mean only "a new Chalkline", a clean starter course) are small. A course installs to `_extensions/insufficientdoubt/chalkline/` either way, so splitting later costs each course one `quarto update` from the new address.
+
+Split when other people start changing Chalkline, or when the sample's content changes get in the way of clean releases. Then give the `chalkline` repository a small example course to test in, and the sample only updates.
+
+**Order matters when adding Chalkline to an existing course:** `quarto add` first, then `project: type: chalkline` in `_quarto.yml`. Until it's installed, Quarto doesn't know the project type and `quarto add` stops with "Unsupported project type". A course made from this repository already has it, so `quarto update` just works.
+
 ## Order of work
 
 1. ✅ **Gather into one extension, inside this repo.**
@@ -77,9 +92,9 @@ Tested: the whole site built with the extension moved to `_extensions/someowner/
 3. ✅ **Move `scripts/` into the extension**, with `chalkline.py` and shortcodes instead of Python cells in pages.
 4. ✅ **Move the vocab app and the vocab checker into the extension**; add `templates/` and `python chalkline.py new`.
 5. ✅ **Check:** full teacher and student renders (all PDF pages identical pixel for pixel to before; changed pages look the same in a browser), the extension under an owner folder, the Mac launcher from a fresh copy, games, vocab pop-ups, the PDF viewer and the vocab app in a browser. Not tested here: the Windows launcher and the GitHub publish workflow (they changed only in paths; the workflow runs on the next push to `main`).
-6. **Make the `chalkline` repository** from `_extensions/chalkline/` (`git subtree split --prefix=_extensions/chalkline` keeps its history), with the files inside `_extensions/chalkline/` in that repo so `quarto add` finds them. Tag `v0.1.0`.
-7. **Make the template repository:** this sample minus most units, with `quarto add <owner>/chalkline` done. Mark it as a template on GitHub.
-8. **This sample becomes a course:** replace its `_extensions/chalkline/` with the installed one, and check that nothing changed.
+6. ~~Make a separate `chalkline` repository~~ Not for now (see above). Instead: once this branch is merged, tag `v0.1.0` on `main`, so a course can pin a version (`quarto add insufficientdoubt/project-chalkline@v0.1.0`).
+7. **New courses:** tick "Template repository" in this repository's settings, so "Use this template" makes a new course (it starts with the sample's units, to replace). A slimmer starter course can come with the split.
+8. ~~This sample becomes a course~~ Not needed while it's also where Chalkline lives.
 9. **Move the alpha testers** (as in `IDEAS.md`): read each one's `TOOL-CHANGES.md`, pull good changes into Chalkline first, then swap their tool folders for the extension.
 
 ## New rules for teachers and AI assistants (after step 8)
@@ -96,8 +111,8 @@ Replace "Changing the tool: keep a log" in `CLAUDE.md` / `AGENTS.md` / `GEMINI.m
 - **Paths fixed in the code.** The scripts and Lua filters assume `course/units/`, `course/lessons/`, `course/season.yml`, `vocab/data/vocab.csv`, `vocab/app/`. Fine while every Chalkline course uses this layout; if one ever can't, put them in a `chalkline:` block in `_quarto.yml`, with these as defaults.
 - **`ui/ui.css`** still has the sample's hex colors (the toolbox, games and activities). Make it read the brand palette like the page and slide styles do.
 
-## Questions to settle (before step 6)
+## Settled
 
-- **The owner on GitHub:** `insufficientdoubt/chalkline`, or an organization (so the name doesn't depend on one person)? Nothing in a course depends on it any more, but it's in every `quarto add` and `quarto update` command.
-- **Version numbers:** `0.x` during alpha (anything may change), `1.0` when the template is stable.
-- **Fonts:** the print fonts are 17 MB (mostly Noto Sans SC). Fine for `quarto add`? Or ship a smaller subset of the Chinese font?
+- **Owner:** your own account for now; an organization (free) once someone else helps maintain Chalkline or before sharing it widely.
+- **Fonts:** the 17 MB of print fonts stay as they are.
+- **Version numbers:** `0.x` during alpha (anything may change), `1.0` when it's stable.
