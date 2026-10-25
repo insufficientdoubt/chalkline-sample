@@ -270,6 +270,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Speed quiz becomes Word Blitz: streaks multiply the points, five in a row is STRAIGHT FIRE
+- **Asked for:** "let's change the game rules slightly to favor correct answers over speed a little bit. Sequential correct answers get a multiplier (like 10%? 20%). Five in a row gets a dump of extra points. And a cool effect goes across the screen like "Straightfire". Missing a question resets and multiplier. Give it a cooler name"
+- **Why:** to reward getting answers right more than answering fast.
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: the game is now **Word Blitz** (`wordBlitz`, game id `blitz`). A right answer scores 600 to 1,000 (was 500 to 1,000), times the streak: +20% for each right answer in a row, up to ×2. Every fifth in a row adds 2,000 points and plays STRAIGHT FIRE: a band of flames sweeps across the game, flames rise from the bottom, and a rising chime plays. A wrong answer or running out of time ends the streak. The top bar shows the streak and the next multiplier; each answer shows the multiplier it got; the end screen shows the best streak. A flame icon on the Review games page.
+  - `_extensions/classroom/games/games.css`: the streak chip and the fire effect; the class names are now `cg-blitz-…`.
+  - `_extensions/classroom/shortcodes.lua`: the shortcode is now `{{< blitz unit=1 >}}` (was `speed-quiz`).
+  - `README.md`: the new name, rules and shortcode. `course/review-games.qmd`, `course/units/01-ancient-greece/review-games-slides.qmd` (content): the new name and rules.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Speed quiz, a Kahoot-style review game for one player, with a high-score table
 - **Asked for:** "Create a kahoot style review game. Single player. Students are given either a picture and then need to match the correct word (grid of four words - 3 from the same unit as the correct answer, one from another unit if available). Or the opposite - given a word and they need to match the picture. They have a few seconds to answer, and the faster they answer the more points they get if correct. Kahoot does it out of a thousand points ... you can add a high scores table where students can write their name."
 - **Why:** "you could have a station where students try this and see who's the winner at the end. Or students can just do it on their own at home."

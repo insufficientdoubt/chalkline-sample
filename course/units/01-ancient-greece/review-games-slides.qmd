@@ -2,7 +2,7 @@
 title: "Greek Word Games"
 subtitle: "希腊词汇游戏 · Ancient Greece review"
 type: slides
-description: "Review games for the unit: Snowman (guess the word), Picture reveal, Jeopardy, Quick-fire questions and a Speed quiz. Copy any slide to make your own."
+description: "Review games for the unit: Snowman (guess the word), Picture reveal, Jeopardy, Quick-fire questions and Word Blitz. Copy any slide to make your own."
 order: 3
 audience: [teacher, student]
 format: revealjs
@@ -462,7 +462,7 @@ Or open **Review games** in the sidebar and choose **Bingo**.
 
 {{< bingo unit=1 >}}
 
-# Speed quiz ⏱️
+# Word Blitz 🔥
 
 :::: {.columns .game-intro}
 ::: {.column width="38%"}
@@ -472,6 +472,8 @@ Or see a word. Choose the picture.
 
 Be quick! Faster answers get more points.
 
+Right answers in a row multiply your points. Five in a row is **straight fire**!
+
 Press **↓** to play.
 :::
 ::: {.column width="62%"}
@@ -479,28 +481,28 @@ Press **↓** to play.
 
 ```{.markdown code-line-numbers="false"}
 Ten questions from unit 1's vocab:
-{{</* speed-quiz unit=1 */>}}
+{{</* blitz unit=1 */>}}
 
 Only pictures (choose the word),
 15 seconds each:
-{{</* speed-quiz unit=1 ask="picture" seconds=15 */>}}
+{{</* blitz unit=1 ask="picture" seconds=15 */>}}
 ```
 
-Or open **Review games** in the sidebar and choose **Speed quiz**.
+Or open **Review games** in the sidebar and choose **Word Blitz**.
 :::
 ::::
 
 ::: notes
-Like Kahoot, for one player. Each question has four answers: three from this unit and one from another unit. A right answer scores 500 to 1,000 points: the faster, the more. Keys **1–4** choose an answer too.
+Like Kahoot, for one player. Each question has four answers: three from this unit and one from another unit. A right answer scores 600 to 1,000 points (the faster, the more), times the streak: ×1.2 for two right in a row, ×1.4 for three, up to ×2. Every fifth right answer in a row adds 2,000 points and sets the screen on fire (**STRAIGHT FIRE!**). A wrong answer, or running out of time, ends the streak. Keys **1–4** choose an answer too.
 
 At the end, a player with a high score types their name. The high-score table is saved **only in this browser on this computer**, so one computer can be a station: students take turns, and the table shows the winner at the end of the lesson. **Clear the scores** (tap twice) starts a new table.
 
 Options: `count=10` questions, `seconds=10`, `ask="picture"` (see a picture, choose the word) or `ask="word"` (see a word, choose the picture). Without `ask`, it mixes both.
 :::
 
-## Ancient Greece speed quiz
+## Ancient Greece Word Blitz
 
-{{< speed-quiz unit=1 title="Ancient Greece speed quiz" >}}
+{{< blitz unit=1 title="Ancient Greece Word Blitz" >}}
 
 ```{=html}
 <style>

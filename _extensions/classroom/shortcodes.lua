@@ -40,8 +40,8 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< scramble unit=1 >}}                the letters of a word, mixed up (words as for snowman)
   {{< sort unit=1 >}}                    sort words into groups: their topics (one unit) or units
   {{< bingo unit=1 >}}                   bingo: make printable cards (PDF, in the browser), then call
-  {{< speed-quiz unit=1 >}}              like Kahoot, for one player: a picture and four words (or a word
-                                         and four pictures), faster = more points, high scores
+  {{< blitz unit=1 >}}                   Word Blitz, like Kahoot for one player: a picture and four words
+                                         (or a word and four pictures), streaks multiply, high scores
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
@@ -473,20 +473,20 @@ return {
     return games.div("bingo", c)
   end,
 
-  -- Speed quiz (like Kahoot, for one player): a picture and four words, or a word and four pictures,
-  -- against the clock, with a high-score table kept in the browser. count=10, seconds=10,
+  -- Word Blitz (like Kahoot, for one player): a picture and four words, or a word and four pictures,
+  -- against the clock; right answers in a row multiply the points. High scores are kept in the browser. count=10, seconds=10,
   -- ask="picture" (choose the word) or ask="word" (choose the picture); both, mixed, if not given.
-  ["speed-quiz"] = function(args, kwargs)
-    if not quarto.doc.is_format("revealjs") then return games.placeholder("Speed quiz") end
+  ["blitz"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Word Blitz") end
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
-    local c = game_config({}, kwargs, "speed")
+    local c = game_config({}, kwargs, "blitz")
     c.all = {}   -- every word, for the wrong answers (one of the four comes from another unit)
     for _, t in ipairs(vex_list or {}) do table.insert(c.all, game_word(t, up)) end
     c.count = tonumber(str(kwargs["count"], "10")) or 10
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
     c.ask = str(kwargs["ask"], "both")
-    c.title = str(kwargs["title"], "Speed quiz")
-    return games.div("speed", c)
+    c.title = str(kwargs["title"], "Word Blitz")
+    return games.div("blitz", c)
   end,
 
   -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).

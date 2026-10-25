@@ -1,5 +1,5 @@
 /*
-  Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire, Matching, Memory, Speed quiz and more. Each one is a
+  Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire, Matching, Memory, Word Blitz and more. Each one is a
   <div class="cg-game" data-game="..." data-config="{json}"> made by shortcodes.lua
   (words from the vocab list) or filter.lua (questions you write in a ::: div).
 
@@ -1138,26 +1138,30 @@
     return b;
   }
 
-  /* ---------------- Speed quiz (like Kahoot, for one player) ----------------
-     A picture and four words, or a word and four pictures. A right answer scores 500 to 1000
-     points: the faster, the more (Kahoot's rule). Of the four, three are from the right word's
-     unit and one from another unit, when there is one. The high scores are kept in this browser
-     only, so one computer can be a station for the class, or a student can play at home.
+  /* ---------------- Word Blitz (like Kahoot, for one player) ----------------
+     A picture and four words, or a word and four pictures. A right answer scores 600 to 1,000
+     points (the faster, the more), times the streak: ×1.2 for two right in a row, ×1.4 for three,
+     up to ×2. Every fifth right in a row adds 2,000 and sets the screen on fire. A wrong answer
+     ends the streak. Of the four answers, three are from the right word's unit and one from
+     another unit, when there is one. The high scores are kept in this browser only, so one
+     computer can be a station for the class, or a student can play at home.
      config: words (the questions), all (every word: the wrong answers), count, seconds,
      ask ("both", "picture": show a picture, choose the word; "word": show a word, choose the picture),
      unit, title. */
-  const SPEED_COLORS = ["#e5383b", "#0087ff", "#e0a800", "#2e9e4f"];
-  const SPEED_SHAPES = ['<path d="M12 3l10 18H2z"/>', '<path d="M12 2l10 10-10 10L2 12z"/>',
+  const BLITZ_COLORS = ["#e5383b", "#0087ff", "#e0a800", "#2e9e4f"];
+  const BLITZ_SHAPES = ['<path d="M12 3l10 18H2z"/>', '<path d="M12 2l10 10-10 10L2 12z"/>',
     '<circle cx="12" cy="12" r="10"/>', '<rect x="3" y="3" width="18" height="18" rx="2"/>'];
-  const SPEED_TOP = 10;   // high scores kept
+  const BLITZ_TOP = 10;   // high scores kept
+  const BLITZ_STEP = 0.2, BLITZ_MAX = 2, BLITZ_RUN = 5, BLITZ_BONUS = 2000;   // the streak rules (above)
 
-  function speedQuiz(root, cfg) {
+  function wordBlitz(root, cfg) {
     const all = list(cfg.all).length ? list(cfg.all) : list(cfg.words);
     const seconds = cfg.seconds || 10;
-    const key = "chalkline-games:speed:" + (cfg.unit || "all");
-    let qs, i, total, right, answered, started, timer = 0, wait = 0, phase = "start", entry = null;
-    const stage = h("div", { class: "cg-speed-stage" });
-    root.append(stage);
+    const key = "chalkline-games:blitz:" + (cfg.unit || "all");
+    let qs, i, total, right, streak, bestStreak, answered, started, timer = 0, wait = 0, phase = "start", entry = null;
+    const stage = h("div", { class: "cg-blitz-stage" });
+    const fx = h("div", { class: "cg-blitz-fx", "aria-hidden": "true" });   // the fire, over the whole game
+    root.append(stage, fx);
 
     function scores() {
       try { return list(JSON.parse(localStorage.getItem(key))); } catch (e) { return []; }
@@ -1165,7 +1169,7 @@
     function saveScores(s) {
       try { localStorage.setItem(key, JSON.stringify(s)); } catch (e) { /* private window: just for now */ }
     }
-    function ranked(s) { return s.slice().sort(function (a, b) { return b.score - a.score || a.at - b.at; }).slice(0, SPEED_TOP); }
+    function ranked(s) { return s.slice().sort(function (a, b) { return b.score - a.score || a.at - b.at; }).slice(0, BLITZ_TOP); }
 
     // Three wrong answers: two from the word's own unit and one from another unit (when there is one).
     function options(w, pictures) {
@@ -1188,53 +1192,54 @@
     }
     function stop() { clearInterval(timer); clearTimeout(wait); timer = wait = 0; }
     function shape(j) {
-      const s = h("span", { class: "cg-speed-shape", "aria-hidden": "true" });
-      s.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor">' + SPEED_SHAPES[j] + "</svg>";
+      const s = h("span", { class: "cg-blitz-shape", "aria-hidden": "true" });
+      s.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor">' + BLITZ_SHAPES[j] + "</svg>";
       return s;
     }
     function table(mine) {
       const s = ranked(scores());
-      const box = h("div", { class: "cg-speed-board" }, h("div", { class: "cg-speed-board-title", text: "High scores" }));
-      if (!s.length) box.append(h("div", { class: "cg-speed-empty", text: "No scores yet. Be the first!" }));
+      const box = h("div", { class: "cg-blitz-board" }, h("div", { class: "cg-blitz-board-title", text: "High scores" }));
+      if (!s.length) box.append(h("div", { class: "cg-blitz-empty", text: "No scores yet. Be the first!" }));
       else {
-        const ol = h("ol", { class: "cg-speed-list" });
+        const ol = h("ol", { class: "cg-blitz-list" });
         s.forEach(function (e, j) {
-          ol.append(h("li", { class: mine && e.at === mine.at ? "cg-speed-mine" : "" },
-            h("span", { class: "cg-speed-rank", text: j + 1 }), h("span", { class: "cg-speed-name", text: e.name }),
-            h("span", { class: "cg-speed-pts", text: e.score.toLocaleString("en-US") })));
+          ol.append(h("li", { class: mine && e.at === mine.at ? "cg-blitz-mine" : "" },
+            h("span", { class: "cg-blitz-rank", text: j + 1 }), h("span", { class: "cg-blitz-name", text: e.name }),
+            h("span", { class: "cg-blitz-pts", text: e.score.toLocaleString("en-US") })));
         });
         box.append(ol);
       }
-      box.append(h("div", { class: "cg-speed-note", text: "Saved on this computer only." }),
+      box.append(h("div", { class: "cg-blitz-note", text: "Saved on this computer only." }),
         s.length ? h("div", { class: "cg-tools" }, sureButton("Clear the scores", function () { saveScores([]); paintBoard(); })) : "");
       return box;
     }
     function paintBoard() {
-      const old = stage.querySelector(".cg-speed-board");
+      const old = stage.querySelector(".cg-blitz-board");
       if (old) old.replaceWith(table(entry));
     }
 
     function begin() {
       stop();
       phase = "start"; entry = null;
+      fx.textContent = "";
       qs = questions();
       stage.textContent = "";
-      stage.className = "cg-speed-stage cg-speed-home";
-      stage.append(h("div", { class: "cg-speed-intro" },
-        h("div", { class: "cg-quiz-title", text: cfg.title || "Speed quiz" }),
+      stage.className = "cg-blitz-stage cg-blitz-home";
+      stage.append(h("div", { class: "cg-blitz-intro" },
+        h("div", { class: "cg-quiz-title", text: cfg.title || "Word Blitz" }),
         h("div", { class: "cg-quiz-sub", text: qs.length + " questions · " + seconds + " seconds each" }),
-        h("p", { class: "cg-speed-how", text: "Choose the right answer. Faster answers get more points: up to 1,000." }),
+        h("p", { class: "cg-blitz-how", text: "Right answers in a row multiply your points. Get five in a row for a big bonus!" }),
         h("div", { class: "cg-tools" }, qs.length ? button("Start", countdown, "cg-big") : h("span", { text: "No words yet." }))),
       table());
     }
     function countdown() {
       stop();
       phase = "count";
-      total = 0; right = 0; i = -1;
+      total = 0; right = 0; streak = 0; bestStreak = 0; i = -1;
       let n = 3;
-      const num = h("div", { class: "cg-speed-count", text: n });
+      const num = h("div", { class: "cg-blitz-count", text: n });
       stage.textContent = "";
-      stage.className = "cg-speed-stage cg-speed-ready";
+      stage.className = "cg-blitz-stage cg-blitz-ready";
       stage.append(h("div", { class: "cg-quiz-sub", text: "Get ready!" }), num);
       beep(660, 0.12, 0.1);
       timer = setInterval(function () {
@@ -1250,25 +1255,25 @@
       phase = "question"; answered = false;
       const q = qs[i], w = q.w;
       const bar = h("div", { class: "cg-timer-fill" });
-      const left = h("span", { class: "cg-speed-left", text: seconds });
-      const grid = h("div", { class: "cg-speed-grid" + (q.mode === "word" ? " cg-speed-pictures" : "") });
+      const left = h("span", { class: "cg-blitz-left", text: seconds });
+      const grid = h("div", { class: "cg-blitz-grid" + (q.mode === "word" ? " cg-blitz-pictures" : "") });
       q.options.forEach(function (o, j) {
-        grid.append(h("button", { class: "cg-speed-opt", style: "--opt:" + SPEED_COLORS[j], "data-n": j,
+        grid.append(h("button", { class: "cg-blitz-opt", style: "--opt:" + BLITZ_COLORS[j], "data-n": j,
           "aria-label": q.mode === "word" ? "Picture " + (j + 1) : o.word, onclick: function () { choose(j); } },
-          shape(j), q.mode === "word" ? h("img", { src: o.image, alt: "" }) : h("span", { class: "cg-speed-word", text: o.word })));
+          shape(j), q.mode === "word" ? h("img", { src: o.image, alt: "" }) : h("span", { class: "cg-blitz-word", text: o.word })));
       });
-      const prompt = q.mode === "picture" ? h("img", { class: "cg-speed-img", src: w.image, alt: "" })
-        : q.mode === "word" ? h("div", { class: "cg-speed-term", text: w.word })
-        : h("div", { class: "cg-speed-def", text: w.hint });
+      const prompt = q.mode === "picture" ? h("img", { class: "cg-blitz-img", src: w.image, alt: "" })
+        : q.mode === "word" ? h("div", { class: "cg-blitz-term", text: w.word })
+        : h("div", { class: "cg-blitz-def", text: w.hint });
       stage.textContent = "";
-      stage.className = "cg-speed-stage cg-speed-play cg-speed-mode-" + q.mode;
+      stage.className = "cg-blitz-stage cg-blitz-play cg-blitz-mode-" + q.mode;
       stage.append(
-        h("div", { class: "cg-speed-top" }, h("span", { class: "cg-speed-num", text: (i + 1) + " / " + qs.length }),
-          h("span", { class: "cg-speed-ask", text: q.mode === "word" ? "Which picture is it?" : "Which word is it?" }),
-          h("span", { class: "cg-speed-total", text: total.toLocaleString("en-US") + " points" })),
-        h("div", { class: "cg-speed-prompt" }, prompt),
-        h("div", { class: "cg-speed-clock" }, h("div", { class: "cg-timer" }, bar), left),
-        h("div", { class: "cg-speed-feedback", hidden: true }),
+        h("div", { class: "cg-blitz-top" }, h("span", { class: "cg-blitz-num", text: (i + 1) + " / " + qs.length }),
+          h("span", { class: "cg-blitz-ask", text: q.mode === "word" ? "Which picture is it?" : "Which word is it?" }),
+          h("span", { class: "cg-blitz-score" }, streakChip(), h("span", { class: "cg-blitz-total", text: total.toLocaleString("en-US") + " points" }))),
+        h("div", { class: "cg-blitz-prompt" }, prompt),
+        h("div", { class: "cg-blitz-clock" }, h("div", { class: "cg-timer" }, bar), left),
+        h("div", { class: "cg-blitz-feedback", hidden: true }),
         grid);
       started = Date.now();
       const length = seconds * 1000;
@@ -1280,6 +1285,25 @@
         if (!rest) choose(-1);
       }, 50);
     }
+    function multiplier(n) { return Math.min(BLITZ_MAX, 1 + BLITZ_STEP * Math.max(0, n - 1)); }
+    function times(m) { return "×" + m.toFixed(1); }
+    // The streak in the top bar: how many in a row, and the multiplier the next right answer gets.
+    function streakChip() {
+      return streak ? h("span", { class: "cg-blitz-streak" + (streak >= 3 ? " cg-blitz-hot" : ""), text: "🔥 " + streak + " in a row · next " + times(multiplier(streak + 1)) }) : "";
+    }
+    // STRAIGHT FIRE: a band of flames sweeps across the game, and flames rise from the bottom.
+    function onFire(bonus) {
+      fx.textContent = "";
+      fx.append(h("div", { class: "cg-blitz-band" },
+        h("span", { class: "cg-blitz-band-big", text: "STRAIGHT FIRE!" }),
+        h("span", { class: "cg-blitz-band-small", text: streak + " in a row  +" + bonus.toLocaleString("en-US") })));
+      for (let k = 0; k < 18; k++) {
+        fx.append(h("span", { class: "cg-blitz-flame", text: "🔥",
+          style: "left:" + (k * 5.6 + Math.random() * 3) + "%;animation-delay:" + (Math.random() * 0.5).toFixed(2) + "s;font-size:" + (34 + Math.random() * 40).toFixed(0) + "px" }));
+      }
+      fx.classList.remove("cg-blitz-burn"); void fx.offsetWidth; fx.classList.add("cg-blitz-burn");
+      [392, 523, 659, 784, 1047, 1319].forEach(function (f, k) { beep(f, 0.22, 0.12, k * 0.07); });
+    }
     // j: the button chosen, or -1 when the time ran out.
     function choose(j) {
       if (phase !== "question" || answered) return;
@@ -1287,58 +1311,68 @@
       stop();
       const q = qs[i], ok = j >= 0 && q.options[j] === q.w;
       const elapsed = Math.min(Date.now() - started, seconds * 1000);
-      const points = ok ? Math.round(1000 * (1 - elapsed / (seconds * 1000) / 2)) : 0;
+      const base = ok ? Math.round(1000 - 400 * elapsed / (seconds * 1000)) : 0;   // 600 to 1,000
+      streak = ok ? streak + 1 : 0;
+      bestStreak = Math.max(bestStreak, streak);
+      const m = multiplier(streak), bonus = ok && streak % BLITZ_RUN === 0 ? BLITZ_BONUS : 0;
+      const points = Math.round(base * m) + bonus;
       total += points;
       if (ok) right++;
-      stage.querySelectorAll(".cg-speed-opt").forEach(function (b, k) {
+      stage.querySelectorAll(".cg-blitz-opt").forEach(function (b, k) {
         b.disabled = true;
-        if (q.options[k] === q.w) b.classList.add("cg-speed-right");
-        else if (k === j) b.classList.add("cg-speed-wrong");
-        else b.classList.add("cg-speed-dim");
-        if (q.mode === "word" && q.options[k] === q.w) b.append(h("span", { class: "cg-speed-label", text: q.w.word }));
+        if (q.options[k] === q.w) b.classList.add("cg-blitz-right");
+        else if (k === j) b.classList.add("cg-blitz-wrong");
+        else b.classList.add("cg-blitz-dim");
+        if (q.mode === "word" && q.options[k] === q.w) b.append(h("span", { class: "cg-blitz-label", text: q.w.word }));
       });
-      const fb = stage.querySelector(".cg-speed-feedback");
+      const fb = stage.querySelector(".cg-blitz-feedback");
       fb.hidden = false;
-      fb.className = "cg-speed-feedback " + (ok ? "cg-speed-yes" : "cg-speed-no");
-      fb.append(h("span", { text: ok ? "Correct!  +" + points : j < 0 ? "Time's up!" : "Not quite." }),
-        ok ? "" : h("span", { class: "cg-speed-was", text: "It's: " + q.w.word }),
+      fb.className = "cg-blitz-feedback " + (ok ? "cg-blitz-yes" : "cg-blitz-no");
+      fb.append(h("span", { text: ok ? "Correct!  +" + points.toLocaleString("en-US") : j < 0 ? "Time's up!" : "Not quite." }),
+        ok && m > 1 ? h("span", { class: "cg-blitz-times", text: times(m) + (bonus ? " + bonus" : "") }) : "",
+        ok ? "" : h("span", { class: "cg-blitz-was", text: "It's: " + q.w.word }),
         button(i + 1 < qs.length ? "Next" : "See my score", next, "cg-primary"));
-      stage.querySelector(".cg-speed-clock").hidden = true;
-      stage.querySelector(".cg-speed-total").textContent = total.toLocaleString("en-US") + " points";
-      if (ok) beep(880, 0.15, 0.12); else beep(196, 0.25, 0.12);
+      stage.querySelector(".cg-blitz-clock").hidden = true;
+      const score = stage.querySelector(".cg-blitz-score");
+      score.textContent = "";
+      score.append(streakChip(), h("span", { class: "cg-blitz-total", text: total.toLocaleString("en-US") + " points" }));
+      if (bonus) onFire(bonus);
+      else if (ok) beep(880, 0.15, 0.12);
+      else beep(196, 0.25, 0.12);
       phase = "feedback";
-      wait = setTimeout(next, ok ? 2000 : 3200);   // on by itself; Next goes straight on
+      wait = setTimeout(next, bonus ? 3000 : ok ? 2000 : 3200);   // on by itself; Next goes straight on
     }
     function end() {
       stop();
       phase = "end";
       const s = ranked(scores());
-      const makesIt = total > 0 && (s.length < SPEED_TOP || total > s[s.length - 1].score);
+      const makesIt = total > 0 && (s.length < BLITZ_TOP || total > s[s.length - 1].score);
       const best = !s.length || total > s[0].score;
-      const name = h("input", { class: "cg-speed-input", type: "text", maxlength: "16", placeholder: "Your name",
+      const name = h("input", { class: "cg-blitz-input", type: "text", maxlength: "16", placeholder: "Your name",
         "aria-label": "Your name", autocomplete: "off", spellcheck: "false" });
       const save = function () {
         const n = name.value.trim().slice(0, 16);
         if (!n) { name.focus(); return; }
-        entry = { name: n, score: total, right: right, of: qs.length, at: Date.now() };
+        entry = { name: n, score: total, right: right, of: qs.length, streak: bestStreak, at: Date.now() };
         saveScores(ranked(scores().concat([entry])));
         const place = ranked(scores()).findIndex(function (e) { return e.at === entry.at; }) + 1;
-        form.replaceWith(h("div", { class: "cg-speed-saved", text: place ? "Saved! You're number " + place + "." : "Saved!" }));
+        form.replaceWith(h("div", { class: "cg-blitz-saved", text: place ? "Saved! You're number " + place + "." : "Saved!" }));
         again.classList.add("cg-primary");
         phase = "saved";
         paintBoard();
       };
       name.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); save(); } e.stopPropagation(); });
       const again = button("Play again", begin, makesIt ? "" : "cg-primary");
-      const form = makesIt ? h("div", { class: "cg-speed-form" },
-        h("div", { class: "cg-speed-made", text: best && s.length ? "A new top score!" : "You made the high scores!" }),
-        h("div", { class: "cg-speed-entry" }, name, button("Save", save, "cg-primary"))) : "";
+      const form = makesIt ? h("div", { class: "cg-blitz-form" },
+        h("div", { class: "cg-blitz-made", text: best && s.length ? "A new top score!" : "You made the high scores!" }),
+        h("div", { class: "cg-blitz-entry" }, name, button("Save", save, "cg-primary"))) : "";
       stage.textContent = "";
-      stage.className = "cg-speed-stage cg-speed-home cg-speed-end";
-      stage.append(h("div", { class: "cg-speed-intro" },
+      stage.className = "cg-blitz-stage cg-blitz-home cg-blitz-end";
+      stage.append(h("div", { class: "cg-blitz-intro" },
         h("div", { class: "cg-quiz-sub", text: "Your score" }),
-        h("div", { class: "cg-speed-final", text: total.toLocaleString("en-US") }),
-        h("div", { class: "cg-quiz-sub", text: right + " of " + qs.length + " right" + (right === qs.length ? ". Perfect!" : "") }),
+        h("div", { class: "cg-blitz-final", text: total.toLocaleString("en-US") }),
+        h("div", { class: "cg-quiz-sub", text: right + " of " + qs.length + " right" + (right === qs.length ? ". Perfect!" : "") +
+          (bestStreak > 1 ? " · best streak " + bestStreak : "") }),
         form,
         h("div", { class: "cg-tools" }, again)),
       table());
@@ -1369,7 +1403,7 @@
     { id: "sort", label: "Sort it", icon: '<path d="M4 4v16h16"/><path d="M8 15V10M12 15V7M16 15v-3"/>' },
     { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
     { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
-    { id: "speed", label: "Speed quiz", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l3.5-3.5M10 2h4M12 2v3"/>' },
+    { id: "blitz", label: "Word Blitz", icon: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>' },
     { id: "bingo", label: "Bingo", icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><circle cx="12" cy="12" r="1.6"/>' },
   ];
   function icon(paths) {
@@ -1425,9 +1459,9 @@
       stage.append(el);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
       reset = GAMES[choice.game](el, { words: pool, all: words, random: true, rows: 4, teams: 2, seconds: 10, tiles: 16,
-        count: /match|memory/.test(choice.game) ? 6 : choice.game === "speed" ? 10 : 5,
+        count: /match|memory/.test(choice.game) ? 6 : choice.game === "blitz" ? 10 : 5,
         units: units, unit: choice.unit,
-        title: (unit ? unit.title : "Vocab") + ({ bingo: "", speed: " speed quiz" }[choice.game] || " quick-fire") });
+        title: (unit ? unit.title : "Vocab") + ({ bingo: "", blitz: " Word Blitz" }[choice.game] || " quick-fire") });
     }
     play();
     return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
@@ -1436,7 +1470,7 @@
   /* ---------------- Start every game on the page ---------------- */
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia,
-    "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "speed": speedQuiz,
+    "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "blitz": wordBlitz,
     "picker": gamePicker };
   // A calm look: buttons are plain words. Take off a leading emoji ("🔀 New word" -> "New word"),
   // also on buttons a game adds later (the clue card, the end of a quick-fire).
