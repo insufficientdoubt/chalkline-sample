@@ -45,6 +45,8 @@ $if(brand.typography.headings.family)$
 $endif$
   colors: brand-color,
   logos: brand-logo-images,
-  school: brand-school,
+$if(school)$
+  school: [$school$],
+$endif$
   doc,
 )

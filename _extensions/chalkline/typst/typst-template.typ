@@ -1,10 +1,8 @@
 // Branded worksheet layout for PDF (Typst) output.
 //
-// Colors and logos come from brand/_brand.yml, so this file shouldn't need
-// editing when the real brand kit arrives. Edit here to change the *layout*:
-// title banner, name box, headings, answer-key boxes, header, and footer.
-
-#let brand-school = "Mingwan School"
+// Part of the Chalkline extension. Colors and logos come from the course's brand/_brand.yml,
+// and the school's name from `school:` in its _quarto.yml, so a course never edits this file.
+// This file is the *layout*: title banner, name box, headings, answer-key boxes, header, and footer.
 
 // Brand logo paths are relative to the project folder; "/" tells Typst to start there.
 #let root-path(p) = if p.starts-with("/") { p } else { "/" + p }
@@ -15,10 +13,10 @@
 #let worksheet-heading-font = state("worksheet-heading-font", none)
 #let poster-dark = state("poster-dark", false)
 
-// Chinese text: fall back to Noto Sans SC (brand/fonts/print/, found through font-paths in _quarto.yml).
+// Chinese text: fall back to Noto Sans SC (fonts/print/ in the Chalkline extension, found through its font-paths).
 #let with-cjk(f) = if f == none { none } else if type(f) == array { (..f, "Noto Sans SC") } else { (f, "Noto Sans SC") }
 
-// Colors for the helpers below (fallbacks match brand/_brand.yml).
+// Colors for the helpers below (fallbacks: Chalkline's default palette).
 #let brand-colors(c) = (
   navy: c.at("navy", default: rgb("#003477")),
   blue: c.at("blue", default: rgb("#0087ff")),
@@ -206,7 +204,7 @@
 //   #work-box(height: 1.4in)[Draw it!] a dashed box with room to work
 //   ```
 // The doodles are simple outlines drawn for Chalkline (no outside artwork), white inside so they
-// can be colored. Fonts: Patrick Hand (text) and Fredoka (titles, numbers), in brand/fonts/print/.
+// can be colored. Fonts: Patrick Hand (text) and Fredoka (titles, numbers), in the extension's fonts/print/.
 #let playful-hand = ("Patrick Hand", "Noto Sans SC")
 #let playful-round = ("Fredoka", "Noto Sans SC")
 #let doodle-svg = (

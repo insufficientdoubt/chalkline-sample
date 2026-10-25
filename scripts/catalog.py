@@ -312,7 +312,7 @@ if __name__ == "__main__":
 # ---------------------------------------------------------------------------
 # Builders for the overview page (print from a cell marked  #| output: asis).
 # They write HTML: a card for each unit, a row for each document, line icons instead of emoji.
-# The look is in brand/styles.scss ("Overview"), with the same design values as the classroom tools.
+# The look is in _extensions/chalkline/styles/styles.scss ("Overview"), with the same design values as the classroom tools.
 # ---------------------------------------------------------------------------
 
 ICONS = {  # Lucide line icons (ISC licence: _extensions/chalkline/ui/LUCIDE-LICENSE.txt), drawn inline

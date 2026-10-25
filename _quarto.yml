@@ -2,8 +2,8 @@
 #
 # How this repo is organized (so it can be remixed for another subject):
 #   course/                 CONTENT  (swap this folder for a different subject)
-#   brand/                  APPEARANCE (colors, fonts, logos, page and slide layouts)
-#   _extensions/chalkline/  CODE: shortcodes, polls, timer, clock, classroom toolbox
+#   brand/                  APPEARANCE: the school's colors, fonts and logos
+#   _extensions/chalkline/  CHALKLINE: shortcodes, games, toolbox, page and slide layouts
 #   scripts/                CODE: catalog builder, vocab tools
 #   index.qmd               overview page, built automatically from every document's labels
 
@@ -11,7 +11,7 @@ profile:
   default: student           # `quarto render` builds the student site (_quarto-student.yml); --profile teacher builds yours
 
 project:
-  type: website
+  type: chalkline            # a Chalkline website: its page, slide and PDF layouts (_extensions/chalkline)
   output-dir: _site          # student build goes here
   execute-dir: project       # Python code runs from the repo root, so "course/..." paths work everywhere
   pre-render:
@@ -34,7 +34,7 @@ project:
     - /vocab/data/*.csv
     - /vocab/config.js       # the vocab app's settings for this course
     - /vocab/images/**
-    - /brand/fonts/*.ttf     # web fonts, for the vocab app (not brand/fonts/print/: those are for PDFs only)
+    - /brand/fonts/*.ttf     # web fonts, for the vocab app (the print fonts are in the Chalkline extension)
   preview:
     port: 4100               # the site is always at http://localhost:4100
     browser: true            # open it in the browser when the preview starts
@@ -46,6 +46,8 @@ vocab-title: "History Vocab"  # name of the vocab app, used on {{< vocab >}} pop
 
 filters:
   - chalkline                # turns content markers into slides/PDF/web output (see _extensions/chalkline)
+
+school: "Mingwan School"     # printed in PDF headers and footers
 
 website:
   title: "Chalkline Sample"
@@ -77,21 +79,16 @@ website:
 # Defaults for each output format. Individual files choose which formats they use.
 format:
   html:
-    theme: [cosmo, brand/styles.scss]
-    include-after-body: brand/type-colors.html   # color-codes slide decks and packets in tables
+    theme: [brand/styles.scss]   # the school's fonts and overrides, after Chalkline's page design
     toc: true
     format-links:              # names for the download links in the right margin
       - {format: typst, text: PDF, icon: file-pdf}
       - docx                   # (at least one plain name, or Quarto lists every format twice)
   typst:
     papersize: a4              # posters override this with papersize: a3
-    font-paths: [brand/fonts/print]   # Noto Sans SC for Chinese in PDFs (the other fonts come from _brand.yml)
-    template-partials:         # branded page layouts (see brand/README.md)
-      - brand/typst/typst-template.typ
-      - brand/typst/typst-show.typ
   docx: default
   revealjs:
-    theme: [default, brand/revealjs.scss]   # "default": no Google Fonts imports ("simple" pulls in two)
+    theme: [brand/revealjs.scss]   # the school's fonts, after Chalkline's slide design
     logo: /brand/logos/icon-sailboat.svg
     slide-number: true
     transition: fade                 # none, fade, slide, convex, concave or zoom

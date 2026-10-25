@@ -16,6 +16,22 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Chalkline's page, slide and PDF design moves into the extension (step 2 of the extension plan)
+- **Asked for:** "start step 2. actually, just run the whole process, and update the repo as you complete each step".
+- **Why:** so a fix to how worksheets, slides or pages look reaches every course with `quarto update`, and a school's brand stays the school's.
+- **Changed:**
+  - Moved into `_extensions/chalkline/`: `brand/styles.scss` and `brand/revealjs.scss` (now `styles/`), `brand/type-colors.html` (`styles/`), `brand/typst/*.typ` (`typst/`), `brand/fonts/print/` (`fonts/print/`).
+  - `_extensions/chalkline/_extension.yml`: a Chalkline project type. `project: type: chalkline` in `_quarto.yml` brings in Chalkline's themes, the overview's type colors, the PDF layouts and the PDF fonts, with no paths to the extension (so it works wherever `quarto add` puts it). The course's own settings merge on top; its stylesheets load after Chalkline's.
+  - `styles/revealjs.scss`: the colors come from `_brand.yml`'s palette (`$brand-navy`, ...) instead of hex codes typed in; the school's fonts moved out.
+  - New `brand/styles.scss` and `brand/revealjs.scss`: only the school's own settings (fonts, the "Source Sans 3" fix). Add overrides here.
+  - `typst/typst-template.typ`, `typst-show.typ`: the school's name comes from `school:` in `_quarto.yml` (was typed into the template).
+  - `_quarto.yml`: `project: type: chalkline`, `school:`, shorter format settings.
+  - New `scripts/extension.py`: finds the course folder and the extension, and gives the PDF settings to builds that can't use the project type. `scripts/packets.py` uses it (packets are built as a book).
+  - `.github/workflows/publish.yml`: the Chinese font's new folder. `brand/README.md`, `brand/_brand.yml` and comments: the new places.
+  - Checked: full teacher and student renders. Same files; all 166 PDF pages identical pixel for pixel; same CSS rules.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: One Chalkline extension (step 1 of the extension plan)
 - **Asked for:** "yes, start step 1" (of `EXTENSION-PLAN.md`: turning Chalkline into a Quarto extension that every course installs).
 - **Why:** so a fix reaches every course with `quarto update` instead of being copied by hand. Step 1 gathers the code into one folder first.

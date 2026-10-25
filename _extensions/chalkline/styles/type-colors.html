@@ -1,7 +1,7 @@
 <!-- Color-code slide decks and packets in tables and the sidebar, so they're easy to spot.
      Finds each table's "Type" column (the overview, its By unit / By type tabs, unit pages)
-     and tags the row; brand/styles.scss does the coloring. Included on every web page via
-     include-after-body in _quarto.yml. -->
+     and tags the row; styles/styles.scss does the coloring. Included on every web page via
+     include-after-body (the Chalkline project type in _extension.yml). -->
 <script>
 (function () {
   const kinds = { slides: "row-slides", packet: "row-packet" };

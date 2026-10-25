@@ -1,5 +1,5 @@
 /* Quick reference slide (quickref.lua): key slides on the left, everything in the unit on the right,
-   one color per type, the same as the overview (brand/styles.scss). */
+   one color per type, the same as the overview (styles/styles.scss). */
 .reveal .qref { display: grid; grid-template-columns: 34% 1fr; gap: 0.9em; font-size: 0.5em; line-height: 1.25; text-align: left; }
 .reveal .qref.qref-nopins { grid-template-columns: 1fr; }
 .reveal .qref-head { margin-bottom: 0.45em; color: var(--ui-muted, #5b6b80); font-size: 0.8em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }

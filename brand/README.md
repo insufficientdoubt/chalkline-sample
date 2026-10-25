@@ -11,10 +11,13 @@
 | `logos/icon-sailboat.svg` | Small icon (white sailboat with an orange hull on a blue circle). Used tiny: favicon, slide corners, PDF page headers, website navbar. The emblem isn't readable at those sizes. |
 | `logos/icon-sailboat-navy.svg` | One-color version of the icon, for printing in a single color. |
 | `logos/LICENSE-phosphor.txt` | License for the sailboat shape (Phosphor Icons, MIT). Keep it with the icon files. |
-| `typst/typst-template.typ` | PDF page *layout*: title banner, Name/Period/Date fields, section headings, word-bank and answer-key boxes, header, footer, teacher corner tab, and the poster layout. |
-| `typst/typst-show.typ` | Passes settings from the `.qmd` file into the PDF layout. You shouldn't need to touch it. |
-| `styles.scss` | Extra web-page styling so web pages match the PDFs. |
-| `revealjs.scss` | Slide styling: title slide, vocab cards, challenge cards, tables. |
+| `fonts/` | The web and slide fonts named in `_brand.yml` (Source Sans 3, Poppins). |
+| `styles.scss` | The school's own web-page settings: the font fix, and anything you want to change. Loads after Chalkline's, so it wins. |
+| `revealjs.scss` | The school's own slide settings: the slide fonts, and anything you want to change. Loads after Chalkline's. |
+
+The school's name, printed in PDF headers and footers, is `school:` in `_quarto.yml`.
+
+**Chalkline's design** (page, slide and PDF layouts) is in the Chalkline extension, not here: `_extensions/chalkline/styles/` (web pages and slides), `_extensions/chalkline/typst/` (PDF layouts: title banner, Name/Period/Date fields, headings, word-bank and answer-key boxes, header, footer, teacher tab, posters, playful) and `_extensions/chalkline/fonts/print/` (PDF fonts). They take their colors from `_brand.yml`, so a new brand needs no changes there. To change how something looks for this course, add a rule to `styles.scss` or `revealjs.scss` here instead of editing the extension.
 
 ## Colors
 
@@ -35,7 +38,7 @@ Yellow `#fbc400` and cyan `#0abee6` are kept only for charts and polls that need
 
 1. Put new logo files in `logos/`. SVG is best; PNG works too.
 2. In `_brand.yml`, update the hex codes under `palette:`, the font names under `typography:`, and the logo paths if the file names changed.
-3. The slide stylesheet (`revealjs.scss`) and the poll and timer widgets in `_extensions/chalkline/` repeat the hex codes; update them too. The toolbox, games and activities take their colors, corners and shadows from one file, `_extensions/chalkline/ui/ui.css`: change them there.
+3. Keep the palette names Chalkline uses (`navy`, `blue`, `turquoise`, `orange`, `sky`): pages, slides and PDFs take their colors from them. New fonts: also change the font lists in `styles.scss` and `revealjs.scss` here. (The toolbox, games and activities take their colors, corners and shadows from `_extensions/chalkline/ui/ui.css`, which still has the sample's hex codes.)
 4. Run `quarto render`.
 
 ## Worksheet options (set at the top of a `.qmd` file)
@@ -57,7 +60,7 @@ hide-title: true      # optional: no title banner (when a big quote is the title
 poster-center: true   # optional: center the content up and down the page
 ```
 
-The poster blocks (`.value`, `.big-quote`, `.steps`) are described in the main README. Their PDF look is in `typst-template.typ` (`poster-value`, `poster-quote`, `poster-steps`) and their web look in `styles.scss`.
+The poster blocks (`.value`, `.big-quote`, `.steps`) are described in the main README. Their PDF look is in the extension's `typst/typst-template.typ` (`poster-value`, `poster-quote`, `poster-steps`) and their web look in its `styles/styles.scss`.
 
 ## Playful worksheets, for younger students (set at the top of a printable's `.qmd` file)
 
@@ -67,7 +70,7 @@ playful-theme: nature # optional: a green frame and title, leaves in the corners
 name-box: true        # the Name and Date line
 ```
 
-Fonts: **Patrick Hand** for text and **Fredoka** for titles and numbers (both SIL Open Font License, in `fonts/print/`). Inside a playful printable, raw Typst blocks can use the playful kit from `typst-template.typ`:
+Fonts: **Patrick Hand** for text and **Fredoka** for titles and numbers (both SIL Open Font License, in the extension's `fonts/print/`). Inside a playful printable, raw Typst blocks can use the playful kit from the extension's `typst/typst-template.typ`:
 
 ```{=typst}
 #doodle("robot", width: 1.2in)       // line art to color: robot, pencil, star, gear, sun, cloud, sparkle,
@@ -80,10 +83,10 @@ The doodles are simple outlines drawn for Chalkline. For more (animals, school t
 
 ## Writing space, checkboxes, callouts
 
-Use the shortcodes from the main README (`{{< lines 3 >}}`, `{{< drawing-box >}}`, `::: {.keep}`, `::: {.write-in}`). They call `answer-lines`, `drawing-box`, `keep` and `write-in` in `typst-template.typ`, so the look of writing space is changed here, once, for every worksheet.
+Use the shortcodes from the main README (`{{< lines 3 >}}`, `{{< drawing-box >}}`, `::: {.keep}`, `::: {.write-in}`). They call `answer-lines`, `drawing-box`, `keep` and `write-in` in the extension's `typst/typst-template.typ`, so writing space looks the same on every worksheet.
 
 Type `☐` anywhere for a drawn checkbox.
 
 Any callout whose title contains "Answer" or "Teacher" (like `::: {.callout-note title="Answer key"}`) gets the orange teacher style. Every other callout gets the blue style.
 
-Chinese text in PDFs uses Noto Sans SC automatically (`brand/fonts/print/`); web pages use the computer's own Chinese font. All font files are in `brand/fonts/`, so builds work without the internet.
+Chinese text in PDFs uses Noto Sans SC automatically (in the extension's `fonts/print/`); web pages use the computer's own Chinese font. All font files are in the project, so builds work without the internet.

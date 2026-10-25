@@ -49,6 +49,7 @@ import yaml
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 from catalog import YEAR_PACKET, formats_of, front_matter, load_packets, teacher_copy  # noqa: E402
+from extension import typst_format  # noqa: E402
 
 STUDENT_COPY = "{name}-student.pdf"   # keep in step with `pdf-viewer: prefer:` in _quarto-teacher.yml
 COPY = ["course", "brand", "_extensions", "scripts", "generated", "_freeze"]
@@ -82,7 +83,7 @@ def book_config(teacher, title, subtitle, chapters):
     cfg["project"] = {"type": "book", "output-dir": "_book",
                       "execute-dir": site["project"].get("execute-dir", "project")}
     cfg["book"] = {"title": title, "subtitle": subtitle, "output-file": "packet", "chapters": chapters}
-    cfg["format"] = {"typst": site["format"]["typst"]}
+    cfg["format"] = {"typst": typst_format(site)}   # Chalkline's PDF layout and the course's settings
     return cfg
 
 
@@ -140,7 +141,7 @@ def student_copies(files, out_dir):
         cfg = {k: v for k, v in site.items() if k not in ("project", "website", "format")}
         cfg["project"] = {"output-dir": "_out", "render": files,
                           "execute-dir": site["project"].get("execute-dir", "project")}
-        cfg["format"] = {"typst": site["format"]["typst"]}
+        cfg["format"] = {"typst": typst_format(site)}   # Chalkline's PDF layout and the course's settings
         (build / "_quarto.yml").write_text(yaml.safe_dump(cfg, allow_unicode=True, sort_keys=False), encoding="utf-8")
         result = subprocess.run(["quarto", "render", "--to", "typst"], cwd=build, env=quarto_env(),
                                 capture_output=True, text=True)

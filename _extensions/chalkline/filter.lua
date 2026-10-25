@@ -19,7 +19,7 @@ Slides (reveal.js):
   - turns  ::: {.quick-ref}  into a quick reference slide: key slides + everything in the unit (quickref.lua)
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
-function in brand/typst/typst-template.typ, with the div's attributes passed
+function in typst/typst-template.typ, with the div's attributes passed
 as named arguments:
   ::: {.keep}                          keep everything inside on one page
   ::: {.write-in}                      taller table rows for handwriting
@@ -27,7 +27,7 @@ as named arguments:
   ::: {.big-quote zh="..."}            poster quote
   ::: {.steps title="..."}             numbered list drawn as a row of cards
 
-Web pages: the same classes are styled in brand/styles.scss; for .value this
+Web pages: the same classes are styled in styles/styles.scss; for .value this
 file also adds the heading (big first letter, Chinese, pinyin).
 ]]
 
