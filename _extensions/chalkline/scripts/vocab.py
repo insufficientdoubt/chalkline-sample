@@ -1,17 +1,9 @@
 """Shared helpers for reading vocab files.
 
 Used in two places:
-  - inside .qmd files, to print vocab sections
+  - by blocks.py, for the shortcodes that show vocab on a page ({{< vocab-cards >}}, {{< word-bank >}},
+    {{< vocab-table >}}, {{< vocab-list >}}, {{< fill-in-the-blank >}}; see blocks.lua)
   - by export_vocab.py, to build Quizlet / Kahoot / Anki files
-
-Inside a .qmd file, use it like this:
-
-    ```{python}
-    #| output: asis
-    import sys; sys.path.append("scripts")
-    from vocab import load_unit, vocab_table
-    print(vocab_table(load_unit(1)))
-    ```
 """
 
 import random
@@ -19,7 +11,9 @@ from pathlib import Path
 
 import yaml
 
-VOCAB_DIR = Path(__file__).resolve().parent.parent / "course" / "vocab"
+from extension import ROOT  # noqa: E402
+
+VOCAB_DIR = ROOT / "course" / "vocab"
 
 
 def load_file(path):

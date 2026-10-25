@@ -4,14 +4,14 @@ Uses reveal.js's own print layout (open a deck with ?print-pdf), printed by the 
 Edge already on the computer, driven by Playwright (in requirements.txt; it waits until the
 print layout is really finished, which Chrome's own command-line printing can't). Teacher builds put the speaker notes on their own page after each slide.
 
-Runs automatically after each full render (`post-render` in _quarto.yml). Saving a deck
+Runs automatically after each full render (`post-render` in the extension's _extension.yml). Saving a deck
 while `quarto preview` runs doesn't reprint it, so editing stays quick; the launchers
 reprint out-of-date decks when they start (scripts/build_if_needed.py). Or by hand:
 
-    python scripts/slides_pdf.py                 every deck, into _site/
-    python scripts/slides_pdf.py --stale         only decks whose PDF is older than the web version
-    python scripts/slides_pdf.py --deck course/units/05-game-day/slides.qmd
-    python scripts/slides_pdf.py --teacher ...   into _site-teacher/, with speaker notes
+    python chalkline.py slides-pdf                 every deck, into _site/
+    python chalkline.py slides-pdf --stale         only decks whose PDF is older than the web version
+    python chalkline.py slides-pdf --deck course/units/05-game-day/slides.qmd
+    python chalkline.py slides-pdf --teacher ...   into _site-teacher/, with speaker notes
 
 Videos, animations and live widgets (timer, poll) print as a still frame.
 Needs Google Chrome or Microsoft Edge.
@@ -23,9 +23,9 @@ import sys
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from catalog import front_matter  # noqa: E402
+from extension import ROOT  # noqa: E402
 
 CHANNELS = ["chrome", "msedge"]   # browsers Playwright can use without downloading its own
 # Several decks print at once in separate tabs; without these, Chrome slows the tabs it treats

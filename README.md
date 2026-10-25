@@ -18,7 +18,7 @@
 | **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
 | **The look of the interactive parts** | `_extensions/chalkline/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
-| **Code** | `_extensions/`, `scripts/` | You don't need to touch these |
+| **Chalkline** | `_extensions/chalkline/`, `chalkline.py` | The tool itself. You don't need to touch these |
 | **AI instructions** | `CLAUDE.md` (also `AGENTS.md`, `GEMINI.md`) | Rules any AI assistant should read first; tool changes get logged in `TOOL-CHANGES.md` |
 
 Things to try once the site is open:
@@ -100,9 +100,9 @@ You can do almost everything here by asking an AI assistant: Claude, Gemini, Cha
 2. In its `index.qmd`, change `title`, `short-title`, `unit` and the `objectives`. The unit appears in the sidebar and overview by itself.
 3. Edit or replace the slides and printables. Keep the labels at the top of each file: `type:` (slides, worksheet, handout, reference…), `order:` and `audience:` (who sees it: `teacher`, `student`, `parent`; see "Students, families and teachers" below).
 4. Add your words to `vocab/data/vocab.csv` (see `vocab/README.md`), then run `python vocab/validate.py`.
-5. To use a unit's words on picture cards, import them: `python scripts/import_vex_vocab.py --unit 3 --title "My Unit" --folder 03-my-unit --ids GRC-001 GRC-002`.
+5. To use a unit's words on picture cards, import them: `python chalkline.py import-vocab --unit 3 --title "My Unit" --folder 03-my-unit --ids GRC-001 GRC-002`.
 
-When a worksheet is finished, rebuild its unit packet: `python scripts/packets.py --unit 3`. Packets and slide PDFs don't rebuild on every save, so editing stays quick; the launcher also rebuilds any that are out of date when it starts.
+When a worksheet is finished, rebuild its unit packet: `python chalkline.py packets --unit 3`. Packets and slide PDFs don't rebuild on every save, so editing stays quick; the launcher also rebuilds any that are out of date when it starts.
 
 ## Everyday commands
 
@@ -112,12 +112,12 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 |---|---|
 | Build everything (student site) into `_site/` | `quarto render` |
 | Build the teacher site into `_site-teacher/` | `quarto render --profile teacher` |
-| Open the student site (port 4101) | `python scripts/open_site.py student` |
-| Rebuild one unit's packet | `python scripts/packets.py --unit 1` |
-| Rebuild slide PDFs | `python scripts/slides_pdf.py` |
+| Open the student site (port 4101) | `python chalkline.py open student` |
+| Rebuild one unit's packet | `python chalkline.py packets --unit 1` |
+| Rebuild slide PDFs | `python chalkline.py slides-pdf` |
 | Check the vocab list | `python vocab/validate.py` |
-| Make Quizlet / Kahoot / Anki files | `python scripts/export_vocab.py` |
-| Update a draw.io diagram's picture after editing it in draw.io | `python scripts/drawio.py` (needs the draw.io app) |
+| Make Quizlet / Kahoot / Anki files | `python chalkline.py export-vocab` |
+| Update a draw.io diagram's picture after editing it in draw.io | `python chalkline.py drawio` (needs the draw.io app) |
 
 ## Unit packets
 
@@ -143,7 +143,7 @@ Inside a page, `::: {.content-visible when-profile="teacher"}` shows something o
 
 ## How the overview finds things
 
-You never edit the overview by hand. Before every render, `scripts/catalog.py` reads the labels at the top of each file in `course/` and builds the list: a card for each unit, with a row for each file. These are the labels:
+You never edit the overview by hand. Before every render, Chalkline's `catalog.py` reads the labels at the top of each file in `course/` and builds the list: a card for each unit, with a row for each file. These are the labels:
 
 ```yaml
 ---
@@ -207,6 +207,10 @@ These come from `_extensions/chalkline/`. Each one looks right on the web page, 
 | `{{< pdf-viewer "athens-vs-sparta.pdf" >}}` | **On a slide:** a PDF you can page through with ‹ ›, and pens for touch screens (pen, highlighter, **T** for typed text, eraser, undo, clear), and zoom (− 100% +, or Ctrl/⌘ + scroll; drag to move around). The **⬇** button offers: **With my notes** (`…-with-notes.pdf`), **Original**, or **Open in a new tab**. Ink stays on that computer until you press the bin button. ⤢ opens the page large, in a window you can drag and resize. Add `layout="gallery"` to show every page as a thumbnail: tap one to open it large. Works with a worksheet's own PDF (made by the same build) or the unit packet. Slides always show the **student copy**, even on the teacher site (it shows `athens-vs-sparta-student.pdf`, which the teacher build makes), so answer keys never go on the board. To show the teacher edition (for teacher training, say), add `prefer=false`. From `_extensions/chalkline/pdf-viewer/`, which also works on its own in any Quarto project. In PDFs and Word it's just a link. |
 | `{{< packet >}}` | On a unit page: the **Unit packet (PDF)** button. Shows nothing if the unit has no printables. |
 | `{{< vocab "democracy" >}}` | A vocab word with a dotted underline. Hover (or tap) to see its vocab card: picture, 中文, definition and a link to the vocab app. Use a term, an "also called" name or an ID (`GRC-003`); `text="citizens"` changes the words shown. In PDFs and Word it's just bold; add `zh=true` to also print the 中文 after it (for reference sheets, never quizzes). Terms come straight from `vocab/data/vocab.csv`, read again before every render. |
+| `{{< vocab-cards unit=1 words="peninsula, colony" zh=true >}}` | Picture cards side by side, for slides: picture, word and meaning (`zh=true` adds the 中文; leave it off on review slides). Without `words=`, every word in the unit. |
+| `{{< word-bank unit=1 "Government: democracy, citizen" "Places: colony" >}}` | A word-bank box, one line per group. |
+| `{{< vocab-table unit=1 >}}`, `{{< vocab-list unit=1 >}}` | The unit's words and meanings as a table or a list (`words="..."` for some of them). |
+| `{{< fill-in-the-blank unit=1 >}}` | A word bank and numbered meanings to fill in. The answer key shows only in the teacher version. |
 | `chalkboard:` in a deck's labels | Draw on any slide: press **C** (or the pen button, bottom left) to draw on the slide, **B** for a blank chalkboard, **Delete** to clear. Copy the three lines from the top of `course/units/01-ancient-greece/city-states-slides.qmd`. |
 | `{{< timer 20 >}}` | A 20-minute countdown on a slide (see below). In print it just says "Timer: 20 minutes". |
 | `{{< pagebreak >}}` | Start a new PDF page. |

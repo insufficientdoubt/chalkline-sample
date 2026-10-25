@@ -1,6 +1,6 @@
 """Build the course catalog from every document's labels (its front matter).
 
-Runs automatically before each full render (`pre-render` in _quarto.yml) and
+Runs automatically before each full render (`pre-render` in the extension's _extension.yml) and
 writes generated/catalog.yml, which the overview page lists, searches and filters.
 Nothing is listed by hand: add a document to a unit folder, give it a `type`,
 and it appears in the overview, grouped under its unit.
@@ -34,8 +34,8 @@ For the student site (the default build) the catalog holds only items marked
 `audience: [..., student]`. Every build also writes the list of pages the student site leaves
 out (teachers-only pages), at the end of _quarto-student.yml.
 
-Also importable from .qmd files:
-    from catalog import load_catalog, load_units, load_packets
+The overview's parts (markdown_season, markdown_by_unit, ...) are shown with {{< overview ... >}}
+(blocks.lua and blocks.py). Other scripts import load_catalog, load_units and load_packets.
 """
 
 import json
@@ -48,7 +48,7 @@ import yaml
 
 from genfile import write_if_changed
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 COURSE = ROOT / "course"
 OUT = ROOT / "generated" / "catalog.yml"
 STUDENT_PROFILE = ROOT / "_quarto-student.yml"

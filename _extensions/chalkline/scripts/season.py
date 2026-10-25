@@ -1,8 +1,6 @@
 """Season facts (dates, team numbers) from course/season.yml, for slides and printables.
 
-    import sys; sys.path.append("scripts")
-    from season import season, events_list
-    print(events_list())        # in a cell marked  #| output: asis
+    {{< season-events >}}        on a page (blocks.lua runs events_list())
 """
 
 import datetime
@@ -10,7 +8,9 @@ from pathlib import Path
 
 import yaml
 
-SEASON_FILE = Path(__file__).resolve().parent.parent / "course" / "season.yml"
+from extension import ROOT  # noqa: E402
+
+SEASON_FILE = ROOT / "course" / "season.yml"
 
 
 def season():

@@ -1,6 +1,6 @@
 # Chalkline sample course
 
-- Read `README.md` first. Content lives in `course/` and `vocab/`, appearance in `brand/`, code in `_extensions/` and `scripts/`.
+- Read `README.md` first. Content lives in `course/` and `vocab/`, appearance in `brand/`, Chalkline itself (the tool) in `_extensions/chalkline/`.
 - Every slide deck and printable has labels at the top: `title`, `type` (slides, worksheet, checklist, handout, reference, game), `order`, `audience` ([teacher, student, parent]) and `description`. Keep them.
 - **Vocab:** `vocab/data/vocab.csv` is the source of truth; run `python vocab/validate.py` after editing it. Follow the rules in `vocab/README.md`: English is the target, 中文 is support; 中文 appears in reference materials, never in review materials (quizzes, flashcards); `short_def` is simple English, 75 characters or fewer; IDs are permanent.
 - **Gloss key vocab:** on slides, write key words as `{{< vocab "democracy" >}}` (a pop-up with picture and 中文). On printables, use `{{< vocab "democracy" zh=true >}}` so the 中文 is printed too, except on quizzes and tests.
@@ -14,7 +14,7 @@
 Keep the edit loop quick:
 
 1. While working on one worksheet (or deck), re-render **only that file** after each change: `quarto render course/units/<unit>/<file>.qmd` (add `--to typst` to check just the PDF). Don't run a full `quarto render` and don't rebuild packets on every change.
-2. When that file is done: save/commit it, then rebuild its unit packet once: `python scripts/packets.py --unit <unit number or folder>`.
+2. When that file is done: save/commit it, then rebuild its unit packet once: `python chalkline.py packets --unit <unit number or folder>`.
 3. A full render (`quarto render`) or the launcher's startup check rebuilds everything else (the year packet, slide PDFs).
 
 If `quarto preview` is running, don't run a full `quarto render` at the same time: it empties `_site/` while the preview is serving it.
@@ -24,7 +24,7 @@ If `quarto preview` is running, don't run a full `quarto render` at the same tim
 This repo has two kinds of files:
 
 - **Content** (lessons, worksheets, vocab words, pictures): everything in `course/`, plus `vocab/data/` and `vocab/images/`. Change these freely. No log needed.
-- **The tool** (how Chalkline works and looks): `_extensions/`, `scripts/`, `brand/`, `vocab/app/`, `vocab/config.js`, `vocab/tools/`, `vocab/validate.py`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
+- **The tool** (how Chalkline works and looks): `_extensions/`, `chalkline.py`, `brand/`, `vocab/app/`, `vocab/config.js`, `vocab/tools/`, `vocab/validate.py`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
 
 **Whenever you change a tool file, add an entry to the top of `TOOL-CHANGES.md`** (create it if it's missing), in the same change. Use this form:
 

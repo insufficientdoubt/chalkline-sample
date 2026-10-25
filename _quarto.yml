@@ -3,8 +3,8 @@
 # How this repo is organized (so it can be remixed for another subject):
 #   course/                 CONTENT  (swap this folder for a different subject)
 #   brand/                  APPEARANCE: the school's colors, fonts and logos
-#   _extensions/chalkline/  CHALKLINE: shortcodes, games, toolbox, page and slide layouts
-#   scripts/                CODE: catalog builder, vocab tools
+#   _extensions/chalkline/  CHALKLINE: shortcodes, games, toolbox, page and slide layouts, scripts
+#                           (run them with `python chalkline.py ...`)
 #   index.qmd               overview page, built automatically from every document's labels
 
 profile:
@@ -14,16 +14,8 @@ project:
   type: chalkline            # a Chalkline website: its page, slide and PDF layouts (_extensions/chalkline)
   output-dir: _site          # student build goes here
   execute-dir: project       # Python code runs from the repo root, so "course/..." paths work everywhere
-  pre-render:
-    - scripts/freeze_check.py  # clears saved Python results (_freeze/) when season, vocab, scripts or the date change
-    - scripts/catalog.py   # reads every document's labels and writes generated/catalog.yml for the overview
-    - scripts/lessons.py   # reads course/lessons/ and writes the lesson map and each lesson's before/next links
-    - scripts/vocab_terms.py   # reads vocab/data/vocab.csv and writes generated/vocab-terms.json for {{< vocab >}} pop-ups
-    - scripts/vocab_brand.py   # gives the vocab app the brand colors and fonts (writes vocab/app/brand.css)
-  post-render:
-    - scripts/student_site.py  # student site only: removes teachers-only pages and their PDFs
-    - scripts/packets.py   # each unit's printables as one packet PDF, plus a year packet (full renders only)
-    - scripts/slides_pdf.py   # every slide deck as a PDF, one slide per page (full renders only)
+  # Chalkline's own steps before and after each render (the catalog, packets, slide PDFs...) come with
+  # `type: chalkline`. A course's own steps can go here too, as pre-render: / post-render: lists.
   render:
     - index.qmd
     - families.qmd
@@ -97,4 +89,4 @@ format:
 execute:
   echo: false                # never show Python code in student materials
   warning: false
-  freeze: auto               # full renders reuse saved Python results unless the page changed (see scripts/freeze_check.py)
+  freeze: auto               # full renders reuse saved Python results unless the page changed (see _extensions/chalkline/scripts/freeze_check.py)

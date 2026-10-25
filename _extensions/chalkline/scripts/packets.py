@@ -1,15 +1,15 @@
 """Build unit packets and the year packet: one fresh PDF each, made by Quarto's book feature.
 
-Runs automatically after each full render (`post-render` in _quarto.yml) and rebuilds every
+Runs automatically after each full render (`post-render` in the extension's _extension.yml) and rebuilds every
 packet. Saving a worksheet while `quarto preview` runs does NOT rebuild its packet, so editing
 stays quick: finish the worksheet, then rebuild its packet by hand. The launchers also rebuild
 out-of-date packets when they start (scripts/build_if_needed.py).
 
-    python scripts/packets.py                  every packet and the year packet, into _site/
-    python scripts/packets.py --unit 5         one unit's packet (unit number or folder name)
-    python scripts/packets.py --stale          only packets older than one of their printables
-    python scripts/packets.py --teacher ...    teacher and student packets, into _site-teacher/
-    python scripts/packets.py --unit 5 --keep  keep the scratch folder (and Typst source) to debug a packet
+    python chalkline.py packets                  every packet and the year packet, into _site/
+    python chalkline.py packets --unit 5         one unit's packet (unit number or folder name)
+    python chalkline.py packets --stale          only packets older than one of their printables
+    python chalkline.py packets --teacher ...    teacher and student packets, into _site-teacher/
+    python chalkline.py packets --unit 5 --keep  keep the scratch folder (and Typst source) to debug a packet
 
 Which printables go in each packet comes from scripts/catalog.py (generated/packets.json):
 worksheets, checklists, handouts and references with a PDF format, in `order:`.
@@ -46,13 +46,12 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from catalog import YEAR_PACKET, formats_of, front_matter, load_packets, teacher_copy  # noqa: E402
-from extension import typst_format  # noqa: E402
+from extension import ROOT, typst_format  # noqa: E402
 
 STUDENT_COPY = "{name}-student.pdf"   # keep in step with `pdf-viewer: prefer:` in _quarto-teacher.yml
-COPY = ["course", "brand", "_extensions", "scripts", "generated", "_freeze"]
+COPY = ["course", "brand", "_extensions", "scripts", "generated", "_freeze"]   # scripts/: the course's own, if any
 WORKERS = max(1, min(4, (os.cpu_count() or 2) // 2))   # packets built at once (each Quarto run uses ~0.5 GB)
 
 # Each printable starts on a new page (except the first heading, under the cover banner).

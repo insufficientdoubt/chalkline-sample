@@ -1,6 +1,6 @@
 """Tidy the student site (the default build, `_quarto-student.yml`) after each render.
 
-Runs after each render (`post-render` in _quarto.yml) and does nothing in the teacher build.
+Runs after each render (`post-render` in the extension's _extension.yml) and does nothing in the teacher build.
 Quarto leaves the pages the student site skips (the teachers-only "drafts" listed at the end of
 _quarto-student.yml) as empty stub pages, and still writes their PDFs. This deletes them,
 so the student site only holds what's meant for students. It also removes the vocab
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 TEACHER_ONLY = ["vocab/app/lessons.html"]
 
 

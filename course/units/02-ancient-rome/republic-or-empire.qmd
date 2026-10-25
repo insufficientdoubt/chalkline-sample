@@ -11,19 +11,7 @@ format:
   typst: default
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, word_bank
-terms = load_unit(2)
-```
-
-```{python}
-#| output: asis
-print(word_bank({
-    "Government": pick(terms, "republic", "senate", "consul", "emperor", "empire"),
-    "Army": pick(terms, "legion"),
-}))
-```
+{{< word-bank unit=2 "Government: republic, senate, consul, emperor, empire" "Army: legion" >}}
 
 ## 1. Sort the facts
 

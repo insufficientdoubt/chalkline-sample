@@ -1,6 +1,6 @@
 """Build the lesson map from the folders under course/lessons/.
 
-Runs automatically before each render (`pre-render` in _quarto.yml).
+Runs automatically before each render (`pre-render` in the extension's _extension.yml).
 
 How lessons are organized:
     course/lessons/03-engineering/            a strand (its index.qmd has `strand: true`)
@@ -32,7 +32,7 @@ import yaml
 
 from genfile import write_if_changed
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 LESSONS = ROOT / "course" / "lessons"
 OUT = ROOT / "generated"
 

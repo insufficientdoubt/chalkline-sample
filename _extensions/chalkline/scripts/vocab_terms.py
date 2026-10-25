@@ -1,6 +1,6 @@
 """Read every term in vocab/data/vocab.csv for the {{< vocab "chain wrap" >}} pop-ups.
 
-Runs automatically before each render (`pre-render` in _quarto.yml), so pop-ups always
+Runs automatically before each render (`pre-render` in the extension's _extension.yml), so pop-ups always
 match the vocab list. Picture and link paths are relative to the site root; the shortcode
 adds the "../" a page needs.
 
@@ -20,7 +20,7 @@ import yaml
 
 from genfile import write_if_changed
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 SRC = ROOT / "vocab" / "data" / "vocab.csv"
 OUT = ROOT / "generated" / "vocab-terms.json"
 UNITS = ROOT / "course" / "vocab"

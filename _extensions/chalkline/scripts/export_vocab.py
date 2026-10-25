@@ -2,8 +2,8 @@
 
 Run from the repo root:
 
-    python scripts/export_vocab.py              # all units
-    python scripts/export_vocab.py --units 1 3  # only units 1 and 3
+    python chalkline.py export-vocab              # all units
+    python chalkline.py export-vocab --units 1 3  # only units 1 and 3
 
 Writes into exports/:
     quizlet/unit-01.txt      tab-separated, one per unit, plus all-units.txt
@@ -18,7 +18,9 @@ from pathlib import Path
 
 from vocab import load_all
 
-EXPORTS = Path(__file__).resolve().parent.parent / "exports"
+from extension import ROOT  # noqa: E402
+
+EXPORTS = ROOT / "exports"
 
 # --- Kahoot settings -------------------------------------------------------
 # Kahoot's import template labels the limits as 120 (question) and 75 (answers),

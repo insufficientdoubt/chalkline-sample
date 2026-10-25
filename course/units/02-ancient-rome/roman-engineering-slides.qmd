@@ -12,12 +12,6 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(2)
-```
-
 ## All roads lead to Rome
 
 :::: {.columns}

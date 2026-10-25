@@ -12,18 +12,9 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(3)
-```
-
 ## The builders
 
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "hunter-gatherer", "Neolithic", "farming"), zh=True))
-```
+{{< vocab-cards unit=3 words="hunter-gatherer, Neolithic, farming" zh=true >}}
 
 ::: notes
 The builders had **no** farms, metal, writing or wheels. Ask: what would be hardest about building something huge without those?

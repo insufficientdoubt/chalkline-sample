@@ -6,6 +6,7 @@ contributes:
   shortcodes:
     - shortcodes.lua
     - pdf-viewer/pdf-viewer.lua
+    - blocks.lua               # vocab cards, word banks and the overview, built by scripts/blocks.py
   filters:
     - path: video-shape.lua   # before shortcodes run: marks each video tall or wide
       at: pre-ast
@@ -16,6 +17,16 @@ contributes:
   project:
     project:
       type: website
+      pre-render:
+        - scripts/freeze_check.py  # clears saved Python results (_freeze/) when season, vocab, scripts or the date change
+        - scripts/catalog.py       # reads every document's labels and writes generated/catalog.yml for the overview
+        - scripts/lessons.py       # reads course/lessons/ and writes the lesson map and each lesson's before/next links
+        - scripts/vocab_terms.py   # reads vocab/data/vocab.csv and writes generated/vocab-terms.json for {{< vocab >}} pop-ups
+        - scripts/vocab_brand.py   # gives the vocab app the brand colors and fonts (writes vocab/app/brand.css)
+      post-render:
+        - scripts/student_site.py  # student site only: removes teachers-only pages and their PDFs
+        - scripts/packets.py       # each unit's printables as one packet PDF, plus a year packet (full renders only)
+        - scripts/slides_pdf.py    # every slide deck as a PDF, one slide per page (full renders only)
     format:
       html:
         theme: [cosmo, styles/styles.scss]

@@ -28,7 +28,7 @@ A vocab picture appears in the pop-ups, the vocab app, printed cards and the sli
 2. **Check the license on the picture's own page**, not in the search results. Best: public domain, CC0, or the Unsplash or Pexels license (no credit required). Also fine: CC BY and CC BY-SA, with the credit. **Don't use** NC (non-commercial) or ND (no changes: we crop and resize) pictures, or anything without a clear license.
 3. **Check the quality.** One clear subject that fills the frame; recognizable when small; sharp and well lit; no watermark, no text in the picture; nothing frightening or unsuitable for children. If the best photo is busy, crop it; if it's still unclear, keep looking.
 4. **Prepare it:** crop to 4:3 (landscape, like the drawings), about 800 × 600 pixels, saved as `<ID>.jpg` under 200 KB. Set the `image` column to the file name.
-5. **Credit it:** add a row to `images/CREDITS.md` (file, what it is, by, license, source link). If the picture is copied into a unit (`scripts/import_vex_vocab.py` does this), add the same row to that unit's `images/CREDITS.md`, and to a deck's picture-credits slide if the deck shows it as a photo.
+5. **Credit it:** add a row to `images/CREDITS.md` (file, what it is, by, license, source link). If the picture is copied into a unit (`python chalkline.py import-vocab` does this), add the same row to that unit's `images/CREDITS.md`, and to a deck's picture-credits slide if the deck shows it as a photo.
 6. **Make an original drawing only when no real image works:** for abstract ideas (*evidence*, *democracy*), or when every open photo is unclear. Keep it simple and bold, like the ones made by `tools/draw_icons.py`. Original drawings need no credit.
 
 ## Sources

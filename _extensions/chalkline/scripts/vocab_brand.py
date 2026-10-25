@@ -1,6 +1,6 @@
 """Give the vocab app (vocab/app/) the same colors and fonts as the rest of the site.
 
-Runs automatically before each render (`pre-render` in _quarto.yml). Reads brand/_brand.yml
+Runs automatically before each render (`pre-render` in the extension's _extension.yml). Reads brand/_brand.yml
 and writes vocab/app/brand.css, which sets the app's CSS variables (--accent, --text, ...)
 and fonts. Change the brand once and the site, PDFs, slides and vocab app all follow.
 Without brand.css the app still works, in its own default colors.
@@ -16,7 +16,7 @@ import yaml
 
 from genfile import write_if_changed
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 BRAND = ROOT / "brand" / "_brand.yml"
 OUT = ROOT / "vocab" / "app" / "brand.css"
 

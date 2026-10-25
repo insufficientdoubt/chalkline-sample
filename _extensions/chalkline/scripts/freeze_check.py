@@ -1,6 +1,6 @@
 """Throw away Quarto's saved Python results (_freeze/) when the data they used has changed.
 
-Runs automatically before each render (`pre-render` in _quarto.yml), first in the list.
+Runs automatically before each render (`pre-render` in the Chalkline project type), first in the list.
 
 `freeze: auto` in _quarto.yml makes full renders reuse each page's saved Python results
 unless that page's own file changed. But pages also read other files (season dates, unit
@@ -18,10 +18,12 @@ import hashlib
 import shutil
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import EXT, ROOT  # noqa: E402  (the course folder, Chalkline)
+
 FREEZE = ROOT / "_freeze"
 STAMP = FREEZE / ".inputs"
-INPUTS = ["course/season.yml", "course/links.yml", "course/vocab/*.yml", "scripts/*.py", "vocab/data/*.csv"]
+INPUTS = ["course/season.yml", "course/links.yml", "course/vocab/*.yml", "scripts/*.py", "vocab/data/*.csv",
+          f"{EXT.relative_to(ROOT).as_posix()}/scripts/*.py"]   # the course's own scripts, and Chalkline's
 
 
 def fingerprint():

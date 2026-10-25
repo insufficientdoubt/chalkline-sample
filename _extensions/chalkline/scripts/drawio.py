@@ -1,7 +1,7 @@
 """Turn draw.io diagrams into SVG pictures for slides and pages.
 
-    python scripts/drawio.py course/units/02-ancient-rome/drawio/republic.drawio
-    python scripts/drawio.py            every .drawio file in course/
+    python chalkline.py drawio course/units/02-ancient-rome/drawio/republic.drawio
+    python chalkline.py drawio            every .drawio file in course/
 
 Edit the .drawio file in draw.io (the desktop app or app.diagrams.net), save it, then run this:
 it writes republic.svg next to it. Needs the draw.io desktop app (https://www.drawio.com).
@@ -20,7 +20,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
 APPS = ["/Applications/draw.io.app/Contents/MacOS/draw.io",
         r"C:\Program Files\draw.io\draw.io.exe",
         "drawio", "draw.io"]

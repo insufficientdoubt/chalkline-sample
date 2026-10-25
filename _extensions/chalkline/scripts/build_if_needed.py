@@ -9,9 +9,9 @@ that are older than their sources: the preview doesn't rebuild those on every sa
 editing stays quick. Pages you edited with the preview running were already rebuilt by
 it, so they don't count as changed.
 
-    python scripts/build_if_needed.py                    build only if something changed
-    python scripts/build_if_needed.py --force            build anyway
-    python scripts/build_if_needed.py --profile teacher  the teacher site (_site-teacher/); none: the student site
+    python chalkline.py build                    build only if something changed
+    python chalkline.py build --force            build anyway
+    python chalkline.py build --profile teacher  the teacher site (_site-teacher/); none: the student site
 """
 
 import os
@@ -20,7 +20,8 @@ import sys
 import time
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from extension import ROOT  # noqa: E402  (the course folder)
+HERE = Path(__file__).resolve().parent   # Chalkline's scripts
 PROFILE = sys.argv[sys.argv.index("--profile") + 1] if "--profile" in sys.argv[:-1] else ""
 SITE = ROOT / (f"_site-{PROFILE}" if PROFILE else "_site")
 STAMP = SITE / ".last-full-build"
@@ -57,13 +58,13 @@ def out_of_date(since):
 def main():
     if PROFILE != "teacher":
         # Refresh the list of pages the student site leaves out before Quarto reads _quarto-student.yml.
-        subprocess.run([sys.executable, "scripts/catalog.py"], cwd=ROOT, env=os.environ, capture_output=True)
+        subprocess.run([sys.executable, str(HERE / "catalog.py")], cwd=ROOT, env=os.environ, capture_output=True)
     stale = out_of_date(STAMP.stat().st_mtime) if STAMP.exists() else None
     if "--force" not in sys.argv and stale == []:
         STAMP.touch()
         print("Chalkline: pages are up to date; checking PDFs.")
         for script in BUNDLES:
-            subprocess.run([sys.executable, f"scripts/{script}", "--stale"] + (["--teacher"] if PROFILE == "teacher" else []),
+            subprocess.run([sys.executable, str(HERE / script), "--stale"] + (["--teacher"] if PROFILE == "teacher" else []),
                            cwd=ROOT, env=os.environ)
         return
     if stale is None:

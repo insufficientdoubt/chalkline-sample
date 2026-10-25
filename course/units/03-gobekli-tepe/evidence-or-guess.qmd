@@ -11,19 +11,7 @@ format:
   typst: default
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, word_bank
-terms = load_unit(3)
-```
-
-```{python}
-#| output: asis
-print(word_bank({
-    "Archaeology": pick(terms, "archaeologist", "excavation", "artifact", "evidence"),
-    "Göbekli Tepe": pick(terms, "T-pillar", "enclosure", "relief", "hunter-gatherer"),
-}))
-```
+{{< word-bank unit=3 "Archaeology: archaeologist, excavation, artifact, evidence" "Göbekli Tepe: T-pillar, enclosure, relief, hunter-gatherer" >}}
 
 ## 1. Evidence or guess?
 

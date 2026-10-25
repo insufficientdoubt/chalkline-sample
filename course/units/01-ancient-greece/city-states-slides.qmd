@@ -15,12 +15,6 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(1)
-```
-
 ## This unit's printables {#unit-printables}
 
 Here is all the work for this unit. Tap a page to see it big.
@@ -69,10 +63,7 @@ Ask: which of these words do you already know in Chinese? We'll meet each one th
 - The sea connected them. Greeks traded by ship and started a {{< vocab "colony" >}} wherever they found good land.
 :::
 ::: {.column width="45%"}
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "peninsula", "colony"), zh=True))
-```
+{{< vocab-cards unit=1 words="peninsula, colony" zh=true >}}
 :::
 ::::
 
@@ -82,10 +73,7 @@ Ask: why would mountains make it hard for one king to rule all of Greece? (Hard 
 
 ## Key words: who decides?
 
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "city-state", "citizen", "democracy", "assembly"), zh=True))
-```
+{{< vocab-cards unit=1 words="city-state, citizen, democracy, assembly" zh=true >}}
 
 ## Athens and Sparta
 

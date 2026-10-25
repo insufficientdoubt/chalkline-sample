@@ -16,6 +16,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Chalkline's scripts move into the extension; pages use shortcodes instead of Python (step 3 of the extension plan)
+- **Asked for:** "just run the whole process, and update the repo as you complete each step".
+- **Why:** so fixes to the catalog, packets, slide PDFs and other scripts reach every course with `quarto update`.
+- **Changed:**
+  - `scripts/*.py` moved to `_extensions/chalkline/scripts/`. `import_vex_vocab.py` is now `import_vocab.py` (it works for any course's vocab list). Each script finds the course folder with `extension.py`, wherever the extension is installed.
+  - `_extensions/chalkline/_extension.yml`: the pre-render and post-render steps are part of the Chalkline project type, so `_quarto.yml` no longer lists them (a course can still add its own).
+  - New `chalkline.py` in the course: one command for Chalkline's scripts (`python chalkline.py packets --unit 3`, `slides-pdf`, `open student`, `export-vocab`, `import-vocab`, `drawio`, `build`), so nobody types the extension's path. The launchers, `.vscode/tasks.json`, `README.md`, `CLAUDE.md` and `vocab/README.md` use it.
+  - New shortcodes (`_extensions/chalkline/blocks.lua`, `scripts/blocks.py`): `{{< vocab-cards >}}`, `{{< word-bank >}}`, `{{< vocab-table >}}`, `{{< vocab-list >}}`, `{{< fill-in-the-blank >}}`, `{{< overview ... >}}`, `{{< season-events >}}`. They call the same Python helpers the pages used to call from code cells.
+  - Content: 9 lessons, `index.qmd` and `families.qmd` use these shortcodes instead of `import sys; sys.path.append("scripts")` code cells (which would break once the scripts moved). A full build now starts Python 6 times instead of 20.
+  - Checked: full teacher and student renders; all 166 PDF pages identical pixel for pixel; screenshots of the 11 changed pages identical (except a matching game, which shuffles on every load); `chalkline.py` commands run.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Chalkline's page, slide and PDF design moves into the extension (step 2 of the extension plan)
 - **Asked for:** "start step 2. actually, just run the whole process, and update the repo as you complete each step".
 - **Why:** so a fix to how worksheets, slides or pages look reaches every course with `quarto update`, and a school's brand stays the school's.

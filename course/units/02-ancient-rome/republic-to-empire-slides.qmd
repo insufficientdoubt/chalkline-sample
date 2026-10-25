@@ -16,12 +16,6 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(2)
-```
-
 ## Rome on a timeline
 
 ::: {.timeline}
@@ -49,10 +43,7 @@ The wolf story is a myth, like the Greek myths in Unit 1. Ask: why would a city 
 
 ## The Republic: no more kings
 
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "republic", "senate", "consul"), zh=True))
-```
+{{< vocab-cards unit=2 words="republic, senate, consul" zh=true >}}
 
 ::: notes
 Two consuls, chosen for one year, could each block the other. Romans had had a bad king and never wanted one person to hold all the power again.

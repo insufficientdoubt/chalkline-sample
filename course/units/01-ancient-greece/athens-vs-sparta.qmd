@@ -11,21 +11,9 @@ format:
   typst: default
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, word_bank
-terms = load_unit(1)
-```
-
 Athens and Sparta were both Greek {{< vocab "city-state" text="city-states" zh=true >}}, but life in them was very different. Use the slides and the word bank.
 
-```{python}
-#| output: asis
-print(word_bank({
-    "Government": pick(terms, "democracy", "citizen", "assembly", "vote"),
-    "Places": pick(terms, "city-state", "peninsula", "colony"),
-}))
-```
+{{< word-bank unit=1 "Government: democracy, citizen, assembly, vote" "Places: city-state, peninsula, colony" >}}
 
 ## 1. Compare
 

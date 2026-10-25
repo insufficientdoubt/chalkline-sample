@@ -14,12 +14,6 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(1)
-```
-
 ## The Olympic Games
 
 :::: {.columns}
@@ -135,10 +129,7 @@ A {{< vocab "philosopher" >}} is a thinker who asks big questions about life and
 - Greek {{< vocab "column" text="columns" >}} came in three styles: Doric, Ionic and Corinthian.
 :::
 ::: {.column width="50%"}
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "column"), zh=True))
-```
+{{< vocab-cards unit=1 words="column" zh=true >}}
 :::
 ::::
 
