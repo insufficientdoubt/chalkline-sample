@@ -283,7 +283,7 @@ Open windows, where they are, the scores, the class lists and the settings are r
 
 ## Slide games
 
-Nine review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
+Ten review games for slides, in a calm, plain style. **To play one right now, open Review games in the sidebar** (`course/review-games.qmd`): choose a game along the top and a unit (or all units), and it starts with that unit's vocab; **New word** (or **New board**, **New cards**…) gives a fresh one. It remembers your last choice on that computer, works full screen on the board, and has the toolbox (**W**) like any deck. The `{{< game-picker >}}` shortcode makes it, so you can put it in any deck too.
 
 To put a game in your own slides, see them all in **Unit 1 › Greek Word Games** (`course/units/01-ancient-greece/review-games-slides.qmd`); its speaker notes (**S**) show how each one is written. Copy any slide to make your own. Between classes, **↺ Reset for the next class** in the toolbox menu (**W**) starts every game again. The games keep their own score and don't use the toolbox scoreboard. Like quizzes, they never show 中文.
 
@@ -298,6 +298,7 @@ To put a game in your own slides, see them all in **Unit 1 › Greek Word Games*
 | 🗂️ **Sort it** | Items in a bank and 2–4 groups ("Both" is just another group). Tap an item, then its group. A right item locks in green; a wrong one shakes, goes back to the bank, and **its reason shows**, so students learn why straight away. Items can be words, phrases or **pictures**. Write any sort you like (animals by habitat, fact or opinion, cause or effect), or use the vocab list: one unit's words sort into their topics, several units' into their units, and each word's meaning is its reason (`with="picture"` shows the pictures). `feedback="end"` lets students sort everything first; **Check** then marks each item and shows the reasons. |
 | 🎱 **Bingo** | Two steps. **Make cards** (before class): choose the grid (3 × 3 to 5 × 5), a free middle square and the number of cards, then **Download the cards**: a PDF made right there in the browser, two cards on each page, every card different. **Call** (in class): **Next** shows a meaning and its picture; students cross out the word. Type a card's number and **Check** to see whether it really has a full line. A **game code** printed on every card (like `1-3F-7365`) makes the same cards again, on any computer, so you can check cards printed last week; type it into the Call step to bring that game back. Nothing is made when the site is built. |
 | ⚡ **Quick-fire** | A question pops up with a timer. Point to a student, who answers out loud. **Show the answer**, then **✓ Right** or **✗ Wrong**. The game counts the score and shows it at the end. |
+| ⏱️ **Speed quiz** | Like Kahoot, for one player. A picture and four words, or a word and four pictures, in four colors; tap one (or press 1–4) before the time runs out. Three answers are from the word's unit and one from another unit. A right answer scores 500 to 1,000 points: the faster, the more. At the end, a player with a high score types their name into the **high scores** (the top 10). They're saved **only in that browser on that computer**, so one computer can be a station that students take turns at, or a student can play at home. **Clear the scores** (tap twice) starts a new table. |
 
 **Choosing the words.** Every game can use the vocab list, or words you write yourself:
 
@@ -344,7 +345,7 @@ Matching and memory use the same lines: a word, a `|`, then its partner (`::: {.
 :::
 ```
 
-`{{< scramble >}}` takes words like `{{< snowman >}}`; `{{< sort unit=1 >}}` and `{{< bingo unit=1 >}}` use a unit's vocab (or every word, with no `unit`). More game ideas, not built yet: `IDEAS.md`.
+`{{< speed-quiz unit=1 >}}` asks 10 questions from a unit's vocab (`count=10`, `seconds=10`, `title="..."`; `ask="picture"` shows only pictures, `ask="word"` only words). `{{< scramble >}}` takes words like `{{< snowman >}}`; `{{< sort unit=1 >}}` and `{{< bingo unit=1 >}}` use a unit's vocab (or every word, with no `unit`). More game ideas, not built yet: `IDEAS.md`.
 
 Each line is the clue or question, a `|`, then the answer. In Jeopardy, each category is a **bold** line, the first clue is worth 100, the next 200, and so on (or set your own with `points="200,400,600"`). `teams="3"` starts with 3 teams; `teams="0"` plays without teams or scores. `seconds="0"` turns the quick-fire timer off. To follow each word with a slide about it, put the games in a column of slides: a `#` heading for the column, then `##` slides under it (press ↓ to go down).
 

@@ -40,6 +40,8 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< scramble unit=1 >}}                the letters of a word, mixed up (words as for snowman)
   {{< sort unit=1 >}}                    sort words into groups: their topics (one unit) or units
   {{< bingo unit=1 >}}                   bingo: make printable cards (PDF, in the browser), then call
+  {{< speed-quiz unit=1 >}}              like Kahoot, for one player: a picture and four words (or a word
+                                         and four pictures), faster = more points, high scores
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
@@ -469,6 +471,22 @@ return {
       if u.unit == c.unit then c.title = u.title end
     end
     return games.div("bingo", c)
+  end,
+
+  -- Speed quiz (like Kahoot, for one player): a picture and four words, or a word and four pictures,
+  -- against the clock, with a high-score table kept in the browser. count=10, seconds=10,
+  -- ask="picture" (choose the word) or ask="word" (choose the picture); both, mixed, if not given.
+  ["speed-quiz"] = function(args, kwargs)
+    if not quarto.doc.is_format("revealjs") then return games.placeholder("Speed quiz") end
+    local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+    local c = game_config({}, kwargs, "speed")
+    c.all = {}   -- every word, for the wrong answers (one of the four comes from another unit)
+    for _, t in ipairs(vex_list or {}) do table.insert(c.all, game_word(t, up)) end
+    c.count = tonumber(str(kwargs["count"], "10")) or 10
+    c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
+    c.ask = str(kwargs["ask"], "both")
+    c.title = str(kwargs["title"], "Speed quiz")
+    return games.div("speed", c)
   end,
 
   -- The Review games page: choose a game and a unit, then play (every vocab word, with its units).

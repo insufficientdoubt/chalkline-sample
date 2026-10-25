@@ -270,6 +270,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Speed quiz, a Kahoot-style review game for one player, with a high-score table
+- **Asked for:** "Create a kahoot style review game. Single player. Students are given either a picture and then need to match the correct word (grid of four words - 3 from the same unit as the correct answer, one from another unit if available). Or the opposite - given a word and they need to match the picture. They have a few seconds to answer, and the faster they answer the more points they get if correct. Kahoot does it out of a thousand points ... you can add a high scores table where students can write their name."
+- **Why:** "you could have a station where students try this and see who's the winner at the end. Or students can just do it on their own at home."
+- **Changed:**
+  - `_extensions/classroom/games/games.js`: the new game (`speedQuiz`): a start screen with the high scores, a 3-2-1 countdown, 10 questions (picture → word and word → picture, mixed), four colored answers with Kahoot's shapes, a timer bar, points as in Kahoot (500 to 1,000 for a right answer, more when faster), the right answer shown after each question, and at the end the score and a name box for the top-10 table. The table is kept in the browser (one per unit), with "Clear the scores" (tap twice). Keys 1–4 answer, Enter starts and goes on. Added to the Review games page as **Speed quiz**, which now also passes every word to the games (for the answer from another unit).
+  - `_extensions/classroom/games/games.css`: the game's styles; the game tabs on the Review games page a little narrower, so ten fit on one row.
+  - `_extensions/classroom/shortcodes.lua`: `{{< speed-quiz unit=1 >}}` (`count`, `seconds`, `ask`, `title`).
+  - `README.md`: the game in the games table and the shortcode. `course/review-games.qmd`, `course/units/01-ancient-greece/review-games-slides.qmd` (content): the description, and an example slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: reveal.js's own tools in the classroom tools menu
 - **Asked for:** "make reveal.js native slide tools more visible on the slide? I feel like with classroom tools on the surface, teachers wont open the "tools" inside the other menu, and thus wont learn about those features."
 - **Why:** so teachers find full screen, the slide overview, speaker view, the chalkboard and the shortcuts, and learn their keys.

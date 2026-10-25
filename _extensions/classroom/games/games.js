@@ -1,5 +1,5 @@
 /*
-  Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire, Matching and Memory. Each one is a
+  Slide games: Snowman, Picture reveal, Jeopardy, Quick-fire, Matching, Memory, Speed quiz and more. Each one is a
   <div class="cg-game" data-game="..." data-config="{json}"> made by shortcodes.lua
   (words from the vocab list) or filter.lua (questions you write in a ::: div).
 
@@ -1138,6 +1138,223 @@
     return b;
   }
 
+  /* ---------------- Speed quiz (like Kahoot, for one player) ----------------
+     A picture and four words, or a word and four pictures. A right answer scores 500 to 1000
+     points: the faster, the more (Kahoot's rule). Of the four, three are from the right word's
+     unit and one from another unit, when there is one. The high scores are kept in this browser
+     only, so one computer can be a station for the class, or a student can play at home.
+     config: words (the questions), all (every word: the wrong answers), count, seconds,
+     ask ("both", "picture": show a picture, choose the word; "word": show a word, choose the picture),
+     unit, title. */
+  const SPEED_COLORS = ["#e5383b", "#0087ff", "#e0a800", "#2e9e4f"];
+  const SPEED_SHAPES = ['<path d="M12 3l10 18H2z"/>', '<path d="M12 2l10 10-10 10L2 12z"/>',
+    '<circle cx="12" cy="12" r="10"/>', '<rect x="3" y="3" width="18" height="18" rx="2"/>'];
+  const SPEED_TOP = 10;   // high scores kept
+
+  function speedQuiz(root, cfg) {
+    const all = list(cfg.all).length ? list(cfg.all) : list(cfg.words);
+    const seconds = cfg.seconds || 10;
+    const key = "chalkline-games:speed:" + (cfg.unit || "all");
+    let qs, i, total, right, answered, started, timer = 0, wait = 0, phase = "start", entry = null;
+    const stage = h("div", { class: "cg-speed-stage" });
+    root.append(stage);
+
+    function scores() {
+      try { return list(JSON.parse(localStorage.getItem(key))); } catch (e) { return []; }
+    }
+    function saveScores(s) {
+      try { localStorage.setItem(key, JSON.stringify(s)); } catch (e) { /* private window: just for now */ }
+    }
+    function ranked(s) { return s.slice().sort(function (a, b) { return b.score - a.score || a.at - b.at; }).slice(0, SPEED_TOP); }
+
+    // Three wrong answers: two from the word's own unit and one from another unit (when there is one).
+    function options(w, pictures) {
+      const others = shuffle(all.filter(function (x) { return x.word !== w.word && (!pictures || x.image); }));
+      const home = list(w.units);
+      const inHome = function (x) { return list(x.units).some(function (u) { return home.indexOf(u) >= 0; }); };
+      const same = others.filter(inHome), away = others.filter(function (x) { return !inHome(x); });
+      const picks = same.slice(0, away.length ? 2 : 3).concat(away.slice(0, 1));
+      others.forEach(function (x) { if (picks.length < 3 && picks.indexOf(x) < 0) picks.push(x); });
+      return shuffle(picks.concat([w]));
+    }
+    function questions() {
+      const pool = shuffle(list(cfg.words)).slice(0, cfg.count || 10);
+      const ask = cfg.ask || "both";
+      return pool.map(function (w, j) {
+        let mode = !w.image ? "meaning" : ask === "picture" ? "picture" : ask === "word" ? "word" : j % 2 ? "word" : "picture";
+        if (mode === "word" && all.filter(function (x) { return x.image; }).length < 4) mode = "picture";
+        return { w: w, mode: mode, options: options(w, mode === "word") };
+      });
+    }
+    function stop() { clearInterval(timer); clearTimeout(wait); timer = wait = 0; }
+    function shape(j) {
+      const s = h("span", { class: "cg-speed-shape", "aria-hidden": "true" });
+      s.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor">' + SPEED_SHAPES[j] + "</svg>";
+      return s;
+    }
+    function table(mine) {
+      const s = ranked(scores());
+      const box = h("div", { class: "cg-speed-board" }, h("div", { class: "cg-speed-board-title", text: "High scores" }));
+      if (!s.length) box.append(h("div", { class: "cg-speed-empty", text: "No scores yet. Be the first!" }));
+      else {
+        const ol = h("ol", { class: "cg-speed-list" });
+        s.forEach(function (e, j) {
+          ol.append(h("li", { class: mine && e.at === mine.at ? "cg-speed-mine" : "" },
+            h("span", { class: "cg-speed-rank", text: j + 1 }), h("span", { class: "cg-speed-name", text: e.name }),
+            h("span", { class: "cg-speed-pts", text: e.score.toLocaleString("en-US") })));
+        });
+        box.append(ol);
+      }
+      box.append(h("div", { class: "cg-speed-note", text: "Saved on this computer only." }),
+        s.length ? h("div", { class: "cg-tools" }, sureButton("Clear the scores", function () { saveScores([]); paintBoard(); })) : "");
+      return box;
+    }
+    function paintBoard() {
+      const old = stage.querySelector(".cg-speed-board");
+      if (old) old.replaceWith(table(entry));
+    }
+
+    function begin() {
+      stop();
+      phase = "start"; entry = null;
+      qs = questions();
+      stage.textContent = "";
+      stage.className = "cg-speed-stage cg-speed-home";
+      stage.append(h("div", { class: "cg-speed-intro" },
+        h("div", { class: "cg-quiz-title", text: cfg.title || "Speed quiz" }),
+        h("div", { class: "cg-quiz-sub", text: qs.length + " questions · " + seconds + " seconds each" }),
+        h("p", { class: "cg-speed-how", text: "Choose the right answer. Faster answers get more points: up to 1,000." }),
+        h("div", { class: "cg-tools" }, qs.length ? button("Start", countdown, "cg-big") : h("span", { text: "No words yet." }))),
+      table());
+    }
+    function countdown() {
+      stop();
+      phase = "count";
+      total = 0; right = 0; i = -1;
+      let n = 3;
+      const num = h("div", { class: "cg-speed-count", text: n });
+      stage.textContent = "";
+      stage.className = "cg-speed-stage cg-speed-ready";
+      stage.append(h("div", { class: "cg-quiz-sub", text: "Get ready!" }), num);
+      beep(660, 0.12, 0.1);
+      timer = setInterval(function () {
+        n--;
+        if (n > 0) { num.textContent = n; num.classList.remove("cg-pop"); void num.offsetWidth; num.classList.add("cg-pop"); beep(660, 0.12, 0.1); }
+        else next();
+      }, 800);
+    }
+    function next() {
+      stop();
+      i++;
+      if (i >= qs.length) { end(); return; }
+      phase = "question"; answered = false;
+      const q = qs[i], w = q.w;
+      const bar = h("div", { class: "cg-timer-fill" });
+      const left = h("span", { class: "cg-speed-left", text: seconds });
+      const grid = h("div", { class: "cg-speed-grid" + (q.mode === "word" ? " cg-speed-pictures" : "") });
+      q.options.forEach(function (o, j) {
+        grid.append(h("button", { class: "cg-speed-opt", style: "--opt:" + SPEED_COLORS[j], "data-n": j,
+          "aria-label": q.mode === "word" ? "Picture " + (j + 1) : o.word, onclick: function () { choose(j); } },
+          shape(j), q.mode === "word" ? h("img", { src: o.image, alt: "" }) : h("span", { class: "cg-speed-word", text: o.word })));
+      });
+      const prompt = q.mode === "picture" ? h("img", { class: "cg-speed-img", src: w.image, alt: "" })
+        : q.mode === "word" ? h("div", { class: "cg-speed-term", text: w.word })
+        : h("div", { class: "cg-speed-def", text: w.hint });
+      stage.textContent = "";
+      stage.className = "cg-speed-stage cg-speed-play cg-speed-mode-" + q.mode;
+      stage.append(
+        h("div", { class: "cg-speed-top" }, h("span", { class: "cg-speed-num", text: (i + 1) + " / " + qs.length }),
+          h("span", { class: "cg-speed-ask", text: q.mode === "word" ? "Which picture is it?" : "Which word is it?" }),
+          h("span", { class: "cg-speed-total", text: total.toLocaleString("en-US") + " points" })),
+        h("div", { class: "cg-speed-prompt" }, prompt),
+        h("div", { class: "cg-speed-clock" }, h("div", { class: "cg-timer" }, bar), left),
+        h("div", { class: "cg-speed-feedback", hidden: true }),
+        grid);
+      started = Date.now();
+      const length = seconds * 1000;
+      timer = setInterval(function () {
+        const rest = Math.max(0, length - (Date.now() - started));
+        bar.style.width = (100 * rest / length) + "%";
+        bar.parentNode.classList.toggle("cg-hurry", rest < 3000);
+        left.textContent = Math.ceil(rest / 1000);
+        if (!rest) choose(-1);
+      }, 50);
+    }
+    // j: the button chosen, or -1 when the time ran out.
+    function choose(j) {
+      if (phase !== "question" || answered) return;
+      answered = true;
+      stop();
+      const q = qs[i], ok = j >= 0 && q.options[j] === q.w;
+      const elapsed = Math.min(Date.now() - started, seconds * 1000);
+      const points = ok ? Math.round(1000 * (1 - elapsed / (seconds * 1000) / 2)) : 0;
+      total += points;
+      if (ok) right++;
+      stage.querySelectorAll(".cg-speed-opt").forEach(function (b, k) {
+        b.disabled = true;
+        if (q.options[k] === q.w) b.classList.add("cg-speed-right");
+        else if (k === j) b.classList.add("cg-speed-wrong");
+        else b.classList.add("cg-speed-dim");
+        if (q.mode === "word" && q.options[k] === q.w) b.append(h("span", { class: "cg-speed-label", text: q.w.word }));
+      });
+      const fb = stage.querySelector(".cg-speed-feedback");
+      fb.hidden = false;
+      fb.className = "cg-speed-feedback " + (ok ? "cg-speed-yes" : "cg-speed-no");
+      fb.append(h("span", { text: ok ? "Correct!  +" + points : j < 0 ? "Time's up!" : "Not quite." }),
+        ok ? "" : h("span", { class: "cg-speed-was", text: "It's: " + q.w.word }),
+        button(i + 1 < qs.length ? "Next" : "See my score", next, "cg-primary"));
+      stage.querySelector(".cg-speed-clock").hidden = true;
+      stage.querySelector(".cg-speed-total").textContent = total.toLocaleString("en-US") + " points";
+      if (ok) beep(880, 0.15, 0.12); else beep(196, 0.25, 0.12);
+      phase = "feedback";
+      wait = setTimeout(next, ok ? 2000 : 3200);   // on by itself; Next goes straight on
+    }
+    function end() {
+      stop();
+      phase = "end";
+      const s = ranked(scores());
+      const makesIt = total > 0 && (s.length < SPEED_TOP || total > s[s.length - 1].score);
+      const best = !s.length || total > s[0].score;
+      const name = h("input", { class: "cg-speed-input", type: "text", maxlength: "16", placeholder: "Your name",
+        "aria-label": "Your name", autocomplete: "off", spellcheck: "false" });
+      const save = function () {
+        const n = name.value.trim().slice(0, 16);
+        if (!n) { name.focus(); return; }
+        entry = { name: n, score: total, right: right, of: qs.length, at: Date.now() };
+        saveScores(ranked(scores().concat([entry])));
+        const place = ranked(scores()).findIndex(function (e) { return e.at === entry.at; }) + 1;
+        form.replaceWith(h("div", { class: "cg-speed-saved", text: place ? "Saved! You're number " + place + "." : "Saved!" }));
+        again.classList.add("cg-primary");
+        phase = "saved";
+        paintBoard();
+      };
+      name.addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); save(); } e.stopPropagation(); });
+      const again = button("Play again", begin, makesIt ? "" : "cg-primary");
+      const form = makesIt ? h("div", { class: "cg-speed-form" },
+        h("div", { class: "cg-speed-made", text: best && s.length ? "A new top score!" : "You made the high scores!" }),
+        h("div", { class: "cg-speed-entry" }, name, button("Save", save, "cg-primary"))) : "";
+      stage.textContent = "";
+      stage.className = "cg-speed-stage cg-speed-home cg-speed-end";
+      stage.append(h("div", { class: "cg-speed-intro" },
+        h("div", { class: "cg-quiz-sub", text: "Your score" }),
+        h("div", { class: "cg-speed-final", text: total.toLocaleString("en-US") }),
+        h("div", { class: "cg-quiz-sub", text: right + " of " + qs.length + " right" + (right === qs.length ? ". Perfect!" : "") }),
+        form,
+        h("div", { class: "cg-tools" }, again)),
+      table());
+      if (right === qs.length) cheer();
+      if (makesIt) setTimeout(function () { name.focus(); }, 50);
+    }
+
+    keyHandlers.push({ el: root, fn: function (e) {
+      if (phase === "question" && /^[1-4]$/.test(e.key)) { choose(+e.key - 1); return true; }
+      if (e.key === "Enter" && (phase === "start" || phase === "feedback")) { phase === "start" ? countdown() : next(); return true; }
+      return false;
+    } });
+    begin();
+    return begin;   // reset: back to the start, with new questions; the high scores stay
+  }
+
   /* ---------------- Review games page: choose a game and a unit, then play ----------------
      config: { words: every vocab word, with its units; units: [{ unit, title }]; home: the overview }.
      The last choice is remembered in this browser. */
@@ -1152,6 +1369,7 @@
     { id: "sort", label: "Sort it", icon: '<path d="M4 4v16h16"/><path d="M8 15V10M12 15V7M16 15v-3"/>' },
     { id: "jeopardy", label: "Jeopardy", icon: '<rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/>' },
     { id: "trivia", label: "Quick-fire", icon: '<path d="M13 2L4.5 13.5H12L11 22l8.5-11.5H12L13 2z"/>' },
+    { id: "speed", label: "Speed quiz", icon: '<circle cx="12" cy="13" r="8"/><path d="M12 13l3.5-3.5M10 2h4M12 2v3"/>' },
     { id: "bingo", label: "Bingo", icon: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/><circle cx="12" cy="12" r="1.6"/>' },
   ];
   function icon(paths) {
@@ -1206,9 +1424,10 @@
       stage.textContent = "";
       stage.append(el);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
-      reset = GAMES[choice.game](el, { words: pool, random: true, rows: 4, teams: 2, count: /match|memory/.test(choice.game) ? 6 : 5, seconds: 10, tiles: 16,
+      reset = GAMES[choice.game](el, { words: pool, all: words, random: true, rows: 4, teams: 2, seconds: 10, tiles: 16,
+        count: /match|memory/.test(choice.game) ? 6 : choice.game === "speed" ? 10 : 5,
         units: units, unit: choice.unit,
-        title: (unit ? unit.title : "Vocab") + (choice.game === "bingo" ? "" : " quick-fire") });
+        title: (unit ? unit.title : "Vocab") + ({ bingo: "", speed: " speed quiz" }[choice.game] || " quick-fire") });
     }
     play();
     return function () { play(); };   // "Reset for the next class": the same game and unit, from the start
@@ -1217,7 +1436,8 @@
   /* ---------------- Start every game on the page ---------------- */
 
   const GAMES = { "snowman": snowman, "picture-reveal": pictureReveal, "jeopardy": jeopardy, "trivia": trivia,
-    "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "picker": gamePicker };
+    "matching": matching, "memory": memory, "scramble": scramble, "sort": sortIt, "bingo": bingo, "speed": speedQuiz,
+    "picker": gamePicker };
   // A calm look: buttons are plain words. Take off a leading emoji ("🔀 New word" -> "New word"),
   // also on buttons a game adds later (the clue card, the end of a quick-fire).
   function calm(root) {

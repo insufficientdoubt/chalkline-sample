@@ -4,7 +4,7 @@ subtitle: "复习游戏 · Choose a game and a unit, and play"
 type: slides
 order: 1
 audience: [teacher, student]
-description: "Snowman, Picture reveal, Jeopardy or Quick-fire with the vocab from any unit, ready to play on the board."
+description: "Snowman, Picture reveal, Jeopardy, Quick-fire, Speed quiz and more with the vocab from any unit, ready to play on the board or at home."
 format:
   revealjs:
     center: false          # the game stays at the top when you switch games
