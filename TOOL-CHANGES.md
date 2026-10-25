@@ -270,6 +270,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Vocab and Packet look like sidebars; V and P; Vocab search, A to Z
+- **Asked for:** "these are still styled like windows though. Can you make them styled as sidebars/side panels (so no curves or padding, just full height bars, and a different background color?" Hotkeys "P for packet, V for vocab", "default size a little smaller", and "a search function to vocab... imagine an AP course that has hundreds of words. We'd want to be able to search all units vocabulary." And "the displayed vocab should be in alphabetical order".
+- **Why:** they still looked like floating windows; a big course needs to find a word fast.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.css`: sidebars are edge to edge, top to bottom, square, on a light grey with a line where they meet the slides; no shadow; the unit menu and buttons on white; × in the bar's bottom corner.
+  - `_extensions/classroom/toolbox/toolbox.js`: no gap around a sidebar; a sidebar saved at an older default width starts at the new one; comments for the new keys (they replace reveal.js's P, previous slide, and V, black screen: ← and B still do those).
+  - `_extensions/classroom/toolbox/tools/vocab.js`: V; 200 px wide (was 230); the words A to Z; a search box that looks in every unit (the word first, then 中文, then the meaning from three letters on), showing each match's unit; Esc clears it.
+  - `_extensions/classroom/toolbox/tools/packet.js`: P; 190 px wide (was 220).
+  - `_extensions/classroom/ui/icons.js`: a search icon (Lucide).
+  - `README.md`, `IDEAS.md`: the new keys and search.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Vocab and Packet are sidebars that make room, instead of floating over the slides
 - **Asked for:** "the default sizes are a bit too big. Even if I set max spacing, they cant quite fit around the slide... And top-to-bottom covers up my logo, controls, and slide number." Idea: "slide out panels from the side of the screen, activated by hotkey or a toggle, which would automatically resize the slide to make room when they came in." Other tools stay floating.
 - **Why:** the two sidebars covered the slide's edges, the logo, the slide number and the controls.

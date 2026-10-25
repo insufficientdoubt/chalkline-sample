@@ -1,5 +1,5 @@
 /*
-  Packet: the unit packet as pages in a sidebar at the left edge ([ opens and closes it); tap one
+  Packet: the unit packet as pages in a sidebar at the left edge (P opens and closes it); tap one
   to open it large in the PDF viewer (zoom, pens, arrow keys to turn pages). The student copy, or the teacher edition with the answer keys.
   No shadow root: the PDF viewer expects to be in the page.
 */
@@ -34,14 +34,14 @@
   }
 
   T.tool("packet", {
-    title: "Packet", icon: "files", w: 220, minW: 170, maxW: 420, keys: [],
-    // A sidebar at the left edge; the slides move over to make room. [ opens and closes it.
-    dock: "left", key: { keyCode: 219, key: "[" },
+    title: "Packet", icon: "files", w: 190, minW: 160, maxW: 420, keys: [],
+    // A sidebar at the left edge; the slides move over to make room. P opens and closes it.
+    dock: "left", key: { keyCode: 80, key: "P" },
   }, class extends T.ToolElement {
     static shadow = false;
     static css = `
 /* A sidebar: the unit menu, Answer key, and the pages */
-.ct-body.ct-packet { padding: 10px; }
+.ct-body.ct-packet { padding: 12px 10px 10px; }
 ct-packet { gap: 8px; }
 .ct-packet-head { flex: none; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .ct-packet-head .ui-select { flex: 1 1 100%; }
