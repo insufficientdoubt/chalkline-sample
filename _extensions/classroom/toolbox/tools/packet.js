@@ -1,6 +1,6 @@
 /*
-  Packet: the unit packet as pages in a sidebar; tap one to open it large in the PDF viewer (zoom,
-  pens, arrow keys to turn pages). The student copy, or the teacher edition with the answer keys.
+  Packet: the unit packet as pages in a sidebar at the left edge ([ opens and closes it); tap one
+  to open it large in the PDF viewer (zoom, pens, arrow keys to turn pages). The student copy, or the teacher edition with the answer keys.
   No shadow root: the PDF viewer expects to be in the page.
 */
 (function () {
@@ -34,9 +34,9 @@
   }
 
   T.tool("packet", {
-    title: "Packet", icon: "files", w: 220, h: 520, minW: 170, minH: 240, keys: [],
-    // A sidebar at the left edge, above the menu buttons and the clock, until it's dragged
-    start: function () { return { x: 8, y: 8, h: Math.max(240, window.innerHeight - 190) }; }
+    title: "Packet", icon: "files", w: 220, minW: 170, maxW: 420, keys: [],
+    // A sidebar at the left edge; the slides move over to make room. [ opens and closes it.
+    dock: "left", key: { keyCode: 219, key: "[" },
   }, class extends T.ToolElement {
     static shadow = false;
     static css = `

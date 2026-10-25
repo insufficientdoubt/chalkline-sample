@@ -12,6 +12,9 @@
     This unit   vocab.js, packet.js, qr.js (QR code for this deck on the student site)
     More        music.js (YouTube), dice.js, slide.js (Slide size)
 
+  Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
+  right and left edge, and the slides move over to make room. ] and [ open and close them.
+
   A tool has no title bar: the tool is the message. Point at it for × on its corner. Drag a tool by
   any empty part of it; drag the corner to make it bigger (everything inside grows). Which tools are
   open, where they are, the scores and the other settings are remembered in this browser, so they
@@ -92,10 +95,76 @@
     });
   }
 
+  /* ---------------- Sidebars ----------------
+     A tool with dock: "left" or "right" (Packet, Vocab) is a sidebar the screen's full height,
+     not a floating panel. The slides move over to make room, and their logo, buttons and slide
+     number move with them, so the sidebar covers nothing. Drag its inner edge to make it wider.
+     One sidebar on each side. */
+  const GAP = 8;   // between a sidebar and the screen's edge
+  const docked = { left: null, right: null };   // side -> tool id
+  const root = document.documentElement;
+  function dockWidth(tool, w) {
+    return Math.round(Math.max(tool.minW, Math.min(w || tool.w, tool.maxW || 460, window.innerWidth * 0.4)));
+  }
+  // Make room for the sidebars: toolbox.css moves the slides (.reveal) and the buttons around them
+  // by --ct-dock-left and --ct-dock-right. reveal.js only sizes the slide when the window changes,
+  // so it's asked again on every frame while the room opens or closes (and while an edge is dragged).
+  let settle = 0;
+  function makeRoom(instant) {
+    ["left", "right"].forEach(function (side) {
+      const id = docked[side];
+      root.style.setProperty("--ct-dock-" + side, id ? layout.pos[id].w + GAP + "px" : "0px");
+    });
+    root.classList.toggle("ct-docked", !!(docked.left || docked.right));
+    root.classList.toggle("ct-dock-instant", !!instant);
+    if (!window.Reveal || !Reveal.isReady()) return;
+    const until = performance.now() + (instant ? 0 : 260);   // the transition in toolbox.css is 0.22s
+    cancelAnimationFrame(settle);
+    (function frame() {
+      Reveal.layout();
+      if (performance.now() < until) settle = requestAnimationFrame(frame);
+      else reseatClock();
+    })();
+  }
+  function placeDock(panel, id) {
+    const tool = TOOLS[id], p = layout.pos[id];
+    p.w = dockWidth(tool, p.w);
+    panel.style.cssText = "top:" + GAP + "px;bottom:" + GAP + "px;width:" + p.w + "px;" + tool.dock + ":" + GAP + "px;z-index:" + panel.style.zIndex;
+  }
+  function edgeDragger(panel, id, edge) {
+    const tool = TOOLS[id];
+    edge.addEventListener("pointerdown", function (e) {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      panel.classList.add("ct-dragging");
+      function move(ev) {
+        layout.pos[id].w = tool.dock === "right" ? window.innerWidth - GAP - ev.clientX : ev.clientX - GAP;
+        placeDock(panel, id);
+        makeRoom(true);
+      }
+      function up() {
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+        window.removeEventListener("pointercancel", up);
+        panel.classList.remove("ct-dragging");
+        root.classList.remove("ct-dock-instant");
+        saveLayout();
+      }
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+      window.addEventListener("pointercancel", up);
+    });
+  }
+  window.addEventListener("resize", function () {   // a sidebar is at most 40% of the screen
+    ["left", "right"].forEach(function (side) { if (docked[side]) placeDock(open[docked[side]].panel, docked[side]); });
+    if (docked.left || docked.right) makeRoom(true);
+  });
+
   function openTool(id) {
     const tool = TOOLS[id];
     if (!tool) return;
     if (open[id]) { open[id].panel.style.zIndex = ++zTop; return; }
+    if (tool.dock) return openDock(id);
     const n = Object.keys(open).length;
     const saved = layout.pos[id];
     if (tool.start && (!saved || saved.auto || (tool.oldDefault && tool.oldDefault(saved)))) {
@@ -131,12 +200,40 @@
     paintMenu();
   }
 
+  function openDock(id) {
+    const tool = TOOLS[id], side = tool.dock;
+    if (docked[side]) closeTool(docked[side]);   // one sidebar on each side
+    const p = layout.pos[id] || (layout.pos[id] = {});
+    if (!p.dock) { p.dock = true; p.w = tool.w; }   // a sidebar from before was a floating panel: start fresh
+    const close = h("button", { class: "ct-ctrl ct-close", "aria-label": "Close " + tool.title,
+      title: "Close" + (tool.key ? " (" + tool.key.key + ")" : ""), onclick: function () { closeTool(id); } }, icon("x"));
+    const body = h("div", { class: "ct-body ct-" + id });
+    const edge = h("div", { class: "ct-edge", title: "Drag to make it wider" });
+    const panel = h("div", { class: "ct-panel ct-dock ct-dock-" + side, role: "complementary", "aria-label": tool.title },
+      body, h("div", { class: "ct-ctrls" }, close), edge);
+    panel.style.zIndex = ++zTop;
+    placeDock(panel, id);
+    layer.append(panel);
+    edgeDragger(panel, id, edge);
+    const el = document.createElement(tool.element);
+    el.panel = panel;
+    el.grow = function () {};
+    body.append(el);
+    open[id] = { panel: panel, api: el };
+    docked[side] = id;
+    makeRoom();
+    saveLayout();
+    paintMenu();
+  }
+
   function closeTool(id, keep) {   // keep: the clock closes for this deck only
     const o = open[id];
     if (!o) return;
     o.api.close();
     o.panel.remove();
     delete open[id];
+    const side = TOOLS[id].dock;
+    if (side && docked[side] === id) { docked[side] = null; makeRoom(); }
     if (id === "clock" && !keep) save("clock-off", true);   // closed on purpose: it stays closed in the next deck
     saveLayout();
     paintMenu();
@@ -194,7 +291,7 @@
       ids.forEach(function (id) {
         const t = TOOLS[id];
         grid.append(h("button", { class: "ct-menu-item" + (open[id] ? " ct-on" : ""), role: "menuitemcheckbox",
-          "aria-checked": open[id] ? "true" : "false",
+          "aria-checked": open[id] ? "true" : "false", title: t.key ? t.title + " (" + t.key.key + ")" : null,
           onclick: function () { open[id] ? closeTool(id) : openTool(id); } },
           h("span", { class: "ct-menu-icon" }, icon(t.icon)), h("span", { class: "ct-menu-name", text: t.title }),
           open[id] ? h("span", { class: "ct-check" }, icon("check")) : null));
@@ -280,6 +377,11 @@
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
     Reveal.addKeyBinding({ keyCode: 75, key: "K", description: "Show/hide the clock" }, function () { open.clock ? closeTool("clock") : openTool("clock"); });
+    // A tool's own key ([ for the Packet, ] for Vocab) opens and closes it
+    Object.keys(TOOLS).forEach(function (id) {
+      const k = TOOLS[id].key;
+      if (k) Reveal.addKeyBinding({ keyCode: k.keyCode, key: k.key, description: "Show/hide " + TOOLS[id].title }, function () { open[id] ? closeTool(id) : openTool(id); });
+    });
   }
 
   // Fullscreen shows only one element: take the tools along into it, and back out again.

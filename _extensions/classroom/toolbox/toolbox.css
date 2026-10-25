@@ -205,3 +205,49 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 .ct-reset-item:hover { background: rgba(0, 135, 255, 0.08); }
 .ct-reset-item input { width: 20px; height: 20px; accent-color: var(--ct-navy); }
 .ct-reset .ui-actions { justify-content: flex-end; padding: 14px 0 0; font-size: 18px; }
+
+/* ---- Sidebars (Vocab, Packet): the screen's full height at its edge. The slides, and the logo,
+   buttons and footer around them, move over by --ct-dock-left / --ct-dock-right (toolbox.js sets
+   them) so a sidebar covers nothing. ---- */
+html.ct-docked .reveal {
+  margin-left: var(--ct-dock-left, 0px);
+  width: calc(100% - var(--ct-dock-left, 0px) - var(--ct-dock-right, 0px));
+}
+html.ct-docked .reveal .footer {
+  left: var(--ct-dock-left, 0px);
+  width: calc(100% - var(--ct-dock-left, 0px) - var(--ct-dock-right, 0px));
+}
+/* fixed to the screen, so they don't move with the slides by themselves */
+html.ct-docked .slide-menu-button, html.ct-docked .slide-chalkboard-buttons, html.ct-docked #ct-launch, html.ct-docked #ct-menu {
+  translate: var(--ct-dock-left, 0px) 0;
+}
+html.ct-docked .slide-logo { translate: calc(-1 * var(--ct-dock-right, 0px)) 0; }
+.reveal, .reveal .footer, .slide-menu-button, .slide-chalkboard-buttons, #ct-launch, #ct-menu, .slide-logo {
+  transition: margin-left 0.22s ease, width 0.22s ease, left 0.22s ease, translate 0.22s ease;
+}
+html.ct-dock-instant .reveal, html.ct-dock-instant .reveal .footer, html.ct-dock-instant .slide-menu-button,
+html.ct-dock-instant .slide-chalkboard-buttons, html.ct-dock-instant #ct-launch, html.ct-dock-instant #ct-menu,
+html.ct-dock-instant .slide-logo { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal .footer, .slide-menu-button, .slide-chalkboard-buttons, #ct-launch, #ct-menu, .slide-logo { transition: none; }
+}
+.ct-dock { cursor: auto; touch-action: auto; animation: ct-dock-in-right 0.22s ease; }
+.ct-dock-left { animation-name: ct-dock-in-left; }
+@keyframes ct-dock-in-right { from { transform: translateX(calc(100% + 16px)); } }
+@keyframes ct-dock-in-left { from { transform: translateX(calc(-100% - 16px)); } }
+@media (prefers-reduced-motion: reduce) { .ct-dock { animation: none; } }
+/* Drag the inner edge to make it wider: a thin bar shows when you point at it */
+.ct-edge { position: absolute; top: 0; bottom: 0; z-index: 3; width: 12px; cursor: ew-resize; touch-action: none; }
+.ct-dock-right > .ct-edge { left: -6px; }
+.ct-dock-left > .ct-edge { right: -6px; }
+.ct-edge::after {
+  content: ""; position: absolute; top: 50%; left: 4px; width: 4px; height: 44px; margin-top: -22px;
+  border-radius: 2px; background: rgba(16, 35, 63, 0.3); opacity: 0; transition: opacity 0.15s;
+}
+.ct-edge:hover::after, .ct-dock.ct-dragging > .ct-edge::after { opacity: 1; }
+.ct-dock-right > .ct-ctrls { right: auto; left: -8px; }   /* × on the inner corner, not off the screen */
+/* The chalkboard's ink layers (reveal-chalkboard) are as big as the window and take the pen's spot
+   from the window's edge, so they stay put; their pen and color buttons move in beside the sidebars. */
+html.ct-docked #notescanvas, html.ct-docked #chalkboard { left: calc(-1 * var(--ct-dock-left, 0px)); width: 100vw; }
+html.ct-docked #notescanvas .palette, html.ct-docked #chalkboard .palette { translate: var(--ct-dock-left, 0px) 0; }
+html.ct-docked #notescanvas .boardhandle, html.ct-docked #chalkboard .boardhandle { translate: calc(-1 * var(--ct-dock-right, 0px)) 0; }

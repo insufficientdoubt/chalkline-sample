@@ -1,6 +1,6 @@
 /*
-  Vocab: the unit's words in a sidebar, as a clean list to point at; tap one for its card beside the
-  list: picture, word, 中文, meaning and an example, with 🔊 to read it aloud. Starts on this deck's
+  Vocab: the unit's words in a sidebar at the right edge (] opens and closes it), as a clean list
+  to point at; tap one for its card beside the list: picture, word, 中文, meaning and an example, with 🔊 to read it aloud. Starts on this deck's
   unit; the menu picks another, or all of them. The words come from vocab/data/vocab.csv.
   No shadow root: the word card opens on the tools' layer, beside the list.
 */
@@ -71,9 +71,9 @@
   }
 
   T.tool("vocab", {
-    title: "Vocab", icon: "book-a", w: 230, h: 520, minW: 170, minH: 200, keys: [],
-    // A sidebar at the right edge, the screen's full height, until it's dragged
-    start: function () { return { x: window.innerWidth - 238, y: 8, h: window.innerHeight - 16 }; }
+    title: "Vocab", icon: "book-a", w: 230, minW: 170, maxW: 380, keys: [],
+    // A sidebar at the right edge; the slides move over to make room. ] opens and closes it.
+    dock: "right", key: { keyCode: 221, key: "]" },
   }, class extends T.ToolElement {
     static shadow = false;
     static css = `
