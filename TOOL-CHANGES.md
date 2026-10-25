@@ -270,6 +270,24 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: reveal.js's own tools in the classroom tools menu
+- **Asked for:** "make reveal.js native slide tools more visible on the slide? I feel like with classroom tools on the surface, teachers wont open the "tools" inside the other menu, and thus wont learn about those features."
+- **Why:** so teachers find full screen, the slide overview, speaker view, the chalkboard and the shortcuts, and learn their keys.
+- **Changed:**
+  - `_extensions/classroom/toolbox/toolbox.js`: a **Slides** group at the bottom of the menu: Full screen (F), All slides (O), Speaker view (S), Whiteboard (B), Draw on slide (C), Shortcuts (?), each with its key on the tile; a tile shows only if the deck has that tool (no chalkboard, no Whiteboard).
+  - `_extensions/classroom/toolbox/toolbox.css`: smaller tiles for that group, so the menu stays short.
+  - `_extensions/classroom/ui/icons.js`: six Lucide icons (maximize, layout-grid, monitor, presentation, pen-line, keyboard).
+  - `README.md`: the Slides group.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: The slide menu opens over the sidebars
+- **Asked for:** "The sidebar and the menu don't play nice. find an easy fix. You can even just close the packet panel if the menu is used, or put the menu on top."
+- **Why:** the slide menu (☰) opened under the Packet sidebar.
+- **Changed:** `_extensions/classroom/toolbox/toolbox.css`: the slide menu and its shade sit above the tools and sidebars (still under the PDF viewer's large window).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Reset for the next class works again; smaller W; key badges on the menu tiles
 - **Asked for:** "Make the W for the classroom tools smaller, and add V and P hotkey indicators to the vocab and packet items. Also check on the reset menu, I don't think its working correctly".
 - **Why:** the W was oversized; the keys weren't shown where you pick the tools; the reset seemed broken.

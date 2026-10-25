@@ -277,6 +277,34 @@
     ["This unit", ["vocab", "packet", "qr"]],
     ["More", ["music", "dice", "slide"]],
   ];
+  // Slides: reveal.js's own tools, which are otherwise only in the slide menu's Tools tab. Each tile
+  // shows its key, so it's quicker next time. A tile shows only when this deck has that tool.
+  const RC = function () { return window.RevealChalkboard; };
+  const SLIDES = [
+    { title: "Full screen", icon: "maximize", key: "F", run: function () {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+    } },
+    { title: "All slides", icon: "layout-grid", key: "O", run: function () { Reveal.toggleOverview(true); } },
+    { title: "Speaker view", icon: "monitor", key: "S", has: function () { return Reveal.getPlugin("notes"); },
+      run: function () { Reveal.getPlugin("notes").open(); } },
+    { title: "Whiteboard", icon: "presentation", key: "B", has: RC, run: function () { RC().toggleChalkboard(); } },
+    { title: "Draw on slide", icon: "pen-line", key: "C", has: RC, run: function () { RC().toggleNotesCanvas(); } },
+    { title: "Shortcuts", icon: "keyboard", key: "?", run: function () { Reveal.toggleHelp(true); } },
+  ];
+  function paintSlides() {
+    if (!window.Reveal) return;
+    const items = SLIDES.filter(function (a) { return !a.has || a.has(); });
+    menu.append(h("div", { class: "ct-menu-group", text: "Slides" }));
+    const grid = h("div", { class: "ct-menu-grid ct-menu-compact" });
+    items.forEach(function (a) {
+      grid.append(h("button", { class: "ct-menu-item", role: "menuitem", title: a.title + " (" + a.key + ")",
+        onclick: function () { toggleMenu(false); a.run(); } },
+        h("span", { class: "ct-menu-icon" }, icon(a.icon)), h("span", { class: "ct-menu-name", text: a.title }),
+        h("kbd", { class: "ct-menu-key ct-tile-key", text: a.key })));
+    });
+    menu.append(grid);
+  }
   function paintMenu() {
     menu.textContent = "";
     menu.append(h("div", { class: "ct-menu-title" }, "Classroom tools", h("kbd", { class: "ct-menu-key", title: "Press W to open and close this menu", text: "W" })));
@@ -299,6 +327,7 @@
       });
       menu.append(grid);
     });
+    paintSlides();
     const foot = h("div", { class: "ct-menu-foot" });
     if (Object.keys(open).length) {
       foot.append(h("button", { class: "ct-menu-action",
