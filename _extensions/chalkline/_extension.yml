@@ -22,7 +22,7 @@ contributes:
         - scripts/catalog.py       # reads every document's labels and writes generated/catalog.yml for the overview
         - scripts/lessons.py       # reads course/lessons/ and writes the lesson map and each lesson's before/next links
         - scripts/vocab_terms.py   # reads vocab/data/vocab.csv and writes generated/vocab-terms.json for {{< vocab >}} pop-ups
-        - scripts/vocab_brand.py   # gives the vocab app the brand colors and fonts (writes vocab/app/brand.css)
+        - scripts/vocab_app.py     # copies the vocab app into vocab/app/, with the brand's colors, fonts and logo
       post-render:
         - scripts/student_site.py  # student site only: removes teachers-only pages and their PDFs
         - scripts/packets.py       # each unit's printables as one packet PDF, plus a year packet (full renders only)

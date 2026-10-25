@@ -1,5 +1,5 @@
 # Column definitions and allowed values for data/*.csv.
-# validate.py reads this file. Change allowed values here, not in the script.
+# `python chalkline.py validate` reads this file. Change allowed values here, not in the script.
 # Domains are the ID prefix: GRC = Ancient Greece, ROM = Ancient Rome, GBT = Göbekli Tepe. Add your own the same way
 # (and give them names in config.js).
 

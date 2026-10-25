@@ -72,6 +72,5 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     try:
         print(BUILDERS[sys.argv[1]](json.loads(sys.argv[2])))
-    except Exception as e:   # shown in the render log, and on the page as a warning
-        print(f"{sys.argv[1]}: {e}", file=sys.stderr)
-        sys.exit(1)
+    except Exception as e:   # blocks.lua shows it in the render log, and on the page as a warning
+        print(f"CHALKLINE-ERROR {e}")

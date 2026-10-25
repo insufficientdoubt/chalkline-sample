@@ -57,6 +57,26 @@
       "type": "shell",
       "command": "python chalkline.py export-vocab",
       "problemMatcher": []
+    },
+    {
+      // Asks for the kind (slides, worksheet...), the unit and the title, then makes the file from a template.
+      "label": "New slide deck or worksheet",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python chalkline.py new ${input:newKind} ${input:newUnit} \"${input:newTitle}\"",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe chalkline.py new ${input:newKind} ${input:newUnit} \"${input:newTitle}\"" },
+      "problemMatcher": []
+    },
+    {
+      "label": "Check the vocab list",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python chalkline.py validate",
+      "windows": { "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe chalkline.py validate" },
+      "problemMatcher": []
     }
+  ],
+  "inputs": [
+    { "id": "newKind", "type": "pickString", "description": "What kind of file?", "options": ["slides", "worksheet"], "default": "slides" },
+    { "id": "newUnit", "type": "promptString", "description": "Which unit? (its number, like 2)" },
+    { "id": "newTitle", "type": "promptString", "description": "Title (the file name comes from it)" }
   ]
 }

@@ -99,7 +99,7 @@ You can do almost everything here by asking an AI assistant: Claude, Gemini, Cha
 1. Copy a unit folder, for example `course/units/01-ancient-greece`, and rename it (`03-my-unit`).
 2. In its `index.qmd`, change `title`, `short-title`, `unit` and the `objectives`. The unit appears in the sidebar and overview by itself.
 3. Edit or replace the slides and printables. Keep the labels at the top of each file: `type:` (slides, worksheet, handout, reference…), `order:` and `audience:` (who sees it: `teacher`, `student`, `parent`; see "Students, families and teachers" below).
-4. Add your words to `vocab/data/vocab.csv` (see `vocab/README.md`), then run `python vocab/validate.py`.
+4. Add your words to `vocab/data/vocab.csv` (see `vocab/README.md`), then run `python chalkline.py validate`.
 5. To use a unit's words on picture cards, import them: `python chalkline.py import-vocab --unit 3 --title "My Unit" --folder 03-my-unit --ids GRC-001 GRC-002`.
 
 When a worksheet is finished, rebuild its unit packet: `python chalkline.py packets --unit 3`. Packets and slide PDFs don't rebuild on every save, so editing stays quick; the launcher also rebuilds any that are out of date when it starts.
@@ -115,7 +115,8 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 | Open the student site (port 4101) | `python chalkline.py open student` |
 | Rebuild one unit's packet | `python chalkline.py packets --unit 1` |
 | Rebuild slide PDFs | `python chalkline.py slides-pdf` |
-| Check the vocab list | `python vocab/validate.py` |
+| Check the vocab list | `python chalkline.py validate` |
+| Start a new slide deck or worksheet from a template | `python chalkline.py new slides 2 "Roman Roads"` (or VS Code: **Run Task… > New slide deck or worksheet**) |
 | Make Quizlet / Kahoot / Anki files | `python chalkline.py export-vocab` |
 | Update a draw.io diagram's picture after editing it in draw.io | `python chalkline.py drawio` (needs the draw.io app) |
 

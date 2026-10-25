@@ -16,6 +16,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: The vocab app and the vocab checker move into the extension; templates for new decks and worksheets (step 4 of the extension plan)
+- **Asked for:** "just run the whole process, and update the repo as you complete each step". Templates: "slide templates we build? Not many of those yet, but they're coming."
+- **Why:** the vocab app is the same in every course and gets fixes; starter files make a new deck or worksheet quick and consistent.
+- **Changed:**
+  - `vocab/app/index.html` and `vendor/` moved to `_extensions/chalkline/vocab-app/`. Before each render, `scripts/vocab_app.py` (was `vocab_brand.py`) copies the app into `vocab/app/` (now not saved in git) and fills in the logo from `_brand.yml`; it still writes `brand.css`. The app's leftover "VEX IQ Vocab" title is now "Vocab" (the course's `config.js` sets the real one).
+  - `vocab/validate.py` moved to `_extensions/chalkline/scripts/validate_vocab.py`: run `python chalkline.py validate`. `vocab/schema.yaml` stays in the course (it lists the course's own topics and ID prefixes), as does `vocab/tools/draw_icons.py` (it draws this sample's pictures).
+  - New `_extensions/chalkline/templates/` (`slides.qmd`, `worksheet.qmd`) and `scripts/new.py`: `python chalkline.py new slides 2 "Roman Roads"` makes `course/units/02-…/roman-roads-slides.qmd` with the title, the next `order:` and the unit filled in. A course's own `templates/` folder is used first.
+  - `scripts/blocks.py`, `blocks.lua`: a shortcode error (like a word that isn't in the unit's vocab) now says what's wrong, on the page and in the render log.
+  - `.vscode/tasks.json`: "New slide deck or worksheet" (asks kind, unit and title) and "Check the vocab list". `.gitignore`, `README.md`, `CLAUDE.md`, `vocab/README.md`, `vocab/index.html`, `vocab/schema.yaml`, `chalkline.py`, `build_if_needed.py`: the new names and places.
+  - Checked: fresh full teacher and student renders (with `vocab/app/` deleted first): same files, all PDFs identical, the vocab app looks the same; both templates render.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Chalkline's scripts move into the extension; pages use shortcodes instead of Python (step 3 of the extension plan)
 - **Asked for:** "just run the whole process, and update the repo as you complete each step".
 - **Why:** so fixes to the catalog, packets, slide PDFs and other scripts reach every course with `quarto update`.

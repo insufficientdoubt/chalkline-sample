@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VEX IQ Vocab</title>
+<title>Vocab</title>
 <style>
   :root {
     --bg: #f6f7f9; --panel: #fff; --text: #1b1f24; --muted: #667085; --line: #e3e6ea;
@@ -107,13 +107,14 @@
   .zh .say { font-size: 0.75em; }
   .no-speech .say { display: none; }
 </style>
-<!-- Colors and fonts from brand/_brand.yml (made by scripts/vocab_brand.py when the course site builds). -->
+<!-- Colors and fonts from brand/_brand.yml (brand.css, made by Chalkline's scripts/vocab_app.py, which also copies this
+     app into the course's vocab/app/ and fills in the logo, when the site builds). -->
 <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 <header>
   <a class="back" href="../../index.html">← Course site</a>
-  <a class="home" href="#"><img src="../../brand/logos/icon-sailboat.svg" alt=""><h1>VEX IQ Vocab</h1></a>
+  <a class="home" href="#"><img src="CHALKLINE_LOGO" alt=""><h1>Vocab</h1></a>
   <input type="search" id="q" placeholder="Search English, 中文, definitions…">
   <label><input type="checkbox" id="zh" checked> 中文</label>
 </header>

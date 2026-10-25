@@ -26,7 +26,7 @@ PROFILE = sys.argv[sys.argv.index("--profile") + 1] if "--profile" in sys.argv[:
 SITE = ROOT / (f"_site-{PROFILE}" if PROFILE else "_site")
 STAMP = SITE / ".last-full-build"
 BUNDLES = ["packets.py", "slides_pdf.py"]   # PDF builders that skip preview saves; run with --stale at startup
-WATCH = ["index.qmd", "_quarto.yml", "course", "brand", "_extensions", "scripts", "vocab/data", "vocab/app"]
+WATCH = ["index.qmd", "_quarto.yml", "course", "brand", "_extensions", "scripts", "vocab/data", "vocab/config.js"]
 
 
 def source_files():

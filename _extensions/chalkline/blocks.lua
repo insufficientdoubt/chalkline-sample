@@ -40,8 +40,8 @@ local function block(name)
     for _, v in ipairs(args) do table.insert(a.groups, pandoc.utils.stringify(v)) end
     local ok, out = pcall(pandoc.pipe, python(),
       { quarto.utils.resolve_path("scripts/blocks.py"), name, quarto.json.encode(a) }, "")
-    if not ok then
-      local msg = tostring(type(out) == "table" and out.output or out)
+    local msg = not ok and ("Python didn't run (" .. tostring(out) .. ")") or out:match("^CHALKLINE%-ERROR (.-)%s*$")
+    if msg then
       quarto.log.warning(name .. " shortcode: " .. msg)
       return pandoc.Para({ pandoc.Strong({ pandoc.Str("⚠ " .. name .. ": " .. msg) }) })
     end

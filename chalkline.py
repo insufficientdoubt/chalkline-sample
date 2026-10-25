@@ -1,5 +1,7 @@
 """Run a Chalkline command. From the course folder:
 
+    python chalkline.py new slides 2 "Roman Roads"   start a deck (or worksheet) in unit 2 from a template
+    python chalkline.py validate             check vocab/data/vocab.csv (after editing it)
     python chalkline.py packets --unit 3     rebuild unit 3's packet (after finishing a worksheet)
     python chalkline.py slides-pdf           print every slide deck to PDF
     python chalkline.py open student         the student site, at http://localhost:4101
@@ -18,7 +20,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-NAMES = {"build": "build_if_needed", "open": "open_site"}   # short names; others: packets, slides-pdf, ...
+NAMES = {"build": "build_if_needed", "open": "open_site", "validate": "validate_vocab"}   # short names; others: packets, slides-pdf, ...
 
 
 def scripts_folder():

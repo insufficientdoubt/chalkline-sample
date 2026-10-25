@@ -1,12 +1,12 @@
 # History vocab (sample)
 
-A bilingual (English / 简体中文) vocab list for the two sample units, and the vocab app that shows it (`app/`, on the site under **History vocab** in the sidebar).
+A bilingual (English / 简体中文) vocab list for the two sample units, and the vocab app that shows it (on the site under **History vocab** in the sidebar). The app is part of Chalkline: before each build it is copied into `app/` (not saved in git), and `config.js` here sets its title, topic names and links.
 
 - `data/vocab.csv`: the terms. **The source of truth**: slides' vocab pop-ups (`{{< vocab "democracy" >}}`) and the unit vocab cards read it.
 - `data/frames.csv`: sentence frames for discussion and writing.
 - `images/`: one picture per term, named by ID (`GRC-010.jpg`, or `.svg` for a drawing). Photos are credited in `images/CREDITS.md`. The sample's first pictures are simple drawings made by `tools/draw_icons.py`; replace them with photos where a photo is better (see "Pictures" below).
 - `config.js`: the app's title, topic names (in English and 中文) and quick-reference links.
-- `schema.yaml` + `validate.py`: the column rules. Run `python vocab/validate.py` after editing the CSV.
+- `schema.yaml`: the column rules. Run `python chalkline.py validate` after editing the CSV.
 
 ## Rules
 

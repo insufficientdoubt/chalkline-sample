@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check data/*.csv against schema.yaml.
 
-Usage: python3 validate.py
+Usage: python chalkline.py validate   (from the course folder)
 Exit code 0 = no errors (warnings allowed), 1 = errors found.
 """
 import csv
@@ -13,7 +13,9 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).resolve().parent
+from extension import ROOT as COURSE  # noqa: E402
+
+ROOT = COURSE / "vocab"   # the course's vocab folder: schema.yaml, data/, images/
 errors = []
 warnings = []
 

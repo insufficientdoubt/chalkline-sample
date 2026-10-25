@@ -2,7 +2,7 @@
 
 - Read `README.md` first. Content lives in `course/` and `vocab/`, appearance in `brand/`, Chalkline itself (the tool) in `_extensions/chalkline/`.
 - Every slide deck and printable has labels at the top: `title`, `type` (slides, worksheet, checklist, handout, reference, game), `order`, `audience` ([teacher, student, parent]) and `description`. Keep them.
-- **Vocab:** `vocab/data/vocab.csv` is the source of truth; run `python vocab/validate.py` after editing it. Follow the rules in `vocab/README.md`: English is the target, 中文 is support; 中文 appears in reference materials, never in review materials (quizzes, flashcards); `short_def` is simple English, 75 characters or fewer; IDs are permanent.
+- **Vocab:** `vocab/data/vocab.csv` is the source of truth; run `python chalkline.py validate` after editing it. Follow the rules in `vocab/README.md`: English is the target, 中文 is support; 中文 appears in reference materials, never in review materials (quizzes, flashcards); `short_def` is simple English, 75 characters or fewer; IDs are permanent.
 - **Gloss key vocab:** on slides, write key words as `{{< vocab "democracy" >}}` (a pop-up with picture and 中文). On printables, use `{{< vocab "democracy" zh=true >}}` so the 中文 is printed too, except on quizzes and tests.
 - Write for middle-school English learners: short sentences, simple words, one idea per bullet.
 - Teacher-only content (answer keys, look-fors) goes inside `::: {.content-visible when-profile="teacher"}`.
@@ -24,7 +24,7 @@ If `quarto preview` is running, don't run a full `quarto render` at the same tim
 This repo has two kinds of files:
 
 - **Content** (lessons, worksheets, vocab words, pictures): everything in `course/`, plus `vocab/data/` and `vocab/images/`. Change these freely. No log needed.
-- **The tool** (how Chalkline works and looks): `_extensions/`, `chalkline.py`, `brand/`, `vocab/app/`, `vocab/config.js`, `vocab/tools/`, `vocab/validate.py`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
+- **The tool** (how Chalkline works and looks): `_extensions/`, `chalkline.py`, `brand/`, `vocab/config.js`, `vocab/tools/`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
 
 **Whenever you change a tool file, add an entry to the top of `TOOL-CHANGES.md`** (create it if it's missing), in the same change. Use this form:
 

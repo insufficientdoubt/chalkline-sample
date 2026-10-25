@@ -2,7 +2,7 @@
 
 The map for splitting Chalkline into **a Quarto extension** (the shared tool) and **a course template** (a starter course). The why is in `IDEAS.md` ("Chalkline as a Quarto extension"). This file says where every file goes and in what order to do the work.
 
-Status: **steps 1–3 done** (2026-10-25). Next: step 4.
+Status: **steps 1–4 done** (2026-10-25). Next: step 5.
 
 ## The three places
 
@@ -131,7 +131,7 @@ Each step leaves the sample working. Commit after each one.
 1. ✅ **Gather into one extension, inside this repo.** Move `pdf-viewer` into `classroom`, rename it `_extensions/chalkline/`, and update `_quarto.yml`. Render, check that slides, PDFs and the overview look the same.
 2. ✅ **Move Chalkline's styles and Typst template into the extension** as custom formats (`chalkline-html`, `chalkline-revealjs`, `chalkline-typst`). Leave `_brand.yml`, logos and an empty `brand/course.scss` in `brand/`. Compare PDFs before and after (page counts and a look at one worksheet, one poster, one deck).
 3. ✅ **Move `scripts/` into the extension** (except `import_vex_vocab.py`), and fix the pages that import them (fix 1 above). Point `pre-render`/`post-render`, the launchers, `.vscode/tasks.json` and the publish workflow at the new paths.
-4. **Move the vocab app, `validate.py` and `schema.yaml` into the extension.**
+4. ✅ **Move the vocab app, `validate.py` and `schema.yaml` into the extension.**
    Add `templates/` and the `new.py` command (start with a slide deck and a worksheet).
 5. **Check:** a full `quarto render` for both profiles, the launcher on Mac and Windows, the publish workflow, a game and a vocab pop-up. At this point the sample is a course with Chalkline inside `_extensions/`, ready to split.
 6. **Make the `chalkline` repository** from `_extensions/chalkline/` (keep its git history with `git subtree split` if we want it). Tag `v0.1.0`.
