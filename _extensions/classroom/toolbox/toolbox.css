@@ -263,3 +263,7 @@ html.ct-docked #notescanvas, html.ct-docked #chalkboard { left: calc(-1 * var(--
 html.ct-docked #notescanvas .palette, html.ct-docked #chalkboard .palette { translate: var(--ct-dock-left, 0px) 0; }
 html.ct-docked #notescanvas .boardhandle, html.ct-docked #chalkboard .boardhandle { translate: calc(-1 * var(--ct-dock-right, 0px)) 0; }
 .ct-dock.ct-dragging { box-shadow: none; }
+/* The slide menu (☰, or M) opens over the tools and sidebars, not under them; still under the PDF
+   viewer's large window (2000). */
+body .slide-menu-wrapper .slide-menu { z-index: 1960; }   /* body: over reveal-menu's own rule, which loads later */
+body .slide-menu-wrapper .slide-menu-overlay { z-index: 1959; }
