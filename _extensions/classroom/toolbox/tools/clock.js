@@ -8,6 +8,7 @@
   const T = window.ChalklineToolbox;
 
   T.tool("clock", { title: "Clock", icon: "clock", w: 128, h: 52, minW: 96, minH: 40, free: true,
+    key: { keyCode: 75, key: "K" },   // shows and hides it
     start: function () {
       // beside the slide, inside the slides' area (a sidebar takes the screen's edge)
       const r = (document.querySelector(".reveal .slides") || document.body).getBoundingClientRect();
