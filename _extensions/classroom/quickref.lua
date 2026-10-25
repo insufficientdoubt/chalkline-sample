@@ -16,6 +16,8 @@ each in its type's color, with a PDF link. Clicking one opens it in a pop-up ove
 picks another. With no list, the grid takes the whole slide. Other formats get a plain list.
 ]]
 
+local versioned = dofile(quarto.utils.resolve_path("games/games.lua")).versioned   -- a new address when a file changes
+
 local function esc(s)
   return (tostring(s or ""):gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
@@ -76,8 +78,8 @@ return function(el)
     return pandoc.BulletList(list)
   end
 
-  quarto.doc.add_html_dependency({ name = "chalkline-quickref", version = "1.0.0", stylesheets = { "quickref.css" },
-    scripts = { { path = "quickref.js", afterBody = true } } })   -- decks and printables open in a pop-up
+  quarto.doc.add_html_dependency(versioned({ name = "chalkline-quickref", stylesheets = { "quickref.css" },
+    scripts = { { path = "quickref.js", afterBody = true } } }))   -- decks and printables open in a pop-up
   local out = { '<div class="qref' .. (#pins > 0 and "" or " qref-nopins") .. '">' }
   if #pins > 0 then
     table.insert(out, '<div class="qref-pins"><div class="qref-head">Key slides</div>')

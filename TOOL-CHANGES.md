@@ -270,6 +270,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Fix: browsers kept old copies of the games' files (the new Play page looked broken)
+- **Asked for:** "Page is up but it's broken."
+- **Why:** the games' script and styles kept the same address from version to version (`site_libs/quarto-contrib/classroom-games-1.0.0/`), so a browser that had loaded them before kept its old copy. The old styles only work inside slides, so the new Play at home page showed every game unstyled (a giant black snowman, plain buttons, all ten games).
+- **Changed:**
+  - `_extensions/classroom/games/games.lua`: `versioned()` gives a dependency a version made from its files' contents (like `1.0.0-903d8ad7`), so the address changes whenever a file changes and browsers fetch it fresh; unchanged files keep their address. Used for the games and the design layer (`ui.css`).
+  - `_extensions/classroom/filter.lua` (the classroom toolbox) and `quickref.lua` (the quick reference slide): the same.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Fix: the overview crashed on the new "game" type
 - **Asked for:** not asked; the teacher site's build failed after the Play at home change.
 - **Why:** the overview has an icon and a color for each type, and the new `game` type had neither, so building the overview stopped with `KeyError: 'Game'`.

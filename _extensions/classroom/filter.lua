@@ -374,9 +374,8 @@ local function Meta(meta)
       stylesheets = { "../pdf-viewer/pdf-viewer.css" },
       resources = { "../pdf-viewer/pdf.min.mjs", "../pdf-viewer/pdf.worker.min.mjs", "../pdf-viewer/pdf-lib.esm.min.js" },
     })
-    quarto.doc.add_html_dependency({
+    quarto.doc.add_html_dependency(games.versioned({   -- a new address whenever a file changes (games.lua)
       name = "classroom-tools",
-      version = "1.0.0",
       scripts = {   -- the icons and the kit first, then the tools in their own files, then the toolbox
         { path = "ui/icons.js", afterBody = true },
         { path = "toolbox/kit.js", afterBody = true },
@@ -400,7 +399,7 @@ local function Meta(meta)
       stylesheets = { "toolbox/toolbox.css" },
       resources = { "toolbox/qrcode.js" },
       meta = next(tags) and tags or nil,
-    })
+    }))
   end
   -- Web pages: links to slideshows open in a new tab (slides-new-tab: false turns it off).
   local nt = meta["slides-new-tab"]

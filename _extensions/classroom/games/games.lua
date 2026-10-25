@@ -10,9 +10,39 @@ local function html_escape(s)
   return (s:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"))
 end
 
+-- A dependency's version, made from its files' contents ("1.0.0-3f2a9c1b"). Quarto puts the version
+-- in the files' address (site_libs/quarto-contrib/classroom-games-1.0.0-3f2a9c1b/), so a changed file
+-- gets a new address and browsers fetch it fresh, instead of keeping an old copy (which made the new
+-- Play at home page look broken). An unchanged file keeps its address, and browsers keep their copy.
+local versions = {}
+function M.versioned(dep)
+  local paths = {}
+  for _, list in ipairs({ dep.scripts or {}, dep.stylesheets or {} }) do
+    for _, f in ipairs(list) do table.insert(paths, type(f) == "table" and f.path or f) end
+  end
+  local key = table.concat(paths, "|")
+  if not versions[key] then
+    local h = 5381   -- djb2, over every file in turn
+    for _, path in ipairs(paths) do
+      local f = io.open(quarto.utils.resolve_path(path), "rb")
+      if f then
+        local s = f:read("a")
+        f:close()
+        for i = 1, #s, 4096 do
+          local bytes = { s:byte(i, math.min(i + 4095, #s)) }
+          for j = 1, #bytes do h = (h * 33 + bytes[j]) % 4294967296 end
+        end
+      end
+    end
+    versions[key] = string.format("1.0.0-%08x", h)
+  end
+  dep.version = versions[key]
+  return dep
+end
+
 -- Chalkline's design layer (ui/ui.css): filter.lua adds it to every page and deck; the games add it too.
 function M.ui()
-  quarto.doc.add_html_dependency({ name = "chalkline-ui", version = "1.0.0", stylesheets = { "ui/ui.css" } })
+  quarto.doc.add_html_dependency(M.versioned({ name = "chalkline-ui", stylesheets = { "ui/ui.css" } }))
 end
 
 -- Games work on slides and on web pages: any HTML output (revealjs is one too).
@@ -22,9 +52,8 @@ end
 
 function M.div(kind, config)
   M.ui()
-  quarto.doc.add_html_dependency({
+  quarto.doc.add_html_dependency(M.versioned({
     name = "classroom-games",
-    version = "1.0.0",
     scripts = {   -- paths are from _extensions/classroom/; timeline.js and activities.js add their games to games.js
       { path = "games/games.js", afterBody = true },
       { path = "games/timeline.js", afterBody = true },
@@ -33,7 +62,7 @@ function M.div(kind, config)
     stylesheets = { "games/games.css", "games/timeline.css", "games/activities.css" },
     -- Bingo makes its printable cards in the browser with pdf-lib (the PDF viewer's copy; MIT).
     resources = { "../pdf-viewer/pdf-lib.esm.min.js" },
-  })
+  }))
   local game = '<div class="cg-game cg-' .. kind .. '" data-game="' .. kind ..
     '" data-config="' .. html_escape(quarto.json.encode(config)) .. '" data-prevent-swipe></div>'
   -- On a web page, the game sits in a .cg-host box: the games' styles apply inside .reveal (slides)
