@@ -273,6 +273,7 @@ tr.row-t-handout { --t: #7b55d6; }
 tr.row-t-poster { --t: #d0457a; }
 tr.row-t-reference { --t: #8a6a1f; }
 tr.row-t-vocab { --t: #c8432b; }
+tr.row-t-game { --t: #7b3fc4; }
 tr[class*="row-t-"] > td:first-child { box-shadow: inset 3px 0 0 var(--t); }
 tr[class*="row-t-"] .type-cell { text-transform: capitalize; color: color-mix(in srgb, var(--t) 85%, #000); font-weight: 600; white-space: nowrap; }
 
@@ -354,6 +355,7 @@ a.btn.packet-one {
 .ov-t-poster { --t: #d0457a; }
 .ov-t-reference { --t: #8a6a1f; }
 .ov-t-vocab { --t: #c8432b; }
+.ov-t-game { --t: #7b3fc4; }
 .ov-outside { --t: #7a8799; }
 
 // The page's own header replaces Quarto's title banner here

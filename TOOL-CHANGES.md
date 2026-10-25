@@ -270,6 +270,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Fix: the overview crashed on the new "game" type
+- **Asked for:** not asked; the teacher site's build failed after the Play at home change.
+- **Why:** the overview has an icon and a color for each type, and the new `game` type had neither, so building the overview stopped with `KeyError: 'Game'`.
+- **Changed:**
+  - `scripts/catalog.py`: an icon for games (Lucide's "gamepad-2").
+  - `brand/styles.scss`: a color for games (purple) in the overview and the tables. `_extensions/classroom/quickref.css`: the same color on the quick reference slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Games on web pages, not only slides; a "Play at home" page (teachers only until turned on)
 - **Asked for:** "What would it take to make this page, and (some of?) the games mobile friendly? So a kid could play on their phone on the subway." Then: "Why does this need to be a slide at all?" Then: "yes, start with steps 1 and 2. One change - for demo purposes, make the student games page visible on the teacher build, and - let's make it disabled by default on the student page. Add a note that teachers will need to enable the student games page if they want students to play at home."
 - **Why:** the games didn't need slides (they use nothing from reveal.js); on a phone, a slide is shrunk to a thin strip.
