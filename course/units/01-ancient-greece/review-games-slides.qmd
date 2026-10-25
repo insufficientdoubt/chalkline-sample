@@ -472,7 +472,7 @@ Or see a word. Choose the picture.
 
 Be quick! Faster answers get more points.
 
-Right answers in a row multiply your points. Five in a row is **straight fire**!
+Right answers in a row multiply your points. Five in a row is **straight fire**! Ten is **cold fire**!
 
 Press **↓** to play.
 :::
@@ -480,7 +480,7 @@ Press **↓** to play.
 [Make your own]{.code-label}
 
 ```{.markdown code-line-numbers="false"}
-Ten questions from unit 1's vocab:
+Unit 1's vocab (Classic or Survival):
 {{</* blitz unit=1 */>}}
 
 Only pictures (choose the word),
@@ -493,11 +493,13 @@ Or open **Review games** in the sidebar and choose **Word Blitz**.
 ::::
 
 ::: notes
-Like Kahoot, for one player. Each question has four answers: three from this unit and one from another unit. A right answer scores 600 to 1,000 points (the faster, the more), times the streak: ×1.2 for two right in a row, ×1.4 for three, up to ×2. Every fifth right answer in a row adds 2,000 points and sets the screen on fire (**STRAIGHT FIRE!**). A wrong answer, or running out of time, ends the streak. Keys **1–4** choose an answer too.
+Like Kahoot, for one player. Each question has four answers: three from this unit and one from another unit. A right answer scores 600 to 1,000 points (the faster, the more), times the **streak**: ×1.2 for two right in a row, ×1.3 for three, ×1.4 for four; then levels, each adding 2,000 points: **STRAIGHT FIRE** from 5 in a row (×1.5), **COLD FIRE** from 10 (×2, everything turns blue) and **SUPERNOVA** from 15 (×2.5, purple). A heat bar along the bottom grows toward the next level; at 4 in a row it shakes and the game turns orange, and from 5 a fire burns along the bottom. A wrong answer, or running out of time, ends the streak. Keys **1–4** choose an answer too.
+
+Two modes, each with its own high scores: **Classic** (20 questions, or 10 if the whole course has fewer than 20 vocab words) and **Survival** (3 lives; the clock gets a second faster every 5 questions, down to 5 seconds). Every word is asked once before any comes back; a word comes back the other way round (picture or word), and a missed word comes back 3 questions later.
 
 At the end, a player with a high score types their name. The high-score table is saved **only in this browser on this computer**, so one computer can be a station: students take turns, and the table shows the winner at the end of the lesson. **Clear the scores** (tap twice) starts a new table.
 
-Options: `count=10` questions, `seconds=10`, `ask="picture"` (see a picture, choose the word) or `ask="word"` (see a word, choose the picture). Without `ask`, it mixes both.
+Options: `mode="survival"` (the mode it starts on), `count=20` (Classic's questions), `seconds=10`, `ask="picture"` (see a picture, choose the word) or `ask="word"` (see a word, choose the picture). Without `ask`, it mixes both.
 :::
 
 ## Ancient Greece Word Blitz

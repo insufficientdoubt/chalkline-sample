@@ -474,7 +474,9 @@ return {
   end,
 
   -- Word Blitz (like Kahoot, for one player): a picture and four words, or a word and four pictures,
-  -- against the clock; right answers in a row multiply the points. High scores are kept in the browser. count=10, seconds=10,
+  -- against the clock; right answers in a row multiply the points. High scores are kept in the browser.
+  -- mode="classic" (20 questions, or 10 for a course with fewer than 20 words; count= changes it) or
+  -- mode="survival" (3 lives): the mode it starts on; students can switch. seconds=10,
   -- ask="picture" (choose the word) or ask="word" (choose the picture); both, mixed, if not given.
   ["blitz"] = function(args, kwargs)
     if not quarto.doc.is_format("revealjs") then return games.placeholder("Word Blitz") end
@@ -482,9 +484,10 @@ return {
     local c = game_config({}, kwargs, "blitz")
     c.all = {}   -- every word, for the wrong answers (one of the four comes from another unit)
     for _, t in ipairs(vex_list or {}) do table.insert(c.all, game_word(t, up)) end
-    c.count = tonumber(str(kwargs["count"], "10")) or 10
+    c.count = tonumber(str(kwargs["count"], ""))   -- nil: games.js decides (20, or 10 for a small course)
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
     c.ask = str(kwargs["ask"], "both")
+    c.mode = str(kwargs["mode"], "classic")
     c.title = str(kwargs["title"], "Word Blitz")
     return games.div("blitz", c)
   end,

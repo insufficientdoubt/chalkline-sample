@@ -1140,18 +1140,101 @@
 
   /* ---------------- Word Blitz (like Kahoot, for one player) ----------------
      A picture and four words, or a word and four pictures. A right answer scores 600 to 1,000
-     points (the faster, the more), times the streak: ×1.2 for two right in a row, ×1.4 for three,
-     up to ×2. Every fifth right in a row adds 2,000 and sets the screen on fire. A wrong answer
-     ends the streak. Of the four answers, three are from the right word's unit and one from
-     another unit, when there is one. The high scores are kept in this browser only, so one
-     computer can be a station for the class, or a student can play at home.
-     config: words (the questions), all (every word: the wrong answers), count, seconds,
-     ask ("both", "picture": show a picture, choose the word; "word": show a word, choose the picture),
-     unit, title.
-     The pictures are inline SVG with class names, and games.css colors them (the --blitz-… values),
-     so a different look (for older students, say) is a change to games.css only. */
+     points (the faster, the more), times the streak: ×1.2 for two right in a row, ×1.3 for three,
+     ×1.4 for four, then levels: ×1.5 from 5 in a row (STRAIGHT FIRE), ×2 from 10 (COLD FIRE) and
+     ×2.5 from 15 (SUPERNOVA). Reaching a level adds 2,000 points. A wrong answer ends the streak.
+     A heat bar along the bottom grows toward the next level; at 4 in a row it shakes and the game
+     turns orange; from 5, a fire burns along the bottom, in each level's colors.
+     Two modes, each with its own high scores: Classic (20 questions, or 10 if the whole course has
+     fewer than 20 words) and Survival (3 lives; the clock gets faster every 5 questions).
+     Every word is asked once before any comes back; a word comes back the other way round
+     (picture or word), and a missed word comes back sooner.
+     Of the four answers, three are from the right word's unit and one from another unit, when
+     there is one. The high scores are kept in this browser only, so one computer can be a station
+     for the class, or a student can play at home.
+     config: words (the questions), all (every word: the wrong answers), mode ("classic" or
+     "survival": the one it starts on), count (Classic's questions), seconds, ask ("both", "picture":
+     show a picture, choose the word; "word": show a word, choose the picture), unit, title.
+     The pictures are inline SVG with class names, and games.css colors them (the --blitz-… values,
+     one set for each level), so a different look is a change to games.css only. */
   const BLITZ_TOP = 10;   // high scores kept
-  const BLITZ_STEP = 0.2, BLITZ_MAX = 2, BLITZ_RUN = 5, BLITZ_BONUS = 2000;   // the streak rules (above)
+  const BLITZ_LIVES = 3, BLITZ_BONUS = 2000, BLITZ_MIN_SECONDS = 5;
+  const BLITZ_LEVELS = { fire: "STRAIGHT FIRE!", cold: "COLD FIRE!", nova: "SUPERNOVA!" };
+  function blitzMultiplier(n) { return n >= 15 ? 2.5 : n >= 10 ? 2 : n >= 5 ? 1.5 : n >= 2 ? 1 + n / 10 : 1; }
+  function blitzLevel(n) { return n >= 15 ? "nova" : n >= 10 ? "cold" : n >= 5 ? "fire" : n >= 4 ? "warm" : ""; }
+  const BLITZ_HEART = '<svg viewBox="0 0 24 22"><path d="M12 21C5 15.5 1 12 1 7a5.5 5.5 0 0 1 11-1 5.5 5.5 0 0 1 11 1c0 5-4 8.5-11 14z"/></svg>';
+
+  // The fire: soft glowing dots that rise from the bottom of the game, drawn on a canvas (no library).
+  // They add up where they overlap ("lighter"), so the thick of the fire burns bright and its edges
+  // stay red, as a flame does; a few embers float higher. Its colors are the level's --blitz-fire…
+  // values, so cold fire is blue. Nothing moves for people whose computer asks for less movement.
+  function blitzFire(root, canvas) {
+    const still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ctx = canvas.getContext && canvas.getContext("2d");
+    let parts = [], level = "", sprites = [], raf = 0, t = 0;
+    function rgb(hex) {
+      hex = (hex || "#ff9f1c").trim().replace("#", "");
+      if (hex.length === 3) hex = hex.replace(/./g, "$&$&");
+      const n = parseInt(hex, 16);
+      return [n >> 16 & 255, n >> 8 & 255, n & 255];
+    }
+    // One soft round dot for each color, drawn once and then stamped.
+    function sprite(hex) {
+      const c = document.createElement("canvas"), g = c.getContext("2d"), v = rgb(hex).join(",");
+      c.width = c.height = 64;
+      const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      r.addColorStop(0, "rgba(" + v + ",1)"); r.addColorStop(0.45, "rgba(" + v + ",0.75)"); r.addColorStop(1, "rgba(" + v + ",0)");
+      g.fillStyle = r; g.fillRect(0, 0, 64, 64);
+      return c;
+    }
+    function frame() {
+      raf = 0;
+      if (!root.isConnected) return;
+      if (document.hidden || !onCurrentSlide(root)) { parts = []; ctx.clearRect(0, 0, canvas.width, canvas.height); if (level) setTimeout(go, 400); return; }
+      const w = canvas.width, hgt = canvas.height;
+      t++;
+      if (level && parts.length < 900) {
+        const rate = level === "nova" ? 13 : level === "cold" ? 12 : 11;
+        for (let k = 0; k < rate; k++) {
+          const ember = Math.random() < 0.06;
+          parts.push({ x: Math.random() * w, y: hgt + 10, vx: (Math.random() - 0.5) * 0.6, vy: -(ember ? 2 + Math.random() * 2 : 1.8 + Math.random() * 2.4),
+            size: ember ? 5 + Math.random() * 5 : 44 + Math.random() * 40, age: 0, life: ember ? 90 + Math.random() * 60 : 30 + Math.random() * 34,
+            ember: ember, seed: Math.random() * 6 });
+        }
+      }
+      ctx.clearRect(0, 0, w, hgt);
+      ctx.globalCompositeOperation = "lighter";
+      parts = parts.filter(function (p) { return p.age < p.life; });
+      parts.forEach(function (p) {
+        p.age++;
+        const a = p.age / p.life;
+        p.x += p.vx + Math.sin(t / 7 + p.seed) * (p.ember ? 0.9 : 0.4);
+        p.y += p.vy;
+        const s = p.ember ? p.size : p.size * (1 - a * 0.7);
+        ctx.globalAlpha = p.ember ? 1 - a : (1 - a) * 0.55;
+        ctx.drawImage(sprites[p.ember || a < 0.2 ? 2 : a < 0.5 ? 1 : 0], p.x - s / 2, p.y - s / 2, s, s);
+      });
+      ctx.globalCompositeOperation = "source-over";
+      ctx.globalAlpha = 1;
+      if (level || parts.length) go();
+    }
+    function go() { if (!raf) raf = requestAnimationFrame(frame); }
+    return {
+      // level: "fire", "cold" or "nova" burns in its colors; "" lets the fire die down.
+      set: function (next) {
+        if (still || !ctx) return;
+        if (next && next !== level) {
+          canvas.width = canvas.offsetWidth || 1000;
+          canvas.height = canvas.offsetHeight || 260;
+          const css = getComputedStyle(root);
+          sprites = ["--blitz-fire1", "--blitz-fire2", "--blitz-fire3"].map(function (v) { return sprite(css.getPropertyValue(v)); });
+        }
+        level = next;
+        if (level) go();
+      },
+      clear: function () { level = ""; parts = []; if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); },
+    };
+  }
 
   // The pictures.
   const BLITZ_ART = {
@@ -1210,18 +1293,27 @@
 
   function wordBlitz(root, cfg) {
     const all = list(cfg.all).length ? list(cfg.all) : list(cfg.words);
-    const seconds = cfg.seconds || 10;
-    const key = "chalkline-games:blitz:" + (cfg.unit || "all");
-    let qs, i, total, right, streak, bestStreak, answered, started, timer = 0, wait = 0, phase = "start", entry = null;
+    const words = list(cfg.words);
+    const base = cfg.seconds || 10;
+    const count = cfg.count || (all.length >= 20 ? 20 : 10);   // Classic: 20 questions, or 10 for a small course
+    let mode = cfg.mode === "survival" ? "survival" : "classic";
+    try { mode = localStorage.getItem("chalkline-games:blitz-mode") || mode; } catch (e) { /* first visit */ }
+    let i, total, right, streak, bestStreak, lives, answered, started, seconds, q;
+    let deck, due, asked, timer = 0, wait = 0, phase = "start", entry = null;
+    const canvas = h("canvas", { class: "cg-blitz-fire", "aria-hidden": "true" });
+    const heatFill = h("div", { class: "cg-blitz-heat-fill" });
+    const heat = h("div", { class: "cg-blitz-heat", "aria-hidden": "true" }, heatFill);
     const stage = h("div", { class: "cg-blitz-stage" });
-    const fx = h("div", { class: "cg-blitz-fx", "aria-hidden": "true" });   // the fire, over the whole game
-    root.append(stage, fx);
+    const fx = h("div", { class: "cg-blitz-fx", "aria-hidden": "true" });   // the banners, over the whole game
+    root.append(canvas, stage, heat, fx);
+    const fire = blitzFire(root, canvas);
 
+    function key() { return "chalkline-games:blitz:" + (cfg.unit || "all") + ":" + mode; }
     function scores() {
-      try { return list(JSON.parse(localStorage.getItem(key))); } catch (e) { return []; }
+      try { return list(JSON.parse(localStorage.getItem(key()))); } catch (e) { return []; }
     }
     function saveScores(s) {
-      try { localStorage.setItem(key, JSON.stringify(s)); } catch (e) { /* private window: just for now */ }
+      try { localStorage.setItem(key(), JSON.stringify(s)); } catch (e) { /* private window: just for now */ }
     }
     function ranked(s) { return s.slice().sort(function (a, b) { return b.score - a.score || a.at - b.at; }).slice(0, BLITZ_TOP); }
 
@@ -1235,19 +1327,31 @@
       others.forEach(function (x) { if (picks.length < 3 && picks.indexOf(x) < 0) picks.push(x); });
       return shuffle(picks.concat([w]));
     }
-    function questions() {
-      const pool = shuffle(list(cfg.words)).slice(0, cfg.count || 10);
-      const ask = cfg.ask || "both";
-      return pool.map(function (w, j) {
-        let mode = !w.image ? "meaning" : ask === "picture" ? "picture" : ask === "word" ? "word" : j % 2 ? "word" : "picture";
-        if (mode === "word" && all.filter(function (x) { return x.image; }).length < 4) mode = "picture";
-        return { w: w, mode: mode, options: options(w, mode === "word") };
-      });
+    // The next question: a missed word that's due again, or the next word from the deck (every
+    // word once, then a fresh shuffle). A word asked before comes back the other way round.
+    function nextQuestion() {
+      let w = null;
+      const d = due.findIndex(function (x) { return x.at <= i; });
+      if (d >= 0) w = due.splice(d, 1)[0].w;
+      else {
+        if (!deck.length) {
+          deck = shuffle(words);
+          if (deck.length > 1 && q && deck[deck.length - 1] === q.w) deck.unshift(deck.pop());   // not the same word twice
+        }
+        w = deck.pop();
+      }
+      const ask = cfg.ask || "both", before = asked.get(w.word);
+      let m = !w.image ? "meaning" : ask === "picture" ? "picture" : ask === "word" ? "word"
+        : before ? (before === "word" ? "picture" : "word") : i % 2 ? "word" : "picture";
+      if (m === "word" && all.filter(function (x) { return x.image; }).length < 4) m = "picture";
+      asked.set(w.word, m);
+      return { w: w, mode: m, options: options(w, m === "word") };
     }
     function stop() { clearInterval(timer); clearTimeout(wait); timer = wait = 0; }
     function table(mine) {
       const s = ranked(scores());
-      const box = h("div", { class: "cg-blitz-board" }, h("div", { class: "cg-blitz-board-title" }, art("trophy"), "High scores"));
+      const box = h("div", { class: "cg-blitz-board" }, h("div", { class: "cg-blitz-board-title" }, art("trophy"), "High scores",
+        h("span", { class: "cg-blitz-board-mode", text: mode === "survival" ? "Survival" : "Classic" })));
       if (!s.length) box.append(h("div", { class: "cg-blitz-empty" }, art("star"), h("span", { text: "No scores yet. Be the first!" })));
       else {
         const ol = h("ol", { class: "cg-blitz-list" });
@@ -1272,26 +1376,49 @@
       p.append(...twinkles());
       return p;
     }
+    // The level, the heat bar and the fire, from the streak.
+    function paintHeat() {
+      const lit = streak ? (streak >= 15 ? 5 : (streak - 1) % 5 + 1) : 0;
+      const level = blitzLevel(streak);
+      if (level) root.dataset.level = level; else delete root.dataset.level;
+      if (phase !== "question" && phase !== "feedback") root.classList.remove("cg-blitz-playing");
+      root.style.setProperty("--heat", lit / 5);
+      fire.set(level === "warm" ? "" : level);
+    }
 
     function begin() {
       stop();
-      phase = "start"; entry = null;
+      phase = "start"; entry = null; streak = 0;
       fx.textContent = "";
-      qs = questions();
+      fire.clear();
+      paintHeat();
       stage.textContent = "";
       stage.className = "cg-blitz-stage cg-blitz-home";
+      const modes = h("div", { class: "cg-blitz-modes", role: "tablist", "aria-label": "Mode" });
+      [["classic", "Classic"], ["survival", "Survival"]].forEach(function (m) {
+        modes.append(h("button", { class: "cg-blitz-mode" + (m[0] === mode ? " cg-on" : ""), role: "tab", "aria-selected": m[0] === mode ? "true" : "false",
+          onclick: function () {
+            mode = m[0];
+            try { localStorage.setItem("chalkline-games:blitz-mode", mode); } catch (e) { /* private window */ }
+            begin();
+          } }, m[1]));
+      });
       const intro = panel("cg-blitz-intro");
       intro.append(logo(),
         h("div", { class: "cg-blitz-title", text: cfg.title || "Word Blitz" }),
-        h("div", { class: "cg-blitz-sub", text: qs.length + " questions · " + seconds + " seconds each" }),
-        h("div", { class: "cg-blitz-how" }, art("flame"), h("span", { text: "Right answers in a row multiply your points. Five in a row: big bonus!" })),
-        h("div", { class: "cg-tools" }, qs.length ? button("Start!", countdown, "cg-big cg-blitz-go") : h("span", { text: "No words yet." })));
+        modes,
+        h("div", { class: "cg-blitz-sub", text: mode === "survival" ? BLITZ_LIVES + " lives · the clock gets faster every 5 questions"
+          : count + " questions · " + base + " seconds each" }),
+        h("div", { class: "cg-blitz-how" }, art("flame"), h("span", { text: "Get answers right in a row! 5 in a row: ×1.5. 10: ×2. 15: ×2.5." })),
+        h("div", { class: "cg-tools" }, words.length ? button("Start!", countdown, "cg-big cg-blitz-go") : h("span", { text: "No words yet." })));
       stage.append(intro, table());
     }
     function countdown() {
       stop();
       phase = "count";
-      total = 0; right = 0; streak = 0; bestStreak = 0; i = -1;
+      total = 0; right = 0; streak = 0; bestStreak = 0; lives = BLITZ_LIVES; i = -1; q = null;
+      deck = []; due = []; asked = new Map();
+      paintHeat();
       let n = 3;
       const num = h("div", { class: "cg-blitz-count", text: n });
       const ring = h("div", { class: "cg-blitz-count-burst", "aria-hidden": "true" });
@@ -1308,12 +1435,29 @@
         else next();
       }, 800);
     }
+    function over() { return mode === "survival" ? lives <= 0 : i + 1 >= count; }
+    function hearts(lost) {
+      const box = h("span", { class: "cg-blitz-hearts", "aria-label": lives + " lives" });
+      for (let k = 0; k < BLITZ_LIVES; k++) {
+        const s = h("span", { class: "cg-blitz-heart" + (k >= lives ? " cg-blitz-gone" : "") + (k === lost ? " cg-blitz-break" : "") });
+        s.innerHTML = BLITZ_HEART;
+        box.append(s);
+      }
+      return box;
+    }
+    function topLeft(lost) {
+      return h("span", { class: "cg-blitz-left-top" },
+        h("span", { class: "cg-blitz-num", text: mode === "survival" ? "Question " + (i + 1) : (i + 1) + " / " + count }),
+        mode === "survival" ? hearts(lost) : "");
+    }
     function next() {
       stop();
+      if (i >= 0 && over()) { end(); return; }
       i++;
-      if (i >= qs.length) { end(); return; }
       phase = "question"; answered = false;
-      const q = qs[i], w = q.w;
+      q = nextQuestion();
+      const w = q.w;
+      seconds = mode === "survival" ? Math.max(BLITZ_MIN_SECONDS, base - Math.floor(i / 5)) : base;
       const fill = h("div", { class: "cg-blitz-fuse-fill" }, art("sparkle", "cg-blitz-spark"));
       const fuse = h("div", { class: "cg-blitz-fuse" }, fill);
       const left = h("span", { class: "cg-blitz-left", text: seconds });
@@ -1328,8 +1472,9 @@
         : h("div", { class: "cg-blitz-def", text: w.hint });
       stage.textContent = "";
       stage.className = "cg-blitz-stage cg-blitz-play cg-blitz-mode-" + q.mode;
+      root.classList.add("cg-blitz-playing");
       stage.append(
-        h("div", { class: "cg-blitz-top" }, h("span", { class: "cg-blitz-num", text: (i + 1) + " / " + qs.length }),
+        h("div", { class: "cg-blitz-top" }, topLeft(),
           h("span", { class: "cg-blitz-ask", text: q.mode === "word" ? "Which picture is it?" : "Which word is it?" }),
           h("span", { class: "cg-blitz-score" }, streakMeter(), h("span", { class: "cg-blitz-total", text: total.toLocaleString("en-US") }))),
         h("div", { class: "cg-blitz-prompt" }, prompt),
@@ -1346,15 +1491,14 @@
         if (!rest) choose(-1);
       }, 50);
     }
-    function multiplier(n) { return Math.min(BLITZ_MAX, 1 + BLITZ_STEP * Math.max(0, n - 1)); }
-    function times(m) { return "×" + m.toFixed(1); }
-    // The streak meter in the top bar: five flames that light up, one for each right answer in a
-    // row (the fifth is the bonus), and the multiplier the next right answer gets.
+    function times(m) { return "×" + (Math.round(m * 10) / 10); }
+    // The streak meter in the top bar: five flames that light up toward the next level, and the
+    // multiplier the next right answer gets.
     function streakMeter() {
-      const lit = streak ? (streak - 1) % BLITZ_RUN + 1 : 0;
+      const lit = streak ? (streak >= 15 ? 5 : (streak - 1) % 5 + 1) : 0;
       const meter = h("span", { class: "cg-blitz-meter" + (streak >= 3 ? " cg-blitz-hot" : ""), title: streak + " in a row" });
-      for (let k = 0; k < BLITZ_RUN; k++) meter.append(art("flame", k < lit ? "cg-blitz-lit" + (k === lit - 1 ? " cg-blitz-new" : "") : "cg-blitz-out"));
-      if (streak) meter.append(h("span", { class: "cg-blitz-next", text: "next " + times(multiplier(streak + 1)) }));
+      for (let k = 0; k < 5; k++) meter.append(art("flame", k < lit ? "cg-blitz-lit" + (k === lit - 1 ? " cg-blitz-new" : "") : "cg-blitz-out"));
+      if (streak) meter.append(h("span", { class: "cg-blitz-next", text: "next " + times(blitzMultiplier(streak + 1)) }));
       return meter;
     }
     // Sparkles fly out of the right answer.
@@ -1366,14 +1510,14 @@
         el.append(s);
       }
     }
-    // STRAIGHT FIRE: a band of flames sweeps across the game, and flames rise from the bottom.
-    function onFire(bonus) {
+    // A new level: its banner sweeps across the game, and flames rise from the bottom.
+    function levelUp(level, m, bonus) {
       fx.textContent = "";
       fx.append(h("div", { class: "cg-blitz-glow" }), h("div", { class: "cg-blitz-band" },
         art("flame", "cg-blitz-band-flame"),
-        h("span", { class: "cg-blitz-band-big", text: "STRAIGHT FIRE!" }),
+        h("span", { class: "cg-blitz-band-big", text: BLITZ_LEVELS[level] }),
         art("flame", "cg-blitz-band-flame"),
-        h("span", { class: "cg-blitz-band-small", text: streak + " in a row  +" + bonus.toLocaleString("en-US") })));
+        h("span", { class: "cg-blitz-band-small", text: streak + " in a row  " + times(m) + "  +" + bonus.toLocaleString("en-US") })));
       for (let k = 0; k < 22; k++) {
         const f = art("flame", "cg-blitz-flame"), size = 40 + Math.random() * 50;
         f.style.cssText = "left:" + (k * 4.6 + Math.random() * 3 - 2).toFixed(1) + "%;width:" + size.toFixed(0) + "px;height:" + (size * 1.33).toFixed(0) +
@@ -1381,22 +1525,29 @@
         fx.append(f);
       }
       fx.classList.remove("cg-blitz-burn"); void fx.offsetWidth; fx.classList.add("cg-blitz-burn");
-      [392, 523, 659, 784, 1047, 1319].forEach(function (f, k) { beep(f, 0.22, 0.12, k * 0.07); });
+      const notes = level === "cold" ? [1319, 1047, 1568, 1319, 2093] : level === "nova" ? [523, 784, 1047, 1568, 2093, 2637] : [392, 523, 659, 784, 1047, 1319];
+      notes.forEach(function (f, k) { beep(f, 0.22, 0.12, k * 0.07); });
     }
     // j: the button chosen, or -1 when the time ran out.
     function choose(j) {
       if (phase !== "question" || answered) return;
       answered = true;
       stop();
-      const q = qs[i], ok = j >= 0 && q.options[j] === q.w;
+      const ok = j >= 0 && q.options[j] === q.w;
       const elapsed = Math.min(Date.now() - started, seconds * 1000);
-      const base = ok ? Math.round(1000 - 400 * elapsed / (seconds * 1000)) : 0;   // 600 to 1,000
+      const points0 = ok ? Math.round(1000 - 400 * elapsed / (seconds * 1000)) : 0;   // 600 to 1,000
+      const before = blitzLevel(streak);
       streak = ok ? streak + 1 : 0;
       bestStreak = Math.max(bestStreak, streak);
-      const m = multiplier(streak), bonus = ok && streak % BLITZ_RUN === 0 ? BLITZ_BONUS : 0;
-      const points = Math.round(base * m) + bonus;
+      const level = blitzLevel(streak), m = blitzMultiplier(streak);
+      const bonus = ok && BLITZ_LEVELS[level] && level !== before ? BLITZ_BONUS : 0;
+      const points = Math.round(points0 * m) + bonus;
       total += points;
       if (ok) right++;
+      else {
+        due.push({ w: q.w, at: i + 3 });   // a missed word comes back soon
+        if (mode === "survival") lives--;
+      }
       stage.querySelectorAll(".cg-blitz-opt").forEach(function (b, k) {
         b.disabled = true;
         if (q.options[k] === q.w) { b.classList.add("cg-blitz-right"); if (ok) sparkleBurst(b); }
@@ -1410,12 +1561,14 @@
       fb.append(h("span", { text: ok ? "Correct!  +" + points.toLocaleString("en-US") : j < 0 ? "Time's up!" : "Not quite." }),
         ok && m > 1 ? h("span", { class: "cg-blitz-times", text: times(m) + (bonus ? " + bonus" : "") }) : "",
         ok ? "" : h("span", { class: "cg-blitz-was", text: "It's: " + q.w.word }),
-        button(i + 1 < qs.length ? "Next" : "See my score", next, "cg-primary"));
+        button(over() ? (mode === "survival" && lives <= 0 ? "Game over" : "See my score") : "Next", next, "cg-primary"));
       stage.querySelector(".cg-blitz-clock").hidden = true;
+      stage.querySelector(".cg-blitz-left-top").replaceWith(topLeft(!ok && mode === "survival" ? lives : -1));
       const score = stage.querySelector(".cg-blitz-score");
       score.textContent = "";
       score.append(streakMeter(), h("span", { class: "cg-blitz-total" + (ok ? " cg-blitz-up" : ""), text: total.toLocaleString("en-US") }));
-      if (bonus) onFire(bonus);
+      paintHeat();
+      if (bonus) levelUp(level, m, bonus);
       else if (ok) beep(880, 0.15, 0.12);
       else beep(196, 0.25, 0.12);
       phase = "feedback";
@@ -1424,6 +1577,9 @@
     function end() {
       stop();
       phase = "end";
+      streak = 0;
+      paintHeat();
+      const played = i + 1;
       const s = ranked(scores());
       const makesIt = total > 0 && (s.length < BLITZ_TOP || total > s[s.length - 1].score);
       const best = !s.length || total > s[0].score;
@@ -1432,7 +1588,7 @@
       const save = function () {
         const n = name.value.trim().slice(0, 16);
         if (!n) { name.focus(); return; }
-        entry = { name: n, score: total, right: right, of: qs.length, streak: bestStreak, at: Date.now() };
+        entry = { name: n, score: total, right: right, of: played, streak: bestStreak, mode: mode, at: Date.now() };
         saveScores(ranked(scores().concat([entry])));
         const place = ranked(scores()).findIndex(function (e) { return e.at === entry.at; }) + 1;
         form.replaceWith(h("div", { class: "cg-blitz-saved", text: place ? "Saved! You're number " + place + "." : "Saved!" }));
@@ -1445,8 +1601,9 @@
       const form = makesIt ? h("div", { class: "cg-blitz-form" },
         h("div", { class: "cg-blitz-made" }, art("trophy"), h("span", { text: best && s.length ? "A new top score!" : "You made the high scores!" })),
         h("div", { class: "cg-blitz-entry" }, name, button("Save", save, "cg-primary"))) : "";
-      // Stars: one for half right, two for most right, three for all right.
-      const won = right === qs.length ? 3 : right >= qs.length * 0.7 ? 2 : right >= qs.length * 0.4 ? 1 : 0;
+      // Stars. Classic: half right, most right, all right. Survival: 10, 20, 30 right.
+      const won = mode === "survival" ? Math.min(3, Math.floor(right / 10))
+        : right === played ? 3 : right >= played * 0.7 ? 2 : right >= played * 0.4 ? 1 : 0;
       const stars = h("div", { class: "cg-blitz-stars" });
       for (let k = 0; k < 3; k++) {
         const st = art("star", k < won ? "cg-blitz-won" : "");
@@ -1457,14 +1614,14 @@
       stage.className = "cg-blitz-stage cg-blitz-home cg-blitz-end";
       const p = panel("cg-blitz-intro");
       p.append(stars,
-        h("div", { class: "cg-blitz-sub", text: "Your score" }),
+        h("div", { class: "cg-blitz-sub", text: mode === "survival" ? "Out of lives! Your score" : "Your score" }),
         h("div", { class: "cg-blitz-final", text: total.toLocaleString("en-US") }),
-        h("div", { class: "cg-blitz-sub", text: right + " of " + qs.length + " right" + (right === qs.length ? ". Perfect!" : "") +
-          (bestStreak > 1 ? " · best streak " + bestStreak : "") }),
+        h("div", { class: "cg-blitz-sub", text: right + (mode === "survival" ? " right" : " of " + played + " right") +
+          (mode !== "survival" && right === played ? ". Perfect!" : "") + (bestStreak > 1 ? " · best streak " + bestStreak : "") }),
         form,
         h("div", { class: "cg-tools" }, again));
       stage.append(p, table());
-      if (right === qs.length) cheer();
+      if (won === 3) cheer();
       if (makesIt) setTimeout(function () { name.focus(); }, 50);
     }
 
@@ -1474,7 +1631,7 @@
       return false;
     } });
     begin();
-    return begin;   // reset: back to the start, with new questions; the high scores stay
+    return begin;   // reset: back to the start; the high scores stay
   }
 
   /* ---------------- Review games page: choose a game and a unit, then play ----------------
@@ -1547,7 +1704,7 @@
       stage.append(el);
       if (!pool.length) { el.textContent = "No words for this unit yet."; reset = null; return; }
       reset = GAMES[choice.game](el, { words: pool, all: words, random: true, rows: 4, teams: 2, seconds: 10, tiles: 16,
-        count: /match|memory/.test(choice.game) ? 6 : choice.game === "blitz" ? 10 : 5,
+        count: /match|memory/.test(choice.game) ? 6 : choice.game === "blitz" ? undefined : 5,
         units: units, unit: choice.unit,
         title: (unit ? unit.title : "Vocab") + ({ bingo: "", blitz: " Word Blitz" }[choice.game] || " quick-fire") });
     }

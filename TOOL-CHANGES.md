@@ -270,6 +270,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Word Blitz: streak levels (STRAIGHT FIRE, COLD FIRE, SUPERNOVA), a heat bar, a live fire, Classic and Survival
+- **Asked for:** "Have a line at the bottom grow from center and get slowly red. At a streak of four it should be slightly shaking. The UI theme turns all oranges and red.. At a streak of five it busts into a flame effect. If you get 10 in a row... Maybe "cold fire". Switch everything to Blue theme. The multiplyer should be flat between 5x streaks ... Then a third tier at 15 correct." Then: "additive multiplier (but tiered- three questions in a row is plus 30%, 4 is + 40%.. Between five questions and nine questions it's a flat 50%, then at [ten] questions its +100%. Then at 15 it's +150%). Expressed as x(mult). classic 20 plus survival mode, go ahead. If there's less than 20 vocabulary words present in the whole course, fallback to 10."
+- **Why:** to reward long runs of right answers, and to give a station a fair leaderboard (Classic) and students at home a mode to push (Survival).
+- **Changed:**
+  - `_extensions/classroom/games/games.js` (Word Blitz only): the multiplier is ×1.2, ×1.3, ×1.4 for 2 to 4 in a row, then ×1.5 (5 to 9), ×2 (10 to 14), ×2.5 (15 and more); reaching a level adds 2,000 points and sweeps its banner across (STRAIGHT FIRE!, COLD FIRE!, SUPERNOVA!). A heat bar along the bottom grows from the middle toward the next level, yellow to red; at 4 in a row it shakes and the game turns orange. From 5, a live fire burns along the bottom, behind the answers: a canvas of soft dots that add up into flames (`blitzFire`, plain JavaScript, no library), in each level's colors, and still for people who ask for less movement. Two modes on the start screen, each with its own high scores: Classic (20 questions, or 10 if the whole course has fewer than 20 words) and Survival (3 lives shown as hearts; a second less every 5 questions, down to 5). Every word is asked once before any comes back; a word comes back the other way round, and a missed word comes back 3 questions later. Survival's stars are for 10, 20 and 30 right.
+  - `_extensions/classroom/games/games.css`: a set of colors for each level (orange, red, blue, purple), the game's own frame and background (which change with the level), the heat bar, the fire's layer, the Classic/Survival switch and the hearts; the pieces a little smaller to make room.
+  - `_extensions/classroom/shortcodes.lua`: `mode="survival"`; `count` is now only Classic's number of questions (no default: the game decides).
+  - `README.md`, `course/units/01-ancient-greece/review-games-slides.qmd` (content): the new rules and modes.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Word Blitz gets a cartoon look (inline SVG pictures); no more Kahoot shapes
 - **Asked for:** "Use some inline svgs to make it look even cooler. We're trying to appeal to primary School and Middle School. Although I suppose it can always be re-themed for other ages later. Remove the kahoot shape icons - since this is a single player game on one device, those icons don't mean anything."
 - **Why:** to appeal to primary and middle school students; the shapes only matter when many players answer on their own devices.
