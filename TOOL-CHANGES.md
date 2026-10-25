@@ -270,6 +270,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-25: Word Blitz gets a cartoon look (inline SVG pictures); no more Kahoot shapes
+- **Asked for:** "Use some inline svgs to make it look even cooler. We're trying to appeal to primary School and Middle School. Although I suppose it can always be re-themed for other ages later. Remove the kahoot shape icons - since this is a single player game on one device, those icons don't mean anything."
+- **Why:** to appeal to primary and middle school students; the shapes only matter when many players answer on their own devices.
+- **Changed:**
+  - `_extensions/classroom/games/games.js` (Word Blitz only): pictures drawn as inline SVG: a badge (a lightning bolt on a spinning starburst, a flame on each side) on the start screen, twinkling sparkles on the panels, the countdown on a spinning starburst, a burning fuse with a spark for the time, a streak meter of five flames that light up (the fifth is the bonus), sparkles that fly out of a right answer, real flames for STRAIGHT FIRE, one to three stars at the end, a trophy for a high score, and gold, silver and bronze medals in the high scores. The four answers are plain colored buttons, without the Kahoot shapes.
+  - `_extensions/classroom/games/games.css`: Word Blitz's styles rewritten for the cartoon look: chunky buttons, big outlined words, the panels in purple and blue. Every color is a `--blitz-…` value at the top, and the SVG pictures are colored from there, so another look (calmer, for older students) is a change to those values only. Less movement for people whose computer asks for it (reduced motion).
+  - `README.md`: the look, and where to change its colors.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: Speed quiz becomes Word Blitz: streaks multiply the points, five in a row is STRAIGHT FIRE
 - **Asked for:** "let's change the game rules slightly to favor correct answers over speed a little bit. Sequential correct answers get a multiplier (like 10%? 20%). Five in a row gets a dump of extra points. And a cool effect goes across the screen like "Straightfire". Missing a question resets and multiplier. Give it a cooler name"
 - **Why:** to reward getting answers right more than answering fast.
