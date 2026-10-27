@@ -59,6 +59,7 @@ extension (for example `_extensions/my-tools/`).
 | `styles/`, `typst/`, `fonts/print/` | Web page, slide and PDF layouts; PDF fonts |
 | `scripts/` | Build steps and commands, run with `python chalkline.py <command>` from the course |
 | `vocab-app/` | The vocab app, copied into the course's `vocab/app/` before each build |
+| `slide-wall/` | The All slides page (`{{< slide-wall >}}`): every deck as rows of slide pictures, taken by `scripts/slide_pictures.py` |
 | `templates/` | Starter files for `python chalkline.py new slides 2 "Title"` |
 | `starter/` | A new course's first unit, vocab list and course files, added by `python chalkline.py setup` |
 

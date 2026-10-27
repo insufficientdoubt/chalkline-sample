@@ -28,6 +28,7 @@ Things to try once the site is open:
 - Open a slide deck and press **S** for speaker notes, **T** for the timer.
 - In a slide deck, press **W** (or the four-squares button, bottom left) for the classroom tools: name picker, groups, scoreboard, voice level with a noise meter, slide size, traffic light, QR code, stopwatch, dice, music, and the unit's vocab and packet. They float above the slides and stay put when you change slides.
 - In the overview, each deck has a **PDF** too.
+- **All slides** (sidebar): every unit's decks as rows of slide pictures. Click a slide to open its deck right there. Small, Medium and Large change the picture size. The pictures are made by a full build (they need Chrome or Edge, like the slide PDFs).
 - **Terminal > Run Task… > Open student site**: what students and families see, without the answer keys, speaker notes and teacher tools. Its **For families 给家长** page welcomes parents.
 - In *From Republic to Empire*, hover the boxes of the infographic: it was made in **draw.io** (`drawio/republic.drawio`), and any draw.io diagram can go in a slide the same way.
 
@@ -123,6 +124,7 @@ Run these in the VS Code terminal, or pick them from **Terminal > Run Task…**.
 | Open the student site (port 4101) | `python chalkline.py open student` |
 | Rebuild one unit's packet | `python chalkline.py packets --unit 1` |
 | Rebuild slide PDFs | `python chalkline.py slides-pdf` |
+| Retake the slide pictures for **All slides** | `python chalkline.py slide-pictures` |
 | Check the vocab list | `python chalkline.py validate` |
 | Start a new slide deck or worksheet from a template | `python chalkline.py new slides 2 "Roman Roads"` (or VS Code: **Run Task… > New slide deck or worksheet**) |
 | Make Quizlet / Kahoot / Anki files | `python chalkline.py export-vocab` |

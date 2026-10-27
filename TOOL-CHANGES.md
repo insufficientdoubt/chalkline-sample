@@ -16,6 +16,18 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: All slides: every deck as rows of slide pictures
+- **Asked for:** "a way to combine all the slide decks for a visual course overview on one page." Of three layouts, (b): "a contact sheet: one row of slide pictures per deck, grouped by unit... Clicking on a slide would take you into that slideshow right?"
+- **Why:** to see the whole course at a glance. Quarto has nothing built in for this: listings show one card per page, and reveal.js's overview (press O) shows only one deck.
+- **Changed:**
+  - `_extensions/chalkline/scripts/slide_pictures.py` (new): after each full render (and for changed decks when the launchers start), opens every unit's decks in Chrome or Edge, shows each slide with all its steps and saves a small picture (`<deck>-pictures/01.jpg`, ...), then writes `slide-pictures.json` at the site root. About 40 seconds and 3 MB for this sample's 160 slides.
+  - `_extensions/chalkline/slide-wall/slide-wall.js`, `slide-wall.css` (new) and the `{{< slide-wall >}}` shortcode in `shortcodes.lua`: the page: unit sections, a row of pictures for each deck (title, slide count, PDF), Small / Medium / Large (remembered), a click opens the deck at that slide.
+  - `all-slides.qmd` (new) and `_quarto.yml`: the page, in the render list and the sidebar ("All slides").
+  - `_extensions/chalkline/_extension.yml`: the new post-render step. `scripts/build_if_needed.py`: the launchers redo out-of-date pictures. `scripts/slides_pdf.py`: `launch()`, shared by both, also tries a Chromium installed by Playwright when there's no Chrome or Edge.
+  - `chalkline.py`, `README.md`, the extension's `README.md` and `CHANGELOG.md`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: New courses without the sample's content, and a starter unit
 - **Asked for:** "Can we make it so that there is an initial setup script when the extension is installed that builds a starter unit with one slideshow one hand out? But then I'm still a little bit unsure about how they get the project started... if they start from zero they still have to clone a repo, and then they still get all the demo content... Right?"
 - **Why:** cloning (or GitHub's "Use this template") copies every file, so a new teacher got three history units and the STEM sampler to delete. Quarto has no hook that runs on `quarto add`, but `quarto use template` copies a repository *except* what its `.quartoignore` lists, and installs its extensions.

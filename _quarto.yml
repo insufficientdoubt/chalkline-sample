@@ -19,6 +19,7 @@ project:
   render:
     - index.qmd
     - families.qmd
+    - all-slides.qmd           # every deck as rows of slide pictures
     - "course/**/*.qmd"
   resources:                 # the vocab app and its data, copied into the site as-is (vocab/app/)
     - /vocab/index.html      # the leading / means "from the project folder"; without it these
@@ -57,6 +58,9 @@ website:
       - text: "History vocab 词汇"
         href: vocab/app/index.html   # the vocab app (copied in via resources above)
         icon: book
+      - text: "All slides"
+        href: all-slides.qmd       # every deck as rows of slide pictures, by unit
+        icon: grid-3x3-gap
       - text: "Review games"
         href: course/review-games.qmd  # any game, any unit (slides)
         icon: controller

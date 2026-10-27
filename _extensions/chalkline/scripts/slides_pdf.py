@@ -93,16 +93,21 @@ async def print_deck(context, limit, url, pdf):
             await page.close()
 
 
+async def launch(p):
+    """Chrome or Edge from the computer; else a Chromium that Playwright installed (`playwright install
+    chromium`, for build servers). None if there's neither."""
+    for channel in CHANNELS + [None]:
+        try:
+            return await p.chromium.launch(channel=channel, args=NO_THROTTLE)
+        except Exception:
+            pass
+    return None
+
+
 async def print_all(folder, jobs):
     from playwright.async_api import async_playwright
     async with async_playwright() as p:
-        browser = None
-        for channel in CHANNELS:
-            try:
-                browser = await p.chromium.launch(channel=channel, args=NO_THROTTLE)
-                break
-            except Exception:
-                pass
+        browser = await launch(p)
         if not browser:
             print("slides_pdf: Google Chrome or Microsoft Edge not found, so slide PDFs were skipped.")
             return

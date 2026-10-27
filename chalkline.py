@@ -5,6 +5,7 @@
     python chalkline.py validate             check vocab/data/vocab.csv (after editing it)
     python chalkline.py packets --unit 3     rebuild unit 3's packet (after finishing a worksheet)
     python chalkline.py slides-pdf           print every slide deck to PDF
+    python chalkline.py slide-pictures       a picture of every slide, for the All slides page
     python chalkline.py open student         the student site, at http://localhost:4101
     python chalkline.py export-vocab         Quizlet, Kahoot and Anki files of the vocab
     python chalkline.py import-vocab ...     copy words from vocab/data/vocab.csv into a unit

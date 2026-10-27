@@ -45,6 +45,8 @@ what each one becomes in each output format (slides, web page, PDF, Word).
   {{< game-picker >}}                    the Review games page: choose any game and unit, and play.
                                          games="blitz,snowman" offers only those (the Play page).
   Games work on slides and on web pages (format: html); in PDFs and Word they're one line.
+  {{< slide-wall >}}                     the All slides page: every unit's decks as rows of slide pictures
+                                         (made by scripts/slide_pictures.py after a full build)
 
 Quarto's built-in {{< pagebreak >}} also works everywhere.
 ]]
@@ -506,6 +508,14 @@ return {
     for id in str(kwargs and kwargs["games"], ""):gmatch("[%w-]+") do table.insert(only, id) end
     return games.div("picker", { words = words, units = vocab_units, random = true, games = only,
       home = quarto.doc.is_format("revealjs") and (up .. "index.html") or nil })   -- a web page has the sidebar
+  end,
+
+  ["slide-wall"] = function()
+    if not quarto.doc.is_format("html") then return pandoc.Null() end
+    quarto.doc.add_html_dependency({ name = "chalkline-slide-wall", version = "1.0.0",
+      stylesheets = { "slide-wall/slide-wall.css" }, scripts = { { path = "slide-wall/slide-wall.js", afterBody = true } } })
+    local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+    return pandoc.RawBlock("html", '<div class="slide-wall" data-root="' .. up .. '" data-src="' .. up .. 'slide-pictures.json"></div>')
   end,
 
   ["timer"] = function(args)
