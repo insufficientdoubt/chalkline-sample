@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **View source** (U, in the toolbox): the current slide's source as typed, with colors and line numbers;
+  Copy, and Open in VS Code on your own computer. Teacher site only. `toolbox/source.lua` cuts the deck
+  into slides; `toolbox/tools/source.js` shows them.
 - A new course: `quarto use template insufficientdoubt/project-chalkline` copies the course files
   without the sample's content, and `python chalkline.py setup` (run by the first build) adds a starter
   unit (one slide deck, one handout, four vocab words) and the course files from `starter/`.
