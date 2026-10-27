@@ -1,7 +1,7 @@
 ---
 title: "Chalkline Quick Start"
 type: reference
-description: "One page, from an empty computer to your own course: install four programs, make a folder, run one command, double-click to start."
+description: "One page, from an empty computer to your own course: set up GitHub, install four programs, make a folder, run one command, double-click to start."
 order: 2
 audience: [teacher]
 doc-type: Quick start
@@ -12,6 +12,12 @@ format:
 ---
 
 From an empty computer to your own course of slides, printable PDFs and a class website, in about 30 minutes. No coding needed.
+
+::: {.callout-tip title="Step 0 · Set up GitHub (once)" icon=false}
+- **Make a free account** at **github.com**. GitHub keeps a safe copy of your course online, and can put your class website on the internet.
+- **Install Git**: git-scm.com. This is how your computer talks to GitHub. The default choices are fine.
+- **Sign in:** after Step 1, click the person icon at the bottom left of VS Code › **Sign in with GitHub**.
+:::
 
 :::: {layout-ncol=2}
 ::: {.callout-tip title="Step 1 · Install four programs (once)" icon=false}
