@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: The toolbox menu: Slides as icons, Slide size by Dice
+- **Asked for:** "How about just icons only for that row, with functions on hover? And then move slide size up to next to dice."
+- **Why:** "I think that's actually a pretty common one when you're accessing the other tools" (Slide size).
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: Slides is a row of icon buttons; each has its name and key as a label for screen readers and for the hover tip. Slide size is back under More, after Dice.
+  - `_extensions/chalkline/toolbox/toolbox.css`: square icon buttons, and a dark tip above one when you point at it or tab to it. The menu and its tiles are back to their first size (372px wide, 74px tiles): with one row of icons it fits an 800-pixel-high screen with room to spare.
+  - `README.md`: the Slides icons.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: The toolbox menu: back to rows, with a shorter bottom
 - **Asked for:** "I think the old layout was a bit clearer. Any other ideas?" Then, of the ideas: "yeah show me idea 1".
 - **Why:** the columns (entry below) were harder to read than one group per row, top to bottom.

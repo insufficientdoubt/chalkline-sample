@@ -275,12 +275,12 @@
     ["Attention", ["voice", "traffic", "spotlight"]],
     ["Time", ["clock", "stopwatch"]],
     ["This unit", ["vocab", "packet", "qr"]],
-    ["More", ["music", "dice"]],
+    ["More", ["music", "dice", "slide"]],
   ];
-  // Slides: small buttons for running the slides, at the bottom: these tools, and reveal.js's own
-  // (otherwise only in the slide menu's Tools tab). Each shows its key, so it's quicker next time;
-  // one shows only when this deck has that tool.
-  const SLIDE_TOOLS = ["slide", "source"];
+  // Slides: a row of icons for running the slides, at the bottom: View source, and reveal.js's own
+  // tools (otherwise only in the slide menu's Tools tab). Point at one for its name and key; one
+  // shows only when this deck has that tool.
+  const SLIDE_TOOLS = ["source"];
   const RC = function () { return window.RevealChalkboard; };
   const SLIDES = [
     { title: "Full screen", icon: "maximize", key: "F", run: function () {
@@ -297,9 +297,9 @@
   function paintSlides() {
     const strip = h("div", { class: "ct-menu-strip" });
     const chip = function (attrs, iconName, title, key, on) {
-      return h("button", Object.assign({ class: "ct-chip" + (on ? " ct-on" : ""), title: key ? title + " (" + key + ")" : title }, attrs),
-        h("span", { class: "ct-menu-icon" }, icon(iconName)), h("span", { text: title }),
-        key ? h("kbd", { class: "ct-menu-key", text: key }) : null);
+      const tip = key ? title + " (" + key + ")" : title;
+      return h("button", Object.assign({ class: "ct-chip" + (on ? " ct-on" : ""), "aria-label": tip, "data-tip": tip }, attrs),
+        h("span", { class: "ct-menu-icon" }, icon(iconName)));
     };
     if (window.Reveal) {
       SLIDES.filter(function (a) { return !a.has || a.has(); }).forEach(function (a) {
