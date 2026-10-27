@@ -292,7 +292,6 @@
       run: function () { Reveal.getPlugin("notes").open(); } },
     { title: "Whiteboard", icon: "presentation", key: "B", has: RC, run: function () { RC().toggleChalkboard(); } },
     { title: "Draw on slide", icon: "pen-line", key: "C", has: RC, run: function () { RC().toggleNotesCanvas(); } },
-    { title: "Shortcuts", icon: "keyboard", key: "?", run: function () { Reveal.toggleHelp(true); } },
   ];
   function paintSlides() {
     const strip = h("div", { class: "ct-menu-strip" });

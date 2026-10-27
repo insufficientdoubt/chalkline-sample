@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: No Shortcuts icon in the toolbox menu
+- **Asked for:** "What's the shortcuts actually do that we haven't already done?" Then: "Yeah just get rid of the shortcuts icon and then merge the update."
+- **Why:** it opens reveal.js's list of keys, which is rarely needed during a lesson. The **?** key still opens it.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: Shortcuts is gone from the Slides row (six icons now).
+  - `_extensions/chalkline/ui/icons.js`: the `keyboard` icon, which nothing else used.
+  - `README.md`: the Slides row, and that ? still lists the keys.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: Speaker view gets a notes icon
 - **Asked for:** "Change speaker view icon to something looking more like notes."
 - **Why:** "I think most teachers actually teach by projecting instead of loading the content directly on the display. But it is useful in case they want to do that." The screen icon looked like a projector or display setting; the speaker view is really your notes.
