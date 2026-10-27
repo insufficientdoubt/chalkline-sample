@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: New courses keep Mingwan's name, logo and colors
+- **Asked for:** "include the mingwan colors and brand as default. But leave a stub for switching in generic values. If we want to share this more widely later. Right now mingwan is the only school that's using this so there's no reason not to include our logo."
+- **Why:** every Chalkline course is at Mingwan for now. This changes part of the entry below: new courses are still "My Course", but not "Your School".
+- **Changed:**
+  - `_extensions/chalkline/scripts/setup.py`: a new course gets "My Course" and "Course Vocab" / "Vocab 词汇" but keeps "Mingwan School", the emblem and the colors. The generic swaps ("Your School", the sailboat as logo) are kept as `GENERIC_NAMES`, off until `GENERIC_BRAND = True`.
+  - `.quartoignore`: copies the Mingwan emblem again.
+  - The Quick Start's step 5: change only "My Course".
+- **Who it helps:** this school's courses; the switch is for every Chalkline course later.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: New courses start as "My Course" at "Your School"
 - **Asked for:** "Use My Course and Your School as the starter names."
 - **Why:** a new course is a copy of the sample's settings, so it started with the sample's title, school, logo and "History vocab".
