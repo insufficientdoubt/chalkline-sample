@@ -44,6 +44,8 @@
     "play": '<polygon points="6 3 20 12 6 21 6 3" />',
     "pause": '<rect x="14" y="4" width="4" height="16" rx="1" /> <rect x="6" y="4" width="4" height="16" rx="1" />',
     "music": '<path d="M9 18V5l12-2v13" /> <circle cx="6" cy="18" r="3" /> <circle cx="18" cy="16" r="3" />',
+    "code": '<polyline points="16 18 22 12 16 6" /> <polyline points="8 6 2 12 8 18" />',
+    "copy": '<rect width="14" height="14" x="8" y="8" rx="2" ry="2" /> <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />',
   };
   function el(name) {
     const span = document.createElement("span");

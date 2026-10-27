@@ -16,6 +16,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: View source (U): how any slide is made
+- **Asked for:** "a 'view source' tool that would show the source for any slide, with syntax hilighting? So you could quickly see how any slide is made." Then: "yes, build it with U".
+- **Why:** to see quickly how a slide is made.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/source.lua` (new): reads the deck's `.qmd` before Quarto changes it and cuts it where reveal.js starts a slide (headings at the slide level, `---` after an empty line; not inside `:::` blocks or code). Each piece gets its slide's id, using pandoc's own rule. Also the file's full path for Open in VS Code, except on GitHub's build (`CI`).
+  - `_extensions/chalkline/toolbox/tools/source.js` (new): the View source tool. It shows the current slide's lines with line numbers and its own small highlighter for headings, `:::` blocks, `{.classes}`, shortcodes, code, bold, links, lists and the labels at the top. It follows slide changes. **Copy**, and **Open in VS Code** (localhost only). Key **U**.
+  - `_extensions/chalkline/filter.lua`: puts the source in each teacher deck as JSON (never in the student site: it has the notes and answer keys), and loads the tool.
+  - `_extensions/chalkline/toolbox/toolbox.js`: View source under More in the menu.
+  - `_extensions/chalkline/ui/icons.js`: Lucide's `code` and `copy` icons.
+  - `README.md`, `_extensions/chalkline/CHANGELOG.md`, and the Start Here deck's toolbox list: the new tool.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: Lesson files open in the visual editor
 - **Asked for:** "is there a less intimidating editor than vs code?" Then, of the options: "Yes implement visual mode by default."
 - **Why:** plain-text markup (`##`, `**`, `:::`) is intimidating for teachers who don't code; the visual editor looks like a word processor.

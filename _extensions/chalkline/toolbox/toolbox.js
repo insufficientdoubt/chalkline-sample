@@ -10,7 +10,7 @@
     Attention   voice.js (Voice level and the noise meter), traffic.js (Traffic light), spotlight.js
     Time        clock.js (open unless you close it; K shows and hides it), stopwatch.js
     This unit   vocab.js, packet.js, qr.js (QR code for this deck on the student site)
-    More        music.js (YouTube), dice.js, slide.js (Slide size)
+    More        music.js (YouTube), dice.js, slide.js (Slide size), source.js (View source)
 
   Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
   right and left edge, and the slides move over to make room. V and P open and close them.
@@ -275,7 +275,7 @@
     ["Attention", ["voice", "traffic", "spotlight"]],
     ["Time", ["clock", "stopwatch"]],
     ["This unit", ["vocab", "packet", "qr"]],
-    ["More", ["music", "dice", "slide"]],
+    ["More", ["music", "dice", "slide", "source"]],
   ];
   // Slides: reveal.js's own tools, which are otherwise only in the slide menu's Tools tab. Each tile
   // shows its key, so it's quicker next time. A tile shows only when this deck has that tool.
@@ -410,7 +410,7 @@
   }, true);
   if (window.Reveal) {
     Reveal.addKeyBinding({ keyCode: 87, key: "W", description: "Classroom tools" }, function () { toggleMenu(); });
-    // A tool's own key opens and closes it: K the clock, P the Packet, V Vocab. P and V replace
+    // A tool's own key opens and closes it: K the clock, P the Packet, V Vocab, U View source. P and V replace
     // reveal.js's own (P: the previous slide, as ← does; V: a black screen, as B and . do).
     Object.keys(TOOLS).forEach(function (id) {
       const k = TOOLS[id].key;

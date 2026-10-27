@@ -16,6 +16,7 @@ Slides (reveal.js):
     The QR code points at the deck on the student site: student-site: "https://.../" in _quarto.yml
   - loads the poll code when a slide has  ::: {.poll ...}  or  ::: {.poll-summary}
   - turns  ::: {.jeopardy}  and  ::: {.trivia}  into slide games (see below and games/games.js)
+  - View source (U, in the toolbox): each slide's source as typed, from toolbox/source.lua
   - turns  ::: {.quick-ref}  into a quick reference slide: key slides + everything in the unit (quickref.lua)
 
 PDF (Typst): a div with one of these classes becomes a call to a layout
@@ -132,6 +133,7 @@ end
 -- teams="3" starts with 3 teams taking turns (2 to 4; teams="0" for no teams or scores).
 local games = dofile(quarto.utils.resolve_path("games/games.lua"))
 local quick_ref = dofile(quarto.utils.resolve_path("quickref.lua"))   -- ::: {.quick-ref}: every link in a unit on one slide
+local slide_source = dofile(quarto.utils.resolve_path("toolbox/source.lua"))   -- View source (U): each slide's source
 
 local function list_items(blocks)
   for _, b in ipairs(blocks) do
@@ -367,6 +369,7 @@ local function Meta(meta)
     end
     if off then tags["chalkline-clock"] = "off" end
     quarto.doc.include_text("after-body", course_data())   -- for Vocab and Packet
+    quarto.doc.include_text("after-body", slide_source.json(meta))   -- for View source: the notes and answer keys too, so teacher only
     quarto.doc.add_html_dependency({   -- the PDF viewer, for Packet (the same files as {{< pdf-viewer >}})
       name = "pdf-viewer",
       version = "1.0.0",
@@ -395,6 +398,7 @@ local function Meta(meta)
         { path = "toolbox/tools/music.js", afterBody = true },
         { path = "toolbox/tools/dice.js", afterBody = true },
         { path = "toolbox/tools/slide.js", afterBody = true },
+        { path = "toolbox/tools/source.js", afterBody = true },
         { path = "toolbox/toolbox.js", afterBody = true },
       },
       stylesheets = { "toolbox/toolbox.css" },
