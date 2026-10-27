@@ -288,7 +288,7 @@
       else if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
     } },
     { title: "All slides", icon: "layout-grid", key: "O", run: function () { Reveal.toggleOverview(true); } },
-    { title: "Speaker view", icon: "monitor", key: "S", has: function () { return Reveal.getPlugin("notes"); },
+    { title: "Speaker view", icon: "notepad-text", key: "S", has: function () { return Reveal.getPlugin("notes"); },
       run: function () { Reveal.getPlugin("notes").open(); } },
     { title: "Whiteboard", icon: "presentation", key: "B", has: RC, run: function () { RC().toggleChalkboard(); } },
     { title: "Draw on slide", icon: "pen-line", key: "C", has: RC, run: function () { RC().toggleNotesCanvas(); } },

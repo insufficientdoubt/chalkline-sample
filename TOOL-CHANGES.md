@@ -16,6 +16,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: Speaker view gets a notes icon
+- **Asked for:** "Change speaker view icon to something looking more like notes."
+- **Why:** "I think most teachers actually teach by projecting instead of loading the content directly on the display. But it is useful in case they want to do that." The screen icon looked like a projector or display setting; the speaker view is really your notes.
+- **Changed:**
+  - `_extensions/chalkline/ui/icons.js`: Lucide's `notepad-text` replaces `monitor`, which nothing else used.
+  - `_extensions/chalkline/toolbox/toolbox.js`: Speaker view uses it.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: The toolbox menu: Slides as icons, Slide size by Dice
 - **Asked for:** "How about just icons only for that row, with functions on hover? And then move slide size up to next to dice."
 - **Why:** "I think that's actually a pretty common one when you're accessing the other tools" (Slide size).
