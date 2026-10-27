@@ -5,8 +5,17 @@ tools, printable worksheets and packets, review games, and a vocab app, all from
 
 ## Use it in a course
 
-Start a new course from the course template (it has all of this set up), or add Chalkline to a
-Quarto website:
+**A new course** (Chalkline and the course files, without the sample's content):
+
+```bash
+quarto use template insufficientdoubt/project-chalkline
+```
+
+The sample's `.quartoignore` lists what's left out. The first build (`python chalkline.py build`, which
+the launchers run) or `python chalkline.py setup` adds a starter unit and the course files from `starter/`,
+never replacing a file that's there.
+
+**An existing Quarto website:**
 
 ```bash
 quarto add insufficientdoubt/project-chalkline   # installs only _extensions/insufficientdoubt/chalkline/
@@ -51,5 +60,6 @@ extension (for example `_extensions/my-tools/`).
 | `scripts/` | Build steps and commands, run with `python chalkline.py <command>` from the course |
 | `vocab-app/` | The vocab app, copied into the course's `vocab/app/` before each build |
 | `templates/` | Starter files for `python chalkline.py new slides 2 "Title"` |
+| `starter/` | A new course's first unit, vocab list and course files, added by `python chalkline.py setup` |
 
 What changed in each version: `CHANGELOG.md`.

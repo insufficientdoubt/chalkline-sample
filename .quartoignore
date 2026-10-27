@@ -1,0 +1,38 @@
+# A new course: `quarto use template insufficientdoubt/project-chalkline` copies this repository
+# into a new folder and installs Chalkline (_extensions/) in it. It leaves out what's listed here:
+# this sample's own content and Chalkline's planning files. The new course gets its own starter unit
+# and course files from `python chalkline.py setup`, which the launchers run the first time.
+
+# Quarto leaves out every dotfile and README.md, CLAUDE.md and AGENTS.md unless told otherwise:
+!.*
+!README.md
+!CLAUDE.md
+!AGENTS.md
+
+# Not for a new course
+.quartoignore
+.github
+.git
+.venv
+.quarto
+_site
+_site-teacher
+_freeze
+generated
+archive
+exports
+EXTENSION-PLAN.md
+IDEAS.md
+TOOL-CHANGES.md
+
+# The sample's content (the starter's own come from _extensions/chalkline/starter/)
+course/units
+course/vocab
+course/season.yml
+course/links.yml
+vocab/data
+vocab/images
+vocab/tools
+vocab/app
+vocab/schema.yaml
+vocab/config.js

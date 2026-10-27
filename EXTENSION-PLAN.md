@@ -93,7 +93,7 @@ Split when other people start changing Chalkline, or when the sample's content c
 4. ✅ **Move the vocab app and the vocab checker into the extension**; add `templates/` and `python chalkline.py new`.
 5. ✅ **Check:** full teacher and student renders (all PDF pages identical pixel for pixel to before; changed pages look the same in a browser), the extension under an owner folder, the Mac launcher from a fresh copy, games, vocab pop-ups, the PDF viewer and the vocab app in a browser. Not tested here: the Windows launcher and the GitHub publish workflow (they changed only in paths; the workflow runs on the next push to `main`).
 6. ~~Make a separate `chalkline` repository~~ Not for now (see above). Instead: once this branch is merged, tag `v0.1.0` on `main`, so a course can pin a version (`quarto add insufficientdoubt/project-chalkline@v0.1.0`).
-7. **New courses:** tick "Template repository" in this repository's settings, so "Use this template" makes a new course (it starts with the sample's units, to replace). A slimmer starter course can come with the split.
+7. ✅ **New courses** (2026-10-27): `quarto use template insufficientdoubt/project-chalkline` copies this repository without the sample's content (`.quartoignore`) and installs the extension; `python chalkline.py setup` (run by the first build) adds a starter unit and the course files from `_extensions/chalkline/starter/`. GitHub's "Use this template" isn't used: it would copy everything, sample units included.
 8. ~~This sample becomes a course~~ Not needed while it's also where Chalkline lives.
 9. **Move the alpha testers** (as in `IDEAS.md`): read each one's `TOOL-CHANGES.md`, pull good changes into Chalkline first, then swap their tool folders for the extension.
 

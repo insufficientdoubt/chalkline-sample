@@ -16,6 +16,18 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: New courses without the sample's content, and a starter unit
+- **Asked for:** "Can we make it so that there is an initial setup script when the extension is installed that builds a starter unit with one slideshow one hand out? But then I'm still a little bit unsure about how they get the project started... if they start from zero they still have to clone a repo, and then they still get all the demo content... Right?"
+- **Why:** cloning (or GitHub's "Use this template") copies every file, so a new teacher got three history units and the STEM sampler to delete. Quarto has no hook that runs on `quarto add`, but `quarto use template` copies a repository *except* what its `.quartoignore` lists, and installs its extensions.
+- **Changed:**
+  - `.quartoignore` (new): what `quarto use template insufficientdoubt/project-chalkline` leaves out: the sample's units, vocab, pictures and course files, the build folders, the planning files and the publish workflow (it publishes the teacher site, answer keys included).
+  - `_extensions/chalkline/starter/` (new): a new course's first unit (`01-first-unit`: the "Welcome to Class" deck and the "Classroom Words" handout), four classroom vocab words with 中文, four sentence frames, and a general `vocab/schema.yaml`, `vocab/config.js`, `course/season.yml`, `course/links.yml` and an empty `TOOL-CHANGES.md`.
+  - `_extensions/chalkline/scripts/setup.py` (new): copies any starter file that's missing; the unit only into a course with no units. Never replaces a file.
+  - `_extensions/chalkline/scripts/build_if_needed.py`: runs setup first, so the launchers and VS Code set up a new course the first time they start. `chalkline.py`: lists `setup`.
+  - `README.md`, `_extensions/chalkline/README.md`, `CHANGELOG.md`, `EXTENSION-PLAN.md` (step 7), the Start here deck: how to start your own course. `CLAUDE.md`: `.quartoignore` is a tool file.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: Robotics material out of Chalkline and the sample
 - **Asked for:** "The robotic stem stuff shouldn't actually be included in the extension... There's a much better version in the robotics League course." Then: "Yes let's pull the robotic stuff for now."
 - **Why:** Chalkline should serve any subject; the robotics League course has the better version, and can be linked or embedded once it's published.

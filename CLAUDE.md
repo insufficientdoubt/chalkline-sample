@@ -24,7 +24,7 @@ If `quarto preview` is running, don't run a full `quarto render` at the same tim
 This repo has two kinds of files:
 
 - **Content** (lessons, worksheets, vocab words, pictures): everything in `course/`, plus `vocab/data/` and `vocab/images/`. Change these freely. No log needed.
-- **The tool** (how Chalkline works and looks): `_extensions/`, `chalkline.py`, `brand/`, `vocab/config.js`, `vocab/tools/`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.vscode/` and `.github/`.
+- **The tool** (how Chalkline works and looks): `_extensions/`, `chalkline.py`, `brand/`, `vocab/config.js`, `vocab/tools/`, `vocab/schema.yaml`, `_quarto*.yml`, `index.qmd`, the `Start Chalkline` launchers, `.quartoignore`, `.vscode/` and `.github/`.
 
 **Whenever you change a tool file, add an entry to the top of `TOOL-CHANGES.md`** (create it if it's missing), in the same change. Use this form:
 

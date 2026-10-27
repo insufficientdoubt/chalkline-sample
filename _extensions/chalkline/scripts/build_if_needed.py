@@ -21,6 +21,7 @@ import time
 from pathlib import Path
 
 from extension import ROOT  # noqa: E402  (the course folder)
+import setup  # noqa: E402
 HERE = Path(__file__).resolve().parent   # Chalkline's scripts
 PROFILE = sys.argv[sys.argv.index("--profile") + 1] if "--profile" in sys.argv[:-1] else ""
 SITE = ROOT / (f"_site-{PROFILE}" if PROFILE else "_site")
@@ -56,6 +57,7 @@ def out_of_date(since):
 
 
 def main():
+    setup.ensure()   # a new course: its starter unit and course files, before anything reads them
     if PROFILE != "teacher":
         # Refresh the list of pages the student site leaves out before Quarto reads _quarto-student.yml.
         subprocess.run([sys.executable, str(HERE / "catalog.py")], cwd=ROOT, env=os.environ, capture_output=True)

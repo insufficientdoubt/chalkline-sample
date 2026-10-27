@@ -40,7 +40,15 @@ Things to try once the site is open:
    - [Git](https://git-scm.com/downloads)
    - [Google Chrome](https://www.google.com/chrome/) or Microsoft Edge (already on Windows), for slide PDFs
 
-2. **Get the project onto your computer.** In VS Code: **File > Open Folder…** and pick the `project-chalkline` folder. (To download it from GitHub first, use the Command Palette, `Ctrl+Shift+P` or `Cmd+Shift+P`, then **Git: Clone**.)
+2. **Get a project onto your computer.** Two choices:
+   - **Try this sample** (every example, three history units): in VS Code, open the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`), choose **Git: Clone**, paste `https://github.com/insufficientdoubt/project-chalkline`, then open the folder.
+   - **Start your own course** (no sample content): open a terminal in the folder where you keep your work and run
+
+     ```bash
+     quarto use template insufficientdoubt/project-chalkline
+     ```
+
+     Answer **Yes** to "Do you trust the authors", **Yes** to "Create a subdirectory", and type a folder name (`my-course`). Quarto copies Chalkline and the course files, but none of this sample's units, vocab or pictures (`.quartoignore` lists what it leaves out). Open the new folder in VS Code. The first time it starts, it adds a starter unit: one slide deck, one handout and four vocab words (`python chalkline.py setup` does the same). Then change `title:` and `school:` in `_quarto.yml`.
 
 3. **Install the extensions.** VS Code will show a pop-up offering to install the recommended extensions (Quarto, Python, Jupyter). Click **Install**. If you miss it, open the Extensions panel and search `@recommended`.
 

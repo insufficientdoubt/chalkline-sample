@@ -1,5 +1,6 @@
 """Run a Chalkline command. From the course folder:
 
+    python chalkline.py setup                a new course: add a starter unit and the course files it needs
     python chalkline.py new slides 2 "Roman Roads"   start a deck (or worksheet) in unit 2 from a template
     python chalkline.py validate             check vocab/data/vocab.csv (after editing it)
     python chalkline.py packets --unit 3     rebuild unit 3's packet (after finishing a worksheet)
