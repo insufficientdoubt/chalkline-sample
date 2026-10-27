@@ -36,7 +36,7 @@ jobs:
       - name: Chinese font for slide PDFs (the project's own Noto Sans SC, so nothing to download)
         run: |
           mkdir -p ~/.local/share/fonts
-          cp brand/fonts/print/*.otf ~/.local/share/fonts/
+          cp _extensions/chalkline/fonts/print/*.otf ~/.local/share/fonts/
           fc-cache -f
           fc-list | grep -i "Noto Sans SC"
 

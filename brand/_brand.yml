@@ -42,7 +42,7 @@ logo:
 typography:
   # Font files live in brand/fonts/ (SIL Open Font License, see the OFL-*.txt files there), so
   # builds never need the internet. Google Fonts is often blocked or slow in mainland China.
-  # Chinese in PDFs uses Noto Sans SC from brand/fonts/print/ (font-paths in _quarto.yml); web pages
+  # Chinese in PDFs uses Noto Sans SC from the Chalkline extension (_extensions/chalkline/fonts/print/); web pages
   # use the computer's own Chinese font instead, because Noto Sans SC is 8 MB per weight.
   fonts:
     - family: Source Sans 3

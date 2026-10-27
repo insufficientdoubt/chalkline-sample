@@ -8,6 +8,124 @@ Newest entries first.
 
 <!-- Entries go below this line. Copy this template:
 
+## YYYY-MM-DD: short title
+- **Asked for:** what the teacher wanted, in their words if they gave them.
+- **Why:** the reason they gave, or "not given".
+- **Changed:** each file and what changed in it.
+- **Who it helps:** this course only, or probably every Chalkline course.
+- **AI assistant:** which one made the change.
+-->
+
+## 2026-10-27: New courses start as "My Course" at "Your School"
+- **Asked for:** "Use My Course and Your School as the starter names."
+- **Why:** a new course is a copy of the sample's settings, so it started with the sample's title, school, logo and "History vocab".
+- **Changed:**
+  - `_extensions/chalkline/scripts/setup.py`: when it adds the starter unit to a new course, it also changes the sample's names: "My Course" (title, teacher title), "Your School" (`school:`, the brand name), "Course Vocab" / "Vocab 词汇", and the sailboat icon instead of the Mingwan emblem as the full logo (`brand/_brand.yml`, `families.qmd`).
+  - `.quartoignore`: leaves out the Mingwan emblem (`brand/logos/logo-emblem.png`).
+  - The Quick Start's step 5 names "My Course" and "Your School".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: All slides: every deck as rows of slide pictures
+- **Asked for:** "a way to combine all the slide decks for a visual course overview on one page." Of three layouts, (b): "a contact sheet: one row of slide pictures per deck, grouped by unit... Clicking on a slide would take you into that slideshow right?"
+- **Why:** to see the whole course at a glance. Quarto has nothing built in for this: listings show one card per page, and reveal.js's overview (press O) shows only one deck.
+- **Changed:**
+  - `_extensions/chalkline/scripts/slide_pictures.py` (new): after each full render (and for changed decks when the launchers start), opens every unit's decks in Chrome or Edge, shows each slide with all its steps and saves a small picture (`<deck>-pictures/01.jpg`, ...), then writes `slide-pictures.json` at the site root. About 40 seconds and 3 MB for this sample's 160 slides.
+  - `_extensions/chalkline/slide-wall/slide-wall.js`, `slide-wall.css` (new) and the `{{< slide-wall >}}` shortcode in `shortcodes.lua`: the page: unit sections, a row of pictures for each deck (title, slide count, PDF), Small / Medium / Large (remembered), a click opens the deck at that slide.
+  - `all-slides.qmd` (new) and `_quarto.yml`: the page, in the render list and the sidebar ("All slides").
+  - `_extensions/chalkline/_extension.yml`: the new post-render step. `scripts/build_if_needed.py`: the launchers redo out-of-date pictures. `scripts/slides_pdf.py`: `launch()`, shared by both, also tries a Chromium installed by Playwright when there's no Chrome or Edge.
+  - `chalkline.py`, `README.md`, the extension's `README.md` and `CHANGELOG.md`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: New courses without the sample's content, and a starter unit
+- **Asked for:** "Can we make it so that there is an initial setup script when the extension is installed that builds a starter unit with one slideshow one hand out? But then I'm still a little bit unsure about how they get the project started... if they start from zero they still have to clone a repo, and then they still get all the demo content... Right?"
+- **Why:** cloning (or GitHub's "Use this template") copies every file, so a new teacher got three history units and the STEM sampler to delete. Quarto has no hook that runs on `quarto add`, but `quarto use template` copies a repository *except* what its `.quartoignore` lists, and installs its extensions.
+- **Changed:**
+  - `.quartoignore` (new): what `quarto use template insufficientdoubt/project-chalkline` leaves out: the sample's units, vocab, pictures and course files, the build folders, the planning files and the publish workflow (it publishes the teacher site, answer keys included).
+  - `_extensions/chalkline/starter/` (new): a new course's first unit (`01-first-unit`: the "Welcome to Class" deck and the "Classroom Words" handout), four classroom vocab words with 中文, four sentence frames, and a general `vocab/schema.yaml`, `vocab/config.js`, `course/season.yml`, `course/links.yml` and an empty `TOOL-CHANGES.md`.
+  - `_extensions/chalkline/scripts/setup.py` (new): copies any starter file that's missing; the unit only into a course with no units. Never replaces a file.
+  - `_extensions/chalkline/scripts/build_if_needed.py`: runs setup first, so the launchers and VS Code set up a new course the first time they start. `chalkline.py`: lists `setup`.
+  - `README.md`, `_extensions/chalkline/README.md`, `CHANGELOG.md`, `EXTENSION-PLAN.md` (step 7), the Start here deck: how to start your own course. `CLAUDE.md`: `.quartoignore` is a tool file.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: Robotics material out of Chalkline and the sample
+- **Asked for:** "The robotic stem stuff shouldn't actually be included in the extension... There's a much better version in the robotics League course." Then: "Yes let's pull the robotic stuff for now."
+- **Why:** Chalkline should serve any subject; the robotics League course has the better version, and can be linked or embedded once it's published.
+- **Changed:**
+  - Content: `course/units/04-stem/linkages-slides.qmd` and its `embeds/lifts.html`, `catapult.html`, `linkage.html` and `images/title-linkages.svg` removed; the unit's description, objectives and credits, the two linkage links in `course/links.yml`, and the Start here catalogue (59 features now, not 63) updated.
+  - `_extensions/chalkline/styles/revealjs.scss`: the robotics-only slide styles removed (challenge cards, judges box, role cards, league cards, role badge, example line, CREST table), about 130 lines none of the decks used. The general ones stay (statement, section, closing, big numbers, timeline, steps); `.closing-crest` is now `.closing-kicker`.
+  - `_extensions/chalkline/shortcodes.lua`, `scripts/vocab_terms.py`, `scripts/vocab.py`: VEX names and examples made general (`vex_vocab` is `vocab_index`, the example word is "democracy").
+  - `_extensions/chalkline/scripts/import_vocab.py`: `--vex` is now `--source`, a history example, and the word lists record `id:` instead of `vex_id:` (the sample's three lists changed to match).
+  - `_extensions/chalkline/scripts/catalog.py`: an outside link with no `source:` is shown as "Website", not "Official VEX".
+  - `_extensions/chalkline/poll.html`, `README.md`: the poll example asks about Athens and Sparta instead of robot arms.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: A README and changelog inside the Chalkline extension
+- **Asked for:** part of running the extension plan ("just run the whole process").
+- **Why:** so the instructions (install, update, what's where) and the list of changes go with every copy of the extension.
+- **Changed:** new `_extensions/chalkline/README.md` (install with `quarto add insufficientdoubt/project-chalkline`, *before* setting `type: chalkline`; update; never edit the installed folder; what each folder does) and `_extensions/chalkline/CHANGELOG.md` (0.1.0).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: The vocab app and the vocab checker move into the extension; templates for new decks and worksheets (step 4 of the extension plan)
+- **Asked for:** "just run the whole process, and update the repo as you complete each step". Templates: "slide templates we build? Not many of those yet, but they're coming."
+- **Why:** the vocab app is the same in every course and gets fixes; starter files make a new deck or worksheet quick and consistent.
+- **Changed:**
+  - `vocab/app/index.html` and `vendor/` moved to `_extensions/chalkline/vocab-app/`. Before each render, `scripts/vocab_app.py` (was `vocab_brand.py`) copies the app into `vocab/app/` (now not saved in git) and fills in the logo from `_brand.yml`; it still writes `brand.css`. The app's leftover "VEX IQ Vocab" title is now "Vocab" (the course's `config.js` sets the real one).
+  - `vocab/validate.py` moved to `_extensions/chalkline/scripts/validate_vocab.py`: run `python chalkline.py validate`. `vocab/schema.yaml` stays in the course (it lists the course's own topics and ID prefixes), as does `vocab/tools/draw_icons.py` (it draws this sample's pictures).
+  - New `_extensions/chalkline/templates/` (`slides.qmd`, `worksheet.qmd`) and `scripts/new.py`: `python chalkline.py new slides 2 "Roman Roads"` makes `course/units/02-…/roman-roads-slides.qmd` with the title, the next `order:` and the unit filled in. A course's own `templates/` folder is used first.
+  - `scripts/blocks.py`, `blocks.lua`: a shortcode error (like a word that isn't in the unit's vocab) now says what's wrong, on the page and in the render log.
+  - `.vscode/tasks.json`: "New slide deck or worksheet" (asks kind, unit and title) and "Check the vocab list". `.gitignore`, `README.md`, `CLAUDE.md`, `vocab/README.md`, `vocab/index.html`, `vocab/schema.yaml`, `chalkline.py`, `build_if_needed.py`: the new names and places.
+  - Checked: fresh full teacher and student renders (with `vocab/app/` deleted first): same files, all PDFs identical, the vocab app looks the same; both templates render.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: Chalkline's scripts move into the extension; pages use shortcodes instead of Python (step 3 of the extension plan)
+- **Asked for:** "just run the whole process, and update the repo as you complete each step".
+- **Why:** so fixes to the catalog, packets, slide PDFs and other scripts reach every course with `quarto update`.
+- **Changed:**
+  - `scripts/*.py` moved to `_extensions/chalkline/scripts/`. `import_vex_vocab.py` is now `import_vocab.py` (it works for any course's vocab list). Each script finds the course folder with `extension.py`, wherever the extension is installed.
+  - `_extensions/chalkline/_extension.yml`: the pre-render and post-render steps are part of the Chalkline project type, so `_quarto.yml` no longer lists them (a course can still add its own).
+  - New `chalkline.py` in the course: one command for Chalkline's scripts (`python chalkline.py packets --unit 3`, `slides-pdf`, `open student`, `export-vocab`, `import-vocab`, `drawio`, `build`), so nobody types the extension's path. The launchers, `.vscode/tasks.json`, `README.md`, `CLAUDE.md` and `vocab/README.md` use it.
+  - New shortcodes (`_extensions/chalkline/blocks.lua`, `scripts/blocks.py`): `{{< vocab-cards >}}`, `{{< word-bank >}}`, `{{< vocab-table >}}`, `{{< vocab-list >}}`, `{{< fill-in-the-blank >}}`, `{{< overview ... >}}`, `{{< season-events >}}`. They call the same Python helpers the pages used to call from code cells.
+  - Content: 9 lessons, `index.qmd` and `families.qmd` use these shortcodes instead of `import sys; sys.path.append("scripts")` code cells (which would break once the scripts moved). A full build now starts Python 6 times instead of 20.
+  - Checked: full teacher and student renders; all 166 PDF pages identical pixel for pixel; screenshots of the 11 changed pages identical (except a matching game, which shuffles on every load); `chalkline.py` commands run.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: Chalkline's page, slide and PDF design moves into the extension (step 2 of the extension plan)
+- **Asked for:** "start step 2. actually, just run the whole process, and update the repo as you complete each step".
+- **Why:** so a fix to how worksheets, slides or pages look reaches every course with `quarto update`, and a school's brand stays the school's.
+- **Changed:**
+  - Moved into `_extensions/chalkline/`: `brand/styles.scss` and `brand/revealjs.scss` (now `styles/`), `brand/type-colors.html` (`styles/`), `brand/typst/*.typ` (`typst/`), `brand/fonts/print/` (`fonts/print/`).
+  - `_extensions/chalkline/_extension.yml`: a Chalkline project type. `project: type: chalkline` in `_quarto.yml` brings in Chalkline's themes, the overview's type colors, the PDF layouts and the PDF fonts, with no paths to the extension (so it works wherever `quarto add` puts it). The course's own settings merge on top; its stylesheets load after Chalkline's.
+  - `styles/revealjs.scss`: the colors come from `_brand.yml`'s palette (`$brand-navy`, ...) instead of hex codes typed in; the school's fonts moved out.
+  - New `brand/styles.scss` and `brand/revealjs.scss`: only the school's own settings (fonts, the "Source Sans 3" fix). Add overrides here.
+  - `typst/typst-template.typ`, `typst-show.typ`: the school's name comes from `school:` in `_quarto.yml` (was typed into the template).
+  - `_quarto.yml`: `project: type: chalkline`, `school:`, shorter format settings.
+  - New `scripts/extension.py`: finds the course folder and the extension, and gives the PDF settings to builds that can't use the project type. `scripts/packets.py` uses it (packets are built as a book).
+  - `.github/workflows/publish.yml`: the Chinese font's new folder. `brand/README.md`, `brand/_brand.yml` and comments: the new places.
+  - Checked: full teacher and student renders. Same files; all 166 PDF pages identical pixel for pixel; same CSS rules.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-25: One Chalkline extension (step 1 of the extension plan)
+- **Asked for:** "yes, start step 1" (of `EXTENSION-PLAN.md`: turning Chalkline into a Quarto extension that every course installs).
+- **Why:** so a fix reaches every course with `quarto update` instead of being copied by hand. Step 1 gathers the code into one folder first.
+- **Changed:**
+  - `_extensions/classroom/` renamed `_extensions/chalkline/`; `_extensions/pdf-viewer/` moved inside it as `_extensions/chalkline/pdf-viewer/`.
+  - `_extensions/chalkline/_extension.yml`: one manifest (title Chalkline, version 0.1.0) with both shortcode files; the old `pdf-viewer/_extension.yml` is gone.
+  - `_extensions/chalkline/filter.lua`, `games/games.lua`: the PDF viewer's files are at `pdf-viewer/…` (was `../pdf-viewer/…`).
+  - `_quarto.yml`: `filters: [chalkline]` (was `classroom`).
+  - Comments and docs that named the old folders: `README.md`, `brand/README.md`, `brand/styles.scss`, `scripts/catalog.py`, `IDEAS.md`, `pdf-viewer.lua`/`.css`, `course/units/04-stem/embeds/embed.css`.
+  - Checked: full teacher and student renders give the same files as before, with the same warnings.
+  - `TOOL-CHANGES.md`: the "copy this template" comment had grown around the entries from 2026-10-24 and earlier, hiding them; it wraps only the template again. No entry changed.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-24: One design layer for everything interactive; PDF viewer and vocab pop-ups restyled to match
 - **Asked for:** "How about improving the style of the vocab viewer and pdf viewer to match the menu and stuff. Also I feel like more of this styling work should be global instead of elements by element. What am I missing"
 - **Why:** each part had its own colors, corners and buttons, so matching them meant changing each one by hand.
@@ -261,14 +379,6 @@ Newest entries first.
 - **Changed:** `_extensions/classroom/toolbox/toolbox.css`: put back the traffic light's styles (the dark box, the three round lights, the glow on the one that's on, the coloured label). An earlier noise-meter restyle deleted them by mistake.
 - **Who it helps:** probably every Chalkline course.
 - **AI assistant:** Claude.
-
-## YYYY-MM-DD: short title
-- **Asked for:** what the teacher wanted, in their words if they gave them.
-- **Why:** the reason they gave, or "not given".
-- **Changed:** each file and what changed in it.
-- **Who it helps:** this course only, or probably every Chalkline course.
-- **AI assistant:** which one made the change.
--->
 
 ## 2026-10-25: Fix: the overview crashed on the new "game" type
 - **Asked for:** not asked; the teacher site's build failed after the Play at home change.

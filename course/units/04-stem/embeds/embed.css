@@ -1,5 +1,5 @@
 /* Shared look for the STEM unit's interactive pages (they're shown on slides in a frame).
-   The same colors and corners as Chalkline's tools (_extensions/classroom/ui/ui.css). */
+   The same colors and corners as Chalkline's tools (_extensions/chalkline/ui/ui.css). */
 :root {
   --ink: #10233f; --muted: #5b6b80; --line: #d6dee8; --soft: #f3f5f8; --surface: #fff;
   --accent: #003477; --accent-hover: #0a4389; --focus: #0087ff; --ok: #23824a; --bad: #c23b3b;

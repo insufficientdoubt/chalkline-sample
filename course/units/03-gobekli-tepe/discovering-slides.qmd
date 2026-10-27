@@ -12,12 +12,6 @@ title-slide-attributes:
   data-background-opacity: "0.45"      # the picture, dimmed, so the title stays readable
 ---
 
-```{python}
-import sys; sys.path.append("scripts")
-from vocab import load_unit, pick, card_grid
-terms = load_unit(3)
-```
-
 ## Where is it?
 
 :::: {.columns}
@@ -59,10 +53,7 @@ Lesson: an expert can look at the same thing and see something new. We'll see ar
 
 ## Digging into the past
 
-```{python}
-#| output: asis
-print(card_grid(pick(terms, "archaeologist", "excavation", "artifact"), zh=True))
-```
+{{< vocab-cards unit=3 words="archaeologist, excavation, artifact" zh=true >}}
 
 ## The enclosures
 
