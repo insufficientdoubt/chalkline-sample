@@ -66,7 +66,7 @@ Tested: the whole site built with the extension moved to `_extensions/someowner/
 ### Games and slide templates
 
 - **Games:** the engine (every game, activities, timelines, Label it) is in the extension. The words and pictures come from the course's vocab, so a game is about the course's subject with no code.
-- **Slide layouts** (`.statement`, `.challenge`, `.card-grid`, `.goal`, ...) are in `styles/revealjs.scss`. Some were made for the robotics decks; review them for the first release.
+- **Slide layouts** (`.statement`, `.challenge`, `.card-grid`, `.goal`, ...) are in `styles/revealjs.scss`. The robotics-only ones were removed on 2026-10-27; the rest are general-purpose.
 - **Starter files** are in `templates/`. `python chalkline.py new` (or VS Code: Run Task > New slide deck or worksheet) copies one into a unit with the title, unit and next `order:` filled in. A course's own `templates/` folder is used first.
 - **Rule for new templates:** if the deck's *design* could serve any subject, its layouts go in the extension and its starter file in `templates/`. If it's one subject's deck, it's content.
 

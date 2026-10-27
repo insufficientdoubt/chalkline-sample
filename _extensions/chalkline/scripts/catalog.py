@@ -15,7 +15,7 @@ Labels read from each document's front matter:
                   `parent`: also listed on the student site's "For families" page
 
 Each unit folder's index.qmd describes the unit (title, unit number, objectives).
-External resources (official VEX posters, manuals, other school sites) are
+External resources (posters, manuals, other websites) are
 listed in course/links.yml. Anything not in a unit folder is grouped as
 "Whole year" (the posters, for example).
 
@@ -216,7 +216,7 @@ def load_catalog():
                 "description": link.get("description", ""),
                 "type": TYPES.get(kind, (kind.title(), 9))[0],
                 "unit": group,
-                "source": link.get("source", "Official VEX"),
+                "source": link.get("source", "Website"),
                 "formats": "Link",
                 "audience": link.get("audience", ["teacher", "student"]),
                 "_sort": (group_order, TYPES.get(kind, ("", 9))[1], 50, link["title"]),

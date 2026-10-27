@@ -38,7 +38,7 @@ def load_file(path):
             "definition": str(entry["definition"]).strip(),
             "example": str(entry.get("example", "")).strip(),
             "kahoot_question": str(entry.get("kahoot_question", "")).strip(),
-            # Optional extras (filled in by import_vex_vocab.py):
+            # Optional extras (filled in by `python chalkline.py import-vocab`):
             "notes": str(entry.get("notes", "")).strip(),     # longer explanation
             "zh": str(entry.get("zh", "")).strip(),           # Chinese: reference materials only
             "image": str(entry.get("image", "")).strip(),     # file name in the unit's images/ folder

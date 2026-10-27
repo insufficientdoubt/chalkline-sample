@@ -1,4 +1,4 @@
-"""Read every term in vocab/data/vocab.csv for the {{< vocab "chain wrap" >}} pop-ups.
+"""Read every term in vocab/data/vocab.csv for the {{< vocab "democracy" >}} pop-ups.
 
 Runs automatically before each render (`pre-render` in the extension's _extension.yml), so pop-ups always
 match the vocab list. Picture and link paths are relative to the site root; the shortcode

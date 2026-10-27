@@ -14,7 +14,7 @@
 | **Unit 1: Ancient Greece** | `course/units/01-ancient-greece/` | 2 slide decks, 3 printables (a worksheet, fact cards, a class vote) |
 | **Unit 2: Ancient Rome** | `course/units/02-ancient-rome/` | 2 slide decks, 3 printables (a sorting worksheet, Roman numerals, an aqueduct design challenge) |
 | **Unit 3: Göbekli Tepe** | `course/units/03-gobekli-tepe/` | 2 slide decks, 3 printables (an evidence-or-guess worksheet, animal fact cards, a T-pillar design challenge) |
-| **Unit 4: STEM Sampler** | `course/units/04-stem/` | A sampler for STEM teams: math, block-coding and linkage decks with interactives you can drag (geometry, GeoGebra, PhET, Blockly, robot lifts with a DR4B that measures its extension, three rubber-band catapult releases, a linkage simulator), a math handout and two practice worksheets made from a seed. The interactive pages are in its `embeds/` folder |
+| **Unit 4: STEM Sampler** | `course/units/04-stem/` | A sampler for STEM teams: math and block-coding decks with interactives you can drag (geometry, GeoGebra, PhET, Blockly), a math handout and two practice worksheets made from a seed. The interactive pages are in its `embeds/` folder |
 | **Vocab** | `vocab/` | 37 words with pictures, 中文 and simple definitions, in the vocab app (sidebar: **History vocab 词汇**) |
 | **Appearance** | `brand/` | Colors, fonts and logos for everything |
 | **The look of the interactive parts** | `_extensions/chalkline/ui/ui.css` | One set of colors, corners, shadows, buttons, fields and menus for the classroom tools, games, vocab pop-ups, PDF viewer and quick reference. Change a value there and they all follow |
@@ -475,12 +475,12 @@ Any slide can have a poll that students answer by tapping the board (or you clic
 How confident do you feel?
 :::
 
-::: {.poll type="choice" options="Swing arm | 4-bar | Chain-bar" correct="B"}
-Which arm keeps the load mostly level?
+::: {.poll type="choice" options="Athens | Sparta | Corinth" correct="B"}
+Which city-state trained every boy to be a soldier?
 :::
 
 ::: {.poll type="truefalse" correct="false"}
-A swing arm keeps the load level.
+Athens had a king.
 :::
 ```
 

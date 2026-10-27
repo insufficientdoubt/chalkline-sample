@@ -228,7 +228,7 @@ The code lives in `course/units/01-ancient-greece/odyssey/`, and the Greece unit
 
 ## So what else can you do?
 
-[**63 ready-made features,** all working in this course today: 50 here, 13 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
+[**59 ready-made features,** all working in this course today: 50 here, 9 more for STEM and printables on the next slide. Click one to see it.]{.cat-lead}
 
 :::: {.catalog}
 
@@ -305,14 +305,14 @@ Every chip with a solid border opens a working example in another deck: press th
 
 ## And for STEM and printables {#more-features}
 
-[**13 more,** from **Unit 4 · STEM Sampler**: things to drag, build and print. Click one to see it.]{.cat-lead}
+[**9 more,** from **Unit 4 · STEM Sampler**: things to drag, build and print. Click one to see it.]{.cat-lead}
 
 :::: {.catalog .catalog-2}
 
 ::: {.cat-box .cat-stem}
-[STEM you can move]{.cat-head} [9]{.cat-n}
+[STEM you can move]{.cat-head} [5]{.cat-n}
 
-[Drag a triangle: angles add to 180°](../04-stem/math-slides.html#/triangle){.chip} [GeoGebra graphs with sliders](../04-stem/math-slides.html#/parabola){.chip} [PhET simulations](../04-stem/math-slides.html#/lines){.chip} [Blocks that become Python](../04-stem/coding-slides.html#/blocks){.chip} [Blockly Games maze](../04-stem/coding-slides.html#/maze){.chip} [Robot lifts: 4-bar, 6-bar and DR4B, with the size rules](../04-stem/linkages-slides.html#/lifts){.chip} [Build a lift: tower height and position, extension measured](../04-stem/linkages-slides.html#/lifts){.chip} [Catapults: three ways to launch](../04-stem/linkages-slides.html#/catapult){.chip} [Linkage simulator: Grashof, Watt, Stephenson](../04-stem/linkages-slides.html#/four-bar-general){.chip}
+[Drag a triangle: angles add to 180°](../04-stem/math-slides.html#/triangle){.chip} [GeoGebra graphs with sliders](../04-stem/math-slides.html#/parabola){.chip} [PhET simulations](../04-stem/math-slides.html#/lines){.chip} [Blocks that become Python](../04-stem/coding-slides.html#/blocks){.chip} [Blockly Games maze](../04-stem/coding-slides.html#/maze){.chip}
 :::
 
 ::: {.cat-box .cat-print}
@@ -335,7 +335,7 @@ Every printable has a teacher copy with the answer key, and goes into its unit's
 ```
 
 ::: notes
-The STEM chips open live interactives in Unit 4's decks (the lifts, catapults, geometry and block coding are saved in the course and work offline; GeoGebra, PhET and Blockly Games need the internet). The printables open their web pages; each has a PDF. The practice grids make a new set of problems when you change one number (the seed) at the top of the file, and the answer key follows. The playful layout (`layout: playful`, `playful-theme: nature`) is for younger students: handwriting fonts and line-art doodles to color.
+The STEM chips open live interactives in Unit 4's decks (the geometry and block coding are saved in the course and work offline; GeoGebra, PhET and Blockly Games need the internet). The printables open their web pages; each has a PDF. The practice grids make a new set of problems when you change one number (the seed) at the top of the file, and the answer key follows. The playful layout (`layout: playful`, `playful-theme: nature`) is for younger students: handwriting fonts and line-art doodles to color.
 :::
 
 ## It always looks like your school

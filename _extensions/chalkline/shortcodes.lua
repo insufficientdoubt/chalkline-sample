@@ -19,9 +19,9 @@ what each one becomes in each output format (slides, web page, PDF, Word).
                                          printables in one PDF, made by scripts/packets.py). The teacher
                                          site shows two: the teacher edition and the student copy.
                                          Nothing if the unit has no printables.
-  {{< vocab "chain wrap" >}}             a VEX term; hovering shows its vocab card (picture, 中文,
+  {{< vocab "democracy" >}}              a vocab word; hovering shows its vocab card (picture, 中文,
                                          definition, link). Name a term, an "also called" name or an
-                                         ID (ENG-078). text="chain wraps" changes the words shown;
+                                         ID (GRC-003). text="democratic" changes the words shown;
                                          zh=true also prints the 中文 after the word in PDF/Word
                                          (for reference sheets; leave it off on quizzes).
                                          Terms come from vocab/data/vocab.csv
@@ -71,11 +71,11 @@ local function include_once(file)
   quarto.doc.include_file("after-body", quarto.utils.resolve_path(file))
 end
 
--- VEX vocab terms, loaded once from generated/vocab-terms.json and looked up by ID, term or "also called" name.
-local vex_vocab, vex_list, vex_units
+-- Vocab terms, loaded once from generated/vocab-terms.json and looked up by ID, term or "also called" name.
+local vocab_index, vocab_list, vocab_units
 local function vocab_lookup(key)
-  if not vex_vocab then
-    vex_vocab, vex_list, vex_units = {}, {}, {}
+  if not vocab_index then
+    vocab_index, vocab_list, vocab_units = {}, {}, {}
     local path = (quarto.project.directory or ".") .. "/generated/vocab-terms.json"
     local f = io.open(path, "r")
     if not f then
@@ -84,16 +84,16 @@ local function vocab_lookup(key)
     end
     local data = quarto.json.decode(f:read("a"))
     f:close()
-    vex_units = data.units or {}
+    vocab_units = data.units or {}
     for _, t in ipairs(data.terms) do
-      table.insert(vex_list, t)
+      table.insert(vocab_list, t)
       for _, k in ipairs({ t.id, t.term, table.unpack(t.aka or {}) }) do
         local lk = k:lower()
-        if vex_vocab[lk] == nil then vex_vocab[lk] = t end
+        if vocab_index[lk] == nil then vocab_index[lk] = t end
       end
     end
   end
-  return vex_vocab[key:lower()]
+  return vocab_index[key:lower()]
 end
 
 -- Slide games (games/): settings for a game from its shortcode. Three ways to choose the words:
@@ -130,7 +130,7 @@ local function game_config(args, kwargs, kind)
   vocab_lookup("")   -- loads the list
   local unit = tonumber(str(kwargs["unit"], ""))
   local words = {}
-  for _, t in ipairs(vex_list or {}) do
+  for _, t in ipairs(vocab_list or {}) do
     local in_unit = not unit
     for _, u in ipairs(t.units or {}) do
       if u == unit then in_unit = true end
@@ -141,7 +141,7 @@ local function game_config(args, kwargs, kind)
     quarto.log.warning(kind .. " shortcode: no vocab words" .. (unit and (" for unit " .. unit) or "") ..
       " (is the unit's list in course/vocab/?)")
   end
-  return { words = words, random = true, units = vex_units, unit = unit }
+  return { words = words, random = true, units = vocab_units, unit = unit }
 end
 
 -- Outside PDFs: page counts from generated/pdf-pages.json, and paths from the project root.
@@ -469,7 +469,7 @@ return {
     if not games.web() then return games.placeholder("Bingo") end
     local c = game_config({}, kwargs, "bingo")
     c.unit = c.unit or 0
-    for _, u in ipairs(vex_units or {}) do
+    for _, u in ipairs(vocab_units or {}) do
       if u.unit == c.unit then c.title = u.title end
     end
     return games.div("bingo", c)
@@ -485,7 +485,7 @@ return {
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
     local c = game_config({}, kwargs, "blitz")
     c.all = {}   -- every word, for the wrong answers (one of the four comes from another unit)
-    for _, t in ipairs(vex_list or {}) do table.insert(c.all, game_word(t, up)) end
+    for _, t in ipairs(vocab_list or {}) do table.insert(c.all, game_word(t, up)) end
     c.count = tonumber(str(kwargs["count"], ""))   -- nil: games.js decides (20, or 10 for a small course)
     c.seconds = tonumber(str(kwargs["seconds"], "10")) or 10
     c.ask = str(kwargs["ask"], "both")
@@ -501,10 +501,10 @@ return {
     local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
     vocab_lookup("")   -- loads the list
     local words = {}
-    for _, t in ipairs(vex_list or {}) do table.insert(words, game_word(t, up)) end
+    for _, t in ipairs(vocab_list or {}) do table.insert(words, game_word(t, up)) end
     local only = {}
     for id in str(kwargs and kwargs["games"], ""):gmatch("[%w-]+") do table.insert(only, id) end
-    return games.div("picker", { words = words, units = vex_units, random = true, games = only,
+    return games.div("picker", { words = words, units = vocab_units, random = true, games = only,
       home = quarto.doc.is_format("revealjs") and (up .. "index.html") or nil })   -- a web page has the sidebar
   end,
 

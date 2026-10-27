@@ -16,6 +16,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: Robotics material out of Chalkline and the sample
+- **Asked for:** "The robotic stem stuff shouldn't actually be included in the extension... There's a much better version in the robotics League course." Then: "Yes let's pull the robotic stuff for now."
+- **Why:** Chalkline should serve any subject; the robotics League course has the better version, and can be linked or embedded once it's published.
+- **Changed:**
+  - Content: `course/units/04-stem/linkages-slides.qmd` and its `embeds/lifts.html`, `catapult.html`, `linkage.html` and `images/title-linkages.svg` removed; the unit's description, objectives and credits, the two linkage links in `course/links.yml`, and the Start here catalogue (59 features now, not 63) updated.
+  - `_extensions/chalkline/styles/revealjs.scss`: the robotics-only slide styles removed (challenge cards, judges box, role cards, league cards, role badge, example line, CREST table), about 130 lines none of the decks used. The general ones stay (statement, section, closing, big numbers, timeline, steps); `.closing-crest` is now `.closing-kicker`.
+  - `_extensions/chalkline/shortcodes.lua`, `scripts/vocab_terms.py`, `scripts/vocab.py`: VEX names and examples made general (`vex_vocab` is `vocab_index`, the example word is "democracy").
+  - `_extensions/chalkline/scripts/import_vocab.py`: `--vex` is now `--source`, a history example, and the word lists record `id:` instead of `vex_id:` (the sample's three lists changed to match).
+  - `_extensions/chalkline/scripts/catalog.py`: an outside link with no `source:` is shown as "Website", not "Official VEX".
+  - `_extensions/chalkline/poll.html`, `README.md`: the poll example asks about Athens and Sparta instead of robot arms.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-25: A README and changelog inside the Chalkline extension
 - **Asked for:** part of running the extension plan ("just run the whole process").
 - **Why:** so the instructions (install, update, what's where) and the list of changes go with every copy of the extension.

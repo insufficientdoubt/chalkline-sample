@@ -72,18 +72,3 @@
   audience: [teacher, student]
   description: Free block-coding puzzles (Maze, Bird, Turtle, Music) that lead from blocks to JavaScript, at each student's own speed.
 
-- title: PMKS+ (linkage simulator)
-  url: https://pmksplus.com/
-  type: reference
-  unit: 04-stem
-  source: PMKS+
-  audience: [teacher, student]
-  description: Design and test planar linkages in the browser, with paths, speeds and forces.
-
-- title: MotionGen (linkage design)
-  url: https://motiongen.io/
-  type: reference
-  unit: 04-stem
-  source: MotionGen
-  audience: [teacher, student]
-  description: Draw linkages and make them follow a path you choose; free, on the web and on tablets.
