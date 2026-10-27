@@ -16,6 +16,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: Lesson files open in the visual editor
+- **Asked for:** "is there a less intimidating editor than vs code?" Then, of the options: "Yes implement visual mode by default."
+- **Why:** plain-text markup (`##`, `**`, `:::`) is intimidating for teachers who don't code; the visual editor looks like a word processor.
+- **Changed:**
+  - `.vscode/settings.json`: `.qmd` files open in Quarto's visual editor (`workbench.editorAssociations`). Ctrl+Shift+F4 (Mac: Cmd+Shift+F4) switches to the plain text and back.
+  - `README.md`: an "Editing in VS Code" section: what visual mode shows, how to switch, and that saving may tidy a file's spacing. (Checked in the Quarto extension's source: it writes shortcodes and the labels at the top back exactly as they were.)
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: New courses keep Mingwan's name, logo and colors
 - **Asked for:** "include the mingwan colors and brand as default. But leave a stub for switching in generic values. If we want to share this more widely later. Right now mingwan is the only school that's using this so there's no reason not to include our logo."
 - **Why:** every Chalkline course is at Mingwan for now. This changes part of the entry below: new courses are still "My Course", but not "Your School".
