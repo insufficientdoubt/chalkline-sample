@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: New courses start as "My Course" at "Your School"
+- **Asked for:** "Use My Course and Your School as the starter names."
+- **Why:** a new course is a copy of the sample's settings, so it started with the sample's title, school, logo and "History vocab".
+- **Changed:**
+  - `_extensions/chalkline/scripts/setup.py`: when it adds the starter unit to a new course, it also changes the sample's names: "My Course" (title, teacher title), "Your School" (`school:`, the brand name), "Course Vocab" / "Vocab 词汇", and the sailboat icon instead of the Mingwan emblem as the full logo (`brand/_brand.yml`, `families.qmd`).
+  - `.quartoignore`: leaves out the Mingwan emblem (`brand/logos/logo-emblem.png`).
+  - The Quick Start's step 5 names "My Course" and "Your School".
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: All slides: every deck as rows of slide pictures
 - **Asked for:** "a way to combine all the slide decks for a visual course overview on one page." Of three layouts, (b): "a contact sheet: one row of slide pictures per deck, grouped by unit... Clicking on a slide would take you into that slideshow right?"
 - **Why:** to see the whole course at a glance. Quarto has nothing built in for this: listings show one card per page, and reveal.js's overview (press O) shows only one deck.

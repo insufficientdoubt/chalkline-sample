@@ -48,7 +48,7 @@ The **first time takes 5–10 minutes**. Then your course opens in the browser w
 :::
 
 ::: {.callout-tip title="Step 5 · Make it yours" icon=false}
-In VS Code, open **`_quarto.yml`**. Change **Chalkline Sample** to your course name and **Mingwan School** to your school.
+In VS Code, open **`_quarto.yml`**. Change **My Course** to your course name and **Your School** to your school.
 
 Open **`course › units › 01-first-unit › welcome-slides.qmd`**. Change a sentence and **save** (Ctrl+S, Mac: Cmd+S). The browser updates by itself.
 :::

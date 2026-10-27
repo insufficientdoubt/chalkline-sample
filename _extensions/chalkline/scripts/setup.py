@@ -4,8 +4,9 @@ course files a build needs, from Chalkline's starter/ folder.
     python chalkline.py setup
 
 `python chalkline.py build` (the launchers and VS Code) runs this first, so a new course made with
-`quarto use template` has a working unit the first time it starts. It never changes a file that's
-already there, and it adds the starter unit only to a course with no units yet.
+`quarto use template` has a working unit the first time it starts. It never replaces a file that's
+already there, and it adds the starter unit only to a course with no units yet. When it does, it also
+swaps the sample course's names in the settings for "My Course" and "Your School", to change.
 """
 
 import shutil
@@ -15,6 +16,18 @@ from extension import EXT, ROOT  # noqa: E402
 
 STARTER = EXT / "starter"
 UNIT_ONLY = ("course/units/", "course/vocab/")   # only for a course with no units yet
+# A new course is a copy of the Chalkline sample's settings: its names become placeholders.
+NEW_NAMES = {
+    "_quarto.yml": [('title: "Chalkline Sample"', 'title: "My Course"'), ('"Mingwan School"', '"Your School"'),
+                    ('"Mingwan School sailboat icon"', '"Sailboat icon"'),
+                    ('vocab-title: "History Vocab"', 'vocab-title: "Course Vocab"'), ('"History vocab 词汇"', '"Vocab 词汇"')],
+    "_quarto-teacher.yml": [('"Chalkline Sample (TEACHER)"', '"My Course (TEACHER)"')],
+    "brand/_brand.yml": [("name: Mingwan School", "name: Your School"),
+                         ("path: logos/logo-emblem.png\n      alt: Mingwan School emblem",
+                          "path: logos/icon-sailboat.svg\n      alt: Sailboat icon (put your school's logo in brand/logos/)"),
+                         ("alt: Mingwan School sailboat icon", "alt: Sailboat icon")],
+    "families.qmd": [("[History vocab 词汇:", "[Vocab 词汇:")],
+}
 
 
 def has_units():
@@ -34,6 +47,16 @@ def ensure(quiet=False):
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dest)
         added.append(rel)
+    if add_unit:
+        for rel, swaps in NEW_NAMES.items():
+            path = ROOT / rel
+            if path.exists():
+                text = original = path.read_text(encoding="utf-8")
+                for old, new in swaps:
+                    text = text.replace(old, new)
+                if text != original:
+                    path.write_text(text, encoding="utf-8")
+                    added.append(rel + " (names)")
     if added and not quiet:
         print("Chalkline setup: added " + ", ".join(added))
         if add_unit:
