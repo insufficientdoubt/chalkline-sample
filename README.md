@@ -84,6 +84,10 @@ In **VS Code**, the site starts by itself when you open the folder (allow "autom
 
 Slide PDFs need **Google Chrome** or **Microsoft Edge** on your computer.
 
+## Editing in VS Code
+
+In VS Code, a `.qmd` file opens in Quarto's *visual editor*: headings, bold, lists and tables look the way they will on the page, and you type as in a word processor. The labels at the top and shortcodes like `{{< vocab "democracy" >}}` show as small grey boxes; leave them as they are. To see the plain text underneath, press **Ctrl+Shift+F4** (Mac: **Cmd+Shift+F4**) or right-click the file and choose **Edit in Source Mode**; the same keys switch back. When you save in visual mode, Quarto may tidy the file's spacing and list layout; the page looks the same.
+
 ## Editing with an AI assistant
 
 You can do almost everything here by asking an AI assistant: Claude, Gemini, ChatGPT/Codex, Copilot, Cursor, Tencent WorkBuddy or another one that can open files in a folder.
