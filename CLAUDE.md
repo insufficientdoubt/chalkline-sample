@@ -8,6 +8,7 @@
 - Teacher-only content (answer keys, look-fors) goes inside `::: {.content-visible when-profile="teacher"}`.
 - **Pictures:** use files with a clear license, or original drawings. Credit every outside picture in the `CREDITS.md` next to it (`images/CREDITS.md` in a unit, `vocab/images/CREDITS.md` for vocab). Outside *links* (websites, articles) go in `course/links.yml`.
 - **Vocab pictures: a real photo first, a drawing only when a photo can't show it.** When you add or replace a vocab word's picture, first look for a high-quality real image with an open license: Wikimedia Commons, Unsplash, Pexels, Openverse, or museum open-access collections (the Met, Smithsonian, Rijksmuseum). Most concrete words (temple, aqueduct, gladiator, quarry) are clearer and more memorable as a real photo. Make an original drawing only when no open image shows the idea clearly and distinctly: abstract ideas, or when the photos are blurry, busy or watermarked. The steps and quality checks are in `vocab/README.md` ("Pictures").
+- **Emoji:** avoid 🤖, 💩 and 🔒 in slides and pages. The brand font (Source Sans 3) has its own black-and-white versions of them, so they never show in color. Other common emoji are fine.
 
 ## Editing printables and slides
 
@@ -38,4 +39,12 @@ This repo has two kinds of files:
 ```
 
 Never delete or rewrite earlier entries. These logs are collected as design feedback and may become improvements to Chalkline for everyone, so the reasons matter as much as the changes.
-- **Emoji:** avoid 🤖, 💩 and 🔒 in slides and pages. The brand font (Source Sans 3) has its own black-and-white versions of them, so they never show in color. Other common emoji are fine.
+
+## A teacher's own tools: outside the extension
+
+Teachers copy this project, and Chalkline's extension comes with it (`_extensions/chalkline/`, or `_extensions/<owner>/chalkline/` when installed with `quarto add`). Updating Chalkline (`quarto update`) replaces that whole folder, so anything changed inside it is lost.
+
+- **Put a teacher's own tools outside the Chalkline extension**: shortcodes, filters, scripts, slide tools. Use a separate extension, `_extensions/my-tools/`, loaded from `_quarto.yml`. Then Chalkline can be updated without losing the teacher's custom work.
+- **A custom slide tool that should always be at hand:** give it its own menu button next to the teacher toolbox button (bottom-left, **W**), not a new item inside the toolbox menu. Like the toolbox, show it only in the teacher site. It can use the toolbox's shared parts (`window.ChalklineToolbox`, see `toolbox/kit.js`) so it looks and works the same.
+- Still log it in `TOOL-CHANGES.md` (above): good custom tools may be built into Chalkline for everyone.
+- This repository is where Chalkline itself is made, so here `_extensions/chalkline/` is changed on purpose. In a teacher's copied course, don't change it: note a Chalkline bug in `TOOL-CHANGES.md` instead.
