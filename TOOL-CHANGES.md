@@ -16,6 +16,45 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: The toolbox menu: Slides as icons, Slide size by Dice
+- **Asked for:** "How about just icons only for that row, with functions on hover? And then move slide size up to next to dice."
+- **Why:** "I think that's actually a pretty common one when you're accessing the other tools" (Slide size).
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: Slides is a row of icon buttons; each has its name and key as a label for screen readers and for the hover tip. Slide size is back under More, after Dice.
+  - `_extensions/chalkline/toolbox/toolbox.css`: square icon buttons, and a dark tip above one when you point at it or tab to it. The menu and its tiles are back to their first size (372px wide, 74px tiles): with one row of icons it fits an 800-pixel-high screen with room to spare.
+  - `README.md`: the Slides icons.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: The toolbox menu: back to rows, with a shorter bottom
+- **Asked for:** "I think the old layout was a bit clearer. Any other ideas?" Then, of the ideas: "yeah show me idea 1".
+- **Why:** the columns (entry below) were harder to read than one group per row, top to bottom.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: the groups are rows again, three tiles across, as before the entry below. More is Music and Dice. **Slides** at the bottom is small buttons with their keys, with Slide size and View source in it too.
+  - `_extensions/chalkline/toolbox/toolbox.css`: the menu is a little wider (408px) and its tiles and headings a little shorter, so it fits on an 800-pixel-high screen with its footer. The small buttons' styles.
+  - `README.md`: the Slides buttons.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: A shorter toolbox menu: for the class, and for you
+- **Asked for:** "the tool menu is getting super crowded. Any ideas to make it less messy while still keeping everything discoverable?" Then, after the ideas: "Yeah show me first."
+- **Why:** too crowded. On an 800-pixel-high screen the menu ran past the bottom, cutting off its last row and its footer.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: the menu has two parts. For the class: a column for each group, with Dice in People and Music in Attention, so "More" is only for a course's own tools. For you: Slide size, View source and reveal.js's own tools as small buttons with their keys (they replace the Slides tiles).
+  - `_extensions/chalkline/toolbox/toolbox.css`: the menu is wider (540px, at most the screen width) and shorter; the styles for the columns and the small buttons; two groups across on a narrow screen.
+  - `README.md`: the menu's two parts.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-27: View source: word wrap
+- **Asked for:** "It works. Add word wrap."
+- **Why:** not given.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/tools/source.js`: a **Wrap** button. Long lines fold under their line number. It starts on, and on/off is remembered in this browser (`source-wrap`). The Open in VS Code button is no longer underlined.
+  - `README.md`: Wrap, in the View source row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: View source (U): how any slide is made
 - **Asked for:** "a 'view source' tool that would show the source for any slide, with syntax hilighting? So you could quickly see how any slide is made." Then: "yes, build it with U".
 - **Why:** to see quickly how a slide is made.

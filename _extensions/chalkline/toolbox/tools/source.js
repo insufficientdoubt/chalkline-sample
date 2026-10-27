@@ -1,7 +1,7 @@
 /*
   View source (U): how this slide is made. The slide's part of the deck's .qmd file, as it was
   typed (shortcodes, ::: blocks, notes), with colors and line numbers, and it follows you as you
-  change slides. Copy puts it on the clipboard, to start a slide of your own from it. On your own
+  change slides. Wrap folds long lines to fit (on at first; remembered). Copy puts it on the clipboard, to start a slide of your own from it. On your own
   computer, Open in VS Code opens the file at that line.
 
   The source comes from toolbox/source.lua (filter.lua puts it in each teacher deck as JSON):
@@ -75,7 +75,7 @@
   }
 
   T.tool("source", { title: "View source", icon: "code", w: 560, h: 440, minW: 300, minH: 180,
-    key: { keyCode: 85, key: "U" },   // like a browser's Ctrl+U
+    key: { keyCode: 85, key: "U" }, keys: ["source-wrap"],   // like a browser's Ctrl+U
     start: function () { return { x: Math.max(8, window.innerWidth - 560 - 24), y: 64 }; } },
     class extends T.ToolElement {
       static css = `
@@ -93,6 +93,9 @@
 .n { flex: none; position: sticky; left: 0; min-width: 3.2em; padding: 0 0.9em 0 0.6em; text-align: right;
   color: var(--ui-line-strong); background: var(--ui-soft); user-select: none; -webkit-user-select: none; }
 .t { white-space: pre; padding-right: 1em; }
+.code-box.wrap .t { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+a.ui-btn { text-decoration: none; }
+.ui-btn[aria-pressed="true"] { background: var(--ui-accent-soft); color: var(--ui-accent); }
 .empty { padding: 1em; color: var(--ui-muted); font-family: inherit; white-space: normal; }
 .h { color: var(--ui-accent); font-weight: 800; }
 .fence { color: #7b4fc9; font-weight: 700; }
@@ -111,12 +114,16 @@
         const self = this, h = T.h;
         this.where = h("div", { class: "where" });
         this.copyBtn = h("button", { class: "ui-btn ui-small", title: "Copy this slide's source", onclick: function () { self.copy(); } }, T.icon("copy"), " Copy");
+        this.wrapBtn = h("button", { class: "ui-btn ui-small", title: "Fold long lines to fit", text: "Wrap", onclick: function () {
+          T.save("source-wrap", !T.load("source-wrap", true)); T.changed("source-wrap"); self.refresh();
+        } });
         const d = source();
         // Open in VS Code: on this computer only (the file is here), never on the published site
         const here = d && d.path && /^(localhost|127\.|\[::1\]|0\.0\.0\.0)/.test(location.host);
         this.vscode = here ? h("a", { class: "ui-btn ui-small", title: "Open the file at this slide in VS Code", text: "Open in VS Code" }) : null;
         this.box = h("pre", { class: "code-box ct-nodrag", tabindex: "0", "aria-label": "This slide's source" });
-        root.append(h("div", { class: "bar" }, this.where, this.copyBtn, this.vscode), this.box);
+        root.append(h("div", { class: "bar" }, this.where, this.wrapBtn, this.copyBtn, this.vscode), this.box);
+        this.refresh();
         this.onSlide = function () { self.paint(); };
         if (window.Reveal) {
           Reveal.on("slidechanged", this.onSlide);
@@ -156,6 +163,11 @@
         }
         box.innerHTML = html;
         box.scrollTop = 0; box.scrollLeft = 0;
+      }
+      refresh() {   // Wrap changed (here, or in another deck)
+        const on = T.load("source-wrap", true);
+        this.box.classList.toggle("wrap", on);
+        this.wrapBtn.setAttribute("aria-pressed", on ? "true" : "false");
       }
       text() {
         const d = source(), p = this.part();
