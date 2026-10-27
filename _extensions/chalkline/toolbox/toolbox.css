@@ -36,13 +36,15 @@
 #ct-launch:hover { opacity: 1; background: rgba(0, 52, 119, 0.08); }
 body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
 
-/* The menu: the tools as tiles, in groups (People, Attention, Time, This unit, More) */
+/* The menu: for the class, the tools as tiles in a column for each group (People, Attention, Time,
+   This unit); for you, the slides' own tools as small buttons in one strip */
 #ct-menu {
   position: fixed;
   left: 12px;
   bottom: 52px;
   z-index: 100000;          /* panels count up from 1 */
-  width: 372px;
+  width: 540px;
+  max-width: calc(100vw - 24px);
   max-height: calc(100vh - 70px);
   overflow: auto;
   padding: 14px 14px 10px;
@@ -60,13 +62,26 @@ body:has(.slide-chalkboard-buttons) #ct-launch { left: 128px; }
   padding: 1px 7px; border: 1px solid var(--ui-line); border-bottom-width: 2px; border-radius: 6px;
   background: var(--ui-soft); color: var(--ui-muted); font-family: inherit; font-size: 12px; font-weight: 700; line-height: 1.4;
 }
-/* Slides (reveal.js's own tools): smaller tiles, so the menu stays short */
-.ct-menu-compact .ct-menu-item { min-height: 58px; gap: 3px; padding: 8px 4px 6px; font-size: 12.5px; }
-.ct-menu-compact .ct-menu-icon { font-size: 19px; }
 /* A tool's own key (V, P) in its tile's corner; the check mark takes the other corner */
 .ct-tile-key { position: absolute; top: 6px; left: 6px; padding: 0 5px; font-size: 11px; }
-.ct-menu-group { margin: 6px 2px 6px; color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.ct-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }
+.ct-menu-group { margin: 4px 2px 6px; color: var(--ui-muted); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.ct-menu-cols { display: grid; gap: 6px; margin-bottom: 8px; }
+.ct-menu-col { min-width: 0; }
+.ct-menu-col .ct-menu-group { margin: 0 2px 4px; letter-spacing: 0.04em; font-size: 10.5px; }
+.ct-menu-grid { display: grid; gap: 6px; }
+/* A narrow screen: two groups across */
+@media (max-width: 560px) { .ct-menu-cols { grid-template-columns: repeat(2, 1fr) !important; } }
+/* For you: small buttons, icon, name and key */
+.ct-menu-you { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
+.ct-chip {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 3px 6px 3px 9px;
+  border: 1px solid var(--ui-line); border-radius: var(--ui-r-pill); background: #fff; color: var(--ui-ink);
+  font-size: 13px; font-weight: 600; white-space: nowrap; transition: border-color 0.12s, background 0.12s;
+}
+.ct-chip:hover { border-color: var(--ui-line-strong); background: var(--ui-soft); }
+.ct-chip .ct-menu-icon { font-size: 16px; }
+.ct-chip .ct-menu-key { padding: 0 5px; font-size: 11px; }
+.ct-chip.ct-on { border-color: var(--ui-accent); background: var(--ui-accent-soft); }
 .ct-menu-item {
   position: relative;
   display: flex;

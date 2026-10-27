@@ -269,16 +269,18 @@
     '<path d="M17.5 14v7M14 17.5h7"/></svg>';
   layer.append(launch, menu);
 
-  // The menu: the tools as tiles, in groups
+  // The menu, in two parts. For the class: the tools as big tiles, a column for each group. A new
+  // tool (a course's own) gets a column of its own, More.
   const MENU = [
-    ["People", ["picker", "groups", "scoreboard"]],
-    ["Attention", ["voice", "traffic", "spotlight"]],
+    ["People", ["picker", "groups", "scoreboard", "dice"]],
+    ["Attention", ["voice", "traffic", "spotlight", "music"]],
     ["Time", ["clock", "stopwatch"]],
     ["This unit", ["vocab", "packet", "qr"]],
-    ["More", ["music", "dice", "slide", "source"]],
   ];
-  // Slides: reveal.js's own tools, which are otherwise only in the slide menu's Tools tab. Each tile
-  // shows its key, so it's quicker next time. A tile shows only when this deck has that tool.
+  // For you: what the teacher uses to run the slides, as small buttons in one strip. These tools,
+  // and reveal.js's own (otherwise only in the slide menu's Tools tab). Each shows its key, so
+  // it's quicker next time; one shows only when this deck has that tool.
+  const FOR_YOU = ["slide", "source"];
   const RC = function () { return window.RevealChalkboard; };
   const SLIDES = [
     { title: "Full screen", icon: "maximize", key: "F", run: function () {
@@ -292,30 +294,38 @@
     { title: "Draw on slide", icon: "pen-line", key: "C", has: RC, run: function () { RC().toggleNotesCanvas(); } },
     { title: "Shortcuts", icon: "keyboard", key: "?", run: function () { Reveal.toggleHelp(true); } },
   ];
-  function paintSlides() {
-    if (!window.Reveal) return;
-    const items = SLIDES.filter(function (a) { return !a.has || a.has(); });
-    menu.append(h("div", { class: "ct-menu-group", text: "Slides" }));
-    const grid = h("div", { class: "ct-menu-grid ct-menu-compact" });
-    items.forEach(function (a) {
-      grid.append(h("button", { class: "ct-menu-item", role: "menuitem", title: a.title + " (" + a.key + ")",
-        onclick: function () { toggleMenu(false); a.run(); } },
-        h("span", { class: "ct-menu-icon" }, icon(a.icon)), h("span", { class: "ct-menu-name", text: a.title }),
-        h("kbd", { class: "ct-menu-key ct-tile-key", text: a.key })));
+  function paintForYou() {
+    const strip = h("div", { class: "ct-menu-you" });
+    const chip = function (attrs, iconName, title, key, on) {
+      return h("button", Object.assign({ class: "ct-chip" + (on ? " ct-on" : ""), title: key ? title + " (" + key + ")" : title }, attrs),
+        h("span", { class: "ct-menu-icon" }, icon(iconName)), h("span", { text: title }),
+        key ? h("kbd", { class: "ct-menu-key", text: key }) : null);
+    };
+    if (window.Reveal) {
+      SLIDES.filter(function (a) { return !a.has || a.has(); }).forEach(function (a) {
+        strip.append(chip({ role: "menuitem", onclick: function () { toggleMenu(false); a.run(); } }, a.icon, a.title, a.key));
+      });
+    }
+    FOR_YOU.filter(function (id) { return TOOLS[id]; }).forEach(function (id) {
+      const t = TOOLS[id];
+      strip.append(chip({ role: "menuitemcheckbox", "aria-checked": open[id] ? "true" : "false",
+        onclick: function () { open[id] ? closeTool(id) : openTool(id); } }, t.icon, t.title, t.key && t.key.key, open[id]));
     });
-    menu.append(grid);
+    if (!strip.childNodes.length) return;
+    menu.append(h("div", { class: "ct-menu-group", text: "For you" }), strip);
   }
   function paintMenu() {
     menu.textContent = "";
     menu.append(h("div", { class: "ct-menu-title" }, "Classroom tools", h("kbd", { class: "ct-menu-key", title: "Press W to open and close this menu", text: "W" })));
-    const listed = [].concat.apply([], MENU.map(function (g) { return g[1]; }));
-    const groups = MENU.map(function (g) { return [g[0], g[1].slice()]; });
-    Object.keys(TOOLS).forEach(function (id) { if (listed.indexOf(id) < 0) groups[groups.length - 1][1].push(id); });   // a new tool goes under More
+    const listed = [].concat.apply(FOR_YOU, MENU.map(function (g) { return g[1]; }));
+    const more = Object.keys(TOOLS).filter(function (id) { return listed.indexOf(id) < 0; });   // a new tool goes under More
+    const groups = MENU.concat(more.length ? [["More", more]] : []);
+    const cols = h("div", { class: "ct-menu-cols" });
     groups.forEach(function (g) {
       const ids = g[1].filter(function (id) { return TOOLS[id]; });
       if (!ids.length) return;
-      menu.append(h("div", { class: "ct-menu-group", text: g[0] }));
       const grid = h("div", { class: "ct-menu-grid" });
+      cols.append(h("div", { class: "ct-menu-col" }, h("div", { class: "ct-menu-group", text: g[0] }), grid));
       ids.forEach(function (id) {
         const t = TOOLS[id];
         grid.append(h("button", { class: "ct-menu-item" + (open[id] ? " ct-on" : ""), role: "menuitemcheckbox",
@@ -325,9 +335,10 @@
           t.key ? h("kbd", { class: "ct-menu-key ct-tile-key", text: t.key.key }) : null,
           open[id] ? h("span", { class: "ct-check" }, icon("check")) : null));
       });
-      menu.append(grid);
     });
-    paintSlides();
+    cols.style.gridTemplateColumns = "repeat(" + cols.childNodes.length + ", 1fr)";
+    menu.append(cols);
+    paintForYou();
     const foot = h("div", { class: "ct-menu-foot" });
     if (Object.keys(open).length) {
       foot.append(h("button", { class: "ct-menu-action",

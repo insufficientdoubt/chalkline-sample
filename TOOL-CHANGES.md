@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: A shorter toolbox menu: for the class, and for you
+- **Asked for:** "the tool menu is getting super crowded. Any ideas to make it less messy while still keeping everything discoverable?" Then, after the ideas: "Yeah show me first."
+- **Why:** too crowded. On an 800-pixel-high screen the menu ran past the bottom, cutting off its last row and its footer.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: the menu has two parts. For the class: a column for each group, with Dice in People and Music in Attention, so "More" is only for a course's own tools. For you: Slide size, View source and reveal.js's own tools as small buttons with their keys (they replace the Slides tiles).
+  - `_extensions/chalkline/toolbox/toolbox.css`: the menu is wider (540px, at most the screen width) and shorter; the styles for the columns and the small buttons; two groups across on a narrow screen.
+  - `README.md`: the menu's two parts.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: View source: word wrap
 - **Asked for:** "It works. Add word wrap."
 - **Why:** not given.
