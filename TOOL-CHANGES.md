@@ -16,6 +16,15 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: View source: word wrap
+- **Asked for:** "It works. Add word wrap."
+- **Why:** not given.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/tools/source.js`: a **Wrap** button. Long lines fold under their line number. It starts on, and on/off is remembered in this browser (`source-wrap`). The Open in VS Code button is no longer underlined.
+  - `README.md`: Wrap, in the View source row.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: View source (U): how any slide is made
 - **Asked for:** "a 'view source' tool that would show the source for any slide, with syntax hilighting? So you could quickly see how any slide is made." Then: "yes, build it with U".
 - **Why:** to see quickly how a slide is made.
