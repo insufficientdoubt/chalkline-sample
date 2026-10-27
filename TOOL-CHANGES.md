@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-27: The toolbox menu: back to rows, with a shorter bottom
+- **Asked for:** "I think the old layout was a bit clearer. Any other ideas?" Then, of the ideas: "yeah show me idea 1".
+- **Why:** the columns (entry below) were harder to read than one group per row, top to bottom.
+- **Changed:**
+  - `_extensions/chalkline/toolbox/toolbox.js`: the groups are rows again, three tiles across, as before the entry below. More is Music and Dice. **Slides** at the bottom is small buttons with their keys, with Slide size and View source in it too.
+  - `_extensions/chalkline/toolbox/toolbox.css`: the menu is a little wider (408px) and its tiles and headings a little shorter, so it fits on an 800-pixel-high screen with its footer. The small buttons' styles.
+  - `README.md`: the Slides buttons.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: A shorter toolbox menu: for the class, and for you
 - **Asked for:** "the tool menu is getting super crowded. Any ideas to make it less messy while still keeping everything discoverable?" Then, after the ideas: "Yeah show me first."
 - **Why:** too crowded. On an 800-pixel-high screen the menu ran past the bottom, cutting off its last row and its footer.
