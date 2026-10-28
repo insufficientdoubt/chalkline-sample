@@ -398,6 +398,7 @@ local function Meta(meta)
         { path = "toolbox/tools/music.js", afterBody = true },
         { path = "toolbox/tools/dice.js", afterBody = true },
         { path = "toolbox/tools/slide.js", afterBody = true },
+        { path = "toolbox/tools/style.js", afterBody = true },   -- Slide style: shows up only in a deck with {.styled} slides
         { path = "toolbox/tools/source.js", afterBody = true },
         { path = "toolbox/toolbox.js", afterBody = true },
       },

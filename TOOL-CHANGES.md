@@ -16,6 +16,14 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-28: Slide style prototype (restyle a slide without changing its words)
+- **Asked for:** slides whose look can be changed (layout, colours, look, language shown and which language is large) without retyping them, with the controls in a pop-up panel; pushed into the Start-here deck as a prototype. Teachers can also add their own colour schemes or card art in their own CSS.
+- **Why:** teachers' slides were crowded and each in a different style; bilingual (English and 中文) text should be written once and shown either way.
+- **Changed:** new `_extensions/chalkline/slide-style/` (`slide-style.lua` the filter, `slide-style.css` and generated `slide-style-count.css` the looks, `gen-count-css.py` the generator, `slide-style.js` click-to-select and full-screen background); new toolbox tool `toolbox/tools/style.js` ("Slide style", teacher site only, shown only in a deck with styled slides); `_extension.yml` and `filter.lua` load them; `toolbox/toolbox.js` lists the tool; `ui/icons.js` gets a palette icon. Content: three styled slides and an intro slide in `course/units/00-start-here/slides.qmd`, plus `slide-style-teacher.css` (example own schemes: bamboo, scroll) and placeholder pictures in `images/`. That deck is now 1280 x 720.
+- **Who it helps:** this deck only for now (other decks are unchanged; nothing happens without `{.styled kind="..."}` on a heading). Probably every Chalkline course if it works out.
+- **AI assistant:** Claude. Known gaps: pictures are placeholders; the slide PDF export of styled slides is not tuned (reveal's print layout ignores their fixed-height layout).
+
+
 ## 2026-10-28: A hosting note in the extension (Cloudflare Workers)
 - **Asked for:** "Please write concise instructions for the correct and updated process using the MCP to do as much as possible. Include a step for creating a cloudflare account if the user doesn't have one. Once you have that done add this process as a new note inside the chalk line extension on the main project chalk line repository."
 - **Why:** "This will facilitate easier setup for users." The Robotics League course went online this way and it works.
