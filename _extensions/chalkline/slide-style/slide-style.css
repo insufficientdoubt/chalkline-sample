@@ -2,14 +2,15 @@
   Slide style: the look of a slide whose heading has {.styled kind="cards|narrative|bigidea" ...}.
   One set of variables per colour scheme, one block of rules per type and look. Every class is
   prefixed ss- because a vocab card (.card) and .zh already mean something else in a deck.
-  The Lua filter (slide-style.lua) adds the ss- classes and the data-ss-* settings; the panel in
-  the toolbox (toolbox/tools/style.js) changes those settings live. Sizes assume a 1280 x 720
+  The Lua filter (slide-style.lua) adds the ss- classes and the data-ss-* settings; the language
+  switch in the slide's corner (slide-style.js) and the Style… panel (toolbox/tools/style.js) change them live. Sizes assume a 1280 x 720
   slide: put  width: 1280  and  height: 720  in the deck's labels.
   A teacher's own colour scheme is a block of these variables in the course's own CSS file.
 */
-/* the slide itself: fills reveal's 1280 x 720 box. No side padding: the deck's other slides start at the same edge. */
+/* the slide itself: fills reveal's 1280 x 720 box. A little side padding: the game look's tilted cards and
+   the brutal look's shadows reach past a card's edge, and the slide cuts off anything outside it. */
 section.ss, section.ss *, section.ss *::before, section.ss *::after { box-sizing: border-box; }
-.reveal section.ss { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; padding: 6px 0 52px; background: var(--bg); color: var(--ink); gap: 16px; text-align: left; overflow: hidden; }
+.reveal section.ss { width: 100% !important; height: 100% !important; top: 0 !important; left: 0 !important; padding: 6px 16px 52px; background: var(--bg); color: var(--ink); gap: 16px; text-align: left; overflow: hidden; }
 .reveal section.ss.present, .reveal section.ss.past, .reveal section.ss.future { display: flex !important; flex-direction: column; }
 .reveal section.ss[hidden] { display: none !important; }
 section.ss h2 { margin: 0; text-transform: none; text-align: left; }
@@ -271,3 +272,18 @@ section.ss[data-ss-flow=side] .ss-narr>p.ss-selected .ss-bi .ss-en,section.ss[da
 
 /* the big idea's round shapes run off the slide, to the edge of the screen */
 .reveal section.ss.ss-bigidea { overflow: visible; }
+
+/* the language switch in the slide's top-right corner (slide-style.js): quiet until you point at it */
+section.ss .ss-corner{position:absolute;top:4px;right:6px;z-index:5;display:flex;align-items:center;gap:6px;font:600 14px/1 "Source Sans 3","Source Sans Pro",system-ui,sans-serif;color:var(--muted);opacity:.45;transition:opacity .15s}
+section.ss .ss-corner:hover,section.ss .ss-corner:focus-within{opacity:1}
+section.ss .ss-corner-seg{display:flex;border:1px solid color-mix(in srgb,var(--muted) 45%,transparent);border-radius:999px;overflow:hidden}
+section.ss .ss-corner-btn{all:unset;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;gap:3px;min-width:30px;height:24px;padding:0 8px;cursor:pointer;color:inherit;border-radius:999px;font:inherit}
+section.ss .ss-corner-btn svg{width:15px;height:15px}
+section.ss .ss-corner-seg .ss-corner-btn{border-radius:0}
+section.ss .ss-corner-btn:hover{color:var(--ink)}
+section.ss .ss-corner-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+section.ss .ss-corner-btn.ss-on{background:var(--muted);color:var(--bg)}
+section.ss .ss-corner-swap{border:1px solid color-mix(in srgb,var(--muted) 45%,transparent)}
+section.ss .ss-corner-swap:disabled{opacity:.35;cursor:default}
+section.ss .ss-corner-style{font-weight:500;padding:0 4px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:color-mix(in srgb,var(--muted) 50%,transparent)}
+html.print-pdf section.ss .ss-corner{display:none}
