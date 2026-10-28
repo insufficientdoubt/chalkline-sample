@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **Hosting** (`HOSTING.md`, `hosting/`): step-by-step setup for a student site and a teacher site with
+  email-code sign-in on Cloudflare Workers, mostly done by Claude with the Cloudflare API connector.
+  `hosting/` has the GitHub workflow and Worker settings to copy into a course.
 - **View source** (U, in the toolbox): the current slide's source as typed, with colors and line numbers;
   Copy, and Open in VS Code on your own computer. Teacher site only. `toolbox/source.lua` cuts the deck
   into slides; `toolbox/tools/source.js` shows them.

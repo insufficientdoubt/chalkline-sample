@@ -62,5 +62,6 @@ extension (for example `_extensions/my-tools/`).
 | `slide-wall/` | The All slides page (`{{< slide-wall >}}`): every deck as rows of slide pictures, taken by `scripts/slide_pictures.py` |
 | `templates/` | Starter files for `python chalkline.py new slides 2 "Title"` |
 | `starter/` | A new course's first unit, vocab list and course files, added by `python chalkline.py setup` |
+| `HOSTING.md`, `hosting/` | Putting a course online: a student site and a teacher site with sign-in, on Cloudflare Workers |
 
 What changed in each version: `CHANGELOG.md`.
