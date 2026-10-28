@@ -10,7 +10,7 @@
     Attention   voice.js (Voice level and the noise meter), traffic.js (Traffic light), spotlight.js
     Time        clock.js (open unless you close it; K shows and hides it), stopwatch.js
     This unit   vocab.js, packet.js, qr.js (QR code for this deck on the student site)
-    More        music.js (YouTube), dice.js, slide.js (Slide size), source.js (View source)
+    More        music.js (YouTube), dice.js, slide.js (Slide size), style.js (Slide style: only in a deck with styled slides), source.js (View source)
 
   Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
   right and left edge, and the slides move over to make room. V and P open and close them.
@@ -275,7 +275,7 @@
     ["Attention", ["voice", "traffic", "spotlight"]],
     ["Time", ["clock", "stopwatch"]],
     ["This unit", ["vocab", "packet", "qr"]],
-    ["More", ["music", "dice", "slide"]],
+    ["More", ["music", "dice", "slide", "style"]],
   ];
   // Slides: a row of icons for running the slides, at the bottom: View source, and reveal.js's own
   // tools (otherwise only in the slide menu's Tools tab). Point at one for its name and key; one

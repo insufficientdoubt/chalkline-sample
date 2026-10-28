@@ -1,0 +1,23 @@
+/* slide-style-teacher.css  (a teacher's own file, loaded with the deck by `css:` in its labels)
+   Two things only: new colour schemes, and optional art behind each card.
+   Nothing here touches language handling, which is done by the filter and slide-style.css.
+
+   Variables a scheme sets: --bg --ink --head --muted --card --card2 --accent --hot --line
+   --strip --strip-fg --strip-sec --pill --pill-fg --spot-bg --spot-fg --spot-card --spot-line
+   and --sel-bg --sel-fg (colour of a clicked item). Art hooks: --card-art, --card-art-size, --card-art-pos, --card-pad.
+   Rule of thumb: check that every text/background pair is readable. */
+
+/* 1. A custom colour scheme: use as scheme="bamboo" */
+section.ss[data-ss-scheme=bamboo]{--bg:#F3F6E8;--ink:#1E2A1E;--head:#2F5233;--muted:#55634F;--card:#E4EDCF;--card2:#FFFFFF;--accent:#5B8C3A;--hot:#C8741A;--line:#2F5233;
+  --strip:#2F5233;--strip-fg:#FFFFFF;--strip-sec:#E4EDCF;--pill:#F2C14E;--pill-fg:#1E2A1E;--spot-bg:#F2C14E;--spot-fg:#1E2A1E;--spot-card:#FFFFFF;--spot-line:#2F5233;
+  --sel-bg:#F2C14E;--sel-fg:#1E2A1E}
+
+/* 2. A scheme with art behind each card: use as scheme="scroll".
+   The art is a wooden rod at the top and bottom of each card; the paper is the --card colour. */
+section.ss[data-ss-scheme=scroll]{--bg:#EADFC4;--ink:#2B2118;--head:#5A2A12;--muted:#5E4E3A;--card:#FBF3DC;--card2:#FBF3DC;--accent:#8C2F1B;--hot:#B3261E;--line:#5A3A1C;
+  --strip:#5A2A12;--strip-fg:#FBF3DC;--strip-sec:#E8D9B5;--pill:#E8C27A;--pill-fg:#2B1A0E;--spot-bg:#E8C27A;--spot-fg:#2B1A0E;--spot-card:#FFF8E6;--spot-line:#5A3A1C;
+  --sel-bg:#E8C27A;--sel-fg:#2B1A0E;
+  --card-art:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxyZWN0IHg9IjAiIHk9IjQiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjN0E0QTIxIi8+PHJlY3QgeD0iMCIgeT0iNiIgd2lkdGg9IjQwMCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI0E4NzAzQSIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNCIgcng9IjUiIGZpbGw9IiM0RTJDMTIiLz48cmVjdCB4PSIzODgiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNCIgcng9IjUiIGZpbGw9IiM0RTJDMTIiLz48L3N2Zz4K"),url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMjQiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjxyZWN0IHg9IjAiIHk9IjQiIHdpZHRoPSI0MDAiIGhlaWdodD0iMTYiIHJ4PSI4IiBmaWxsPSIjN0E0QTIxIi8+PHJlY3QgeD0iMCIgeT0iNiIgd2lkdGg9IjQwMCIgaGVpZ2h0PSI0IiByeD0iMiIgZmlsbD0iI0E4NzAzQSIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNCIgcng9IjUiIGZpbGw9IiM0RTJDMTIiLz48cmVjdCB4PSIzODgiIHk9IjAiIHdpZHRoPSIxMiIgaGVpZ2h0PSIyNCIgcng9IjUiIGZpbGw9IiM0RTJDMTIiLz48L3N2Zz4K");--card-art-size:100% 22px,100% 22px;--card-art-pos:top,bottom;--card-pad:34px 20px}
+section.ss[data-ss-scheme=scroll] .ss-card{border:0;border-radius:3px;box-shadow:0 3px 8px rgba(60,35,10,.25)}
+/* a table row is too short for rods, so the teacher turns the art off there */
+section.ss[data-ss-scheme=scroll][data-ss-type=table] .ss-card{--card-art:none;border-left:8px solid var(--accent);border-radius:0}
