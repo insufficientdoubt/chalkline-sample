@@ -1,5 +1,8 @@
 # Putting a course online (Cloudflare Workers)
 
+For a real course. The Chalkline sample itself (project-chalkline) is published on GitHub Pages:
+all its content is a demo, so its teacher version can be public. A real course's answer keys can't.
+
 Two free websites, rebuilt by GitHub every time you change `main`:
 
 - **Student site**: for students and families. No sign-in.
