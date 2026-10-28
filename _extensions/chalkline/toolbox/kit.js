@@ -12,6 +12,8 @@
     active                                  false in speaker view, the PDF export and pop-ups: no tools there
     ToolElement                             the base for a tool built as a web component (below)
     tools                                   the tools in their own files, by id: the toolbox adds them to its menu
+                                            (not one with menu: false, which opens its own panel:)
+    open(id), close(id), isOpen(id)         added by toolbox.js once it has started
 
   A tool in its own file is a web component: its own tag (<ct-stopwatch>) with its own styles inside
   it (a shadow root), so the slides' styles can't change it and its styles can't leak out. It looks

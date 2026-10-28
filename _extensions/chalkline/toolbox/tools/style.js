@@ -1,17 +1,21 @@
 /*
   Slide style: change how the deck's styled slides look (the ones with {.styled kind="..."} on their
-  heading, see slide-style/slide-style.lua) while their words stay the same: the languages shown and
-  which is large, the look, the colours, and for each kind of slide its layout. Only in a deck that
-  has styled slides, and only in the teacher site.
+  heading, see slide-style/slide-style.lua) while their words stay the same: the look, the colours,
+  and for each kind of slide its layout. Only in a deck that has styled slides, and only in the
+  teacher site. An experiment, for trying looks: not meant to ship to teachers as it is.
+
+  It isn't in the toolbox menu (menu: false). The Style… link in the corner of a styled slide
+  (slide-style.js, next to the language switch) opens it; it hides when you leave the styled slides
+  and comes back when you return to them.
 
   Changes apply to every styled slide at once (a control for another kind of slide is hidden
   until you get to that slide, and applies there). They are remembered in this browser, for this deck. The
   deck's file is not changed: Copy settings puts the current slide's settings on the clipboard,
-  to paste onto its heading. Reset goes back to what the file says.
+  to paste onto its heading. Reset goes back to what the file says (the languages stay as the
+  corner switch has them).
 
-  A slide written in one language only has nothing to switch, so Languages and Large language are
-  greyed out when it is showing. The colour schemes are the built-in five, plus any the deck's own
-  CSS adds (named under slide-style: schemes: in the deck's labels; they are listed as "Your own CSS").
+  The colour schemes are the built-in five, plus any the deck's own CSS adds (named under
+  slide-style: schemes: in the deck's labels; they are listed as "Your own CSS").
 */
 (function () {
   const T = window.ChalklineToolbox;
@@ -35,10 +39,9 @@
     original.set(s, o);
   });
 
-  // The controls: [setting, name, kind it belongs to (or null for all), choices]
+  // The controls: [setting, name, kind it belongs to (or null for all), choices]. The languages are
+  // in the corner of the slide (slide-style.js).
   const GROUPS = [
-    ["show", "Languages", null, [["both", "Both"], ["en", "English"], ["zh", "中文"]], true],
-    ["primary", "Large language", null, [["en", "English"], ["zh", "中文"]], true],
     ["look", "Look", null, [["plain", "Plain"], ["game", "Game"], ["brutal", "Brutal"]]],
     ["scheme", "Colours", null, CONFIG.schemes.map(function (n) { return [n, label(n)]; })],
     ["type", "Layout", "cards", [["row", "Row"], ["grid", "Grid"], ["table", "Table"]]],
@@ -49,6 +52,8 @@
   if (CONFIG.own && CONFIG.own.length) {
     GROUPS.splice(4, 0, ["scheme", "Your own CSS", null, CONFIG.own.map(function (n) { return [n, label(n)]; })]);
   }
+
+  let wanted = false, leaving = false;   // the panel was open on a styled slide; it's being hidden, not closed
 
   // ---------- applying ----------
   let state = T.load(KEY, {});   // setting -> value, for everything the teacher has changed
@@ -64,8 +69,7 @@
   }
   function applyOne(section, k, v) {
     if (k === "items") { if (section.classList.contains("ss-cards")) setItems(section, +v); return; }
-    // a slide in one language keeps showing it
-    if ((k === "show" || k === "primary") && section.dataset.ssLangs !== "both") return;
+    if (k === "show" || k === "primary") return;   // the corner switch has these now (an old saved setting)
     section.dataset[DS(k)] = v;
   }
   function applyAll() {
@@ -84,7 +88,7 @@
     state = {};
     try { localStorage.removeItem("chalkline-tools:" + KEY); } catch (e) { /* private window */ }
     original.forEach(function (o, s) {
-      Object.keys(o).forEach(function (k) { if (o[k] != null) s.dataset[DS(k)] = o[k]; });
+      Object.keys(o).forEach(function (k) { if (o[k] != null && k !== "show" && k !== "primary") s.dataset[DS(k)] = o[k]; });
       s.querySelectorAll(".ss-off").forEach(function (c) { c.classList.remove("ss-off"); });
       if (s.classList.contains("ss-cards") && s.dataset.ssItemsFile) setItems(s, +s.dataset.ssItemsFile);
       paint(s);
@@ -122,13 +126,13 @@
     return "{" + parts.join(" ") + "}";
   }
 
-  T.tool("style", { title: "Slide style", icon: "palette", w: 440, h: 540, minW: 340, minH: 300, keys: ["style"] },
+  T.tool("style", { title: "Slide style", icon: "palette", w: 400, h: 480, minW: 320, minH: 260, keys: ["style"], menu: false,
+      start: function () { return { x: window.innerWidth - 416, y: 56 }; } },
     class extends T.ToolElement {
       static css = `
 .wrap { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 2px 2px 6px; }
 .row { display: flex; flex-direction: column; gap: 4px; transition: opacity .15s; }
 .row[hidden] { display: none; }
-.row.locked { opacity: .35; pointer-events: none; }
 .ui-seg { flex-wrap: wrap; }
 .ui-seg > button { font-size: 0.85em; }
 .note { margin: 0; font-size: 0.78em; color: var(--ui-muted); line-height: 1.35; }
@@ -156,7 +160,6 @@
           row._g = g;
           self.rows[g[1]] = row;
           wrap.append(row);
-          if (g[1] === "Large language") self.langNote = null;
           if (g[1] === "Layout") {   // the number of cards sits right under the layout
             self.slider = h("input", { type: "range", min: 1, max: 9, "aria-label": "Number of cards", oninput: function () { set("items", +self.slider.value); } });
             self.count = h("b");
@@ -182,15 +185,13 @@
       paint() {
         const cur = current();
         const kind = cur ? ["cards", "narrative", "bigidea"].filter(function (k) { return cur.classList.contains("ss-" + k); })[0] : null;
-        const langs = (cur || SECTIONS()[0]).dataset.ssLangs;
         const self = this;
         this.where.textContent = cur
-          ? "Changes apply to every styled slide. Only this slide's own controls are shown."
+          ? "An experiment. Changes apply to every styled slide; only this slide's own controls are shown."
           : "Go to a styled slide to see what you change. Changes apply to every styled slide.";
         GROUPS.forEach(function (g) {
           const row = self.rows[g[1]], k = g[0];
           row.hidden = !!(g[2] && kind && g[2] !== kind);   // another kind of slide's control: still applies when you get there
-          row.classList.toggle("locked", !!(g[4] && langs !== "both"));
           g[3].forEach(function (c) { self.btns[k + ":" + c[0]].classList.toggle("ui-on", value(k) === c[0]); });
         });
         const cs = cardsSlide();
@@ -201,9 +202,27 @@
           this.slider.value = cs.dataset.ssCount;
           this.count.textContent = cs.dataset.ssCount;
         }
-        this.rows["Languages"].title = langs !== "both" ? "This slide is written in one language only" : "";
       }
       refresh() { this.paint(); }
-      close() { if (window.Reveal && this.onSlide) Reveal.off("slidechanged", this.onSlide); }
+      close() {
+        if (window.Reveal && this.onSlide) Reveal.off("slidechanged", this.onSlide);
+        if (!leaving) wanted = false;   // closed with its ×: it stays closed
+      }
     });
+
+  // Open from the corner's Style… link; hidden on the other slides, back on the styled ones
+  window.ChalklineSlideStyle = window.ChalklineSlideStyle || {};
+  ChalklineSlideStyle.togglePanel = function () {
+    if (!T.open) return;
+    if (T.isOpen("style")) { wanted = false; T.close("style"); } else { wanted = true; T.open("style"); }
+  };
+  function follow() {
+    if (!T.open) return;
+    if (current()) { if (wanted && !T.isOpen("style")) T.open("style"); }
+    else if (T.isOpen("style")) { wanted = true; leaving = true; T.close("style"); leaving = false; }
+  }
+  if (T.active && window.Reveal) {
+    const start = function () { wanted = !!(T.isOpen && T.isOpen("style")); follow(); Reveal.on("slidechanged", follow); };
+    if (Reveal.isReady()) setTimeout(start); else Reveal.on("ready", function () { setTimeout(start); });
+  }
 })();

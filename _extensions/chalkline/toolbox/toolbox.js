@@ -10,7 +10,8 @@
     Attention   voice.js (Voice level and the noise meter), traffic.js (Traffic light), spotlight.js
     Time        clock.js (open unless you close it; K shows and hides it), stopwatch.js
     This unit   vocab.js, packet.js, qr.js (QR code for this deck on the student site)
-    More        music.js (YouTube), dice.js, slide.js (Slide size), style.js (Slide style: only in a deck with styled slides), source.js (View source)
+    More        music.js (YouTube), dice.js, slide.js (Slide size), source.js (View source)
+    Not in the menu  style.js (Slide style: opened from the corner of a styled slide, see slide-style/)
 
   Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
   right and left edge, and the slides move over to make room. V and P open and close them.
@@ -275,7 +276,7 @@
     ["Attention", ["voice", "traffic", "spotlight"]],
     ["Time", ["clock", "stopwatch"]],
     ["This unit", ["vocab", "packet", "qr"]],
-    ["More", ["music", "dice", "slide", "style"]],
+    ["More", ["music", "dice", "slide"]],
   ];
   // Slides: a row of icons for running the slides, at the bottom: View source, and reveal.js's own
   // tools (otherwise only in the slide menu's Tools tab). Point at one for its name and key; one
@@ -318,7 +319,9 @@
     menu.append(h("div", { class: "ct-menu-title" }, "Classroom tools", h("kbd", { class: "ct-menu-key", title: "Press W to open and close this menu", text: "W" })));
     const listed = [].concat.apply(SLIDE_TOOLS, MENU.map(function (g) { return g[1]; }));
     const groups = MENU.map(function (g) { return [g[0], g[1].slice()]; });
-    Object.keys(TOOLS).forEach(function (id) { if (listed.indexOf(id) < 0) groups[groups.length - 1][1].push(id); });   // a new tool goes under More
+    Object.keys(TOOLS).forEach(function (id) {   // a new tool goes under More; one with menu: false opens on its own (style.js)
+      if (listed.indexOf(id) < 0 && TOOLS[id].menu !== false) groups[groups.length - 1][1].push(id);
+    });
     groups.forEach(function (g) {
       const ids = g[1].filter(function (id) { return TOOLS[id]; });
       if (!ids.length) return;
@@ -454,5 +457,9 @@
   }
   if (Reveal.isReady()) reseatClock(); else Reveal.on("ready", reseatClock);
   Reveal.on("resize", reseatClock);
+  // A tool that isn't in the menu (menu: false) opens and closes its own panel with these
+  Object.assign(window.ChalklineToolbox, {
+    open: openTool, close: function (id) { closeTool(id); }, isOpen: function (id) { return !!open[id]; },
+  });
   paintMenu();
 })();

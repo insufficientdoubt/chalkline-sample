@@ -20,7 +20,7 @@ A deck can set its own defaults in its labels, and name the schemes its own CSS 
 
   slide-style:
     look: game
-    schemes: [bamboo, scroll]       # these show up in the style panel (the toolbox's Slide style tool)
+    schemes: [bamboo, scroll]       # these show up in the style panel (Style… in a styled slide's corner)
 
 Words in two languages are written once:  [English | 中文]{.bi}. One language only ([中文]{.bi}
 or [English]{.bi}) is fine: that text is shown on its own and the slide has no language switch.

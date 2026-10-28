@@ -16,6 +16,18 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-28: Slide style prototype, round 2 (own deck, corner language switch, nothing cut off)
+- **Asked for:** "this is an experiment, put it into a side deck"; "don't show the style tool in the toolbox, just pop it up when you go onto those slides"; "some stuff gets cut off"; "Make the language toggles appear in the corner of the slide. Understated. EN / (translate icon) / Zh, and another toggle for which one is primary. Then a 'style...' thing to pop up controls."
+- **Why:** "We wont actually ship this capability to live-restyle slides, probably. Live control language, yes, but not color/layout. This is for demo/testing purposes."
+- **Changed:**
+  - `slide-style/slide-style.js`: a quiet switch in a styled slide's top-right corner: EN · 文A (both) · 中, ⇅ to swap which language is large, and (teacher site) Style… to open the panel. Remembered in this browser for every deck; in both sites; not on one-language slides, the PDF or speaker view's previews.
+  - `slide-style/slide-style.css`: the switch's look; 16px side padding on styled slides, because tilted game cards and brutal shadows at the edges were cut off.
+  - `toolbox/tools/style.js`: not in the toolbox menu (`menu: false`); opens from Style…, hides when you leave the styled slides and comes back on them, closes for good with its ×. Languages are no longer in it (the corner has them).
+  - `toolbox/toolbox.js`: a tool with `menu: false` stays out of the menu; `ChalklineToolbox.open/close/isOpen` so such a tool can open its own panel. `kit.js`, `filter.lua`, `slide-style.lua`: comments.
+  - Content: the four experiment slides moved out of `00-start-here/slides.qmd` (back as it was, default slide size) into a new teacher-only deck `00-start-here/slide-style-slides.qmd`.
+- **Who it helps:** this course's demo only for now. The corner language switch could become a Chalkline feature for every bilingual course.
+- **AI assistant:** Claude. Checked in a mock page in a headless browser (Quarto couldn't be installed in its session), not a real render.
+
 ## 2026-10-28: Slide style prototype (restyle a slide without changing its words)
 - **Asked for:** slides whose look can be changed (layout, colours, look, language shown and which language is large) without retyping them, with the controls in a pop-up panel; pushed into the Start-here deck as a prototype. Teachers can also add their own colour schemes or card art in their own CSS.
 - **Why:** teachers' slides were crowded and each in a different style; bilingual (English and 中文) text should be written once and shown either way.
