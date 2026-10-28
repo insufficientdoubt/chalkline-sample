@@ -23,4 +23,11 @@ listing:
 
 {{< packet >}}
 
+## In a real course
+
+The **Robotics League** course (VEX IQ robotics) is made with Chalkline too.
+
+- [Lifts and Launchers](https://mingwan-robotics.final-version-3.workers.dev/course/units/06-mechanisms/02-lifts-and-launchers/slides.html): a slideshow with robot lifts and catapults you can move.
+- [VEX IQ Vocab](https://mingwan-robotics.final-version-3.workers.dev/vocab/app/): the words for those slides, with pictures and 中文.
+
 ## Materials
