@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-28: A hosting note in the extension (Cloudflare Workers)
+- **Asked for:** "Please write concise instructions for the correct and updated process using the MCP to do as much as possible. Include a step for creating a cloudflare account if the user doesn't have one. Once you have that done add this process as a new note inside the chalk line extension on the main project chalk line repository."
+- **Why:** "This will facilitate easier setup for users." The Robotics League course went online this way and it works.
+- **Changed:**
+  - `_extensions/chalkline/HOSTING.md` (new): seven steps; Claude does the files, the account checks and the teacher sign-in (Cloudflare Access, email codes) with the Cloudflare API connector; the teacher makes the account, the token and the GitHub secrets.
+  - `_extensions/chalkline/hosting/` (new): `deploy.yml` (builds both sites, checks the secrets, uploads from `main`, uploads the teacher site only once its address asks for a sign-in), `public.jsonc`, `teacher.jsonc`, `teacher-placeholder.jsonc` and the placeholder page. From Robotics League, with general names (`my-course`); the workflow reads the teacher Worker's name from `hosting/teacher.jsonc`.
+  - `_extensions/chalkline/README.md`: a row for them. `CHANGELOG.md`: an Unreleased entry.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-27: No Shortcuts icon in the toolbox menu
 - **Asked for:** "What's the shortcuts actually do that we haven't already done?" Then: "Yeah just get rid of the shortcuts icon and then merge the update."
 - **Why:** it opens reveal.js's list of keys, which is rarely needed during a lesson. The **?** key still opens it.
