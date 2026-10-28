@@ -72,3 +72,19 @@
   audience: [teacher, student]
   description: Free block-coding puzzles (Maze, Bird, Turtle, Music) that lead from blocks to JavaScript, at each student's own speed.
 
+
+- title: "Lifts and Launchers (Robotics League slides)"
+  url: https://mingwan-robotics.final-version-3.workers.dev/course/units/06-mechanisms/02-lifts-and-launchers/slides.html
+  type: slides
+  unit: 04-stem
+  source: Robotics League
+  audience: [teacher, student]
+  description: A real Chalkline course for VEX IQ. Robot lifts and catapults you can move, live on the slides.
+
+- title: "VEX IQ Vocab (Robotics League)"
+  url: https://mingwan-robotics.final-version-3.workers.dev/vocab/app/
+  type: vocab
+  unit: 04-stem
+  source: Robotics League
+  audience: [teacher, student]
+  description: The words for those slides, with pictures and 中文. Built with Chalkline's vocab app.
