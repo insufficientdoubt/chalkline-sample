@@ -28,7 +28,8 @@
   --rule: #{$blue};              // the line under slide titles, timeline dots, big numbers
   --link: #{$navy};
   // a slide's own background (a colour scheme sets these; schemes.html paints them behind the slide)
-  --paper-image: none;
+  --paper-image: none;           // a pattern or picture over --paper (night's grid)
+  --paper-size: auto;            // its background-size: 40px 40px for a tile, cover for one picture
   // shape
   --radius: 14px;
   --border: 0px;                 // a box's border width

@@ -313,7 +313,7 @@ The same slide with `{.look-game}` on its title: thick outlines, hard shadows, t
 `{.look-brutal}`: square corners, heavy borders, offset shadows, a highlighted title.
 :::
 
-## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-scroll .look-scroll background-color="#EADFC4"}
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-scroll .look-scroll}
 
 ::: tiles
 ::: box
@@ -369,7 +369,7 @@ The same slide with `{.look-game}` on its title: thick outlines, hard shadows, t
 :::
 
 ::: notes
-`{.look-scroll}`: paper colours, a serif font for 中文 (one variable, `--bi-zh-font`), wooden rods on each card. The slide's background colour is Quarto's own `background-color=` on the title.
+`{.look-scroll}`: a hanging scroll, all in `slide-kit-looks.css`: paper with fibres, a red frame with cloud-curl corners, a brush stroke under the title, a seal (`--seal: "学"`), cards hung from wooden rods, and a serif font for 中文 (`--bi-zh-font`).
 :::
 
 ## [Group task · prepare your statement | 小组任务 · 准备发言]{.bi} {#task}
@@ -519,6 +519,7 @@ The big idea again with `{.look-dusk}` and a dark `background-color=`. Nothing i
 ## Colour schemes {#schemes}
 
 - Four schemes come with Chalkline, made from the brand colours: **night**, **sky**, **lagoon** and **sunrise**
+- A course can add its own: this deck's **trail** is in `slide-kit-looks.css`
 - One slide: `## Title {.scheme-night}`
 - A whole deck: `slide-scheme: night` in its labels
 - Chalkline's own pieces follow too: tables, steps, vocab cards, callouts
@@ -705,4 +706,103 @@ Night on Chalkline's table style: the header row and stripes follow the scheme's
 
 ::: notes
 `{.scheme-sunrise}`: warm paper from the brand orange, turquoise as the highlight.
+:::
+
+## {#section-trail .center .scheme-trail}
+
+
+::: cover
+[Part 2 · Spring and Autumn & Warring States | 第 2 节 · 春秋战国]{.bi .kicker}
+
+[The Hundred Schools of Thought | 百家争鸣]{.bi .big}
+
+::: tiles
+::: {.box .plain}
+::: row
+[1]{.num}
+
+[Why it happened | 争鸣原因]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[2]{.num}
+
+[The ideas | 治国主张]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[3]{.num}
+
+[The debate | 智慧对决]{.bi}
+:::
+:::
+:::
+:::
+
+::: notes
+`{.scheme-trail}`: this deck's own scheme, made for fun after a handbag catalogue: cream paper, suede boxes with white stitching, olive line drawings and turquoise beads in the background, turquoise as the highlight. All of it is about 40 lines in `slide-kit-looks.css`; the background is one drawing (`--paper-image`).
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-trail .scheme-trail}
+
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+The cards in trail: a stitched ring on each card, a turquoise stitched border on the highlighted one, a zigzag under the title.
 :::

@@ -16,6 +16,17 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Night keeps its grid; a scheme's background can be any picture
+- **Asked for:** "for the theme that comes from robotics make sure that it kept the background grid. And on the night theme ... make sure that the headline color is something visible." Also a "Songmont hobo" inspired theme with "casually placed short wavy lines on the background ... angled connectors and perfect circles", and a more ornate scroll look "to show off the styling capabilities".
+- **Why:** to show teachers what the styling can do.
+- **Changed:**
+  - `_extensions/chalkline/schemes.html`: paints `--paper-size` too (night's 40px squares were fixed in the code; a whole-slide drawing needs `cover`), paints any slide whose scheme or look gives it its own paper, and offers `ChalklineSchemes.paint(slide)` to tools that change a slide's classes. Before, a scheme picked live drew in the wrong layer, so night lost its grid and a slide's own picture could be covered.
+  - `_extensions/chalkline/styles/layout.scss`: new token `--paper-size`.
+  - `_extensions/chalkline/styles/schemes.scss`: night's grid a little stronger (0.09 instead of 0.07) and `--paper-size: 40px 40px`. Night's titles are white (18:1); checked on every slide.
+  - Content: the deck's own **trail** scheme (cream paper, suede boxes with white stitching, olive zigzags and angled lines, a stitched circle, turquoise beads, turquoise highlight) and a more ornate **scroll** look (paper fibres, a red frame with cloud-curl corners, a brush stroke under the title, a seal, cards on wooden rods) in `slide-kit-looks.css`; two trail slides; trail in the deck's style picker.
+- **Who it helps:** probably every Chalkline course (the painting fix and `--paper-size`); the trail scheme and scroll look are this deck's.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Colour schemes from the brand colours
 - **Asked for:** "Could you make a couple of more color schemes using the brand kit colors as the foundation? You can also have a look at the robotics League repo because I think there's already a good color scheme there."
 - **Why:** to show teachers that slides don't have to look bland.
