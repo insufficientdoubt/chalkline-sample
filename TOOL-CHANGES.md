@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: A hidden language keeps its room on slides
+- **Asked for:** "when a language is hidden, it should just be invisible, not absent. That way the page won't reflow and look weird."
+- **Why:** switching EN / 中 made everything on the slide jump: the hidden language's lines vanished and the shown one grew.
+- **Changed:** `_extensions/chalkline/bilingual/bilingual.js`: marks a deck's `<html>` with `.bi-slides`. `_extensions/chalkline/bilingual/bilingual.css`: on slides the hidden language is `visibility: hidden` (it keeps its space), and the shown one keeps its size and place (⇅ still makes 中文 the large one). Pages that show one language through their labels still leave the other out, as before. The old Slide style experiment (`slide-style/`) is unchanged. Checked in the Slide kit deck: every bilingual line is in the same place in EN, 文A and 中.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Lagoon gets a slight gradient
 - **Asked for:** "For the lagoon theme, give the background a slight gradient."
 - **Why:** not given.

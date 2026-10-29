@@ -3,7 +3,7 @@
   lighter, in whatever size, font and colour its place already has. So it works the same in a slide
   title, a bullet, a card or a dark box, with no rule for each.
   <html> carries the settings: data-bi-primary (en | zh) and data-bi-show (both | en | zh), set by
-  bilingual.js from the deck's labels or the slide's language switch.
+  bilingual.js from the deck's labels or the slide's language switch, and .bi-slides on a deck.
 
   A theme can change the look with these (on :root, a slide, or any box):
     --bi-second-size    the second language's size          (0.8em)
@@ -26,15 +26,19 @@ html[data-bi-primary="zh"] .bil > .bil-en {
   color: var(--bi-second-color, color-mix(in srgb, currentColor 68%, transparent));
   line-height: 1.25;
 }
-/* the first: as the place has it */
+/* the first: as the place has it (on a page showing one language, that one) */
 html[data-bi-primary="zh"] .bil > .bil-zh,
-html[data-bi-show="en"] .bil > .bil-en,
-html[data-bi-show="zh"] .bil > .bil-zh {
+html:not(.bi-slides)[data-bi-show="en"] .bil > .bil-en,
+html:not(.bi-slides)[data-bi-show="zh"] .bil > .bil-zh {
   order: 0; font-size: 1em; font-weight: inherit; color: inherit; line-height: inherit;
 }
-/* one language only */
+/* one language only: on a page the other is left out */
 html[data-bi-show="en"] .bil > .bil-zh,
 html[data-bi-show="zh"] .bil > .bil-en { display: none; }
+/* on slides (html.bi-slides, from bilingual.js) it is only invisible: it keeps its room, and the
+   shown one its size and place, so switching languages never moves anything on the slide */
+html.bi-slides[data-bi-show="en"] .bil > .bil-zh,
+html.bi-slides[data-bi-show="zh"] .bil > .bil-en { display: revert; visibility: hidden; }
 
 /* the language switch, top right of the slides (bilingual.js): quiet until you point at it */
 .bi-switch {

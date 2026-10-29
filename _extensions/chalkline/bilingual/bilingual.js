@@ -23,6 +23,7 @@
     } catch (e) { /* private window */ }
   }
   function apply() {
+    html.classList.toggle("bi-slides", !!cfg.slides);   // a hidden language keeps its room (bilingual.css)
     html.dataset.biPrimary = state.primary;
     html.dataset.biShow = state.show;
   }
