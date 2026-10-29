@@ -16,6 +16,27 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Scheme backgrounds no longer go blank
+- **Asked for:** "could you check that backgrounds are getting applied correctly when switching slides? I noticed that sometimes if you move from a slide with no theme to one with one it still has a blank background."
+- **Why:** reveal.js throws away its background layers and makes new, blank ones whenever `Reveal.configure()` or `Reveal.sync()` runs. Chalkline painted the scheme backgrounds into those layers only once, when the deck opened. The toolbox's Slide size tool calls `Reveal.configure()` when a deck opens (for any teacher who has changed the slide size) and while its slider moves, so every slide with a scheme or look of its own (night, sky, lagoon, glass, scroll…) then showed a blank background.
+- **Changed:** `_extensions/chalkline/schemes.html`: watches reveal's background layers and paints them again whenever reveal makes new ones (from the slides' classes, so a scheme the style picker put on a slide stays too). Checked in the Slide kit deck with a saved slide size: before, every themed slide was blank; after, all of them have their paper, forwards and backwards, and after `configure()` and `sync()`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-29: One language on: it takes the top place
+- **Asked for:** "when you select one language only, that language should swap to the dominant position, not stay as a subtitle." And: "A tiny reflow when you switch which one is on top isn't a bad thing."
+- **Why:** the goal of the change below was that boxes don't suddenly get half as tall when a language is switched off, not that nothing moves at all.
+- **Changed:** `_extensions/chalkline/bilingual/bilingual.css`: the language you show is large and first again; the hidden one stays invisible in the second language's place and size, so boxes keep their height (Slide kit cards: 274px both and EN, 270px 中).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-29: A hidden language keeps its room on slides
+- **Asked for:** "when a language is hidden, it should just be invisible, not absent. That way the page won't reflow and look weird."
+- **Why:** switching EN / 中 made everything on the slide jump: the hidden language's lines vanished and the shown one grew.
+- **Changed:** `_extensions/chalkline/bilingual/bilingual.js`: marks a deck's `<html>` with `.bi-slides`. `_extensions/chalkline/bilingual/bilingual.css`: on slides the hidden language is `visibility: hidden` (it keeps its space), and the shown one keeps its size and place (⇅ still makes 中文 the large one). Pages that show one language through their labels still leave the other out, as before. The old Slide style experiment (`slide-style/`) is unchanged. Checked in the Slide kit deck: every bilingual line is in the same place in EN, 文A and 中.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Lagoon gets a slight gradient
 - **Asked for:** "For the lagoon theme, give the background a slight gradient."
 - **Why:** not given.

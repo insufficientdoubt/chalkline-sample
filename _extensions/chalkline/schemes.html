@@ -25,22 +25,35 @@
   function ownPicture(s) {
     return s.hasAttribute("data-background-image") || s.hasAttribute("data-background-video") || s.hasAttribute("data-background-iframe");
   }
-  function start() {
-    var reveal = document.querySelector(".reveal");
-    var deck = ((document.getElementById("chalkline-scheme") || {}).textContent || "").trim();
-    if (deck) reveal.classList.add("scheme-" + deck);
-    var rs = getComputedStyle(reveal);
-    var deckPaper = rs.getPropertyValue("--paper").trim(), deckImage = rs.getPropertyValue("--paper-image").trim();
-    if (deck) {   // the screen around the slide too
-      var html = document.documentElement.style;
-      html.setProperty("--r-background-color", deckPaper);
-    }
+  var deck = "", deckPaper = "", deckImage = "";
+  function paintAll() {
     [].forEach.call(document.querySelectorAll(".reveal .slides section"), function (s) {
       if (s.querySelector(":scope > section") || ownPicture(s) || s.hasAttribute("data-background-color")) return;
       var st = getComputedStyle(s);
       // a deck scheme, or a slide whose scheme or look gives it its own paper
       if (deck || st.getPropertyValue("--paper").trim() !== deckPaper || st.getPropertyValue("--paper-image").trim() !== deckImage) paint(s);
     });
+  }
+  function start() {
+    var reveal = document.querySelector(".reveal");
+    deck = ((document.getElementById("chalkline-scheme") || {}).textContent || "").trim();
+    if (deck) reveal.classList.add("scheme-" + deck);
+    var rs = getComputedStyle(reveal);
+    deckPaper = rs.getPropertyValue("--paper").trim(); deckImage = rs.getPropertyValue("--paper-image").trim();
+    if (deck) {   // the screen around the slide too
+      var html = document.documentElement.style;
+      html.setProperty("--r-background-color", deckPaper);
+    }
+    paintAll();
+    // Reveal.configure() and Reveal.sync() (the toolbox's slide size, for one) throw the background
+    // layers away and make new, blank ones: paint those again (from the slides' classes, so a scheme
+    // a tool put on a slide stays too)
+    var layers = reveal.querySelector(":scope > .backgrounds"), queued = false;
+    if (layers) new MutationObserver(function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; paintAll(); });
+    }).observe(layers, { childList: true });
   }
   window.ChalklineSchemes = { paint: paint, ownPicture: ownPicture };
   if (!window.Reveal) return;
