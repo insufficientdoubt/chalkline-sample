@@ -712,7 +712,7 @@ Instructions, a video and a work gallery. Pieces: Quarto `.columns`; `{{</* vide
 :::
 :::
 ::: {.column width="54%"}
-::: {.box style="--pic-height: 5.4em; --pic-fit: contain"}
+::: {.box style="--pic-height: 4.2em; --pic-fit: contain"}
 ![](images/sevenstates.jpg){fig-alt="Map of the seven Warring States around 260 BCE"}
 
 [Ask · 提问]{.kicker}
@@ -825,7 +825,7 @@ Chained instructions, easy to hard: each challenge adds to the same project (a d
 
 :::: {.columns}
 ::: {.column width="31%"}
-::: {style="font-size: 0.54em; --pic-fit: contain; --pic-height: 2.2em; --pad: 0.35em 0.7em; --gap: 0.35em"}
+::: {style="font-size: 0.5em; --pic-fit: contain; --pic-height: 1.8em; --pad: 0.3em 0.7em; --gap: 0.25em"}
 ::: {.box .plain}
 ![](images/jigsaw-home.svg){fig-alt="Four home groups, each with one A, B, C and D"}
 
