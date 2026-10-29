@@ -26,7 +26,7 @@ bilingual:
 
 :::: {.columns}
 ::: {.column width="55%"}
-- Words in two languages, written once: `[Schools | 诸子]{.bi}`
+- Optional: words in two languages, written once: `[Schools | 诸子]{.bi}` (next slide)
 - Layout from Quarto and a few plain pieces: `.columns`, `.tiles`, `.chain`, `.box`, `.strip`
 - What words *are*, not where they go: `.kicker`, `.big`, `.lead`, `.pill`, `.fine`
 - A new look is a few lines of CSS (see `slide-kit-looks.css`)
@@ -35,13 +35,49 @@ bilingual:
 ::: {.box .plain}
 ### Try it
 
-Look at the top-right corner. **EN · 文A · 中** picks the languages. **⇅** swaps which one is large. The **palette** tries other colours and looks.
+The **palette** in the top-right corner tries other colours and looks, on this slide or on every slide.
 :::
 :::
 ::::
 
 ::: notes
 Compare with the first experiment (slide-style-slides.qmd): there, each kind of slide had its own fixed slots. Here every slide is ordinary Markdown with a few classes, so a teacher can change the number of boxes, mix pieces, or add a picture without new code. Each slide's notes say which pieces it uses.
+:::
+
+## [This slide is bilingual | 这张幻灯片是双语的]{.bi} {#bilingual}
+
+:::: {.columns}
+::: {.column width="52%"}
+::: {.box .plain}
+[Optional · 可选]{.kicker}
+
+[Any slide can have two languages. On English-only slides, the controls hide. | 任何幻灯片都可以使用两种语言。只有英文的幻灯片上，按钮会隐藏。]{.bi}
+:::
+
+::: box
+[How to write it · 写法]{.kicker}
+
+`[Schools | 诸子]{.bi}`
+
+[English, a bar, then 中文. | 先写英文，再写竖线，然后写中文。]{.bi}
+:::
+:::
+::: {.column width="48%"}
+::: {.box .dark}
+[The controls ↗ · 切换按钮]{.kicker}
+
+- **EN** · [English only | 只显示英文]{.bi}
+- **文A** · [both languages | 两种语言]{.bi}
+- **中** · [中文 only | 只显示中文]{.bi}
+- **⇅** · [swap the large one | 交换大小]{.bi}
+
+[Your choice is kept for every deck in this browser. | 你的选择会保存在这个浏览器里，所有幻灯片都适用。]{.bi .fine style="color: inherit; opacity: 0.8"}
+:::
+:::
+::::
+
+::: notes
+Bilingual slides are optional. Write `[English | 中文]{.bi}` anywhere: a title, a bullet, a box, a table cell (there, write the bar as `\|`). The deck's labels say which language is large at first (`bilingual: primary: en`). The controls show only on slides with bilingual text. Try them here: the orange box around them is only on this slide (`slide-kit-looks.css`). The rest of the deck shows bilingual text in many layouts (section opener, big idea, source, cards, task, table, media, frames, lesson intro, Think-Pair-Share) and some English-only slides.
 :::
 
 ## {#section .center}
@@ -603,23 +639,23 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 Lesson intro and Do now, on one slide. Pieces: an ordinary Markdown table for topic, objective and homework; `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); `[ ]{.gap}` for the blanks in a sentence frame; a `.box` for the Do now with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
 :::
 
-## [Make a museum card | 制作博物馆卡片]{.bi} {#instructions}
+## Make a museum card {#instructions}
 
 :::: {.columns}
 ::: {.column width="56%"}
 {{< video https://upload.wikimedia.org/wikipedia/commons/d/de/Ink_grinding.webmhd.webm height="200" title="Grinding an ink stick on an inkstone" >}}
 
 ::: {.box .plain style="font-size: 0.85em"}
-[Instructions · 任务说明]{.kicker}
+[Instructions]{.kicker}
 
-[Watch how ink is made. Then make a card for one thinker. | 先看如何磨墨，再为一位思想家制作卡片。]{.bi}
+Watch how ink is made. Then make a card for one thinker.
 
-1. [Write his name, school and big idea. | 写出他的姓名、学派和主张。]{.bi}
-2. [Draw one picture for his idea. | 为他的主张画一幅图。]{.bi}
+1. Write his name, school and big idea.
+2. Draw one picture for his idea.
 :::
 :::
 ::: {.column width="44%"}
-[Work gallery · 作品展示]{.kicker}
+[Work gallery]{.kicker}
 
 {{< pdf-viewer "../01-ancient-greece/01-ancient-greece-packet.pdf" layout="gallery" title="Unit 1 packet: Ancient Greece" >}}
 :::
@@ -691,18 +727,18 @@ Instructions, a video and a work gallery. Pieces: Quarto `.columns`; `{{</* vide
 Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes for where students sit (original drawings, shown whole with `--pic-fit: contain`); on the right a `.box` with the question and a picture, and two `.dark` boxes with `{{</* timer 1.5 */>}}` and `{{</* timer 2 */>}}` (a slide can have more than one timer; `font-size: 0.45em` on their tiles makes them smaller).
 :::
 
-## [Museum cards: easy to hard | 博物馆卡片：由易到难]{.bi} {#easy-to-hard}
+## Museum cards: easy to hard {#easy-to-hard}
 
 :::: {.columns style="font-size: 0.8em"}
 ::: column
-### [Part 1: name, school, big idea | 第一部分：姓名、学派、主张]{.bi}
+### Part 1: name, school, big idea
 
 ::: row
 [1]{.num}
 
 ![](images/mencius.jpg){.thumb fig-alt="Mencius"}
 
-[**Mencius:** kind government. Draw his idea. | **孟子**：仁政。画出他的主张。]{.bi}
+**Mencius:** kind government. Draw his idea.
 :::
 
 ::: row
@@ -710,7 +746,7 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/mozi.jpg){.thumb fig-alt="The book Mozi"}
 
-[**Mozi:** love everyone. Give one example. | **墨子**：兼爱。举一个例子。]{.bi}
+**Mozi:** love everyone. Give one example.
 :::
 
 ::: row
@@ -718,7 +754,7 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/zhuangzi.jpg){.thumb fig-alt="Zhuangzi"}
 
-[**Zhuangzi:** follow nature. Find one line in the reading. | **庄子**：顺应自然。在阅读材料中找一句话。]{.bi}
+**Zhuangzi:** follow nature. Find one line in the reading.
 :::
 
 ::: row
@@ -726,18 +762,18 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/hanfei.jpg){.thumb fig-alt="A statue of Han Fei"}
 
-[**Han Fei:** rule by law. Write one law he might like. | **韩非**：以法治国。写一条他可能喜欢的法律。]{.bi}
+**Han Fei:** rule by law. Write one law he might like.
 :::
 :::
 ::: column
-### [Part 2: add a question and your answer | 第二部分：提一个问题并回答]{.bi}
+### Part 2: add a question and your answer
 
 ::: row
 [5]{.num}
 
 ![](images/suqin.jpg){.thumb fig-alt="Su Qin"}
 
-[**Su Qin:** six states joined against Qin. Why? | **苏秦**：六国联合抗秦。为什么？]{.bi}
+**Su Qin:** six states joined against Qin. Why?
 :::
 
 ::: row
@@ -745,7 +781,7 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/zouyan.jpg){.thumb fig-alt="A bronze mirror"}
 
-[**Zou Yan:** five phases. Draw the cycle. | **邹衍**：五行。画出循环图。]{.bi}
+**Zou Yan:** five phases. Draw the cycle.
 :::
 
 ::: row
@@ -753,7 +789,7 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/gongsun.jpg){.thumb fig-alt="A white horse"}
 
-[**Gongsun Long:** "A white horse is not a horse." Agree? Why? | **公孙龙**：“白马非马”。你同意吗？为什么？]{.bi}
+**Gongsun Long:** "A white horse is not a horse." Agree? Why?
 :::
 
 ::: row
@@ -761,7 +797,7 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 
 ![](images/xuxing.jpg){.thumb fig-alt="Shennong, the farmer god"}
 
-[**Xu Xing:** even the king should farm. Is it fair? | **许行**：君王也应该耕种。公平吗？]{.bi}
+**Xu Xing:** even the king should farm. Is it fair?
 :::
 :::
 ::::
