@@ -8,9 +8,11 @@ format:
   revealjs:
     width: 1280
     height: 720
-    css: slide-kit-looks.css      # this deck's own looks (game, brutal, scroll, dusk): only token changes and a few rules
+    css: slide-kit-looks.css      # this deck's own looks and schemes (game, brutal, scroll, dusk, trail, glass)
     include-after-body: slide-kit-style.html   # this deck's own style picker (the palette next to the language switch)
     footer: "Unit 2 · Hundred Schools of Thought · 第二单元 · 百家争鸣"
+resources:
+  - images/abstract-glow.jpg      # the glass scheme's background (slide-kit-looks.css)
 title-slide-attributes:
   data-background-color: "#003477"
 bilingual:
@@ -424,11 +426,14 @@ A task. Pieces: Chalkline's existing `.steps` (numbered cards), `.box` with `.ki
 A reveal table: an ordinary Markdown table (inside a table cell the bar is written `\|`); each answer is a `.fragment`, so it appears on the next click. The row labels always show. The table's look is Chalkline's existing table style.
 :::
 
-## {#media background-image="images/sevenstates.svg" background-size="contain" background-color="#14213D"}
+## {#media background-color="#14213D"}
 
 [Watch · 观看]{.pill .absolute top=10 left=0}
 
-::: {.box .plain .absolute bottom=0 left=0 right=0}
+::: {.cover .media}
+![](images/sevenstates.svg)
+
+::: {.box .plain}
 ::: row
 [Think · 思考]{.kicker}
 
@@ -437,9 +442,10 @@ A reveal table: an ordinary Markdown table (inside a table cell the bar is writt
 
 [Placeholder map, an original drawing. Put a real picture or a video here. | 示意图（原创），请换成真实图片或视频。]{.bi .fine}
 :::
+:::
 
 ::: notes
-Media. Pieces: Quarto's own `background-image=` fills the slide; `.absolute` (Quarto's) pins a `.pill` and a `.box` caption bar to the corners. A video: `background-video=` instead.
+Media. The picture is in the slide, not behind it, inside a `.cover .media` block: it grows to fill the room the caption box leaves, so the question never covers it. A video works the same way: `{{</* video ... */>}}` with no size fills the room left on its slide. A `.pill` is pinned to the corner with Quarto's `.absolute`.
 :::
 
 ## [Speaking frames: fill in the blanks | 发言句型]{.bi} {#frames}
@@ -805,4 +811,91 @@ Night on Chalkline's table style: the header row and stripes follow the scheme's
 
 ::: notes
 The cards in trail: a stitched ring on each card, a turquoise stitched border on the highlighted one, a zigzag under the title.
+:::
+
+## [What defined the Warring States era? | 春秋战国有什么整体的时代特征？]{.bi} {#big-idea-glass .scheme-glass}
+
+
+::: {.cover style="height: auto; padding: 0.6em 0"}
+[Turmoil · Change · Growth | 动荡 · 变化 · 发展]{.bi .big style="text-align: center"}
+:::
+
+::: chain
+::: {.box style="text-align: center"}
+[Economic change | 经济之变]{.bi}
+:::
+
+::: {.box style="text-align: center"}
+[Social change | 社会之变]{.bi}
+:::
+
+::: {.box style="text-align: center"}
+[A debate of ideas | 思想之辩]{.bi}
+:::
+:::
+
+[The pre-Qin thinkers all wanted to save a troubled world, so their ideas grew out of their time. (Hu Shih) | 先秦诸子皆为忧世之乱而思以拯济之，故其学皆应时而生。——胡适]{.bi .fine}
+
+::: notes
+`{.scheme-glass}`: flat and modern. A full-slide abstract picture with frosted, see-through tiles (`backdrop-filter`) on it. The picture is an original drawing; any photo can take its place (one line in `slide-kit-looks.css`).
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-glass .scheme-glass}
+
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+The cards in glass.
 :::

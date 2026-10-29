@@ -117,6 +117,14 @@
   gap: var(--gap);
 }
 .reveal .cover > * { margin: 0; }
+// Media: a picture (or video) and its caption. The picture takes all the room the caption leaves,
+// so the caption never covers it:  ::: {.cover .media}  then the picture, then a box.
+.reveal .cover.media { justify-content: flex-start; padding-bottom: 1.4em; }   // clear of the footer
+.reveal .cover.media > :is(p, div):has(img, video, iframe) { flex: 1 1 0; min-height: 0; display: flex; justify-content: center; }
+.reveal .cover.media :is(img, video, iframe) { height: 100%; max-height: 100%; width: auto; max-width: 100%; object-fit: contain; margin: 0; }
+.reveal .cover.media figure { height: 100%; margin: 0; }
+// a line holding only a pinned (.absolute) thing takes no room
+.reveal .slides section > p:has(> .absolute:only-child) { margin: 0; height: 0; }
 
 // ---- Boxes ----
 

@@ -16,6 +16,14 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: A media layout whose caption never covers the picture
+- **Asked for:** "for the media slide layout I noticed that the question would cover the bottom of the video/image." Also, for the Slide kit deck: "a kind of flat modern design with a background image (abstract, something from Unsplash) and semi-transparent tiles", and the scroll look's corner ornament "will overlap with the title text".
+- **Why:** the picture was the slide's background, so the caption box sat on top of it.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: `::: {.cover .media}` holds a picture (or video) and its caption; the picture takes all the room the caption leaves. A line holding only an `.absolute` thing (a pinned pill) takes no room.
+  - Content: the media slide uses it; the deck's own **glass** scheme (an original abstract background in `images/abstract-glow.jpg`, frosted see-through tiles with `backdrop-filter`) with two slides and a place in the style picker; the scroll look's title moves clear of the corner ornament. Unsplash couldn't be reached from the AI's session, so the background is an original picture; any photo can replace it.
+- **Who it helps:** probably every Chalkline course (the media layout).
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Slide columns with a real gap and equal heights
 - **Asked for:** "on the slide with Confucius on government, the spacing looks off. Is this a style issue or something innate to the platform?"
 - **Why:** the source box touched the two boxes under it, the gap between those two was smaller than elsewhere, and they had different heights.
