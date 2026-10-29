@@ -327,6 +327,11 @@ local function Div(el)
     return nil
   end
   if quarto.doc.is_format("html") then
+    -- slide kit: a box that starts with its ### title stays a box (pandoc would make it a slide of its own)
+    if quarto.doc.is_format("revealjs") and el.classes:includes("box") and el.content[1] and el.content[1].t == "Header" then
+      el.content:insert(1, pandoc.RawBlock("html", "<!-- box -->"))
+      return el
+    end
     if el.classes:includes("poll") or el.classes:includes("poll-summary") then
       if quarto.doc.is_format("revealjs") then include_once("poll.html") end
     end

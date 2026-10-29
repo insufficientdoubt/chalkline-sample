@@ -16,6 +16,20 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Bilingual text on its own; a slide kit and a second experiment deck
+- **Asked for:** "Do the bilingual bit. Then make a second experiment deck using examples + built in layout tools" (content from the slide designs made the day before). "Mark the Lua short codes built yesterday for removal." "If open props/utopia helps, include."
+- **Why:** the first experiment had "very detailed context specific styling"; "we're going to need more generic reusable styling so that we have different types of text." Example slides rather than fixed templates, because "we don't know in advance what content the teachers will need" and "our goal is flexibility as a tool."
+- **Changed:**
+  - `_extensions/chalkline/bilingual/` (new): `bilingual.lua` turns `[English | 中文]{.bi}` into two marked spans anywhere (slides, pages, PDFs); alone in its line it stacks, in a sentence it stays on one line. `bilingual.css` styles only the second language (smaller, lighter), so a title stays a title and a dark box stays dark; `--bi-*` variables change it. `bilingual.js` reads the deck's `bilingual:` labels and adds the language switch to slides (same saved setting as the first experiment's). In HTML the class is `.bil`, because Bootstrap's icons already use `.bi`.
+  - `_extensions/chalkline/styles/layout.scss` (new, loaded with every deck): design tokens (colours, radius, shadow, a type scale named like Utopia's), layout pieces `.tiles` (as many columns as boxes) `.chain` `.row` `.cover`, `.box` (`.plain` `.dark` `.accent` `.hot` `.spot`), `.strip`, and text roles `.kicker` `.big` `.lead` `.pill` `.num` `.muted` `.small` `.fine` `.gap`.
+  - `_extensions/chalkline/filter.lua`: a `.box` whose first line is a `###` title stays one box (pandoc made it a slide of its own).
+  - `_extensions/chalkline/_extension.yml`: loads the two. `README.md`, `CHANGELOG.md`: rows and an entry.
+  - Marked **to be removed**: `slide-style/` (all four files) and `toolbox/tools/style.js` (comments at the top; `toolbox.js` comment).
+  - Content: new teacher-only deck `00-start-here/slide-kit-slides.qmd` (section, big idea, source and meaning, cards, task, reveal table, media, sentence frames, then the cards in three looks and the big idea dark) and its own looks in `slide-kit-looks.css`. The first experiment deck's description says it will go.
+  - Open Props and Utopia: not added. The slide is a fixed size that reveal.js scales, so Utopia's fluid sizes don't apply, and the 20 or so tokens needed are fewer than Open Props would bring in (it would also need copying into the project, since builds work offline). The token names follow theirs, so either can be added later.
+- **Who it helps:** probably every Chalkline course (bilingual text); the slide kit is an experiment for now.
+- **AI assistant:** Claude. Checked with real renders (Quarto 1.9.17) and screenshots of every slide in a headless browser, in both languages as primary, English only, and a page and a PDF with bilingual text.
+
 ## 2026-10-28: Slide style prototype, round 2 (own deck, corner language switch, nothing cut off)
 - **Asked for:** "this is an experiment, put it into a side deck"; "don't show the style tool in the toolbox, just pop it up when you go onto those slides"; "some stuff gets cut off"; "Make the language toggles appear in the corner of the slide. Understated. EN / (translate icon) / Zh, and another toggle for which one is primary. Then a 'style...' thing to pop up controls."
 - **Why:** "We wont actually ship this capability to live-restyle slides, probably. Live control language, yes, but not color/layout. This is for demo/testing purposes."

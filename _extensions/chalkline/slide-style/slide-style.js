@@ -1,4 +1,5 @@
 /*
+  TO BE REMOVED with slide-style.lua (see there).
   Slide style, in the browser (every deck with a styled slide, student site too):
     - click a card or a paragraph to select it: it takes the scheme's highlight colour and grows a little.
       Click it again, click the slide, or press Esc to clear. Tab and Enter (or Space) work too.

@@ -13,3 +13,5 @@ website:
   drafts:
   - course/play.qmd
   - course/units/00-start-here/quick-start.qmd
+  - course/units/00-start-here/slide-kit-slides.qmd
+  - course/units/00-start-here/slide-style-slides.qmd

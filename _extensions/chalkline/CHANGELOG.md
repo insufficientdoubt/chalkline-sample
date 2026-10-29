@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Bilingual text** (`bilingual/`): `[English | 中文]{.bi}` in any title, bullet, table cell or box, on
+  slides, pages and PDFs. Alone in its line, the two languages stack; inside a sentence, they stay on one
+  line. Only the second language is styled (smaller, lighter), so it takes its place's own size and colour.
+  A deck's `bilingual: {primary, show}` labels set the start; slides get a language switch in the corner.
+- **Slide kit** (experiment, `styles/layout.scss`): design tokens (`--accent`, `--surface`, `--radius`,
+  `--step-1`, ...), layout pieces (`.tiles`, `.chain`, `.row`, `.cover`, `.box`, `.strip`) and text roles
+  (`.kicker`, `.big`, `.lead`, `.pill`, `.num`, `.muted`, `.small`, `.fine`, `.gap`). A `.box` that starts with
+  a `###` title stays one box. A look for a slide or deck is a few token changes in the course's own CSS.
+- **To be removed:** `slide-style/` and `toolbox/tools/style.js` (the `{.styled kind="..."}` experiment).
+
 - **Hosting** (`HOSTING.md`, `hosting/`): step-by-step setup for a student site and a teacher site with
   email-code sign-in on Cloudflare Workers, mostly done by Claude with the Cloudflare API connector.
   `hosting/` has the GitHub workflow and Worker settings to copy into a course.
