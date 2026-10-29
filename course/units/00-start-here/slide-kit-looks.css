@@ -142,3 +142,21 @@
 
 /* the bilingual slide (#bilingual): an orange box around the language controls, only while that slide shows */
 .reveal:has(section#bilingual.present) .bi-switch { opacity: 1; outline: 3px solid #ff8c0f; outline-offset: 5px; border-radius: 999px; }
+
+/* puzzle: four boxes in a 2 × 2 square that lock together like jigsaw pieces (the Jigsaw slide).
+   Each box's colour is --piece; a round tab of that colour sticks out into its neighbour. */
+.reveal .puzzle { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; height: 510px; font-size: 0.7em; --thumb: 2.8em; }
+.reveal .slides .puzzle > .box.box { position: relative; margin: 0; background: var(--piece); border-radius: 0; padding: 0.7em 1.4em; justify-content: center; gap: 0.5em; }
+.reveal .slides .puzzle > .box.box:nth-child(1) { border-top-left-radius: var(--radius); z-index: 2; }
+.reveal .slides .puzzle > .box.box:nth-child(2) { border-top-right-radius: var(--radius); }
+.reveal .slides .puzzle > .box.box:nth-child(3) { border-bottom-left-radius: var(--radius); }
+.reveal .slides .puzzle > .box.box:nth-child(4) { border-bottom-right-radius: var(--radius); z-index: 2; }
+.reveal .puzzle > .box:is(:nth-child(1), :nth-child(4))::before,
+.reveal .puzzle > .box:is(:nth-child(1), :nth-child(4))::after {
+  content: ""; position: absolute; width: 1.9em; height: 1.9em; border-radius: 50%; background: var(--piece);
+}
+.reveal .puzzle > .box:nth-child(1)::after { right: -0.95em; top: calc(50% - 0.95em); }    /* into B */
+.reveal .puzzle > .box:nth-child(1)::before { bottom: -0.95em; left: calc(50% - 0.95em); } /* into C */
+.reveal .puzzle > .box:nth-child(4)::after { top: -0.95em; left: calc(50% - 0.95em); }     /* into B */
+.reveal .puzzle > .box:nth-child(4)::before { left: -0.95em; top: calc(50% - 0.95em); }    /* into C */
+.reveal .puzzle .row .bil { font-weight: 700; }

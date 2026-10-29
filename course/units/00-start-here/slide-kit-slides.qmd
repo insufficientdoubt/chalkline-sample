@@ -806,15 +806,17 @@ Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes 
 Chained instructions, easy to hard: each challenge adds to the same project (a drum kit made of sprites), so students build it up step by step and go as far as they can. Pieces: Quarto `.columns` with a `###` heading for each part; each challenge a `.row` with a `.num`, a small `.thumb` picture (`object-fit: contain` shows a whole drawing) and its words.
 :::
 
-## [Jigsaw: become an expert, then teach | 拼图学习：先当专家，再教同伴]{.bi} {#jigsaw}
+## [Jigsaw: expert groups | 拼图学习：专家组任务]{.bi} {#jigsaw}
 
-::: {.chain style="--pic-fit: contain; --pic-height: 3.2em; align-items: stretch; font-size: 0.72em"}
+:::: {.columns}
+::: {.column width="31%"}
+::: {style="font-size: 0.54em; --pic-fit: contain; --pic-height: 2.2em; --pad: 0.35em 0.7em; --gap: 0.35em"}
 ::: {.box .plain}
 ![](images/jigsaw-home.svg){fig-alt="Four home groups, each with one A, B, C and D"}
 
 [1 · Home group | 原小组]{.bi .kicker}
 
-[Each person gets a letter: A, B, C or D. | 每人领一个字母：A、B、C或D。]{.bi}
+[Get a letter: A, B, C or D. | 每人领一个字母。]{.bi}
 :::
 
 ::: {.box .plain}
@@ -822,62 +824,79 @@ Chained instructions, easy to hard: each challenge adds to the same project (a d
 
 [2 · Expert group | 专家组]{.bi .kicker}
 
-[Meet the others with your letter. Read, talk, agree on 3 key points. | 和同字母的同学一起读、讨论，总结3个要点。]{.bi}
+[Do your puzzle piece. Agree on 3 key points. | 完成你的拼图任务，总结3个要点。]{.bi}
 
-::: {.end style="font-size: 0.5em; align-self: center"}
+::: {style="font-size: 0.42em; align-self: center"}
 {{< timer 10 >}}
 :::
 :::
 
 ::: {.box .plain}
-![](images/jigsaw-home.svg){fig-alt="Back in the four home groups"}
-
 [3 · Back home: teach | 回原小组：讲解]{.bi .kicker}
 
-[Teach your group your 3 points. Listen and take notes. | 向小组讲解你的3个要点。认真听，做笔记。]{.bi}
+[Teach your 3 points. Take notes. | 讲解3个要点，做笔记。]{.bi}
 
-::: {.end style="font-size: 0.5em; align-self: center"}
+::: {style="font-size: 0.42em; align-self: center"}
 {{< timer 8 >}}
 :::
 :::
 :::
-
-::: {.tiles style="font-size: 0.8em"}
-::: {.box style="--strong: #FF8C0F; --on-strong: #1F2933"}
+:::
+::: {.column width="69%"}
+::: puzzle
+::: {.box style="--piece: #FFE4C7; --strong: #FF8C0F"}
 ::: row
 [A]{.num}
 
-[Confucianism | 儒家]{.bi}
-:::
+![](images/mencius.jpg){.thumb fig-alt="Mencius"}
+
+[Confucianism · Mencius | 儒家 · 孟子]{.bi}
 :::
 
-::: {.box style="--strong: #14D7CD; --on-strong: #1F2933"}
+[Read about Mencius. What should a good ruler do? | 阅读孟子。好的统治者应该做什么？]{.bi}
+:::
+
+::: {.box style="--piece: #CDF6F3; --strong: #14D7CD"}
 ::: row
 [B]{.num}
 
-[Mohism | 墨家]{.bi}
-:::
+![](images/mozi.jpg){.thumb fig-alt="The book Mozi"}
+
+[Mohism · Mozi | 墨家 · 墨子]{.bi}
 :::
 
-::: {.box style="--strong: #0087FF"}
+[Read about Mozi. Why was he against wars of attack? | 阅读墨子。他为什么反对攻打别国？]{.bi}
+:::
+
+::: {.box style="--piece: #D3E8FF; --strong: #0087FF"}
 ::: row
 [C]{.num}
 
-[Daoism | 道家]{.bi}
-:::
+![](images/zhuangzi.jpg){.thumb fig-alt="Zhuangzi"}
+
+[Daoism · Zhuangzi | 道家 · 庄子]{.bi}
 :::
 
-::: {.box style="--strong: #003477"}
+[Read about Zhuangzi. What does "follow nature" mean? | 阅读庄子。“顺应自然”是什么意思？]{.bi}
+:::
+
+::: {.box style="--piece: #D5DEEB; --strong: #003477"}
 ::: row
 [D]{.num}
 
-[Legalism | 法家]{.bi}
-:::
-:::
+![](images/hanfei.jpg){.thumb fig-alt="A statue of Han Fei"}
+
+[Legalism · Han Fei | 法家 · 韩非]{.bi}
 :::
 
+[Read about Han Fei. Why did rulers like strict laws? | 阅读韩非。统治者为什么喜欢严格的法律？]{.bi}
+:::
+:::
+:::
+::::
+
 ::: notes
-A jigsaw. Students start in mixed home groups and each takes a letter; they meet the others with the same letter in an expert group, become experts on one school, then go back home and teach it. Pieces: a `.chain` of three `.box`es (the arrows show the order), each with a picture first (original drawings: each circle is a student, the letter is their topic) and a `.kicker`; a `{{</* timer */>}}` in the two timed steps; `.tiles` for the four topics, each a `.row` with a `.num` in its letter's colour (`--strong` on the box).
+A jigsaw. Students start in mixed home groups and each takes a letter; the same letters meet as an expert group and do that puzzle piece; then everyone goes home and teaches it. Pieces: on the left, three `.box`es, the first two with a picture first (original drawings: each circle is a student, the letter is their topic), a `.kicker` and a `{{</* timer */>}}` for the two timed steps; on the right `::: puzzle`, four `.box`es that lock together like puzzle pieces (`slide-kit-looks.css`), each with its tint (`--piece`), a `.num` in its letter's colour (`--strong`), a `.thumb` picture and the group's question.
 :::
 
 ## [Lesson summary | 课堂小结]{.bi} [made in draw.io]{.drawio-label} {#summary}
