@@ -163,7 +163,7 @@
 
 /* lesson-info: the lesson intro's topic, objective and homework, labels right-aligned against a line
    (the Lesson intro slide). An ordinary Markdown table inside  ::: lesson-info */
-.reveal .lesson-info table { font-size: 0.7em; width: 100%; margin: 0; }
+.reveal .lesson-info table { font-size: 0.64em; width: 100%; margin: 0; }
 .reveal .lesson-info thead { display: none; }
 .reveal .lesson-info td { background: none !important; border-bottom: 2px solid color-mix(in srgb, var(--hot) 45%, transparent); padding: 0.2em 0.7em; vertical-align: top; }
 .reveal .lesson-info tr:last-child td { border-bottom: 0; }
@@ -172,3 +172,19 @@
 /* vocab-row: focus words under their pictures, centred and a little larger than tiles make them */
 .reveal .tiles.vocab-row > .box { align-items: center; text-align: center; }
 .reveal .tiles.vocab-row > .box > p { font-size: 0.68em; }
+
+/* area: a labelled part of a slide, the label small in its top-right corner, so an observer can't
+   miss it:  ::: {.area .content label="Content objective"}  (or .language). The label is the block's own words. */
+.reveal .area { position: relative; padding: 0.55em 0.8em 0.6em; border-radius: var(--radius); border-left: 6px solid var(--area-line); background: var(--area-bg); }
+.reveal .area + .area { margin-top: 0.35em; }
+.reveal .area::before {
+  content: attr(data-label); position: absolute; top: 0.45em; right: 0.8em;
+  font-size: 0.42em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--area-line);
+}
+.reveal .area.content { --area-line: #0067C5; --area-bg: color-mix(in srgb, #0087FF 7%, var(--paper)); }
+.reveal .area.language { --area-line: #B85C00; --area-bg: color-mix(in srgb, #FF8C0F 9%, var(--paper)); }
+.reveal .area > .lesson-info { margin-top: 0.35em; }
+.reveal .area .obj { font-size: 0.68em; font-weight: 600; margin: 0.6em 0 0.35em; }
+.reveal .area .frame { font-size: 0.68em; margin: 0.4em 0 0; }
+.reveal .area .tiles { margin: 0.2em 0; }
+.reveal .area .tiles > .box { --surface-2: var(--paper); padding: 0.3em 0.4em; }

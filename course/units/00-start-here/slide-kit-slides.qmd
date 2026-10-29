@@ -579,6 +579,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 
 :::: {.columns style="height: 490px"}
 ::: {.column width="57%"}
+::: {.area .content label="Content objective · 内容目标"}
 ::: lesson-info
 | | |
 |--:|:--|
@@ -588,10 +589,12 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 
 : {tbl-colwidths="[25,75]"}
 :::
+:::
 
-[Focus vocabulary · 重点词汇]{.kicker}
+::: {.area .language label="Language objective · 语言目标"}
+[I can use the focus words and a sentence frame to explain an idea. | 我能用重点词汇和句型说明一个主张。]{.bi .obj}
 
-::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 3.2em"}
+::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 2.5em"}
 ::: {.box .plain}
 ![](../../../vocab/images/GRC-009.svg){fig-alt=""}
 
@@ -617,10 +620,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::
 :::
 
-::: {.box .plain style="font-size: 0.75em"}
-[Sentence frames · 句型]{.kicker}
-
-[The [ ]{.gap} school said rulers should [ ]{.gap}. | [ ]{.gap}学派认为统治者应该[ ]{.gap}。]{.bi}
+[The [ ]{.gap} school said rulers should [ ]{.gap}. | [ ]{.gap}学派认为统治者应该[ ]{.gap}。]{.bi .frame}
 :::
 :::
 ::: {.column width="43%"}
@@ -649,7 +649,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 ```
 
 ::: notes
-Lesson intro and Do now, on one slide. Pieces: the date in the title is today's, filled in when the slide opens (`[today]{.today}` and a few lines of script on the slide); an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line (`slide-kit-looks.css`); `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); `[ ]{.gap}` for the blanks in a sentence frame; a `.box` for the Do now, as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
+Lesson intro and Do now, on one slide. Pieces: the date in the title is today's, filled in when the slide opens (`[today]{.today}` and a few lines of script on the slide); two `.area` blocks, each labelled in its corner (`label="Content objective"`, `label="Language objective"`) so observers find them at once: the content area holds an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line; the language area holds the language objective, `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); and a sentence frame with `[ ]{.gap}` for the blanks (all in `slide-kit-looks.css`); a `.box` for the Do now, as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
 :::
 
 ## Make a museum card {#instructions}
