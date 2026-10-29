@@ -4,6 +4,7 @@
      --hot --on-hot --strong --on-strong   --radius --border --shadow --gap --pad
      --bi-second-size --bi-second-color --bi-zh-font   (bilingual text)
    For a whole deck, put the tokens on .reveal instead of a slide's class.
+   --paper, --paper-image and --paper-size are the slide's background (Chalkline paints them behind it).
    Rule of thumb: check that every text and background pair is easy to read. */
 
 /* game: thick outlines, hard shadows, tilted cards. Shapes only: the colours come from the slide's scheme. */
@@ -21,23 +22,6 @@
 .reveal section.look-brutal h2 { display: inline-block; padding: 2px 16px; background: var(--accent); color: var(--on-accent); border: 4px solid var(--heading); box-shadow: 6px 6px 0 var(--heading); }
 .reveal section.look-brutal h2::after { display: none; }
 
-/* scroll: paper colours, a serif for 中文, a wooden rod at the top and bottom of each card */
-.reveal section.look-scroll {
-  --paper: #EADFC4;
-  --ink: #2B2118; --ink-muted: #5E4E3A; --heading: #5A2A12; --surface: #FBF3DC; --hot: #B3261E; --on-hot: #fff;
-  --strong: #5A2A12; --on-strong: #FBF3DC; --accent: #8C2F1B; --radius: 3px; --shadow: 0 3px 8px rgba(60, 35, 10, 0.25);
-  --bi-zh-font: "Noto Serif SC", "Songti SC", "SimSun", serif;
-  color: var(--ink);
-}
-.reveal section.look-scroll h2 { color: var(--heading); }
-.reveal section.look-scroll h2::after { background: var(--accent); }
-.reveal section.look-scroll .tiles > .box {
-  padding-top: 34px; padding-bottom: 34px;
-  background-image: linear-gradient(#7A4A21, #7A4A21), linear-gradient(#7A4A21, #7A4A21);
-  background-size: 100% 14px; background-position: top, bottom; background-repeat: no-repeat;
-}
-.reveal section.look-scroll .spot { outline: 3px solid var(--hot); outline-offset: 3px; }
-
 /* dusk: a dark slide (with background-color="#00234F" on the title) */
 .reveal section.look-dusk {
   --paper: #00234F;
@@ -46,3 +30,79 @@
 }
 .reveal section.look-dusk h2 { color: var(--heading); }
 .reveal section.look-dusk h2::after { background: #14D7CD; }
+
+/* trail: this deck's own colour scheme, for fun, after a handbag catalogue's "循迹" pages: cream paper,
+   suede and saddle leather, white stitching, olive line drawings (zigzag "tiger teeth", angled
+   connectors, a stitched circle) and turquoise beads. Pick it with Trail in the palette, or {.scheme-trail}. */
+.reveal .scheme-trail {
+  --paper: #f3eee6;
+  --paper-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 1280 720%27 preserveAspectRatio=%27xMidYMid slice%27%3E %3Cg fill=%27none%27 stroke=%27%238a7d4f%27 stroke-width=%272.2%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27 opacity=%27.55%27%3E %3Cpath d=%27M1046 96 l14 -9 l14 9 l14 -9 l14 9 l14 -9 l14 9 l16 0%27/%3E %3Cpath d=%27M1030 132 h18 l12 10 l12 -10 l12 10 l12 -10 h40%27/%3E %3Cpath d=%27M1030 166 l12 -8 l12 8 l12 -8 l12 8 l12 -8 l12 8 h30%27/%3E %3Cpath d=%27M1066 202 h34 l14 14 l14 -14 h20 l14 14 l14 -14 h40%27/%3E %3Cpath d=%27M34 618 h40 l12 -12 l12 12 h26%27/%3E %3Cpath d=%27M60 650 l10 -7 l10 7 l10 -7 l10 7 l10 -7 l10 7%27/%3E %3Ccircle cx=%271214%27 cy=%27640%27 r=%2730%27 stroke-dasharray=%275 6%27/%3E %3Ccircle cx=%271214%27 cy=%27640%27 r=%276%27/%3E %3Cpath d=%27M1150 690 h40 l10 -10 h28%27/%3E %3C/g%3E %3Cg transform=%27rotate(-24 952 92)%27%3E %3Cellipse cx=%27952%27 cy=%2792%27 rx=%2734%27 ry=%2715%27 fill=%27%233aa8a0%27 opacity=%27.75%27 stroke=%27%238a7d4f%27 stroke-width=%272%27/%3E %3Cpath d=%27M926 92 l8 -6 l8 6 l8 -6 l8 6 l8 -6 l8 6%27 fill=%27none%27 stroke=%27%23f3eee6%27 stroke-width=%272%27 stroke-linecap=%27round%27/%3E %3C/g%3E %3Cg transform=%27rotate(62 1002 132)%27%3E %3Cellipse cx=%271002%27 cy=%27132%27 rx=%2722%27 ry=%2711%27 fill=%27%233aa8a0%27 opacity=%27.75%27 stroke=%27%238a7d4f%27 stroke-width=%272%27/%3E %3Cpath d=%27M986 132 l6 -5 l6 5 l6 -5 l6 5%27 fill=%27none%27 stroke=%27%23f3eee6%27 stroke-width=%272%27 stroke-linecap=%27round%27/%3E %3C/g%3E %3C/svg%3E");
+  --paper-size: cover;
+  --ink: #3a322b; --ink-muted: #6b5f52; --heading: #231d18;
+  --surface: #d9c9b2; --surface-2: #ece3d5; --line: rgba(75, 51, 36, 0.28);
+  --accent: #8a7d4f; --on-accent: #fff; --rule: #8a7d4f;
+  --hot: #3aa8a0; --on-hot: #10302d; --hot-text: #1d7a72;
+  --strong: #4b3324; --on-strong: #f4ede2;
+  --radius: 6px;
+  color: var(--ink);
+}
+.reveal .scheme-trail h2 { letter-spacing: 0.03em; }
+.reveal .scheme-trail h2 .bil-zh, .reveal .scheme-trail h2 [lang="zh"] { letter-spacing: 0.18em; }
+.reveal .scheme-trail h2::after { width: 120px; height: 14px; border-radius: 0; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 120 14%27%3E%3Cpath d=%27M2 10 l10 -7 l10 7 l10 -7 l10 7 l10 -7 l10 7 h56%27 fill=%27none%27 stroke=%27%238a7d4f%27 stroke-width=%272.4%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E") no-repeat left center / contain; }
+/* white stitching on suede and leather */
+.reveal .scheme-trail .box, .reveal .scheme-trail .strip, .reveal .scheme-trail .steps li { outline: 1.6px dashed rgba(255, 255, 255, 0.8); outline-offset: -7px; }
+.reveal .scheme-trail .box.plain { outline-color: rgba(75, 51, 36, 0.35); }
+.reveal .scheme-trail .tiles > .box.spot, .reveal .scheme-trail .spot { outline: 2px dashed var(--hot); outline-offset: -7px; box-shadow: 0 0 0 3px var(--hot); }
+/* a stitched ring on each card, like the one on the bag */
+.reveal .scheme-trail .tiles > .box { position: relative; }
+.reveal .scheme-trail .tiles > .box::after { content: ""; position: absolute; right: 14px; bottom: 14px; width: 22px; height: 22px; border-radius: 50%; border: 1.6px dashed rgba(255, 255, 255, 0.85); }
+.reveal .scheme-trail .pill { border-radius: 4px; }
+
+/* scroll: a mounted hanging scroll. Paper with fibres, a red frame with cloud-curl corners, a brush
+   stroke under the title, a seal, and cards hung from wooden rods with round ends. */
+.reveal section.look-scroll {
+  --paper: #EADFC4;
+  --paper-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27220%27 height=%27220%27%3E%3Cfilter id=%27f%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.9%27 numOctaves=%272%27 seed=%274%27/%3E%3CfeColorMatrix values=%270 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .12 0 0 0 .09 0%27/%3E%3C/filter%3E%3Crect width=%27220%27 height=%27220%27 filter=%27url(%23f)%27/%3E%3C/svg%3E"), radial-gradient(ellipse at center, transparent 55%, rgba(90, 55, 20, 0.18));
+  --paper-size: 220px 220px, cover;
+  --ink: #2B2118; --ink-muted: #5E4E3A; --heading: #5A2A12; --surface: #FBF3DC; --surface-2: #FFF8E6;
+  --hot: #B3261E; --on-hot: #fff; --hot-text: #8C2F1B; --strong: #3B2414; --on-strong: #FBF3DC; --accent: #8C2F1B;
+  --rule: #8C2F1B; --radius: 2px; --shadow: 0 4px 10px rgba(60, 35, 10, 0.28);
+  --bi-zh-font: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  --seal: "学";
+  color: var(--ink);
+}
+.reveal section.look-scroll::before {
+  content: ""; position: absolute; inset: -6px -10px; pointer-events: none; z-index: 0;
+  border: 1.5px solid rgba(140, 47, 27, 0.55); outline: 4px double rgba(140, 47, 27, 0.35); outline-offset: 6px;
+  background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 80%27%3E%3Cg transform=%27rotate(0 40 40)%27 fill=%27none%27 stroke=%27%238C2F1B%27 stroke-width=%272.4%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M4 76 V22 Q4 4 22 4 H76%27/%3E%3Cpath d=%27M12 76 V28 Q12 12 28 12 H76%27 stroke-width=%271.2%27/%3E%3Cpath d=%27M22 40 a10 10 0 1 1 10 10 a5 5 0 1 1 -5 -5%27/%3E%3Cpath d=%27M40 22 a10 10 0 1 0 10 -10%27/%3E%3C/g%3E%3C/svg%3E") left top / 64px no-repeat, url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 80%27%3E%3Cg transform=%27rotate(90 40 40)%27 fill=%27none%27 stroke=%27%238C2F1B%27 stroke-width=%272.4%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M4 76 V22 Q4 4 22 4 H76%27/%3E%3Cpath d=%27M12 76 V28 Q12 12 28 12 H76%27 stroke-width=%271.2%27/%3E%3Cpath d=%27M22 40 a10 10 0 1 1 10 10 a5 5 0 1 1 -5 -5%27/%3E%3Cpath d=%27M40 22 a10 10 0 1 0 10 -10%27/%3E%3C/g%3E%3C/svg%3E") right top / 64px no-repeat,
+              url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 80%27%3E%3Cg transform=%27rotate(270 40 40)%27 fill=%27none%27 stroke=%27%238C2F1B%27 stroke-width=%272.4%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M4 76 V22 Q4 4 22 4 H76%27/%3E%3Cpath d=%27M12 76 V28 Q12 12 28 12 H76%27 stroke-width=%271.2%27/%3E%3Cpath d=%27M22 40 a10 10 0 1 1 10 10 a5 5 0 1 1 -5 -5%27/%3E%3Cpath d=%27M40 22 a10 10 0 1 0 10 -10%27/%3E%3C/g%3E%3C/svg%3E") left bottom / 64px no-repeat, url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 80 80%27%3E%3Cg transform=%27rotate(180 40 40)%27 fill=%27none%27 stroke=%27%238C2F1B%27 stroke-width=%272.4%27 stroke-linecap=%27round%27%3E%3Cpath d=%27M4 76 V22 Q4 4 22 4 H76%27/%3E%3Cpath d=%27M12 76 V28 Q12 12 28 12 H76%27 stroke-width=%271.2%27/%3E%3Cpath d=%27M22 40 a10 10 0 1 1 10 10 a5 5 0 1 1 -5 -5%27/%3E%3Cpath d=%27M40 22 a10 10 0 1 0 10 -10%27/%3E%3C/g%3E%3C/svg%3E") right bottom / 64px no-repeat;
+}
+.reveal section.look-scroll > * { position: relative; z-index: 1; }
+.reveal section.look-scroll h2 { font-family: "Noto Serif SC", "Songti SC", Georgia, serif; color: var(--heading); }
+.reveal section.look-scroll h2::after { width: 180px; height: 12px; border-radius: 0; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 16%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M2 9 C30 3 60 12 100 7 S170 4 198 8 L196 11 C160 9 120 14 80 12 S20 13 3 12 Z%27 fill=%27%238C2F1B%27/%3E%3C/svg%3E") no-repeat left center / 100% 100%; }
+/* the seal, bottom right */
+.reveal section.look-scroll::after {
+  content: var(--seal); position: absolute; right: 26px; bottom: 44px; z-index: 2;
+  width: 54px; height: 54px; display: grid; place-items: center; transform: rotate(-6deg);
+  background: #B3261E; color: #FBF3DC; border-radius: 6px; box-shadow: inset 0 0 0 3px #B3261E, inset 0 0 0 5px #FBF3DC;
+  font: 700 30px/1 "Noto Serif SC", "Songti SC", serif; opacity: 0.9;
+}
+/* cards hang from wooden rods with round ends */
+.reveal section.look-scroll .tiles { overflow: visible; row-gap: 30px; }
+.reveal section.look-scroll .tiles > .box {
+  position: relative; padding-top: 28px; padding-bottom: 28px; overflow: visible;
+  background: linear-gradient(180deg, #FFF9EA, #F4E7C6); border: 0; box-shadow: var(--shadow);
+}
+.reveal section.look-scroll .tiles > .box::before, .reveal section.look-scroll .tiles > .box::after {
+  content: ""; position: absolute; left: -9px; right: -9px; height: 13px; border-radius: 7px;
+  background: radial-gradient(circle at 6px 50%, #3B2414 5px, transparent 6px),
+              radial-gradient(circle at calc(100% - 6px) 50%, #3B2414 5px, transparent 6px),
+              linear-gradient(180deg, #A8703A, #7A4A21 60%, #5A3416);
+}
+.reveal section.look-scroll .tiles > .box::before { top: -6px; }
+.reveal section.look-scroll .tiles > .box::after { bottom: -6px; }
+.reveal section.look-scroll .tiles > .box h3 { font-family: "Noto Serif SC", "Songti SC", Georgia, serif; }
+.reveal section.look-scroll .spot { outline: 2px solid var(--hot); outline-offset: 4px; }
+.reveal section.look-scroll .strip { background: linear-gradient(90deg, #3B2414, #5A2A12 50%, #3B2414); box-shadow: inset 0 0 0 2px #3B2414, inset 0 0 0 4px rgba(232, 194, 122, 0.6); }
+.reveal section.look-scroll .pill { border-radius: 3px; background: #B3261E; color: #FBF3DC; }
+

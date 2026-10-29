@@ -45,7 +45,8 @@
   if (/[?&](print-pdf|receiver)/.test(location.search) || !window.Reveal) return;
 
   var SCHEMES = [["", "Default", "#ffffff"], ["night", "Night", "#0b1630"], ["sky", "Sky", "#ebf7fd"],
-                 ["lagoon", "Lagoon", "#14d7cd"], ["sunrise", "Sunrise", "#ffe9d3"]];
+                 ["lagoon", "Lagoon", "#14d7cd"], ["sunrise", "Sunrise", "#ffe9d3"],
+                 ["trail", "Trail", "#d9c9b2"]];   // trail: this deck's own scheme (slide-kit-looks.css)
   // game and brutal change shapes and take the colours from the scheme; scroll brings its own colours
   var LOOKS = [["", "Plain"], ["game", "Game"], ["brutal", "Brutal"], ["scroll", "Scroll"]];
   var PALETTE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
@@ -63,29 +64,24 @@
     var c = [].find.call(s.classList, function (k) { return k.indexOf(prefix) === 0; });
     return c ? c.slice(prefix.length) : "";
   }
-  function layer(s) {   // reveal.js draws a slide's background here
+  function layers(s) {   // reveal.js draws a slide's background here, and background-color= in its content
     var bg = Reveal.getSlideBackground(s);
-    return bg && (bg.querySelector(".slide-background-content") || bg);
+    return bg ? [bg, bg.querySelector(".slide-background-content")].filter(Boolean) : [];
   }
+  var PROPS = ["backgroundColor", "backgroundImage", "backgroundSize", "backgroundPosition"];
   function remember(s) {
     if (saved.has(s)) return;
-    var l = layer(s);
-    saved.set(s, { cls: s.className, bg: l ? l.style.backgroundColor : "", img: l ? l.style.backgroundImage : "", size: l ? l.style.backgroundSize : "" });
-  }
-  function paint(s) {
-    var l = layer(s);
-    if (!l) return;
-    var st = getComputedStyle(s), img = st.getPropertyValue("--paper-image").trim();
-    l.style.backgroundColor = st.getPropertyValue("--paper").trim();
-    l.style.backgroundImage = img && img !== "none" ? img : "none";
-    l.style.backgroundSize = img && img !== "none" ? "40px 40px" : "";
+    saved.set(s, { cls: s.className, layers: layers(s).map(function (l) {
+      var o = {}; PROPS.forEach(function (k) { o[k] = l.style[k]; }); return o;
+    }) });
   }
   function set(prefix, value) {
     targets().forEach(function (s) {
       remember(s);
       [].slice.call(s.classList).forEach(function (k) { if (k.indexOf(prefix) === 0) s.classList.remove(k); });
       if (value) s.classList.add(prefix + value);
-      paint(s);
+      // a slide with its own picture or video keeps it; the others get the new paper (schemes.html)
+      if (window.ChalklineSchemes && !ChalklineSchemes.ownPicture(s)) ChalklineSchemes.paint(s);
     });
     Reveal.layout();
     draw();
@@ -93,8 +89,7 @@
   function reset() {
     saved.forEach(function (v, s) {
       s.className = v.cls;
-      var l = layer(s);
-      if (l) { l.style.backgroundColor = v.bg; l.style.backgroundImage = v.img; l.style.backgroundSize = v.size; }
+      layers(s).forEach(function (l, i) { PROPS.forEach(function (k) { l.style[k] = v.layers[i] ? v.layers[i][k] : ""; }); });
     });
     saved.clear();
     Reveal.layout();
