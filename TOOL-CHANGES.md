@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Credits slide with pictures and sources
+- **Asked for:** "add credits slide at the end. And add an AI instruction to do that automatically when possible. Maybe two columns - one for photo credits and one for sources links (if any are used)."
+- **Why:** "it's good practice, demonstrate a good example to students, and it's free goodwill to show respect to sources."
+- **Changed:** `_extensions/chalkline/styles/revealjs.scss`: headings on a `.credits` slide (`### Pictures`, `### Sources`) are small, to match its small print. `CLAUDE.md` (not a tool file, noted here for the reason): AI assistants add or update a deck's two-column credits slide whenever they add a picture or a source. The Slide kit deck got its credits slide.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: A picture on a card
 - **Asked for:** "put a picture on each card in the cards slides" (with real, openly licensed pictures in place of the placeholders).
 - **Why:** not given; the Slide kit deck shows what a deck can look like.

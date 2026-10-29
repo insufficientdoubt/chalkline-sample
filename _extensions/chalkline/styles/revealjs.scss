@@ -243,7 +243,9 @@ $sky: if(global-variable-exists(brand-sky), $brand-sky, #ebf7fd);
 .reveal img.photo { border-radius: 10px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18); max-height: 420px; width: auto; max-width: 100%; object-fit: cover; margin: 0.2em 0 0.3em; }
 .reveal img.photo.tall { max-height: 520px; }
 .reveal .photo-caption { display: block; font-size: 0.5em; color: var(--ink-muted); line-height: 1.3; }
-// A deck's last slide listing picture credits: small print.
+// A deck's last slide listing picture credits (and sources): small print, with small column headings
+// (### Pictures, ### Sources) when it has two columns.
 .reveal .credits ul { font-size: 0.55em; }
+.reveal .credits h3 { font-size: 0.75em; margin: 0 0 0.3em; }
 // Title slides with a picture backdrop: a soft shadow keeps the words readable over busy images.
 #title-slide .title, #title-slide .subtitle { text-shadow: 0 2px 14px rgba(0, 20, 50, 0.65); }

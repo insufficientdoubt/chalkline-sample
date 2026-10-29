@@ -969,3 +969,31 @@ The cards in trail: a stitched ring on each card, a turquoise stitched border on
 ::: notes
 The cards in glass.
 :::
+
+## [Credits | 来源]{.bi} {#credits .credits}
+
+:::: columns
+::: column
+### Pictures
+
+- **Mencius:** album portrait, Yuan dynasty, National Palace Museum, Taipei. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E8%87%B3%E8%81%96%E5%85%88%E8%B3%A2%E5%8D%8A%E8%BA%AB%E5%83%8F_%E5%86%8A-005-%E5%AD%9F%E8%BB%BB.jpg).
+- **Mozi:** a page of the book *Mozi*, old woodblock edition. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Mozi.jpg).
+- **Zhuangzi:** album portrait. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Zhuangzi.png).
+- **Han Fei:** statue in Shaanxi, photo by Sabinowitz, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Statue_Of_Han_Fei.png).
+- **Sun Bin:** Ming dynasty painting. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sun_Bin.jpg).
+- **Spade coins:** Shanghai Museum, photo by Gary Lee Todd, CC0, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Warring_States_Spade_Coins.jpg).
+- The glass scheme's background is original, made for this course. Full list: `images/CREDITS.md`.
+:::
+
+::: column
+### Sources
+
+- **Quoted:** *Analects* 2.1 (《论语·为政》). Classical text, public domain.
+- **Named on the cards:** *Mencius* 《孟子》, *Mozi* 《墨子》, *Zhuangzi* 《庄子》, *Han Feizi* 《韩非子》, *Sun Bin's Art of War* 《孙膑兵法》.
+- **Background:** [Hundred Schools of Thought](https://en.wikipedia.org/wiki/Hundred_Schools_of_Thought) and [Warring States period](https://en.wikipedia.org/wiki/Warring_States_period), Wikipedia, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+:::
+::::
+
+::: notes
+Credits. Pieces: `{.credits}` on the title (small print), Quarto's `.columns` for pictures and sources. Every deck that uses outside pictures or sources ends with a slide like this one (see `CLAUDE.md`).
+:::
