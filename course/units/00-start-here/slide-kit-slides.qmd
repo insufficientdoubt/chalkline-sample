@@ -580,11 +580,10 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::: {.columns style="height: 700px"}
 ::: {.column width="57%"}
 ::: {.area .content label="Content objective · 内容目标"}
-[History · Grade 7 · [today]{.today} | 历史 · 七年级 · [今天]{.today}]{.bi .lesson-head}
-
 ::: lesson-info
 | | |
 |--:|:--|
+| [History \| 历史]{.bi} | [Grade 7 · [today]{.today} \| 七年级 · [今天]{.today}]{.bi} |
 | [Topic \| 课题]{.bi} | [The Hundred Schools of Thought \| 百家争鸣]{.bi} |
 | [Objective \| 学习目标]{.bi} | [I can explain one school's big idea. \| 我能说出一个学派的主张。]{.bi} |
 | [Homework \| 作业]{.bi} | [Museum card, due Friday \| 博物馆卡片，周五交]{.bi} |
@@ -594,7 +593,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::
 
 ::: {.area .language label="Language objective · 语言目标"}
-[I can explain an idea with the focus words and a frame. | 我能用重点词汇和句型说明一个主张。]{.bi .obj}
+[Vocab · 词汇]{.pill .tag}
 
 ::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 2.6em"}
 ::: {.box .plain}
@@ -622,13 +621,13 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::
 :::
 
+[Sentence frames · 句型]{.pill .tag}
+
 [The [ ]{.gap} school said rulers should [ ]{.gap}. | [ ]{.gap}学派认为统治者应该[ ]{.gap}。]{.bi .frame}
 :::
 :::
 ::: {.column width="43%"}
-::: {.box style="height: 100%"}
-### [Do now | 课前任务]{.bi}
-
+::: {.area .donow label="Do now · 课前任务"}
 1. [Name one thinker from the last lesson. | 说出上节课学过的一位思想家。]{.bi}
 2. [What was his big idea? Write one sentence. | 他的主要主张是什么？写一句话。]{.bi}
 
@@ -651,7 +650,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 ```
 
 ::: notes
-Lesson intro and Do now, on one slide. Pieces: no slide title (`## {#lesson-intro}`), so the Do now runs the slide's full height; the subject, grade and today's date head the content area (the date is filled in when the slide opens: `[today]{.today}` and a few lines of script on the slide); two `.area` blocks, each labelled in its corner (`label="Content objective"`, `label="Language objective"`) so observers find them at once: the content area holds an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line; the language area holds the language objective, `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); and a sentence frame with `[ ]{.gap}` for the blanks (all in `slide-kit-looks.css`); a `.box` for the Do now, as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
+Lesson intro and Do now, on one slide. Pieces: no slide title (`## {#lesson-intro}`), so the Do now runs the slide's full height; the subject, grade and today's date are the first row of the content table, in its colour (the date is filled in when the slide opens: `[today]{.today}` and a few lines of script on the slide); two `.area` blocks, each labelled in its corner (`label="Content objective"`, `label="Language objective"`) so observers find them at once: the content area holds an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line; the language area holds two `.pill` tags, Vocab and Sentence frames, each followed by its content: `.tiles` of `.box` for the words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); and a sentence frame with `[ ]{.gap}` for the blanks (all in `slide-kit-looks.css`); an `.area` for the Do now, labelled like the objectives and as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
 :::
 
 ## Make a museum card {#instructions}
