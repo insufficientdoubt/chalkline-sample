@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: A picture on a card
+- **Asked for:** "put a picture on each card in the cards slides" (with real, openly licensed pictures in place of the placeholders).
+- **Why:** not given; the Slide kit deck shows what a deck can look like.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: a picture as the first line of a `.box` fills the box's width, at the same height on every card, cropped to fill (`object-fit: cover`). `--pic-height` changes the height and `--pic-position` which part shows, e.g. `![](images/mencius.jpg){fig-alt="Mencius" style="--pic-position: 50% 60%"}`. Checked in the Slide kit deck's seven cards slides (plain, game, brutal, scroll, night, trail, glass).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Scheme backgrounds no longer go blank
 - **Asked for:** "could you check that backgrounds are getting applied correctly when switching slides? I noticed that sometimes if you move from a slide with no theme to one with one it still has a blank background."
 - **Why:** reveal.js throws away its background layers and makes new, blank ones whenever `Reveal.configure()` or `Reveal.sync()` runs. Chalkline painted the scheme backgrounds into those layers only once, when the deck opened. The toolbox's Slide size tool calls `Reveal.configure()` when a deck opens (for any teacher who has changed the slide size) and while its slider moves, so every slide with a scheme or look of its own (night, sky, lagoon, glass, scroll…) then showed a blank background.

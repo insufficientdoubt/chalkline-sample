@@ -157,6 +157,14 @@
 }
 // the one box to look at
 .reveal .spot { outline: 4px solid var(--hot); outline-offset: -4px; }
+// a picture first in a box (a card's picture): as wide as the box, all cards' pictures the same height,
+// cropped to fill it:   ::: box   then   ![](images/mencius.jpg){fig-alt="Mencius"}   then the text.
+// --pic-height changes the height, --pic-position which part shows (faces are near the top).
+.reveal .box > p:first-child:has(> img:only-child) { margin-bottom: 0.2em; }
+.reveal .box > p:first-child > img:only-child {
+  display: block; width: 100%; max-width: none; height: var(--pic-height, 4.5em); max-height: none; margin: 0;
+  object-fit: cover; object-position: var(--pic-position, 50% 22%); border-radius: calc(var(--radius) * 0.6);
+}
 // a box's last line sits at its bottom (a source, a page number)
 .reveal .box > .end, .reveal .box > p:has(> .end) { margin-top: auto; }
 

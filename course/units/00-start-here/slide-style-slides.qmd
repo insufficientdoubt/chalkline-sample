@@ -32,12 +32,12 @@ On the next slides, look at the top-right corner. **EN · 文A · 中** picks th
 This deck is an experiment. The language switch in the corner is in both sites and is remembered in this browser. The Style… panel (teacher site only) is for trying looks: its changes stay in this browser, and Copy settings puts the heading's attributes on the clipboard to paste into the file. Colour schemes beyond the five built-in ones (Bamboo and Scroll here) are written in the teacher's own CSS file next to this deck, `slide-style-teacher.css`.
 :::
 
-## [Warring States thinkers · schools of thought | 战国诸子 · 诸子百家]{.bi} {#schools-of-thought .styled kind="cards" type="row" look="game" scheme="brand" items="5"}
+## [Warring States thinkers · schools of thought | 战国诸子 · 诸子百家]{.bi} {#schools-of-thought .styled kind="cards" type="row" look="game" scheme="brand" items="5" img="banner"}
 
 ::: schools
 
 ::: card
-![Confucius](images/confucius.svg){.pic credit="Placeholder"}
+![Confucius](images/confucius.jpg){.pic credit="After Wu Daozi, stone rubbing, public domain"}
 
 [Confucianism | 儒家]{.bi .name}
 
@@ -49,7 +49,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Mozi](images/mozi.svg){.pic credit="Placeholder"}
+![The book Mozi](images/mozi.jpg){.pic credit="Mozi, old woodblock edition, public domain"}
 
 [Mohism | 墨家]{.bi .name}
 
@@ -61,7 +61,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Zhuangzi](images/zhuangzi.svg){.pic credit="Placeholder"}
+![Zhuangzi](images/zhuangzi.jpg){.pic credit="Album painting, public domain"}
 
 [Daoism | 道家]{.bi .name}
 
@@ -73,7 +73,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: {.card .spot}
-![Han Fei](images/hanfei.svg){.pic credit="Placeholder"}
+![Han Fei](images/hanfei.jpg){.pic credit="Sabinowitz, CC BY-SA 4.0"}
 
 [Legalism | 法家]{.bi .name}
 
@@ -85,7 +85,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Sun Bin](images/sunbin.svg){.pic credit="Placeholder"}
+![Sun Bin](images/sunbin.jpg){.pic credit="Ming painting, public domain"}
 
 [Military thinkers | 兵家]{.bi .name}
 
@@ -97,7 +97,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Su Qin](images/suqin.svg){.pic credit="Placeholder"}
+![Su Qin](images/suqin.jpg){.pic credit="Woodcut, public domain"}
 
 [Diplomats | 纵横家]{.bi .name}
 
@@ -109,7 +109,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Zou Yan](images/zouyan.svg){.pic credit="Placeholder"}
+![A bronze mirror, Warring States](images/zouyan.jpg){.pic credit="Cleveland Museum of Art, CC0"}
 
 [Yin-Yang school | 阴阳家]{.bi .name}
 
@@ -121,7 +121,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Gongsun Long](images/gongsun.svg){.pic credit="Placeholder"}
+![A white horse](images/gongsun.jpg){.pic credit="Gao Qifeng, public domain"}
 
 [School of Names | 名家]{.bi .name}
 
@@ -133,7 +133,7 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: card
-![Xu Xing](images/xuxing.svg){.pic credit="Placeholder"}
+![Shennong, the farmer god](images/xuxing.jpg){.pic credit="Hasegawa Nobukata, public domain"}
 
 [Agrarians | 农家]{.bi .name}
 
@@ -153,14 +153,14 @@ This deck is an experiment. The language switch in the corner is in both sites a
 :::
 
 ::: notes
-`items="5"` shows the first five of the nine schools; the Style… panel's slider adds the rest, and the layout adapts to 1 to 9 cards. The pictures are placeholders until real, openly licensed ones are added (see images/CREDITS.md).
+`items="5"` shows the first five of the nine schools; the Style… panel's slider adds the rest, and the layout adapts to 1 to 9 cards. The pictures are real, openly licensed ones, credited in images/CREDITS.md.
 :::
 
 ## [Why did so many schools of thought appear? | 为什么会出现百家争鸣？]{.bi} {#why-many-schools .styled kind="narrative" look="plain" scheme="brand" flow="interleave" pic="side"}
 
 ::: narbody
 
-![Map of the Seven Warring States](images/sevenstates.svg){.pic credit="Placeholder"}
+![Map of the Seven Warring States](images/sevenstates.jpg){.pic credit="Philg88, CC BY-SA 3.0"}
 
 ::: narr
 [During the Spring and Autumn and Warring States periods, the Zhou kings lost real power. Many small states fought for land, and in time only seven major states were left. | 春秋战国时期，周天子逐渐失去实权，许多诸侯国为争夺土地连年交战，最后只剩下七个大国。]{.bi}
@@ -184,4 +184,14 @@ This deck is an experiment. The language switch in the corner is in both sites a
 
 ## Picture credits {.credits}
 
-- The pictures are placeholders drawn for this course (see `images/CREDITS.md`).
+- Confucius: stone rubbing after Wu Daozi (Tang dynasty). Public domain.
+- The book *Mozi*: an old woodblock edition. Public domain.
+- Zhuangzi: from an album of portraits of rulers and worthies. Public domain.
+- Han Fei: statue in Shaanxi, photo by Sabinowitz. CC BY-SA 4.0.
+- Sun Bin: Ming dynasty painting. Public domain.
+- Su Qin: woodcut from *Dongzhou Lieguo Zhi*. Public domain.
+- Bronze mirror, Warring States: Cleveland Museum of Art. CC0.
+- White horse: Gao Qifeng. Public domain.
+- Shennong: Hasegawa Nobukata. Public domain.
+- Map of the Warring States, c. 260 BCE: Philg88. CC BY-SA 3.0.
+- Full details and links: `images/CREDITS.md`.
