@@ -9,6 +9,7 @@ format:
     width: 1280
     height: 720
     css: slide-kit-looks.css      # this deck's own looks (game, brutal, scroll, dusk): only token changes and a few rules
+    include-after-body: slide-kit-style.html   # this deck's own style picker (the palette next to the language switch)
     footer: "Unit 2 · Hundred Schools of Thought · 第二单元 · 百家争鸣"
 title-slide-attributes:
   data-background-color: "#003477"
@@ -29,7 +30,7 @@ bilingual:
 ::: {.box .plain}
 ### Try it
 
-Look at the top-right corner. **EN · 文A · 中** picks the languages. **⇅** swaps which one is large.
+Look at the top-right corner. **EN · 文A · 中** picks the languages. **⇅** swaps which one is large. The **palette** tries other colours and looks.
 :::
 :::
 ::::

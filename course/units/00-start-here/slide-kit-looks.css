@@ -6,23 +6,24 @@
    For a whole deck, put the tokens on .reveal instead of a slide's class.
    Rule of thumb: check that every text and background pair is easy to read. */
 
-/* game: thick outlines, hard shadows, tilted cards */
-.reveal section.look-game { --radius: 18px; --border: 3px; --line: #003477; --surface: #fff; --shadow: 0 6px 0 #003477; }
+/* game: thick outlines, hard shadows, tilted cards. Shapes only: the colours come from the slide's scheme. */
+.reveal section.look-game { --radius: 18px; --border: 3px; --line: var(--heading); --shadow: 0 6px 0 var(--heading); }
 .reveal section.look-game .tiles > .box:nth-child(odd) { transform: rotate(-1.2deg); }
 .reveal section.look-game .tiles > .box:nth-child(even) { transform: rotate(1deg) translateY(6px); }
-.reveal section.look-game .spot { outline: 0; --line: #FF8C0F; box-shadow: 0 8px 0 #FF8C0F; border-width: 4px; }
+.reveal section.look-game .spot { outline: 0; --line: var(--hot); box-shadow: 0 8px 0 var(--hot); border-width: 4px; }
 .reveal section.look-game .strip { border-radius: 999px; }
 
-/* brutal: square corners, heavy borders, offset shadows */
-.reveal section.look-brutal { --radius: 0; --border: 4px; --line: #003477; --shadow: 7px 7px 0 #003477; }
-.reveal section.look-brutal .tiles > .box:nth-child(even) { --surface: #fff; }
-.reveal section.look-brutal .spot { outline: 0; --surface: #FF8C0F; --heading: #003477; }
-.reveal section.look-brutal .strip { border: 4px solid #003477; box-shadow: 7px 7px 0 #FF8C0F; }
-.reveal section.look-brutal h2 { display: inline-block; padding: 2px 16px; background: #14D7CD; border: 4px solid #003477; box-shadow: 6px 6px 0 #003477; }
+/* brutal: square corners, heavy borders, offset shadows. Shapes only, like game. */
+.reveal section.look-brutal { --radius: 0; --border: 4px; --line: var(--heading); --shadow: 7px 7px 0 var(--heading); }
+.reveal section.look-brutal .tiles > .box:nth-child(even) { --surface: var(--surface-2); }
+.reveal section.look-brutal .tiles > .box.spot, .reveal section.look-brutal .spot { outline: 0; --surface: var(--hot); --heading: var(--on-hot); --ink: var(--on-hot); --ink-muted: var(--on-hot); }
+.reveal section.look-brutal .strip { border: 4px solid var(--heading); box-shadow: 7px 7px 0 var(--hot); }
+.reveal section.look-brutal h2 { display: inline-block; padding: 2px 16px; background: var(--accent); color: var(--on-accent); border: 4px solid var(--heading); box-shadow: 6px 6px 0 var(--heading); }
 .reveal section.look-brutal h2::after { display: none; }
 
 /* scroll: paper colours, a serif for 中文, a wooden rod at the top and bottom of each card */
 .reveal section.look-scroll {
+  --paper: #EADFC4;
   --ink: #2B2118; --ink-muted: #5E4E3A; --heading: #5A2A12; --surface: #FBF3DC; --hot: #B3261E; --on-hot: #fff;
   --strong: #5A2A12; --on-strong: #FBF3DC; --accent: #8C2F1B; --radius: 3px; --shadow: 0 3px 8px rgba(60, 35, 10, 0.25);
   --bi-zh-font: "Noto Serif SC", "Songti SC", "SimSun", serif;
@@ -39,6 +40,7 @@
 
 /* dusk: a dark slide (with background-color="#00234F" on the title) */
 .reveal section.look-dusk {
+  --paper: #00234F;
   --ink: #EAF4FB; --ink-muted: #A9C4DE; --heading: #fff; --surface: #073B7A; --line: #14D7CD; --border: 2px;
   color: var(--ink);
 }
