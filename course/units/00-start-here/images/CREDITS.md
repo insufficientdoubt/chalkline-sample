@@ -21,7 +21,9 @@ cropped to the head and shoulders, as noted.
 | `coins.jpg` | Warring States spade coins, Shanghai Museum. | Photo: Gary Lee Todd | CC0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Warring_States_Spade_Coins.jpg) |
 
 `tps-knee.svg`, `tps-face.svg` and `tps-class.svg` (where students sit for Think-Pair-Share) are original drawings made
-for this course; no outside source, no license needed. So is the Lesson summary diagram (`../drawio/summary.drawio`).
+for this course; no outside source, no license needed. So are the drum kit sprites in `drums/` (after the teacher's own
+ScratchJr slides), the jigsaw group diagrams (`jigsaw-home.svg`, `jigsaw-expert.svg`) and the Lesson summary diagram
+(`../drawio/summary.drawio`).
 
 The Slide kit deck's instructions slide plays a video from Wikimedia Commons (not a copy in this folder):
 *Ink grinding*, how to grind an ink stick on an inkstone, by Wobuzowatsj, CC0,

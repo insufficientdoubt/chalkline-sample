@@ -77,7 +77,7 @@ Compare with the first experiment (slide-style-slides.qmd): there, each kind of 
 ::::
 
 ::: notes
-Bilingual slides are optional. Write `[English | 中文]{.bi}` anywhere: a title, a bullet, a box, a table cell (there, write the bar as `\|`). The deck's labels say which language is large at first (`bilingual: primary: en`). The controls show only on slides with bilingual text. Try them here: the orange box around them is only on this slide (`slide-kit-looks.css`). The rest of the deck shows bilingual text in many layouts (section opener, big idea, source, cards, task, table, media, frames, lesson intro, Think-Pair-Share) and some English-only slides.
+Bilingual slides are optional. Write `[English | 中文]{.bi}` anywhere: a title, a bullet, a box, a table cell (there, write the bar as `\|`). The deck's labels say which language is large at first (`bilingual: primary: en`). The controls show only on slides with bilingual text. Try them here: the orange box around them is only on this slide (`slide-kit-looks.css`). The rest of the deck shows bilingual text in many layouts (section opener, big idea, source, cards, task, table, media, frames, lesson intro, Think-Pair-Share, jigsaw) and some English-only slides.
 :::
 
 ## {#section .center}
@@ -727,83 +727,157 @@ Instructions, a video and a work gallery. Pieces: Quarto `.columns`; `{{</* vide
 Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes for where students sit (original drawings, shown whole with `--pic-fit: contain`); on the right a `.box` with the question and a picture, and two `.dark` boxes with `{{</* timer 1.5 */>}}` and `{{</* timer 2 */>}}` (a slide can have more than one timer; `font-size: 0.45em` on their tiles makes them smaller).
 :::
 
-## Museum cards: easy to hard {#easy-to-hard}
+## Drum kit: easy to hard {#easy-to-hard}
 
 :::: {.columns style="font-size: 0.8em"}
 ::: column
-### Part 1: name, school, big idea
+### Part 1: two events per sprite
 
 ::: row
 [1]{.num}
 
-![](images/mencius.jpg){.thumb fig-alt="Mencius"}
+![](images/drums/bass-drum.svg){.thumb fig-alt="A bass drum" style="object-fit: contain"}
 
-**Mencius:** kind government. Draw his idea.
+**Bass drum:** a loud low sound + smaller and bigger.
 :::
 
 ::: row
 [2]{.num}
 
-![](images/mozi.jpg){.thumb fig-alt="The book Mozi"}
+![](images/drums/hi-hat.svg){.thumb fig-alt="A hi-hat" style="object-fit: contain"}
 
-**Mozi:** love everyone. Give one example.
+**Hi-hat:** a high crash sound + smaller and bigger.
 :::
 
 ::: row
 [3]{.num}
 
-![](images/zhuangzi.jpg){.thumb fig-alt="Zhuangzi"}
+![](images/drums/ride-cymbal.svg){.thumb fig-alt="A ride cymbal" style="object-fit: contain"}
 
-**Zhuangzi:** follow nature. Find one line in the reading.
+**Ride cymbal:** a medium crash sound + shake left and right.
 :::
 
 ::: row
 [4]{.num}
 
-![](images/hanfei.jpg){.thumb fig-alt="A statue of Han Fei"}
+![](images/drums/stars.svg){.thumb fig-alt="Two stars" style="object-fit: contain"}
 
-**Han Fei:** rule by law. Write one law he might like.
+**Stars:** appear and disappear, turn forever (opposite ways!).
 :::
 :::
 ::: column
-### Part 2: add a question and your answer
+### Part 2: three events per sprite
 
 ::: row
 [5]{.num}
 
-![](images/suqin.jpg){.thumb fig-alt="Su Qin"}
+![](images/drums/snare-drum.svg){.thumb fig-alt="A snare drum" style="object-fit: contain"}
 
-**Su Qin:** six states joined against Qin. Why?
+**Snare drum:** a sound + smaller and bigger + a fast jump.
 :::
 
 ::: row
 [6]{.num}
 
-![](images/zouyan.jpg){.thumb fig-alt="A bronze mirror"}
+![](images/drums/tom.svg){.thumb fig-alt="A tom drum" style="object-fit: contain"}
 
-**Zou Yan:** five phases. Draw the cycle.
+**Tom:** a sound + smaller and bigger + fast up and down.
 :::
 
 ::: row
 [7]{.num}
 
-![](images/gongsun.jpg){.thumb fig-alt="A white horse"}
+![](images/drums/floor-tom.svg){.thumb fig-alt="A floor tom" style="object-fit: contain"}
 
-**Gongsun Long:** "A white horse is not a horse." Agree? Why?
+**Floor tom:** the same sprite and code as the tom. Just add legs!
 :::
 
 ::: row
 [8]{.num}
 
-![](images/xuxing.jpg){.thumb fig-alt="Shennong, the farmer god"}
+![](images/drums/dancer.svg){.thumb fig-alt="A dancing cat" style="object-fit: contain"}
 
-**Xu Xing:** even the king should farm. Is it fair?
+**Dancing character:** dances forever, says "hee hee!", and gets bigger and smaller when touched. (Not only a cat!)
 :::
 :::
 ::::
 
 ::: notes
-Instructions, easy to hard, in two parts. Pieces: Quarto `.columns` with a `###` heading in each; each task a `.row` with a `.num`, a small square `.thumb` picture and its words. Students start at 1 and go as far as they can.
+Chained instructions, easy to hard: each challenge adds to the same project (a drum kit made of sprites), so students build it up step by step and go as far as they can. Pieces: Quarto `.columns` with a `###` heading for each part; each challenge a `.row` with a `.num`, a small `.thumb` picture (`object-fit: contain` shows a whole drawing) and its words.
+:::
+
+## [Jigsaw: become an expert, then teach | 拼图学习：先当专家，再教同伴]{.bi} {#jigsaw}
+
+::: {.chain style="--pic-fit: contain; --pic-height: 3.2em; align-items: stretch; font-size: 0.72em"}
+::: {.box .plain}
+![](images/jigsaw-home.svg){fig-alt="Four home groups, each with one A, B, C and D"}
+
+[1 · Home group | 原小组]{.bi .kicker}
+
+[Each person gets a letter: A, B, C or D. | 每人领一个字母：A、B、C或D。]{.bi}
+:::
+
+::: {.box .plain}
+![](images/jigsaw-expert.svg){fig-alt="Four expert groups: all A, all B, all C, all D"}
+
+[2 · Expert group | 专家组]{.bi .kicker}
+
+[Meet the others with your letter. Read, talk, agree on 3 key points. | 和同字母的同学一起读、讨论，总结3个要点。]{.bi}
+
+::: {.end style="font-size: 0.5em; align-self: center"}
+{{< timer 10 >}}
+:::
+:::
+
+::: {.box .plain}
+![](images/jigsaw-home.svg){fig-alt="Back in the four home groups"}
+
+[3 · Back home: teach | 回原小组：讲解]{.bi .kicker}
+
+[Teach your group your 3 points. Listen and take notes. | 向小组讲解你的3个要点。认真听，做笔记。]{.bi}
+
+::: {.end style="font-size: 0.5em; align-self: center"}
+{{< timer 8 >}}
+:::
+:::
+:::
+
+::: {.tiles style="font-size: 0.8em"}
+::: {.box style="--strong: #FF8C0F; --on-strong: #1F2933"}
+::: row
+[A]{.num}
+
+[Confucianism | 儒家]{.bi}
+:::
+:::
+
+::: {.box style="--strong: #14D7CD; --on-strong: #1F2933"}
+::: row
+[B]{.num}
+
+[Mohism | 墨家]{.bi}
+:::
+:::
+
+::: {.box style="--strong: #0087FF"}
+::: row
+[C]{.num}
+
+[Daoism | 道家]{.bi}
+:::
+:::
+
+::: {.box style="--strong: #003477"}
+::: row
+[D]{.num}
+
+[Legalism | 法家]{.bi}
+:::
+:::
+:::
+
+::: notes
+A jigsaw. Students start in mixed home groups and each takes a letter; they meet the others with the same letter in an expert group, become experts on one school, then go back home and teach it. Pieces: a `.chain` of three `.box`es (the arrows show the order), each with a picture first (original drawings: each circle is a student, the letter is their topic) and a `.kicker`; a `{{</* timer */>}}` in the two timed steps; `.tiles` for the four topics, each a `.row` with a `.num` in its letter's colour (`--strong` on the box).
 :::
 
 ## [Lesson summary | 课堂小结]{.bi} [made in draw.io]{.drawio-label} {#summary}
@@ -1262,10 +1336,6 @@ The cards in glass.
 - **Han Fei:** statue in Shaanxi, photo by Sabinowitz, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Statue_Of_Han_Fei.png).
 - **Sun Bin:** Ming dynasty painting. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sun_Bin.jpg).
 - **Spade coins:** Shanghai Museum, photo by Gary Lee Todd, CC0, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Warring_States_Spade_Coins.jpg).
-- **Su Qin:** woodcut from *Dongzhou Lieguo Zhi*. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E8%8B%8F%E7%A7%A6.png).
-- **Bronze mirror:** Warring States, Cleveland Museum of Art, [CC0](https://clevelandart.org/art/1999.220).
-- **White horse:** Gao Qifeng. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gao_Qifeng_-_White_horse_-_Google_Art_Project.jpg).
-- **Shennong:** Hasegawa Nobukata. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Chinese_god_Shen_Nun,_Painting_by_Nobukata.jpg).
 - **Map of the Warring States:** Philg88, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:EN-WarringStatesAll260BCE.jpg).
 :::
 
@@ -1276,7 +1346,7 @@ The cards in glass.
 - **Named on the cards:** *Mencius* 《孟子》, *Mozi* 《墨子》, *Zhuangzi* 《庄子》, *Han Feizi* 《韩非子》, *Sun Bin's Art of War* 《孙膑兵法》.
 - **Background:** [Hundred Schools of Thought](https://en.wikipedia.org/wiki/Hundred_Schools_of_Thought) and [Warring States period](https://en.wikipedia.org/wiki/Warring_States_period), Wikipedia, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 - **Video, grinding ink:** Wobuzowatsj, CC0, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ink_grinding.webmhd.webm).
-- **Original, made for this course:** the vocab and seating drawings, the Lesson summary diagram, the glass scheme's background. Full list: `images/CREDITS.md`.
+- **Original, made for this course:** the vocab, seating, drum kit and jigsaw drawings, the Lesson summary diagram, the glass scheme's background. Full list: `images/CREDITS.md`.
 :::
 ::::
 
