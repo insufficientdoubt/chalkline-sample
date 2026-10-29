@@ -16,6 +16,38 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Lagoon gets a slight gradient
+- **Asked for:** "For the lagoon theme, give the background a slight gradient."
+- **Why:** not given.
+- **Changed:** `_extensions/chalkline/styles/schemes.scss`: lagoon's slide runs on a diagonal from a lighter turquoise (top left) to a slightly bluer one (bottom right). Its quieter text is a little darker, so it stays readable across the whole gradient (navy text 6:1 or better, quieter text 4.7:1).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-29: Boxes in a row line up again
+- **Asked for:** "an alignment issue on the big idea slide?"
+- **Why:** the new gap between stacked blocks (two entries down) also applied inside tiles and chains, so every box after the first was pushed down.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: that gap only applies outside tiles, chains and rows. Checked: the first row of every tile row and chain in the Slide kit deck lines up.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
+## 2026-10-29: A media layout whose caption never covers the picture
+- **Asked for:** "for the media slide layout I noticed that the question would cover the bottom of the video/image." Also, for the Slide kit deck: "a kind of flat modern design with a background image (abstract, something from Unsplash) and semi-transparent tiles", and the scroll look's corner ornament "will overlap with the title text".
+- **Why:** the picture was the slide's background, so the caption box sat on top of it.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: `::: {.cover .media}` holds a picture (or video) and its caption; the picture takes all the room the caption leaves. A line holding only an `.absolute` thing (a pinned pill) takes no room.
+  - Content: the media slide uses it; the deck's own **glass** scheme (an original abstract background in `images/abstract-glow.jpg`, frosted see-through tiles with `backdrop-filter`) with two slides and a place in the style picker; the scroll look's title moves clear of the corner ornament. Unsplash couldn't be reached from the AI's session, so the background is an original picture; any photo can replace it.
+- **Who it helps:** probably every Chalkline course (the media layout).
+- **AI assistant:** Claude.
+
+## 2026-10-29: Slide columns with a real gap and equal heights
+- **Asked for:** "on the slide with Confucius on government, the spacing looks off. Is this a style issue or something innate to the platform?"
+- **Why:** the source box touched the two boxes under it, the gap between those two was smaller than elsewhere, and they had different heights.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`:
+  - Slide columns are a flex row with the kit's gap, and as tall as the tallest; a box alone in a column fills it. Quarto draws slide columns as inline blocks: no gap but a space's width, always top-aligned, and their top margin is ignored. The top margin stays 0, so decks keep their spacing (checked on every columns slide in two unit decks and the Start-here deck: the columns move a few pixels apart, nothing else).
+  - The kit's blocks (boxes, tiles, chains, strips, columns, steps) get a gap when one follows another.
+  - A `.row` lines its items up on their text's baseline (a label and its source line); a row with a `.num` still centres.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Night keeps its grid; a scheme's background can be any picture
 - **Asked for:** "for the theme that comes from robotics make sure that it kept the background grid. And on the night theme ... make sure that the headline color is something visible." Also a "Songmont hobo" inspired theme with "casually placed short wavy lines on the background ... angled connectors and perfect circles", and a more ornate scroll look "to show off the styling capabilities".
 - **Why:** to show teachers what the styling can do.

@@ -53,8 +53,12 @@
 // boxes. Loud: for openers, games and the one slide everyone should look at. Navy on turquoise: 7:1.
 .reveal.scheme-lagoon, .reveal .scheme-lagoon {
   --paper: #{$turquoise};
+  // a slight diagonal: lighter turquoise at the top left, a little bluer at the bottom right.
+  // Navy text stays at 6:1 or better all the way across, quieter text at 4.7:1.
+  --paper-image: linear-gradient(135deg, #{mix($turquoise, #fff, 80%)} 0%, #{$turquoise} 50%, #{mix($turquoise, $blue, 85%)} 100%);
+  --paper-size: cover;
   --ink: #{$navy};
-  --ink-muted: #{mix($navy, $turquoise, 82%)};
+  --ink-muted: #{mix($navy, $turquoise, 88%)};
   --heading: #{$navy};
   --surface: #fff;
   --surface-2: #{mix($turquoise, #fff, 18%)};
