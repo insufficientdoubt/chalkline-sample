@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Scheme backgrounds no longer go blank
+- **Asked for:** "could you check that backgrounds are getting applied correctly when switching slides? I noticed that sometimes if you move from a slide with no theme to one with one it still has a blank background."
+- **Why:** reveal.js throws away its background layers and makes new, blank ones whenever `Reveal.configure()` or `Reveal.sync()` runs. Chalkline painted the scheme backgrounds into those layers only once, when the deck opened. The toolbox's Slide size tool calls `Reveal.configure()` when a deck opens (for any teacher who has changed the slide size) and while its slider moves, so every slide with a scheme or look of its own (night, sky, lagoon, glass, scroll…) then showed a blank background.
+- **Changed:** `_extensions/chalkline/schemes.html`: watches reveal's background layers and paints them again whenever reveal makes new ones (from the slides' classes, so a scheme the style picker put on a slide stays too). Checked in the Slide kit deck with a saved slide size: before, every themed slide was blank; after, all of them have their paper, forwards and backwards, and after `configure()` and `sync()`.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: One language on: it takes the top place
 - **Asked for:** "when you select one language only, that language should swap to the dominant position, not stay as a subtitle." And: "A tiny reflow when you switch which one is on top isn't a bad thing."
 - **Why:** the goal of the change below was that boxes don't suddenly get half as tall when a language is switched off, not that nothing moves at all.
