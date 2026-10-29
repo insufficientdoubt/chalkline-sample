@@ -1,4 +1,5 @@
 /*
+  TO BE REMOVED with slide-style/ (see slide-style.lua).
   Slide style: change how the deck's styled slides look (the ones with {.styled kind="..."} on their
   heading, see slide-style/slide-style.lua) while their words stay the same: the look, the colours,
   and for each kind of slide its layout. Only in a deck that has styled slides, and only in the

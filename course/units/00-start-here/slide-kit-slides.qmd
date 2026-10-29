@@ -1,0 +1,707 @@
+---
+title: "Slide kit (experiment)"
+type: slides
+description: "A test deck: eight kinds of slide built from a few plain pieces (tiles, boxes, text roles) and bilingual text, then the same slides in three looks and four colour schemes. Not part of the course."
+order: 4
+audience: [teacher]
+format:
+  revealjs:
+    width: 1280
+    height: 720
+    css: slide-kit-looks.css      # this deck's own looks (game, brutal, scroll, dusk): only token changes and a few rules
+    footer: "Unit 2 · Hundred Schools of Thought · 第二单元 · 百家争鸣"
+title-slide-attributes:
+  data-background-color: "#003477"
+bilingual:
+  primary: en                     # which language is large at first; the switch in the top-right corner changes it
+---
+
+## How this deck is made {#how}
+
+:::: {.columns}
+::: {.column width="55%"}
+- Words in two languages, written once: `[Schools | 诸子]{.bi}`
+- Layout from Quarto and a few plain pieces: `.columns`, `.tiles`, `.chain`, `.box`, `.strip`
+- What words *are*, not where they go: `.kicker`, `.big`, `.lead`, `.pill`, `.fine`
+- A new look is a few lines of CSS (see `slide-kit-looks.css`)
+:::
+::: {.column width="45%"}
+::: {.box .plain}
+### Try it
+
+Look at the top-right corner. **EN · 文A · 中** picks the languages. **⇅** swaps which one is large.
+:::
+:::
+::::
+
+::: notes
+Compare with the first experiment (slide-style-slides.qmd): there, each kind of slide had its own fixed slots. Here every slide is ordinary Markdown with a few classes, so a teacher can change the number of boxes, mix pieces, or add a picture without new code. Each slide's notes say which pieces it uses.
+:::
+
+## {#section .center}
+
+::: cover
+[Part 2 · Spring and Autumn & Warring States | 第 2 节 · 春秋战国]{.bi .kicker}
+
+[The Hundred Schools of Thought | 百家争鸣]{.bi .big}
+
+::: tiles
+::: {.box .plain}
+::: row
+[1]{.num}
+
+[Why it happened | 争鸣原因]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[2]{.num}
+
+[The ideas | 治国主张]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[3]{.num}
+
+[The debate | 智慧对决]{.bi}
+:::
+:::
+:::
+:::
+
+::: notes
+A section opener. Pieces: `.cover` (fills the slide and centres it), `.kicker`, `.big`, `.tiles` of `.box .plain`, each a `.row` with a `.num`. Three agenda boxes or five: the tiles make as many columns as there are boxes.
+:::
+
+## [What defined the Warring States era? | 春秋战国有什么整体的时代特征？]{.bi} {#big-idea}
+
+::: {.cover style="height: auto; padding: 0.6em 0"}
+[Turmoil · Change · Growth | 动荡 · 变化 · 发展]{.bi .big style="text-align: center"}
+:::
+
+::: chain
+::: {.box .plain style="text-align: center"}
+[Economic change | 经济之变]{.bi}
+:::
+
+::: {.box .plain style="text-align: center"}
+[Social change | 社会之变]{.bi}
+:::
+
+::: {.box .plain style="text-align: center"}
+[A debate of ideas | 思想之辩]{.bi}
+:::
+:::
+
+[The pre-Qin thinkers all wanted to save a troubled world, so their ideas grew out of their time. (Hu Shih) | 先秦诸子皆为忧世之乱而思以拯济之，故其学皆应时而生。——胡适]{.bi .fine}
+
+::: notes
+A big idea. Pieces: `.big` for the claim, `.chain` (tiles with arrows between them) for the three changes, `.fine` for the source. The question is the slide title, written once in both languages.
+:::
+
+## [Confucius · on government | 孔子 · 政治主张]{.bi} {#source}
+
+::: {.box .plain}
+::: row
+[Source · 原文]{.kicker}
+
+[Analects 2.1 · 《论语·为政》]{.fine}
+:::
+
+[The Master said: "Govern by virtue, and you are like the North Star. It stays in its place, and all the other stars turn toward it." | 子曰：“为政以德，譬如北辰，居其所而众星共之。”]{.bi .lead}
+:::
+
+:::: {.columns}
+::: {.column width="62%"}
+::: box
+[Meaning · 解读]{.kicker}
+
+[If a ruler leads by being good, people will follow him, like stars around the North Star. | 统治者如果用道德来治理国家，百姓就会像群星环绕北极星一样围绕着他。]{.bi}
+:::
+:::
+::: {.column width="38%"}
+::: {.box .dark}
+[Takeaway · 要点]{.kicker}
+
+[Rule by virtue | 为政以德]{.bi .big style="font-size: var(--step-3)"}
+:::
+:::
+::::
+
+::: notes
+Source, meaning, takeaway. Pieces: three `.box`es (`.plain`, plain `.box`, `.dark`), each with a `.kicker` label; Quarto's own `.columns` for the 62/38 split. Each part has its own box, so long text never runs into the next part.
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards}
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+Cards. Pieces: `.tiles` of `.box` (five boxes make five columns; delete one and you get four), a `###` title in each, `.muted` and `.fine` for the quieter lines, `.end` to push the book title to the bottom, `.spot` on the one to discuss, and a `.strip` with a `.pill` for the question. The next three slides are this slide again, with one class on the title.
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-game .look-game}
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+The same slide with `{.look-game}` on its title: thick outlines, hard shadows, tilted cards. All of it is in `slide-kit-looks.css` (about ten lines).
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-brutal .look-brutal}
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+`{.look-brutal}`: square corners, heavy borders, offset shadows, a highlighted title.
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-scroll .look-scroll background-color="#EADFC4"}
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+`{.look-scroll}`: paper colours, a serif font for 中文 (one variable, `--bi-zh-font`), wooden rods on each card. The slide's background colour is Quarto's own `background-color=` on the title.
+:::
+
+## [Group task · prepare your statement | 小组任务 · 准备发言]{.bi} {#task}
+
+:::: {.columns}
+::: {.column width="64%"}
+::: steps
+1. [Each person chooses one thinker | 每人选择一个思想家]{.bi}
+2. [Sit with others from your school | 同一学派的同学坐在一起]{.bi}
+3. [Use the frames: problem, solution, reason | 用句型准备：问题、方案、原因]{.bi}
+:::
+
+::: {.box .plain}
+[Done when · 完成标准]{.kicker}
+
+[Every member can say one idea and one reason from their school. | 每位成员都能说出本学派的一个主张和一个理由。]{.bi}
+:::
+:::
+::: {.column width="36%"}
+::: {.box .dark style="align-items: center"}
+[Timer · 计时]{.kicker}
+
+{{< timer 5 >}}
+:::
+
+::: {.box .plain}
+[Materials · 材料]{.kicker}
+
+[Worksheet, parts 1 and 2 | 学习单 第 1–2 部分]{.bi}
+
+[Hand in parts 1 and 2. | 上交第 1–2 部分。]{.bi .fine}
+:::
+:::
+::::
+
+::: notes
+A task. Pieces: Chalkline's existing `.steps` (numbered cards), `.box` with `.kicker` labels, the `{{< timer 5 >}}` shortcode inside a `.dark` box, Quarto `.columns`.
+:::
+
+## [Why did the Hundred Schools appear? | 为什么会出现百家争鸣？]{.bi} {#reveal-table}
+
+| | |
+|:--|:--|
+| [Politics \| 政治]{.bi} | [[The old order fell apart. No one idea was in charge. \| 礼崩乐坏，诸侯争霸，没有一种学说取得独尊地位。]{.bi}]{.fragment} |
+| [Economy \| 经济]{.bi} | [[Iron tools and ox plows made more food, enough to feed scholars. \| 铁器和牛耕推广，农业发展，能够供养知识分子。]{.bi}]{.fragment} |
+| [Science \| 科技]{.bi} | [[New tools and new knowledge spread. \| 新的工具和知识不断传播。]{.bi}]{.fragment} |
+| [Education \| 教育]{.bi} | [[Schools opened to more people, not only nobles. \| 私学兴起，教育不再只属于贵族。]{.bi}]{.fragment} |
+
+: {tbl-colwidths="[24,76]"}
+
+::: notes
+A reveal table: an ordinary Markdown table (inside a table cell the bar is written `\|`); each answer is a `.fragment`, so it appears on the next click. The row labels always show. The table's look is Chalkline's existing table style.
+:::
+
+## {#media background-image="images/sevenstates.svg" background-size="contain" background-color="#14213D"}
+
+[Watch · 观看]{.pill .absolute top=10 left=0}
+
+::: {.box .plain .absolute bottom=0 left=0 right=0}
+::: row
+[Think · 思考]{.kicker}
+
+[What changes can you see? | 你能看到哪些变化？]{.bi .lead}
+:::
+
+[Placeholder map, an original drawing. Put a real picture or a video here. | 示意图（原创），请换成真实图片或视频。]{.bi .fine}
+:::
+
+::: notes
+Media. Pieces: Quarto's own `background-image=` fills the slide; `.absolute` (Quarto's) pins a `.pill` and a `.box` caption bar to the corners. A video: `background-video=` instead.
+:::
+
+## [Speaking frames: fill in the blanks | 发言句型]{.bi} {#frames}
+
+::: {.tiles style="--cols: 1; --gap: 0.3em"}
+::: {.box .plain}
+::: row
+[1]{.num}
+
+[What is the problem? | 问题是什么？]{.bi .small style="width: 9em"}
+
+[The main problem is [ ]{.gap}. | 我们时代最大的困境是[ ]{.gap}。]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[2]{.num}
+
+[What is the solution? | 解决方案是什么？]{.bi .small style="width: 9em"}
+
+[Our school believes the best way is [ ]{.gap}. | 我们学派认为最好的办法是[ ]{.gap}。]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[3]{.num}
+
+[Why does it work? | 为什么这样做？]{.bi .small style="width: 9em"}
+
+[This idea works because [ ]{.gap}. | 这样做的原因是[ ]{.gap}。]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[4]{.num}
+
+[What will happen? | 期望结果是什么？]{.bi .small style="width: 9em"}
+
+[If rulers follow our idea, [ ]{.gap} will happen. | 如果君主采纳我们的思想，[ ]{.gap}将会发生。]{.bi}
+:::
+:::
+:::
+
+::: notes
+Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each frame a `.box .plain` holding a `.row`: a `.num`, the question (`.small`) and the frame, with `[ ]{.gap}` for each blank.
+:::
+
+## [What defined the Warring States era? | 春秋战国有什么整体的时代特征？]{.bi} {#big-idea-dusk .look-dusk background-color="#00234F"}
+
+::: {.cover style="height: auto; padding: 0.6em 0"}
+[Turmoil · Change · Growth | 动荡 · 变化 · 发展]{.bi .big style="text-align: center"}
+:::
+
+::: chain
+::: {.box style="text-align: center"}
+[Economic change | 经济之变]{.bi}
+:::
+
+::: {.box style="text-align: center"}
+[Social change | 社会之变]{.bi}
+:::
+
+::: {.box style="text-align: center"}
+[A debate of ideas | 思想之辩]{.bi}
+:::
+:::
+
+[The pre-Qin thinkers all wanted to save a troubled world, so their ideas grew out of their time. (Hu Shih) | 先秦诸子皆为忧世之乱而思以拯济之，故其学皆应时而生。——胡适]{.bi .fine}
+
+::: notes
+The big idea again with `{.look-dusk}` and a dark `background-color=`. Nothing in the bilingual text changed: the second language is a lighter shade of whatever colour the text has, so it works on dark slides too.
+:::
+
+## Colour schemes {#schemes}
+
+- Four schemes come with Chalkline, made from the brand colours: **night**, **sky**, **lagoon** and **sunrise**
+- One slide: `## Title {.scheme-night}`
+- A whole deck: `slide-scheme: night` in its labels
+- Chalkline's own pieces follow too: tables, steps, vocab cards, callouts
+
+::: notes
+The schemes are in `_extensions/chalkline/styles/schemes.scss`. Each one is only a list of tokens (about fifteen colours). Night comes from the Robotics League course's dark "Workshop Night" slides.
+:::
+
+## [Warring States thinkers · five schools | 战国诸子 · 五大学派]{.bi} {#cards-night .scheme-night}
+
+::: tiles
+::: box
+### [Confucianism | 儒家]{.bi}
+[Mencius | 孟子]{.bi .muted}
+
+**[Kind government | 仁政]{.bi}**
+
+[《孟子》]{.bi .fine .end}
+:::
+
+::: box
+### [Mohism | 墨家]{.bi}
+[Mozi | 墨子]{.bi .muted}
+
+**[Love everyone, no wars of attack | 兼爱非攻]{.bi}**
+
+[《墨子》]{.bi .fine .end}
+:::
+
+::: box
+### [Daoism | 道家]{.bi}
+[Zhuangzi | 庄子]{.bi .muted}
+
+**[Follow nature | 顺应自然]{.bi}**
+
+[《庄子》]{.bi .fine .end}
+:::
+
+::: {.box .spot}
+### [Legalism | 法家]{.bi}
+[Han Fei | 韩非]{.bi .muted}
+
+**[Rule by law, a strong ruler | 以法治国]{.bi}**
+
+[《韩非子》]{.bi .fine .end}
+:::
+
+::: box
+### [Military thinkers | 兵家]{.bi}
+[Wu Qi, Sun Bin | 吴起 孙膑]{.bi .muted}
+
+**[Military strategy | 军事战略]{.bi}**
+
+[《孙膑兵法》]{.bi .fine .end}
+:::
+:::
+
+::: strip
+[Think · 思考]{.pill}
+
+[Which school's ideas did Warring States rulers like best? | 哪一个学派的主张最受战国统治者欢迎？]{.bi}
+:::
+
+::: notes
+`{.scheme-night}`: the cards slide, unchanged except for that class.
+:::
+
+## [Why did the Hundred Schools appear? | 为什么会出现百家争鸣？]{.bi} {#table-night .scheme-night}
+
+| | |
+|:--|:--|
+| [Politics \| 政治]{.bi} | [[The old order fell apart. No one idea was in charge. \| 礼崩乐坏，诸侯争霸，没有一种学说取得独尊地位。]{.bi}]{.fragment} |
+| [Economy \| 经济]{.bi} | [[Iron tools and ox plows made more food, enough to feed scholars. \| 铁器和牛耕推广，农业发展，能够供养知识分子。]{.bi}]{.fragment} |
+| [Science \| 科技]{.bi} | [[New tools and new knowledge spread. \| 新的工具和知识不断传播。]{.bi}]{.fragment} |
+| [Education \| 教育]{.bi} | [[Schools opened to more people, not only nobles. \| 私学兴起，教育不再只属于贵族。]{.bi}]{.fragment} |
+
+: {tbl-colwidths="[24,76]"}
+
+::: notes
+Night on Chalkline's table style: the header row and stripes follow the scheme's tokens.
+:::
+
+## [Group task · prepare your statement | 小组任务 · 准备发言]{.bi} {#task-sky .scheme-sky}
+
+:::: {.columns}
+::: {.column width="64%"}
+::: steps
+1. [Each person chooses one thinker | 每人选择一个思想家]{.bi}
+2. [Sit with others from your school | 同一学派的同学坐在一起]{.bi}
+3. [Use the frames: problem, solution, reason | 用句型准备：问题、方案、原因]{.bi}
+:::
+
+::: {.box .plain}
+[Done when · 完成标准]{.kicker}
+
+[Every member can say one idea and one reason from their school. | 每位成员都能说出本学派的一个主张和一个理由。]{.bi}
+:::
+:::
+::: {.column width="36%"}
+::: {.box .dark style="align-items: center"}
+[Timer · 计时]{.kicker}
+
+{{< timer 5 >}}
+:::
+
+::: {.box .plain}
+[Materials · 材料]{.kicker}
+
+[Worksheet, parts 1 and 2 | 学习单 第 1–2 部分]{.bi}
+:::
+:::
+::::
+
+::: notes
+`{.scheme-sky}`: the pale brand blue as the slide, white boxes.
+:::
+
+## {#section-lagoon .center .scheme-lagoon}
+
+::: cover
+[Part 2 · Spring and Autumn & Warring States | 第 2 节 · 春秋战国]{.bi .kicker}
+
+[The Hundred Schools of Thought | 百家争鸣]{.bi .big}
+
+::: tiles
+::: {.box .plain}
+::: row
+[1]{.num}
+
+[Why it happened | 争鸣原因]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[2]{.num}
+
+[The ideas | 治国主张]{.bi}
+:::
+:::
+
+::: {.box .plain}
+::: row
+[3]{.num}
+
+[The debate | 智慧对决]{.bi}
+:::
+:::
+:::
+:::
+
+::: notes
+`{.scheme-lagoon}`: turquoise slide, navy text. Loud: for openers and the one slide everyone should look at.
+:::
+
+## [Confucius · on government | 孔子 · 政治主张]{.bi} {#source-sunrise .scheme-sunrise}
+
+::: {.box .plain}
+::: row
+[Source · 原文]{.kicker}
+
+[Analects 2.1 · 《论语·为政》]{.fine}
+:::
+
+[The Master said: "Govern by virtue, and you are like the North Star. It stays in its place, and all the other stars turn toward it." | 子曰：“为政以德，譬如北辰，居其所而众星共之。”]{.bi .lead}
+:::
+
+:::: {.columns}
+::: {.column width="62%"}
+::: box
+[Meaning · 解读]{.kicker}
+
+[If a ruler leads by being good, people will follow him, like stars around the North Star. | 统治者如果用道德来治理国家，百姓就会像群星环绕北极星一样围绕着他。]{.bi}
+:::
+:::
+::: {.column width="38%"}
+::: {.box .dark}
+[Takeaway · 要点]{.kicker}
+
+[Rule by virtue | 为政以德]{.bi .big style="font-size: var(--step-3)"}
+:::
+:::
+::::
+
+::: notes
+`{.scheme-sunrise}`: warm paper from the brand orange, turquoise as the highlight.
+:::

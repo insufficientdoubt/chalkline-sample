@@ -1,4 +1,7 @@
 --[[
+TO BE REMOVED: the first slide-style experiment. Replaced by bilingual/bilingual.lua ([English | 中文]{.bi}
+anywhere) and the slide kit (styles/layout.scss). Only course/units/00-start-here/slide-style-slides.qmd uses it.
+
 Slide style: slides whose look can be changed without touching their words.
 
 A slide opts in with  {.styled kind="..."}  on its heading. Everything else is optional:

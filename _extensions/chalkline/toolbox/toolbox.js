@@ -11,7 +11,7 @@
     Time        clock.js (open unless you close it; K shows and hides it), stopwatch.js
     This unit   vocab.js, packet.js, qr.js (QR code for this deck on the student site)
     More        music.js (YouTube), dice.js, slide.js (Slide size), source.js (View source)
-    Not in the menu  style.js (Slide style: opened from the corner of a styled slide, see slide-style/)
+    Not in the menu  style.js (to be removed; Slide style: opened from the corner of a styled slide, see slide-style/)
 
   Vocab and Packet are sidebars instead (dock in their file): the screen's full height, at its
   right and left edge, and the slides move over to make room. V and P open and close them.

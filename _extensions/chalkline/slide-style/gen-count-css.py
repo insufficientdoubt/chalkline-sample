@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Writes slide-style-count.css: how each type reflows for 1-9 cards.
+"""TO BE REMOVED with slide-style.lua (see there).
+Writes slide-style-count.css: how each type reflows for 1-9 cards.
 The Lua filter sets data-ss-count on the slide; these rules read it. No JavaScript needed."""
 MAXN = 9
 
