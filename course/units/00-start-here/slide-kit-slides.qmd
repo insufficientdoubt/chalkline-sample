@@ -575,21 +575,23 @@ Media. The picture is in the slide, not behind it, inside a `.cover .media` bloc
 Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each frame a `.box .plain` holding a `.row`: a `.num`, the question (`.small`) and the frame, with `[ ]{.gap}` for each blank.
 :::
 
-## [History · Grade 7 · 12 November | 历史 · 七年级 · 11月12日]{.bi} {#lesson-intro}
+## [History · Grade 7 · [today]{.today} | 历史 · 七年级 · [今天]{.today}]{.bi} {#lesson-intro}
 
-:::: {.columns}
+:::: {.columns style="height: 490px"}
 ::: {.column width="57%"}
+::: lesson-info
 | | |
-|:--|:--|
+|--:|:--|
 | [Topic \| 课题]{.bi} | [The Hundred Schools of Thought \| 百家争鸣]{.bi} |
-| [Objective \| 学习目标]{.bi} | [I can explain one school's big idea and give one reason. \| 我能说出一个学派的主张，并给出一个理由。]{.bi} |
-| [Homework \| 作业]{.bi} | [Museum card, due Friday 14 November \| 博物馆卡片，11月14日（周五）交]{.bi} |
+| [Objective \| 学习目标]{.bi} | [I can explain one school's big idea. \| 我能说出一个学派的主张。]{.bi} |
+| [Homework \| 作业]{.bi} | [Museum card, due Friday \| 博物馆卡片，周五交]{.bi} |
 
-: {tbl-colwidths="[24,76]"}
+: {tbl-colwidths="[25,75]"}
+:::
 
 [Focus vocabulary · 重点词汇]{.kicker}
 
-::: {.tiles style="--pic-fit: contain; --pic-height: 3.6em"}
+::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 3.2em"}
 ::: {.box .plain}
 ![](../../../vocab/images/GRC-009.svg){fig-alt=""}
 
@@ -615,7 +617,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::
 :::
 
-::: {.box .plain style="font-size: 0.85em"}
+::: {.box .plain style="font-size: 0.75em"}
 [Sentence frames · 句型]{.kicker}
 
 [The [ ]{.gap} school said rulers should [ ]{.gap}. | [ ]{.gap}学派认为统治者应该[ ]{.gap}。]{.bi}
@@ -628,15 +630,26 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 1. [Name one thinker from the last lesson. | 说出上节课学过的一位思想家。]{.bi}
 2. [What was his big idea? Write one sentence. | 他的主要主张是什么？写一句话。]{.bi}
 
-::: {.end style="align-self: center; font-size: 0.6em"}
+::: {.end style="align-self: center; font-size: 0.48em"}
 {{< timer 5 >}}
 :::
 :::
 :::
 ::::
 
+```{=html}
+<script>
+  // Today's date in the title: "29 October" in English, "10月29日" in 中文 (the visitor's own clock)
+  document.querySelectorAll("#lesson-intro .today").forEach(function (el) {
+    var d = new Date();
+    el.textContent = el.closest(".bil-zh") ? (d.getMonth() + 1) + "月" + d.getDate() + "日"
+      : d.toLocaleDateString("en-GB", { day: "numeric", month: "long" });
+  });
+</script>
+```
+
 ::: notes
-Lesson intro and Do now, on one slide. Pieces: an ordinary Markdown table for topic, objective and homework; `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); `[ ]{.gap}` for the blanks in a sentence frame; a `.box` for the Do now with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
+Lesson intro and Do now, on one slide. Pieces: the date in the title is today's, filled in when the slide opens (`[today]{.today}` and a few lines of script on the slide); an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line (`slide-kit-looks.css`); `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); `[ ]{.gap}` for the blanks in a sentence frame; a `.box` for the Do now, as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
 :::
 
 ## Make a museum card {#instructions}
