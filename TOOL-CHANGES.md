@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: The version 1 plan stays out of new courses
+- **Asked for:** "make a planning document for the next stage… Put the planning doc on the main branch."
+- **Why:** it's Chalkline's own planning, like `EXTENSION-PLAN.md` and `IDEAS.md`, not something a teacher's new course needs.
+- **Changed:** `.quartoignore`: lists `V1-PLAN.md`, so `quarto use template` leaves it out of a new course. The plan itself is `V1-PLAN.md`.
+- **Who it helps:** probably every Chalkline course (none of them gets a stray planning file).
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Classroom routine slides: lesson intro, instructions, Think-Pair-Share, easy to hard, a diagram
 - **Asked for:** "Add example slides for these layouts. Instruction slides, TPS, diagram (as draw.io) work gallery... And of course the lesson intro + Do now slide." (from photos of the teacher's own slides)
 - **Why:** not given; the Slide kit deck shows what Chalkline's pieces can do.
