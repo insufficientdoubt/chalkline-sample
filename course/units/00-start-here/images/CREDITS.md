@@ -20,6 +20,13 @@ cropped to the head and shoulders, as noted.
 | `sevenstates.jpg` | Map: the Warring States of China, c. 260 BCE. | Philg88 | [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/) | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:EN-WarringStatesAll260BCE.jpg) |
 | `coins.jpg` | Warring States spade coins, Shanghai Museum. | Photo: Gary Lee Todd | CC0 | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Warring_States_Spade_Coins.jpg) |
 
+`tps-knee.svg`, `tps-face.svg` and `tps-class.svg` (where students sit for Think-Pair-Share) are original drawings made
+for this course; no outside source, no license needed. So is the Lesson summary diagram (`../drawio/summary.drawio`).
+
+The Slide kit deck's instructions slide plays a video from Wikimedia Commons (not a copy in this folder):
+*Ink grinding*, how to grind an ink stick on an inkstone, by Wobuzowatsj, CC0,
+[Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ink_grinding.webmhd.webm).
+
 `abstract-glow.jpg` (the background of the Slide kit deck's glass scheme) is an original picture, made for this
 course with a short script (soft glows of the brand colours, rings and grain); no outside source, no license needed.
 Swap in a photo (for example from Unsplash) to change it, and credit that photo here.

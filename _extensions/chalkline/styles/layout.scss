@@ -95,6 +95,15 @@
 .reveal .row { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--gap); }
 .reveal .row:has(> p > .num) { align-items: center; }   // a number in a circle sits beside its text's middle
 .reveal .row > p { margin: 0; }
+// A small square picture in a row, beside a number and its words (a list of tasks or stations):
+//   ::: row   [1]{.num}   ![](images/mencius.jpg){.thumb fig-alt="Mencius"}   [the words]   :::
+// The row stays on one line and the words take the room left. --thumb changes the size.
+.reveal img.thumb {
+  width: var(--thumb, 3.4em); height: var(--thumb, 3.4em); max-width: none; max-height: none; margin: 0;
+  object-fit: cover; object-position: 50% 25%; border-radius: calc(var(--radius) * 0.6); background: var(--surface);
+}
+.reveal .row:has(img.thumb) { flex-wrap: nowrap; align-items: center; }
+.reveal .row:has(img.thumb) > :last-child { flex: 1; min-width: 0; }
 
 // Columns: Quarto draws slide columns as inline blocks side by side, so they have no gap (only the
 // width of a space), always line up at the top, and a box in one can't be as tall as the other.
@@ -159,11 +168,12 @@
 .reveal .spot { outline: 4px solid var(--hot); outline-offset: -4px; }
 // a picture first in a box (a card's picture): as wide as the box, all cards' pictures the same height,
 // cropped to fill it:   ::: box   then   ![](images/mencius.jpg){fig-alt="Mencius"}   then the text.
-// --pic-height changes the height, --pic-position which part shows (faces are near the top).
+// --pic-height changes the height, --pic-position which part shows (faces are near the top),
+// --pic-fit: contain shows all of it (a drawing or an icon) instead of filling the space.
 .reveal .box > p:first-child:has(> img:only-child) { margin-bottom: 0.2em; }
 .reveal .box > p:first-child > img:only-child {
   display: block; width: 100%; max-width: none; height: var(--pic-height, 4.5em); max-height: none; margin: 0;
-  object-fit: cover; object-position: var(--pic-position, 50% 22%); border-radius: calc(var(--radius) * 0.6);
+  object-fit: var(--pic-fit, cover); object-position: var(--pic-position, 50% 22%); border-radius: calc(var(--radius) * 0.6);
 }
 // a box's last line sits at its bottom (a source, a page number)
 .reveal .box > .end, .reveal .box > p:has(> .end) { margin-top: auto; }

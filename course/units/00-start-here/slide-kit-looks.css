@@ -139,3 +139,6 @@
 .reveal .scheme-glass table { border-radius: 14px; overflow: hidden; }
 .reveal .scheme-glass table th { background: rgba(6, 18, 44, 0.55); }
 .reveal .scheme-glass table tr:nth-child(even) td { background: rgba(255, 255, 255, 0.08); }
+
+/* the bilingual slide (#bilingual): an orange box around the language controls, only while that slide shows */
+.reveal:has(section#bilingual.present) .bi-switch { opacity: 1; outline: 3px solid #ff8c0f; outline-offset: 5px; border-radius: 999px; }

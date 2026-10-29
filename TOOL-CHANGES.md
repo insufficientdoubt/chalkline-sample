@@ -16,6 +16,14 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Classroom routine slides: lesson intro, instructions, Think-Pair-Share, easy to hard, a diagram
+- **Asked for:** "Add example slides for these layouts. Instruction slides, TPS, diagram (as draw.io) work gallery... And of course the lesson intro + Do now slide." (from photos of the teacher's own slides)
+- **Why:** not given; the Slide kit deck shows what Chalkline's pieces can do.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: a card's picture can show whole (`--pic-fit: contain`, for drawings and icons); a new small square picture for a row, `![](file){.thumb}`, beside a `.num` and its words (a list of tasks or stations). The new slides in the Slide kit deck (`course/units/00-start-here/`) use only existing pieces besides these: the vocab pop-ups, timers (two on one slide), Quarto's video, Chalkline's packet gallery (`pdf-viewer layout="gallery"`), and a draw.io diagram shown like the Rome unit's.
+- **Noticed (for Chalkline):** the draw.io hover script (`drawio-live.js` and `.css`) lives in the Rome unit's folder, so this deck needed its own copy; it could be part of Chalkline (a `{{< drawio >}}` shortcode). Making the diagram's picture needs the draw.io desktop app (`python chalkline.py drawio`); without it the SVG here was drawn from the `.drawio` file by a short script, so running `chalkline.py drawio` on a computer with draw.io will redraw it. A local `{{< video file >}}` doesn't size itself to its slide like YouTube and Vimeo links do.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Credits slide with pictures and sources
 - **Asked for:** "add credits slide at the end. And add an AI instruction to do that automatically when possible. Maybe two columns - one for photo credits and one for sources links (if any are used)."
 - **Why:** "it's good practice, demonstrate a good example to students, and it's free goodwill to show respect to sources."
