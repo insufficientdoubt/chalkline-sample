@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Boxes in a row line up again
+- **Asked for:** "an alignment issue on the big idea slide?"
+- **Why:** the new gap between stacked blocks (two entries down) also applied inside tiles and chains, so every box after the first was pushed down.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`: that gap only applies outside tiles, chains and rows. Checked: the first row of every tile row and chain in the Slide kit deck lines up.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: A media layout whose caption never covers the picture
 - **Asked for:** "for the media slide layout I noticed that the question would cover the bottom of the video/image." Also, for the Slide kit deck: "a kind of flat modern design with a background image (abstract, something from Unsplash) and semi-transparent tiles", and the scroll look's corner ornament "will overlap with the title text".
 - **Why:** the picture was the slide's background, so the caption box sat on top of it.

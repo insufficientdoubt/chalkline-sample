@@ -105,8 +105,9 @@
 .reveal .slides .columns > .column:has(> .box:only-child) { display: flex; flex-direction: column; }
 .reveal .slides .columns > .column > .box:only-child { flex: 1; }
 
-// Spacing between the kit's blocks, so a box never touches the next one
-.reveal :is(.box, .tiles, .chain, .strip, .columns, .steps) + :is(.box, .tiles, .chain, .strip, .columns, .steps) { margin-top: var(--gap); }
+// Spacing between the kit's blocks stacked one under another, so a box never touches the next one.
+// Not inside tiles, chains and rows: their own gap spaces them (a margin there pushes boxes out of line).
+.reveal :not(.tiles, .chain, .row) > :is(.box, .tiles, .chain, .strip, .columns, .steps) + :is(.box, .tiles, .chain, .strip, .columns, .steps) { margin-top: var(--gap); }
 // Cover: fills the slide's height and centres what's in it (section openers, a big idea).
 .reveal .slides section:has(> .cover) { height: 100%; }
 .reveal .cover {
