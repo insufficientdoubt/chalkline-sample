@@ -16,6 +16,16 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Slide columns with a real gap and equal heights
+- **Asked for:** "on the slide with Confucius on government, the spacing looks off. Is this a style issue or something innate to the platform?"
+- **Why:** the source box touched the two boxes under it, the gap between those two was smaller than elsewhere, and they had different heights.
+- **Changed:** `_extensions/chalkline/styles/layout.scss`:
+  - Slide columns are a flex row with the kit's gap, and as tall as the tallest; a box alone in a column fills it. Quarto draws slide columns as inline blocks: no gap but a space's width, always top-aligned, and their top margin is ignored. The top margin stays 0, so decks keep their spacing (checked on every columns slide in two unit decks and the Start-here deck: the columns move a few pixels apart, nothing else).
+  - The kit's blocks (boxes, tiles, chains, strips, columns, steps) get a gap when one follows another.
+  - A `.row` lines its items up on their text's baseline (a label and its source line); a row with a `.num` still centres.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Night keeps its grid; a scheme's background can be any picture
 - **Asked for:** "for the theme that comes from robotics make sure that it kept the background grid. And on the night theme ... make sure that the headline color is something visible." Also a "Songmont hobo" inspired theme with "casually placed short wavy lines on the background ... angled connectors and perfect circles", and a more ornate scroll look "to show off the styling capabilities".
 - **Why:** to show teachers what the styling can do.
