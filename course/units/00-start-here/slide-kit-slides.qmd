@@ -575,7 +575,7 @@ Media. The picture is in the slide, not behind it, inside a `.cover .media` bloc
 Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each frame a `.box .plain` holding a `.row`: a `.num`, the question (`.small`) and the frame, with `[ ]{.gap}` for each blank.
 :::
 
-## {#lesson-intro}
+## {#lesson-intro data-menu-title="Do now · 课前任务"}
 
 :::: {.columns style="height: 700px"}
 ::: {.column width="57%"}
@@ -650,7 +650,7 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 ```
 
 ::: notes
-Lesson intro and Do now, on one slide. Pieces: no slide title (`## {#lesson-intro}`), so the Do now runs the slide's full height; the subject, grade and today's date are the first row of the content table, in its colour (the date is filled in when the slide opens: `[today]{.today}` and a few lines of script on the slide); two `.area` blocks, each labelled in its corner (`label="Content objective"`, `label="Language objective"`) so observers find them at once: the content area holds an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line; the language area holds two `.pill` tags, Vocab and Sentence frames, each followed by its content: `.tiles` of `.box` for the words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); and a sentence frame with `[ ]{.gap}` for the blanks (all in `slide-kit-looks.css`); an `.area` for the Do now, labelled like the objectives and as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
+Lesson intro and Do now, on one slide. Pieces: no slide title (`## {#lesson-intro data-menu-title="Do now"}`: the menu (☰) still lists it by that name), so the Do now runs the slide's full height; the subject, grade and today's date are the first row of the content table, in its colour (the date is filled in when the slide opens: `[today]{.today}` and a few lines of script on the slide); two `.area` blocks, each labelled in its corner (`label="Content objective"`, `label="Language objective"`) so observers find them at once: the content area holds an ordinary Markdown table for topic, objective and homework, in a `.lesson-info` block that right-aligns the labels against a line; the language area holds two `.pill` tags, Vocab and Sentence frames, each followed by its content: `.tiles` of `.box` for the words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); and a sentence frame with `[ ]{.gap}` for the blanks (all in `slide-kit-looks.css`); an `.area` for the Do now, labelled like the objectives and as tall as the slide, with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
 :::
 
 ## Make a museum card {#instructions}
