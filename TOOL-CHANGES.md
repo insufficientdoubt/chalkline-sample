@@ -16,6 +16,19 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Colour schemes from the brand colours
+- **Asked for:** "Could you make a couple of more color schemes using the brand kit colors as the foundation? You can also have a look at the robotics League repo because I think there's already a good color scheme there."
+- **Why:** to show teachers that slides don't have to look bland.
+- **Changed:**
+  - `_extensions/chalkline/styles/schemes.scss` (new, loaded with every deck): four schemes that only set the slide kit's tokens: **night** (the Robotics League course's "Workshop Night" dark slides with graph paper), **sky**, **lagoon** (turquoise, navy text) and **sunrise** (warm orange paper). Night also recolours Quarto's callouts and code.
+  - `_extensions/chalkline/schemes.html` (new): paints a scheme's colour behind the slide (reveal.js draws backgrounds in a separate layer). `filter.lua` adds it to every deck and reads a deck's `slide-scheme:` label.
+  - `_extensions/chalkline/styles/revealjs.scss`: Chalkline's slide pieces (titles, bold text, vocab cards, tables, steps, frames, goals, timelines, big numbers) use the tokens instead of fixed brand colours. Same colours as before; checked on a unit deck, pixel for pixel apart from the clock.
+  - `_extensions/chalkline/styles/layout.scss`: new tokens `--rule`, `--link`, `--hot-text` (the orange, dark enough for small words: 4.7:1 on white; the bright orange was 2.3:1) and `--paper-image`; slide text, `###` titles and links follow the tokens.
+  - `_extension.yml`, `README.md`, `CHANGELOG.md`: load it, a row, an entry.
+  - Content: six scheme slides at the end of `00-start-here/slide-kit-slides.qmd`.
+- **Who it helps:** probably every Chalkline course. The Robotics League course's 40 or so lines of dark-slide overrides could become `slide-scheme: night` once it has this version of Chalkline.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Bilingual text on its own; a slide kit and a second experiment deck
 - **Asked for:** "Do the bilingual bit. Then make a second experiment deck using examples + built in layout tools" (content from the slide designs made the day before). "Mark the Lua short codes built yesterday for removal." "If open props/utopia helps, include."
 - **Why:** the first experiment had "very detailed context specific styling"; "we're going to need more generic reusable styling so that we have different types of text." Example slides rather than fixed templates, because "we don't know in advance what content the teachers will need" and "our goal is flexibility as a tool."

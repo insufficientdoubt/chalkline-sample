@@ -353,6 +353,14 @@ local function Meta(meta)
   if quarto.doc.is_format("revealjs") and not down_off then include_once("down-arrow.html") end
   -- Slides: a {{< video >}} with no size of its own fills the room left on its slide.
   if quarto.doc.is_format("revealjs") then include_once("video-fit.html") end
+  -- Slides: colour schemes (styles/schemes.scss) painted behind the slide; `slide-scheme: night` for a whole deck.
+  if quarto.doc.is_format("revealjs") then
+    local scheme = meta["slide-scheme"] and pandoc.utils.stringify(meta["slide-scheme"]) or ""
+    if scheme:match("^[%w-]+$") then
+      quarto.doc.include_text("after-body", '<script type="text/plain" id="chalkline-scheme">' .. scheme .. "</script>")
+    end
+    include_once("schemes.html")
+  end
   -- Slides: the classroom toolbox (toolbox/toolbox.js; turn off with `classroom-tools: false`).
   -- Teacher build only: students (and families, on the student site) never see it.
   local tools = meta["classroom-tools"]

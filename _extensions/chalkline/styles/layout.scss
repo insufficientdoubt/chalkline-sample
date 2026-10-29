@@ -22,8 +22,13 @@
   --on-accent: #{$navy};         // text on --accent
   --hot: #{$orange};             // the one thing to look at
   --on-hot: #{$navy};
+  --hot-text: #{mix($orange, #000, 68%)};   // the same, dark enough for words on the slide (4.7:1 on white)
   --strong: #{$navy};            // dark bands
   --on-strong: #fff;
+  --rule: #{$blue};              // the line under slide titles, timeline dots, big numbers
+  --link: #{$navy};
+  // a slide's own background (a colour scheme sets these; schemes.html paints them behind the slide)
+  --paper-image: none;
   // shape
   --radius: 14px;
   --border: 0px;                 // a box's border width
@@ -42,6 +47,11 @@
 }
 
 // ---- Layout ----
+
+// Every slide's text follows the tokens, so a colour scheme reaches Chalkline's own pieces too.
+.reveal .slides section { color: var(--ink); }
+.reveal .slides section :is(h3, h4) { color: var(--heading); }
+.reveal .slides section a { color: var(--link); }
 
 // A slide with no title (## {#id}): no title line either.
 .reveal .slides section > h2:empty { display: none; }
@@ -76,7 +86,7 @@
     left: calc(var(--gap) / -2);
     top: 50%;
     transform: translate(-50%, -50%);
-    color: var(--hot);
+    color: var(--hot-text);
     font-weight: 700;
   }
 }
@@ -115,6 +125,8 @@
 .reveal .box.accent { background: var(--accent); color: var(--on-accent); }
 .reveal .box.hot { background: var(--hot); color: var(--on-hot); }
 .reveal .box.dark { background: var(--strong); color: var(--on-strong); }
+.reveal .box.dark, .reveal .strip { --hot-text: var(--hot); }   // the bright one reads well on dark
+.reveal .box.accent, .reveal .box.hot { --hot-text: currentColor; }
 .reveal .box.accent, .reveal .box.hot, .reveal .box.dark {
   --heading: currentColor;
   --ink-muted: currentColor;
@@ -154,7 +166,7 @@
   font-weight: 700;
 }
 .reveal :where(.kicker, .big) { display: block; }   // :where: [A | B]{.bi .big} still stacks (bilingual.css)
-.reveal .kicker { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--hot); }
+.reveal .kicker { font-size: var(--step--1); font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--hot-text); }
 .reveal .big { font-family: var(--r-heading-font); font-size: var(--step-4); font-weight: 700; line-height: 1.1; color: var(--heading); }
 .reveal .lead { font-size: var(--step-1); line-height: 1.3; }
 .reveal .muted { color: var(--ink-muted); }

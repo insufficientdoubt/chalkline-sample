@@ -1,0 +1,33 @@
+<!--
+  Colour schemes (styles/schemes.scss) on slides: reveal.js draws each slide's background in its own
+  layer, outside the slide, so a scheme's --paper and --paper-image are painted there from here.
+  A deck's  slide-scheme: night  label puts the scheme on the whole deck (filter.lua sets data-scheme
+  below), including the screen around the slide. A slide's own background-color= or background-image=
+  always wins. Added to every deck by filter.lua.
+-->
+<script>
+(function () {
+  function start() {
+    var reveal = document.querySelector(".reveal");
+    var deck = (document.getElementById("chalkline-scheme") || {}).textContent;
+    if (deck) reveal.classList.add("scheme-" + deck.trim());
+    var css = getComputedStyle(reveal);
+    if (deck) document.documentElement.style.setProperty("--r-background-color", css.getPropertyValue("--paper").trim());
+    [].forEach.call(document.querySelectorAll(".reveal .slides section"), function (s) {
+      if (s.querySelector(":scope > section")) return;   // a stack of vertical slides
+      var own = /(^| )scheme-/.test(s.className);
+      if (!own && !deck) return;
+      if (s.hasAttribute("data-background-color") || s.hasAttribute("data-background-image") ||
+          s.hasAttribute("data-background-video") || s.hasAttribute("data-background-iframe")) return;
+      var bg = Reveal.getSlideBackground(s);
+      if (!bg) return;
+      var st = getComputedStyle(s);
+      bg.style.backgroundColor = st.getPropertyValue("--paper").trim();
+      var img = st.getPropertyValue("--paper-image").trim();
+      if (img && img !== "none") { bg.style.backgroundImage = img; bg.style.backgroundSize = "40px 40px"; }
+    });
+  }
+  if (!window.Reveal) return;
+  if (Reveal.isReady()) start(); else Reveal.on("ready", start);
+})();
+</script>

@@ -10,6 +10,10 @@
   `--step-1`, ...), layout pieces (`.tiles`, `.chain`, `.row`, `.cover`, `.box`, `.strip`) and text roles
   (`.kicker`, `.big`, `.lead`, `.pill`, `.num`, `.muted`, `.small`, `.fine`, `.gap`). A `.box` that starts with
   a `###` title stays one box. A look for a slide or deck is a few token changes in the course's own CSS.
+- **Colour schemes** (`styles/schemes.scss`, `schemes.html`): night (from the Robotics League course's dark
+  slides), sky, lagoon and sunrise, all made from the brand colours. `{.scheme-night}` on a slide's title, or
+  `slide-scheme: night` in a deck's labels. Chalkline's own slide styles (titles, tables, steps, vocab cards,
+  timelines) now read the slide kit's tokens, so a scheme reaches them too; light decks look as before.
 - **To be removed:** `slide-style/` and `toolbox/tools/style.js` (the `{.styled kind="..."}` experiment).
 
 - **Hosting** (`HOSTING.md`, `hosting/`): step-by-step setup for a student site and a teacher site with

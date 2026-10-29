@@ -35,7 +35,7 @@ contributes:
         theme: [cosmo, styles/styles.scss]
         include-after-body: styles/type-colors.html   # color-codes slide decks and packets in tables
       revealjs:
-        theme: [default, styles/revealjs.scss, styles/layout.scss]   # layout.scss: the slide kit (tiles, boxes, text roles); "default": no Google Fonts imports ("simple" pulls in two)
+        theme: [default, styles/revealjs.scss, styles/layout.scss, styles/schemes.scss]   # layout.scss: the slide kit (tiles, boxes, text roles); schemes.scss: colour schemes; "default": no Google Fonts imports ("simple" pulls in two)
       typst:
         font-paths: [fonts/print]   # Fredoka, Patrick Hand, and Noto Sans SC for Chinese in PDFs
         template-partials:          # Chalkline's page layouts (worksheets, posters, playful)
