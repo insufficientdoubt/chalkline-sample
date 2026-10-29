@@ -160,3 +160,38 @@
 .reveal .puzzle > .box:nth-child(4)::after { top: -0.95em; left: calc(50% - 0.95em); }     /* into B */
 .reveal .puzzle > .box:nth-child(4)::before { left: -0.95em; top: calc(50% - 0.95em); }    /* into C */
 .reveal .puzzle .row .bil { font-weight: 700; }
+
+/* The lesson intro uses three sizes only, so nothing is promoted or demoted by accident:
+   headings (the lesson line and "Do now") at --step-1; all content (table, objectives, vocab words,
+   frame, Do now questions) at the body size; the corner labels small. The whole slide is set one notch
+   smaller so it fits, instead of shrinking parts of it. 中文 is 0.8 of its line, as everywhere. */
+.reveal section#lesson-intro { font-size: 0.74em; }
+.reveal section#lesson-intro .box > h3 { font-size: var(--step-1); line-height: 1.15; }
+/* lesson-info: the lesson intro's topic, objective and homework, labels right-aligned against a line
+   (the Lesson intro slide). An ordinary Markdown table inside  ::: lesson-info */
+.reveal .lesson-info table { font-size: 1em; width: 100%; margin: 0; }   /* body size, not Chalkline's smaller table text */
+.reveal .lesson-info thead { display: none; }
+.reveal .lesson-info td { background: none !important; border-bottom: 2px solid color-mix(in srgb, var(--hot) 45%, transparent); padding: 0.2em 0.7em; vertical-align: top; }
+.reveal .lesson-info tr:last-child td { border-bottom: 0; }
+.reveal .lesson-info td:first-child { text-align: right; font-weight: 700; color: var(--heading); border-right: 3px solid var(--accent); }
+.reveal .lesson-info td:first-child .bil { align-items: flex-end; text-align: right; }
+/* vocab-row: focus words under their pictures, centred and a little larger than tiles make them */
+.reveal .tiles.vocab-row > .box { align-items: center; text-align: center; }
+.reveal .tiles.vocab-row > .box > p { font-size: 1em; }   /* body size: the words are content, not captions */
+
+/* area: a labelled part of a slide, the label small in its top-right corner, so an observer can't
+   miss it:  ::: {.area .content label="Content objective"}  (or .language). The label is the block's own words. */
+.reveal .area { position: relative; padding: 0.55em 0.8em 0.6em; border-radius: var(--radius); border-left: 6px solid var(--area-line); background: var(--area-bg); }
+.reveal .area + .area { margin-top: 0.5em; }
+.reveal .area::before {
+  content: attr(data-label); position: absolute; top: 0.45em; right: 0.8em;
+  font-size: 0.6em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--area-line);
+}
+.reveal .area.content { --area-line: #0067C5; --area-bg: color-mix(in srgb, #0087FF 7%, var(--paper)); }
+.reveal .area.language { --area-line: #B85C00; --area-bg: color-mix(in srgb, #FF8C0F 9%, var(--paper)); }
+.reveal .area > .lesson-info { margin-top: 0.35em; }
+.reveal .area .obj { margin: 0.7em 0 0.3em; }
+.reveal .area .frame { margin: 0.3em 0 0; }
+.reveal .area .tiles { margin: 0.2em 0; }
+.reveal .area .tiles > .box { --surface-2: var(--paper); padding: 0.3em 0.4em; }
+.reveal .area .lesson-head { font-family: var(--r-heading-font); font-weight: 700; color: var(--heading); font-size: var(--step-1); line-height: 1.15; margin-top: 0.2em; }
