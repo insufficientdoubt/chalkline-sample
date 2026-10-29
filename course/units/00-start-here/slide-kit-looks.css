@@ -195,3 +195,5 @@
 .reveal .area .tiles { margin: 0.2em 0; }
 .reveal .area .tiles > .box { --surface-2: var(--paper); padding: 0.3em 0.4em; }
 .reveal .area .lesson-head { font-family: var(--r-heading-font); font-weight: 700; color: var(--heading); font-size: var(--step-1); line-height: 1.15; margin-top: 0.2em; }
+.reveal .area .tag { display: inline-block; font-size: var(--step--1); margin: 0.45em 0 0.1em; }
+.reveal .area .tag + .tiles { margin-top: 0.15em; }
