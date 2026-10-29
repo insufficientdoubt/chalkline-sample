@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Timer buttons stay big enough to tap
+- **Asked for:** "The timer buttons are tiny now. Fix and republish."
+- **Why:** a timer made smaller to fit a box (the Slide kit's lesson intro, Think-Pair-Share and jigsaw slides) shrank its Start, Reset and +1 min buttons with it, to about 7px.
+- **Changed:** `_extensions/chalkline/countdown.html`: the buttons are never smaller than 16px (in slide pixels); a full-size timer looks the same as before.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: The version 1 plan stays out of new courses
 - **Asked for:** "make a planning document for the next stage… Put the planning doc on the main branch."
 - **Why:** it's Chalkline's own planning, like `EXTENSION-PLAN.md` and `IDEAS.md`, not something a teacher's new course needs.
