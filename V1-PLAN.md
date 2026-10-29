@@ -96,7 +96,7 @@ Keep or adapt: "A slide is just text you can read", "Packets build themselves", 
 - **Colour sets:** the colour schemes, side by side, with what each is for.
 - **Style:** the looks (game, brutal, scroll, dusk…) and when to use them.
 - **Brand assets:** logos, fonts and colours from `brand/`, and how to change them.
-- **Design guidance** (to be written): short rules for people and for AI assistants to read before making new slides, focused on **high-quality slides that work for translanguaging**: one idea per slide, short sentences, room for a second language, pictures that carry meaning, contrast, consistent places for the same things. To be added to `CLAUDE.md` once agreed.
+- **Design guidance** (to be written): short rules for people and for AI assistants to read before making new slides, focused on **high-quality slides that work for translanguaging**: one idea per slide, short sentences, room for a second language, pictures that carry meaning, contrast, consistent places for the same things. **Type follows the content's importance, not the space:** a slide uses a few sizes only (headings, content, small labels; the second language at 0.8 of its line), and when a slide is full the whole slide gets one notch smaller instead of shrinking some parts, so nothing is demoted by accident (worked out on the Slide kit's lesson intro). To be added to `CLAUDE.md` once agreed.
 
 ### How it ships (to work out)
 

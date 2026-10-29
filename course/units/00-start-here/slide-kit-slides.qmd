@@ -594,9 +594,9 @@ Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each fr
 :::
 
 ::: {.area .language label="Language objective · 语言目标"}
-[I can use the focus words and a sentence frame to explain an idea. | 我能用重点词汇和句型说明一个主张。]{.bi .obj}
+[I can explain an idea with the focus words and a frame. | 我能用重点词汇和句型说明一个主张。]{.bi .obj}
 
-::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 3.2em"}
+::: {.tiles .vocab-row style="--pic-fit: contain; --pic-height: 2.6em"}
 ::: {.box .plain}
 ![](../../../vocab/images/GRC-009.svg){fig-alt=""}
 
