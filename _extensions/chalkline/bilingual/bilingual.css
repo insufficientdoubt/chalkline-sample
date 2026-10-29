@@ -26,19 +26,22 @@ html[data-bi-primary="zh"] .bil > .bil-en {
   color: var(--bi-second-color, color-mix(in srgb, currentColor 68%, transparent));
   line-height: 1.25;
 }
-/* the first: as the place has it (on a page showing one language, that one) */
+/* the first: as the place has it (showing one language: that one) */
 html[data-bi-primary="zh"] .bil > .bil-zh,
-html:not(.bi-slides)[data-bi-show="en"] .bil > .bil-en,
-html:not(.bi-slides)[data-bi-show="zh"] .bil > .bil-zh {
+html[data-bi-show="en"] .bil > .bil-en,
+html[data-bi-show="zh"] .bil > .bil-zh {
   order: 0; font-size: 1em; font-weight: inherit; color: inherit; line-height: inherit;
 }
 /* one language only: on a page the other is left out */
 html[data-bi-show="en"] .bil > .bil-zh,
 html[data-bi-show="zh"] .bil > .bil-en { display: none; }
-/* on slides (html.bi-slides, from bilingual.js) it is only invisible: it keeps its room, and the
-   shown one its size and place, so switching languages never moves anything on the slide */
+/* on slides (html.bi-slides, from bilingual.js) it is only invisible, in the second language's place
+   and size: boxes keep their height when one language is switched off */
 html.bi-slides[data-bi-show="en"] .bil > .bil-zh,
-html.bi-slides[data-bi-show="zh"] .bil > .bil-en { display: revert; visibility: hidden; }
+html.bi-slides[data-bi-show="zh"] .bil > .bil-en {
+  display: revert; visibility: hidden;
+  order: 1; font-size: var(--bi-second-size, 0.8em); line-height: 1.25;
+}
 
 /* the language switch, top right of the slides (bilingual.js): quiet until you point at it */
 .bi-switch {

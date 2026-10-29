@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: One language on: it takes the top place
+- **Asked for:** "when you select one language only, that language should swap to the dominant position, not stay as a subtitle." And: "A tiny reflow when you switch which one is on top isn't a bad thing."
+- **Why:** the goal of the change below was that boxes don't suddenly get half as tall when a language is switched off, not that nothing moves at all.
+- **Changed:** `_extensions/chalkline/bilingual/bilingual.css`: the language you show is large and first again; the hidden one stays invisible in the second language's place and size, so boxes keep their height (Slide kit cards: 274px both and EN, 270px 中).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: A hidden language keeps its room on slides
 - **Asked for:** "when a language is hidden, it should just be invisible, not absent. That way the page won't reflow and look weird."
 - **Why:** switching EN / 中 made everything on the slide jump: the hidden language's lines vanished and the shown one grew.
