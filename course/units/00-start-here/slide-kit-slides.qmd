@@ -1,7 +1,7 @@
 ---
 title: "Slide kit (experiment)"
 type: slides
-description: "A test deck: eight kinds of slide built from a few plain pieces (tiles, boxes, text roles) and bilingual text, then the same slides in three looks and four colour schemes. Not part of the course."
+description: "A test deck: thirteen kinds of slide built from a few plain pieces (tiles, boxes, text roles) and bilingual text, then the same slides in three looks and four colour schemes. Not part of the course."
 order: 4
 audience: [teacher]
 format:
@@ -13,6 +13,9 @@ format:
     footer: "Unit 2 · Hundred Schools of Thought · 第二单元 · 百家争鸣"
 resources:
   - images/abstract-glow.jpg      # the glass scheme's background (slide-kit-looks.css)
+  - drawio/*.svg                  # the draw.io diagram and its hover script (the Lesson summary slide)
+  - drawio/*.js
+  - drawio/*.css
 title-slide-attributes:
   data-background-color: "#003477"
 bilingual:
@@ -536,6 +539,247 @@ Media. The picture is in the slide, not behind it, inside a `.cover .media` bloc
 Sentence frames. Pieces: `.tiles` with one column (`style="--cols: 1"`), each frame a `.box .plain` holding a `.row`: a `.num`, the question (`.small`) and the frame, with `[ ]{.gap}` for each blank.
 :::
 
+## [History · Grade 7 · 12 November | 历史 · 七年级 · 11月12日]{.bi} {#lesson-intro}
+
+:::: {.columns}
+::: {.column width="57%"}
+| | |
+|:--|:--|
+| [Topic \| 课题]{.bi} | [The Hundred Schools of Thought \| 百家争鸣]{.bi} |
+| [Objective \| 学习目标]{.bi} | [I can explain one school's big idea and give one reason. \| 我能说出一个学派的主张，并给出一个理由。]{.bi} |
+| [Homework \| 作业]{.bi} | [Museum card, due Friday 14 November \| 博物馆卡片，11月14日（周五）交]{.bi} |
+
+: {tbl-colwidths="[24,76]"}
+
+[Focus vocabulary · 重点词汇]{.kicker}
+
+::: {.tiles style="--pic-fit: contain; --pic-height: 3.6em"}
+::: {.box .plain}
+![](../../../vocab/images/GRC-009.svg){fig-alt=""}
+
+{{< vocab "philosopher" >}}
+:::
+
+::: {.box .plain}
+![](../../../vocab/images/ROM-005.svg){fig-alt=""}
+
+{{< vocab "empire" >}}
+:::
+
+::: {.box .plain}
+![](../../../vocab/images/GBT-003.svg){fig-alt=""}
+
+{{< vocab "artifact" >}}
+:::
+
+::: {.box .plain}
+![](../../../vocab/images/GBT-004.svg){fig-alt=""}
+
+{{< vocab "evidence" >}}
+:::
+:::
+
+::: {.box .plain style="font-size: 0.85em"}
+[Sentence frames · 句型]{.kicker}
+
+[The [ ]{.gap} school said rulers should [ ]{.gap}. | [ ]{.gap}学派认为统治者应该[ ]{.gap}。]{.bi}
+:::
+:::
+::: {.column width="43%"}
+::: box
+### [Do now | 课前任务]{.bi}
+
+1. [Name one thinker from the last lesson. | 说出上节课学过的一位思想家。]{.bi}
+2. [What was his big idea? Write one sentence. | 他的主要主张是什么？写一句话。]{.bi}
+
+::: {.end style="align-self: center; font-size: 0.6em"}
+{{< timer 5 >}}
+:::
+:::
+:::
+::::
+
+::: notes
+Lesson intro and Do now, on one slide. Pieces: an ordinary Markdown table for topic, objective and homework; `.tiles` of `.box` for the focus words, each with its picture first (`--pic-fit: contain` shows a whole drawing) and the word as `{{</* vocab "philosopher" */>}}` (a pop-up with picture and 中文); `[ ]{.gap}` for the blanks in a sentence frame; a `.box` for the Do now with `{{</* timer 5 */>}}` pushed to its bottom with `.end`.
+:::
+
+## [Make a museum card | 制作博物馆卡片]{.bi} {#instructions}
+
+:::: {.columns}
+::: {.column width="56%"}
+{{< video https://upload.wikimedia.org/wikipedia/commons/d/de/Ink_grinding.webmhd.webm height="200" title="Grinding an ink stick on an inkstone" >}}
+
+::: {.box .plain style="font-size: 0.85em"}
+[Instructions · 任务说明]{.kicker}
+
+[Watch how ink is made. Then make a card for one thinker. | 先看如何磨墨，再为一位思想家制作卡片。]{.bi}
+
+1. [Write his name, school and big idea. | 写出他的姓名、学派和主张。]{.bi}
+2. [Draw one picture for his idea. | 为他的主张画一幅图。]{.bi}
+:::
+:::
+::: {.column width="44%"}
+[Work gallery · 作品展示]{.kicker}
+
+{{< pdf-viewer "../01-ancient-greece/01-ancient-greece-packet.pdf" layout="gallery" title="Unit 1 packet: Ancient Greece" >}}
+:::
+::::
+
+::: notes
+Instructions, a video and a work gallery. Pieces: Quarto `.columns`; `{{</* video URL height="200" */>}}` (here a CC0 video on Wikimedia Commons, so it needs the internet; a file in the deck's folder works too, and a YouTube or Vimeo link sizes itself); a `.box` with a `.kicker` and a numbered list; on the right Chalkline's packet gallery, `{{</* pdf-viewer "../01-ancient-greece/01-ancient-greece-packet.pdf" layout="gallery" */>}}`: every page of a PDF as a thumbnail; tap one to open it large. It shows a unit packet (made by a full build) or any worksheet's PDF.
+:::
+
+## [Think · Pair · Share | 思考 · 结对 · 分享]{.bi} {#tps}
+
+:::: {.columns}
+::: {.column width="46%"}
+::: {.box .plain style="font-size: 0.9em"}
+- [**Listen** to the question. | **听**问题。]{.bi}
+- [**Think** about your answer. | **想**一想你的答案。]{.bi}
+- [**Talk** to your partner (2×). | 和同伴**说**（两次）。]{.bi}
+- [**Share** with the whole class. | 和全班**分享**。]{.bi}
+:::
+
+::: {.tiles style="--pic-fit: contain; --pic-height: 3.6em; text-align: center"}
+::: {.box .plain}
+![](images/tps-knee.svg){fig-alt="Two students sitting side by side"}
+
+[1 · Knee to knee | 膝对膝]{.bi}
+:::
+
+::: {.box .plain}
+![](images/tps-face.svg){fig-alt="Two students facing each other at a table"}
+
+[2 · Face to face | 面对面]{.bi}
+:::
+
+::: {.box .plain}
+![](images/tps-class.svg){fig-alt="A teacher and the whole class"}
+
+[3 · Whole class | 全班]{.bi}
+:::
+:::
+:::
+::: {.column width="54%"}
+::: {.box style="--pic-height: 5.4em; --pic-fit: contain"}
+![](images/sevenstates.jpg){fig-alt="Map of the seven Warring States around 260 BCE"}
+
+[Ask · 提问]{.kicker}
+
+[Which state is the biggest? | 哪个国家最大？]{.bi}
+
+[Why might the other six states join together? | 其他六国为什么可能联合起来？]{.bi}
+:::
+
+::: {.tiles style="font-size: 0.45em"}
+::: {.box .dark style="align-items: center"}
+[Think · 思考]{.kicker}
+
+{{< timer 1.5 >}}
+:::
+
+::: {.box .dark style="align-items: center"}
+[Share ×2 · 分享 ×2]{.kicker}
+
+{{< timer 2 >}}
+:::
+:::
+:::
+::::
+
+::: notes
+Think-Pair-Share. Pieces: a `.box` with the four steps; `.tiles` of three boxes for where students sit (original drawings, shown whole with `--pic-fit: contain`); on the right a `.box` with the question and a picture, and two `.dark` boxes with `{{</* timer 1.5 */>}}` and `{{</* timer 2 */>}}` (a slide can have more than one timer; `font-size: 0.45em` on their tiles makes them smaller).
+:::
+
+## [Museum cards: easy to hard | 博物馆卡片：由易到难]{.bi} {#easy-to-hard}
+
+:::: {.columns style="font-size: 0.8em"}
+::: column
+### [Part 1: name, school, big idea | 第一部分：姓名、学派、主张]{.bi}
+
+::: row
+[1]{.num}
+
+![](images/mencius.jpg){.thumb fig-alt="Mencius"}
+
+[**Mencius:** kind government. Draw his idea. | **孟子**：仁政。画出他的主张。]{.bi}
+:::
+
+::: row
+[2]{.num}
+
+![](images/mozi.jpg){.thumb fig-alt="The book Mozi"}
+
+[**Mozi:** love everyone. Give one example. | **墨子**：兼爱。举一个例子。]{.bi}
+:::
+
+::: row
+[3]{.num}
+
+![](images/zhuangzi.jpg){.thumb fig-alt="Zhuangzi"}
+
+[**Zhuangzi:** follow nature. Find one line in the reading. | **庄子**：顺应自然。在阅读材料中找一句话。]{.bi}
+:::
+
+::: row
+[4]{.num}
+
+![](images/hanfei.jpg){.thumb fig-alt="A statue of Han Fei"}
+
+[**Han Fei:** rule by law. Write one law he might like. | **韩非**：以法治国。写一条他可能喜欢的法律。]{.bi}
+:::
+:::
+::: column
+### [Part 2: add a question and your answer | 第二部分：提一个问题并回答]{.bi}
+
+::: row
+[5]{.num}
+
+![](images/suqin.jpg){.thumb fig-alt="Su Qin"}
+
+[**Su Qin:** six states joined against Qin. Why? | **苏秦**：六国联合抗秦。为什么？]{.bi}
+:::
+
+::: row
+[6]{.num}
+
+![](images/zouyan.jpg){.thumb fig-alt="A bronze mirror"}
+
+[**Zou Yan:** five phases. Draw the cycle. | **邹衍**：五行。画出循环图。]{.bi}
+:::
+
+::: row
+[7]{.num}
+
+![](images/gongsun.jpg){.thumb fig-alt="A white horse"}
+
+[**Gongsun Long:** "A white horse is not a horse." Agree? Why? | **公孙龙**：“白马非马”。你同意吗？为什么？]{.bi}
+:::
+
+::: row
+[8]{.num}
+
+![](images/xuxing.jpg){.thumb fig-alt="Shennong, the farmer god"}
+
+[**Xu Xing:** even the king should farm. Is it fair? | **许行**：君王也应该耕种。公平吗？]{.bi}
+:::
+:::
+::::
+
+::: notes
+Instructions, easy to hard, in two parts. Pieces: Quarto `.columns` with a `###` heading in each; each task a `.row` with a `.num`, a small square `.thumb` picture and its words. Students start at 1 and go as far as they can.
+:::
+
+## [Lesson summary | 课堂小结]{.bi} [made in draw.io]{.drawio-label} {#summary}
+
+<link rel="stylesheet" href="drawio/drawio-live.css">
+<div class="drawio-live" data-src="drawio/summary.svg"></div>
+<script src="drawio/drawio-live.js"></script>
+
+::: notes
+A diagram made in draw.io: the source is `drawio/summary.drawio`. Open it in draw.io (the desktop app or app.diagrams.net), change it, save, then run `python chalkline.py drawio` to update the picture (`summary.svg`). On the slide, point at or tap a box: it lifts and the rest fades. The words in the diagram don't follow the language switch.
+:::
+
 ## [What defined the Warring States era? | 春秋战国有什么整体的时代特征？]{.bi} {#big-idea-dusk .look-dusk background-color="#00234F"}
 
 ::: {.cover style="height: auto; padding: 0.6em 0"}
@@ -982,7 +1226,11 @@ The cards in glass.
 - **Han Fei:** statue in Shaanxi, photo by Sabinowitz, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Statue_Of_Han_Fei.png).
 - **Sun Bin:** Ming dynasty painting. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sun_Bin.jpg).
 - **Spade coins:** Shanghai Museum, photo by Gary Lee Todd, CC0, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Warring_States_Spade_Coins.jpg).
-- The glass scheme's background is original, made for this course. Full list: `images/CREDITS.md`.
+- **Su Qin:** woodcut from *Dongzhou Lieguo Zhi*. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:%E8%8B%8F%E7%A7%A6.png).
+- **Bronze mirror:** Warring States, Cleveland Museum of Art, [CC0](https://clevelandart.org/art/1999.220).
+- **White horse:** Gao Qifeng. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Gao_Qifeng_-_White_horse_-_Google_Art_Project.jpg).
+- **Shennong:** Hasegawa Nobukata. Public domain, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Chinese_god_Shen_Nun,_Painting_by_Nobukata.jpg).
+- **Map of the Warring States:** Philg88, [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:EN-WarringStatesAll260BCE.jpg).
 :::
 
 ::: column
@@ -991,6 +1239,8 @@ The cards in glass.
 - **Quoted:** *Analects* 2.1 (《论语·为政》). Classical text, public domain.
 - **Named on the cards:** *Mencius* 《孟子》, *Mozi* 《墨子》, *Zhuangzi* 《庄子》, *Han Feizi* 《韩非子》, *Sun Bin's Art of War* 《孙膑兵法》.
 - **Background:** [Hundred Schools of Thought](https://en.wikipedia.org/wiki/Hundred_Schools_of_Thought) and [Warring States period](https://en.wikipedia.org/wiki/Warring_States_period), Wikipedia, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+- **Video, grinding ink:** Wobuzowatsj, CC0, via [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Ink_grinding.webmhd.webm).
+- **Original, made for this course:** the vocab and seating drawings, the Lesson summary diagram, the glass scheme's background. Full list: `images/CREDITS.md`.
 :::
 ::::
 
