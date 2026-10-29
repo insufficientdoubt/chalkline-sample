@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-29: Lagoon gets a slight gradient
+- **Asked for:** "For the lagoon theme, give the background a slight gradient."
+- **Why:** not given.
+- **Changed:** `_extensions/chalkline/styles/schemes.scss`: lagoon's slide runs on a diagonal from a lighter turquoise (top left) to a slightly bluer one (bottom right). Its quieter text is a little darker, so it stays readable across the whole gradient (navy text 6:1 or better, quieter text 4.7:1).
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Boxes in a row line up again
 - **Asked for:** "an alignment issue on the big idea slide?"
 - **Why:** the new gap between stacked blocks (two entries down) also applied inside tiles and chains, so every box after the first was pushed down.
