@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-30: The vocab gallery fits the room it's given
+- **Asked for:** "can you make the layout variable according to the width of the container? If I give them a narrow space I'd love them to be vertical, and if I give them a wide space I'd love them to be able to fill the whole slide."
+- **Why:** so one shortcode works in a slide's side column, a box or across the whole slide.
+- **Changed:** `_extensions/chalkline/vocab-gallery.html`: a few lines of script choose the columns from the gallery's width (each card at least `--vg-min`, 5em), then even out the rows (8 words in room for 6 make two rows of 4); when only one card fits, the cards become a list with the picture beside the word; pictures keep a 4:3 shape, so they grow with wide cards, and words grow a little too. Cards always have a thin line, so white cards show on a white slide. `cols=` is now a maximum. `_extensions/chalkline/shortcodes.lua`: passes `cols=` on. `README.md`: says so. Checked on whole slides (4 and 8 words), in wide, medium and narrow columns, and on the Slide kit's lesson intro.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-30: A vocab gallery
 - **Asked for:** "make a gallery for specified vocab cards/tables. Lua code. Default view is picture+ word in a grid. Click on the card pops up the full vocab card. But a offer a table view as well." Then: put it on the lesson intro slide, and try it with more or fewer words.
 - **Why:** not given; the lesson intro's focus words were hand-built boxes, and "at some point, we will probably have to make a better vocab picture injector thing".

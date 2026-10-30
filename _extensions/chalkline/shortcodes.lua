@@ -254,9 +254,10 @@ end
 
 -- {{< vocab-gallery "philosopher, empire, artifact" >}}: the words' pictures and names in a grid; click
 -- (or Enter) opens a word's full card. A Cards | Table switch shows them as a table (picture, word,
--- 中文, meaning) instead. unit=1: every word in that unit. view="table": start as a table. cols=4: the
--- number of columns (default: all in one row up to 5 words, then two rows). zh=true: 中文 under the
--- words too; zh=false: no 中文 at all (the table and pop-ups have it otherwise). In PDF and Word: a table.
+-- 中文, meaning) instead. unit=1: every word in that unit. view="table": start as a table. The layout
+-- follows the room it's given (vocab-gallery.html): as many columns as fit, in even rows; a vertical
+-- list when it's narrow; bigger cards when it's wide. cols=4: at most 4 columns. zh=true: 中文 under
+-- the words too; zh=false: no 中文 at all (the table and pop-ups have it otherwise). In PDF and Word: a table.
 local function vocab_gallery(args, kwargs, meta)
   local names = {}
   for _, a in ipairs(args) do
@@ -291,7 +292,8 @@ local function vocab_gallery(args, kwargs, meta)
   include_once("vocab-gallery.html")
   local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
   local n = #terms
-  local cols = tonumber(str(kwargs["cols"], "")) or (n <= 5 and n or math.ceil(n / 2))
+  local max_cols = tonumber(str(kwargs["cols"], ""))
+  local cols = max_cols or (n <= 5 and n or math.ceil(n / 2))   -- before the script fits it to the room
   local view = str(kwargs["view"], "cards") == "table" and "table" or "cards"
   local function pic(t, cls)
     return t.image ~= "" and ('<span class="' .. cls .. '"><img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy"></span>') or ('<span class="' .. cls .. '"></span>')
@@ -310,7 +312,8 @@ local function vocab_gallery(args, kwargs, meta)
     return '<button type="button" data-view="' .. v .. '" aria-pressed="' .. tostring(view == v) .. '">' .. label .. '</button>'
   end
   return pandoc.RawBlock("html",
-    '<div class="vocab-gallery" data-view="' .. view .. '" style="--vg-cols: ' .. cols .. '">' ..
+    '<div class="vocab-gallery" data-view="' .. view .. '"' .. (max_cols and (' data-cols="' .. max_cols .. '"') or "") ..
+    ' style="--vg-cols: ' .. cols .. '">' ..
     '<div class="vg-switch" role="group" aria-label="Show the words as">' .. btn("cards", "Cards") .. btn("table", "Table") .. '</div>' ..
     '<div class="vg-cards">' .. table.concat(cards) .. '</div>' ..
     '<table class="vg-table"><tbody>' .. table.concat(rows) .. '</tbody></table></div>')
