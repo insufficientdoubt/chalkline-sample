@@ -1,0 +1,99 @@
+<!-- Vocab gallery for {{< vocab-gallery >}}: picture cards in a grid (click one for its full card,
+     vocab-card.html) or a table, with a Cards | Table switch. The grid fits the room it's given: as many
+     columns as fit (each card at least --vg-min wide), in even rows; a list when only one fits. Colours, corners and borders come from
+     the slide's tokens (styles/layout.scss), so a colour scheme or look restyles the cards like boxes. -->
+<style>
+.vocab-gallery { position: relative; margin: 0.2em 0; }
+.vocab-gallery .vg-switch {
+  display: flex; justify-content: flex-end; gap: 0; margin: 0 0 0.25em;
+  font: 600 13px/1 "Source Sans 3", system-ui, sans-serif; opacity: 0.55; transition: opacity 0.15s;
+}
+.vocab-gallery:hover .vg-switch, .vocab-gallery .vg-switch:focus-within { opacity: 1; }
+.vocab-gallery .vg-switch button {
+  all: unset; box-sizing: border-box; padding: 4px 10px; cursor: pointer; color: var(--ink-muted, #52606D);
+  border: 1px solid var(--line, rgba(0, 52, 119, 0.25)); background: var(--surface-2, #fff);
+}
+.vocab-gallery .vg-switch button:first-child { border-radius: 999px 0 0 999px; }
+.vocab-gallery .vg-switch button:last-child { border-radius: 0 999px 999px 0; border-left: 0; }
+.vocab-gallery .vg-switch button[aria-pressed="true"] { background: var(--strong, #003477); color: var(--on-strong, #fff); border-color: var(--strong, #003477); }
+.vocab-gallery .vg-switch button:focus-visible { outline: 2px solid #0087ff; outline-offset: 1px; }
+
+/* cards: picture and word; the pop-up opens on click (or Enter), not on hover */
+.vocab-gallery { --vg-min: 5em; }
+.vocab-gallery .vg-cards { display: grid; grid-template-columns: repeat(var(--vg-cols, 4), minmax(0, 1fr)); gap: var(--gap, 0.5em); }
+.vocab-gallery .vg-card {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.15em; container-type: inline-size;
+  padding: 0.35em 0.4em; text-align: center; white-space: normal; cursor: pointer;
+  background: var(--surface-2, #fff); color: var(--ink, inherit);
+  border: max(var(--border, 1px), 1px) solid var(--line, rgba(0, 52, 119, 0.18));   /* always a line: on a white slide, white cards need one */
+  border-radius: var(--radius, 14px); box-shadow: var(--shadow, none);
+  transition: transform 0.12s;
+}
+.vocab-gallery .vg-card:hover { transform: translateY(-2px); }
+.vocab-gallery .vg-card:focus-visible { outline: 2px solid #0087ff; outline-offset: 2px; }
+.vocab-gallery .vg-pic { display: block; width: 100%; height: var(--vg-pic, auto); aspect-ratio: 4 / 3; }   /* grows with the card */
+.vocab-gallery .vg-pic img, .reveal .vocab-gallery .vg-pic img { display: block; width: 100%; height: 100%; max-height: none; margin: 0; object-fit: contain; }
+.vocab-gallery .vg-word { line-height: 1.15; font-size: clamp(1em, 13cqi, 1.8em); }   /* bigger in a wide card */
+.vocab-gallery .vg-zh { font-size: 0.8em; color: var(--ink-muted, #52606D); line-height: 1.15; }
+.vocab-gallery .vocab-term:hover > .vocab-card, .vocab-gallery .vocab-term:focus-within > .vocab-card { display: none; }
+.vocab-gallery .vocab-term.open > .vocab-card { display: block; }
+.vocab-gallery .vocab-card { cursor: auto; }
+
+/* table: picture, word, 中文, meaning */
+.vocab-gallery .vg-table, .reveal .vocab-gallery .vg-table { width: 100%; margin: 0; font-size: 0.68em; line-height: 1.25; border-collapse: collapse; }
+.vocab-gallery .vg-table td { padding: 0.15em 0.5em; vertical-align: middle; border-bottom: 1px solid var(--line, rgba(0, 52, 119, 0.18)); background: none; }
+.vocab-gallery .vg-table tr:last-child td { border-bottom: 0; }
+.vocab-gallery .vg-tpic { width: 2.6em; }
+.vocab-gallery .vg-tpic .vg-pic { height: 1.6em; }
+.vocab-gallery .vg-tword { font-weight: 700; color: var(--heading, inherit); white-space: nowrap; }
+.vocab-gallery .vg-tzh { color: var(--ink-muted, #52606D); white-space: nowrap; }
+
+/* a list when only one card fits across: the picture beside the word */
+.vocab-gallery[data-layout="list"] .vg-card { flex-direction: row; justify-content: flex-start; gap: 0.6em; text-align: left; padding: 0.3em 0.5em; }
+.vocab-gallery[data-layout="list"] .vg-card > .vg-pic { width: 2.6em; height: 2em; flex: none; aspect-ratio: auto; }
+.vocab-gallery[data-layout="list"] .vg-word { font-size: 1em; }
+.vocab-gallery[data-view="cards"] .vg-table, .vocab-gallery[data-view="table"] .vg-cards { display: none; }
+html.print-pdf .vocab-gallery .vg-switch { display: none; }
+</style>
+<script>
+(function () {
+  // The Cards | Table switch, and Enter or Space to open a card from the keyboard.
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest(".vocab-gallery .vg-switch button");
+    if (!b) return;
+    var g = b.closest(".vocab-gallery");
+    g.dataset.view = b.dataset.view;
+    g.querySelectorAll(".vg-switch button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+    fit(g);
+    if (window.Reveal && Reveal.layout) Reveal.layout();
+  });
+  // Columns from the room: as many cards as fit (at least --vg-min wide), at most cols= or the word
+  // count, then evened out (8 words in room for 6 make 2 rows of 4). Sizes are in the slide's own
+  // pixels, so reveal.js scaling the slide doesn't change them.
+  function fit(g) {
+    var grid = g.querySelector(".vg-cards"), w = grid && grid.clientWidth;
+    if (!w) return;   // not shown (another slide, or the table view)
+    var n = grid.children.length, cs = getComputedStyle(g), em = parseFloat(cs.fontSize);
+    var min = (parseFloat(cs.getPropertyValue("--vg-min")) || 5) * em;
+    var gap = parseFloat(getComputedStyle(grid).columnGap) || 0;
+    var cols = Math.max(1, Math.min(+g.dataset.cols || n, n, Math.floor((w + gap) / (min + gap))));
+    cols = Math.ceil(n / Math.ceil(n / cols));
+    g.style.setProperty("--vg-cols", cols);
+    g.dataset.layout = cols === 1 && n > 1 ? "list" : "grid";
+  }
+  var galleries = document.querySelectorAll(".vocab-gallery");
+  if (window.ResizeObserver) {
+    var ro = new ResizeObserver(function (entries) { entries.forEach(function (e) { fit(e.target.closest(".vocab-gallery")); }); });
+    galleries.forEach(function (g) { ro.observe(g.querySelector(".vg-cards")); });
+  }
+  galleries.forEach(fit);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    var c = e.target.closest && e.target.closest(".vocab-gallery .vg-card");
+    if (!c || e.target !== c) return;
+    e.preventDefault(); e.stopPropagation();   // before reveal.js sees it (Space would go to the next slide)
+    c.click();
+  }, true);
+})();
+</script>
