@@ -226,6 +226,97 @@ local function lesson_links(list)
   return out
 end
 
+-- A vocab word's pop-up card (picture, word, 中文, meaning, read-aloud buttons, link to the vocab app),
+-- used by {{< vocab >}} and {{< vocab-gallery >}}. Shows on hover, focus or tap (vocab-card.html).
+local function vocab_card_html(t, meta)
+  include_once("vocab-card.html")
+  -- Picture and link paths are from the site root; add the "../" this page needs.
+  local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+  local img = t.image ~= "" and ('<span class="vc-pic"><img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy"></span>') or ""
+  -- Line icons (Lucide, like the classroom tools'): a speaker, and an arrow for the link.
+  local function svg(paths)
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' .. paths .. '</svg>'
+  end
+  local SPEAKER = svg('<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>')
+  local ARROW = svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>')
+  -- Speaker buttons read the word aloud (English, then 中文) with the computer's voices (vocab-card.html).
+  local function say(text, lang, label)
+    return '<button type="button" class="vc-say" data-lang="' .. lang .. '" data-say="' .. html_escape(text) ..
+           '" aria-label="' .. label .. '" title="' .. label .. '">' .. SPEAKER .. '</button>'
+  end
+  local zh = t.zh ~= "" and ('<span class="vc-zh">' .. html_escape(t.zh) .. say(t.zh, "zh-CN", "Say it in Chinese") .. '</span>') or ""
+  return '<span class="vocab-card" role="tooltip">' .. img ..
+    '<span class="vc-term">' .. html_escape(t.term) .. say(t.term, "en-US", "Say it in English") .. '</span>' .. zh ..
+    '<span class="vc-def">' .. html_escape(t.definition) .. '</span>' ..
+    '<a class="vc-link" href="' .. html_escape(up .. t.url) .. '" target="_blank" rel="noopener">' .. html_escape(str(meta and meta["vocab-title"], "Vocab")) .. ARROW .. '</a>' ..
+    '</span>'
+end
+
+-- {{< vocab-gallery "philosopher, empire, artifact" >}}: the words' pictures and names in a grid; click
+-- (or Enter) opens a word's full card. A Cards | Table switch shows them as a table (picture, word,
+-- 中文, meaning) instead. unit=1: every word in that unit. view="table": start as a table. cols=4: the
+-- number of columns (default: all in one row up to 5 words, then two rows). zh=true: 中文 under the
+-- words too; zh=false: no 中文 at all (the table and pop-ups have it otherwise). In PDF and Word: a table.
+local function vocab_gallery(args, kwargs, meta)
+  local names = {}
+  for _, a in ipairs(args) do
+    for w in pandoc.utils.stringify(a):gmatch("[^,]+") do
+      w = w:match("^%s*(.-)%s*$")
+      if w ~= "" then table.insert(names, w) end
+    end
+  end
+  local terms = {}
+  local unit = tonumber(str(kwargs["unit"], ""))
+  if #names == 0 and unit then
+    vocab_lookup("")   -- loads the list
+    for _, t in ipairs(vocab_list) do
+      for _, u in ipairs(t.units or {}) do if u == unit then table.insert(terms, t) break end end
+    end
+  else
+    for _, w in ipairs(names) do
+      local t = vocab_lookup(w)
+      if t then table.insert(terms, t) else quarto.log.warning('vocab-gallery: "' .. w .. '" is not in vocab/data/vocab.csv') end
+    end
+  end
+  if #terms == 0 then return pandoc.Null() end
+  local zh = str(kwargs["zh"], "")          -- "" (the table only), "true" (cards too) or "false" (none)
+  local with_zh = zh ~= "false"
+  if not quarto.doc.is_format("html") then   -- print: a plain table
+    local rows = { "| Word |" .. (with_zh and " 中文 |" or "") .. " Meaning |", "|:--|" .. (with_zh and ":--|" or "") .. ":--|" }
+    for _, t in ipairs(terms) do
+      table.insert(rows, "| **" .. t.term .. "** |" .. (with_zh and (" " .. t.zh .. " |") or "") .. " " .. t.definition:gsub("|", "\\|") .. " |")
+    end
+    return pandoc.read(table.concat(rows, "\n"), "markdown").blocks
+  end
+  include_once("vocab-gallery.html")
+  local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
+  local n = #terms
+  local cols = tonumber(str(kwargs["cols"], "")) or (n <= 5 and n or math.ceil(n / 2))
+  local view = str(kwargs["view"], "cards") == "table" and "table" or "cards"
+  local function pic(t, cls)
+    return t.image ~= "" and ('<span class="' .. cls .. '"><img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy"></span>') or ('<span class="' .. cls .. '"></span>')
+  end
+  local cards, rows = {}, {}
+  for _, t in ipairs(terms) do
+    table.insert(cards, '<div class="vg-card vocab-term" tabindex="0" role="button" aria-label="' .. html_escape(t.term) .. ': open its card">' ..
+      pic(t, "vg-pic") .. '<span class="vg-word">' .. html_escape(t.term) .. '</span>' ..
+      ((zh == "true" and t.zh ~= "") and ('<span class="vg-zh">' .. html_escape(t.zh) .. '</span>') or "") ..
+      vocab_card_html(t, meta) .. '</div>')
+    table.insert(rows, '<tr><td class="vg-tpic">' .. pic(t, "vg-pic") .. '</td><td class="vg-tword">' .. html_escape(t.term) .. '</td>' ..
+      (with_zh and ('<td class="vg-tzh">' .. html_escape(t.zh) .. '</td>') or "") ..
+      '<td class="vg-tdef">' .. html_escape(t.definition) .. '</td></tr>')
+  end
+  local function btn(v, label)
+    return '<button type="button" data-view="' .. v .. '" aria-pressed="' .. tostring(view == v) .. '">' .. label .. '</button>'
+  end
+  return pandoc.RawBlock("html",
+    '<div class="vocab-gallery" data-view="' .. view .. '" style="--vg-cols: ' .. cols .. '">' ..
+    '<div class="vg-switch" role="group" aria-label="Show the words as">' .. btn("cards", "Cards") .. btn("table", "Table") .. '</div>' ..
+    '<div class="vg-cards">' .. table.concat(cards) .. '</div>' ..
+    '<table class="vg-table"><tbody>' .. table.concat(rows) .. '</tbody></table></div>')
+end
+
+
 return {
   ["lesson-nav"] = function()
     local info = lesson_info()
@@ -247,6 +338,8 @@ return {
     return pandoc.Div(rows, pandoc.Attr("", { "lesson-nav" }))
   end,
 
+  ["vocab-gallery"] = vocab_gallery,
+
   ["vocab"] = function(args, kwargs, meta)
     local key = str(args[1], "")
     local t = vocab_lookup(key)
@@ -261,29 +354,7 @@ return {
       end
       return pandoc.Strong({ pandoc.Str(shown) })
     end
-    include_once("vocab-card.html")
-    -- Picture and link paths are from the site root; add the "../" this page needs.
-    local up = quarto.project.offset and (quarto.project.offset .. "/") or ""
-    local img = t.image ~= "" and ('<span class="vc-pic"><img src="' .. html_escape(up .. t.image) .. '" alt="" loading="lazy"></span>') or ""
-    -- Line icons (Lucide, like the classroom tools'): a speaker, and an arrow for the link.
-    local function svg(paths)
-      return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' .. paths .. '</svg>'
-    end
-    local SPEAKER = svg('<path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/>')
-    local ARROW = svg('<path d="M7 7h10v10"/><path d="M7 17 17 7"/>')
-    -- Speaker buttons read the word aloud (English, then 中文) with the computer's voices (vocab-card.html).
-    local function say(text, lang, label)
-      return '<button type="button" class="vc-say" data-lang="' .. lang .. '" data-say="' .. html_escape(text) ..
-             '" aria-label="' .. label .. '" title="' .. label .. '">' .. SPEAKER .. '</button>'
-    end
-    local zh = t.zh ~= "" and ('<span class="vc-zh">' .. html_escape(t.zh) .. say(t.zh, "zh-CN", "Say it in Chinese") .. '</span>') or ""
-    return pandoc.RawInline("html",
-      '<span class="vocab-term" tabindex="0">' .. html_escape(shown) ..
-      '<span class="vocab-card" role="tooltip">' .. img ..
-      '<span class="vc-term">' .. html_escape(t.term) .. say(t.term, "en-US", "Say it in English") .. '</span>' .. zh ..
-      '<span class="vc-def">' .. html_escape(t.definition) .. '</span>' ..
-      '<a class="vc-link" href="' .. html_escape(up .. t.url) .. '" target="_blank" rel="noopener">' .. html_escape(str(meta and meta["vocab-title"], "Vocab")) .. ARROW .. '</a>' ..
-      '</span></span>')
+    return pandoc.RawInline("html", '<span class="vocab-term" tabindex="0">' .. html_escape(shown) .. vocab_card_html(t, meta) .. '</span>')
   end,
 
   ["pdf"] = function(args, kwargs)

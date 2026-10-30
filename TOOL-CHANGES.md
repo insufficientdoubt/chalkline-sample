@@ -16,6 +16,13 @@ Newest entries first.
 - **AI assistant:** which one made the change.
 -->
 
+## 2026-10-30: A vocab gallery
+- **Asked for:** "make a gallery for specified vocab cards/tables. Lua code. Default view is picture+ word in a grid. Click on the card pops up the full vocab card. But a offer a table view as well." Then: put it on the lesson intro slide, and try it with more or fewer words.
+- **Why:** not given; the lesson intro's focus words were hand-built boxes, and "at some point, we will probably have to make a better vocab picture injector thing".
+- **Changed:** `_extensions/chalkline/shortcodes.lua`: new `{{< vocab-gallery >}}` (words by name from any unit, or `unit=`; options `view`, `cols`, `zh`; a table in PDF and Word); the pop-up card's markup is now one function shared with `{{< vocab >}}`. New `_extensions/chalkline/vocab-gallery.html`: the grid, the table, the Cards \| Table switch, click (or Enter) to open a card; colours, corners and borders from the slide's tokens, so schemes and looks restyle it. `README.md`: the shortcode. Checked on the Slide kit's lesson intro with 3, 4 and 8 words, both views, and in a PDF.
+- **Who it helps:** probably every Chalkline course.
+- **AI assistant:** Claude.
+
 ## 2026-10-29: Timer buttons stay big enough to tap
 - **Asked for:** "The timer buttons are tiny now. Fix and republish."
 - **Why:** a timer made smaller to fit a box (the Slide kit's lesson intro, Think-Pair-Share and jigsaw slides) shrank its Start, Reset and +1 min buttons with it, to about 7px.
