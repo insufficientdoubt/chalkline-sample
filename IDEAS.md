@@ -9,6 +9,18 @@ Things we've talked about but not built yet. Add to this list; move an idea out 
 - **A new intro deck: everything interactive.** One deck that walks a new teacher through every interactive option now in Chalkline (review games, learning activities, timelines, Label it, polls, the toolbox, the chalkboard, PDF worksheets), each with a live example and one line on how to write it. The Start here catalogue slide lists them; this would *teach* them.
 - **An intro piece: "lists are the secret".** A short deck (or a section of the one above) that drives home the big idea: **make lists of your course's vocabulary and key facts first** (words and meanings, dates and events, people and what they did, places and pictures). Once a list exists, it becomes a quick, reusable activity in minutes: snowman, matching, memory, bingo, Jeopardy, sort it, timelines, flashcards, quizzes. Show one list turning into five activities. The vocab list (`vocab/data/vocab.csv`) is the model.
 
+## Packet theming (after v1)
+
+First, after the templates are cleaned up: **better packet layouts**. Some packets made by a real teacher came out as long walls of text. Fix that before adding decoration.
+
+**Idea: faint generated decorations for margins and white space.** Inspired by [florilegium](https://github.com/kevinraymond/florilegium) (MIT), which draws Delft-blue floral page margins in Lua inside LuaLaTeX, a new garden for every page. We want a much lighter version: thin line drawings, very faint, that don't use much toner on a photocopier.
+
+- **How:** a Python script (in `scripts/`) that draws SVG decorations from a seed: margin strips, corners, end-of-printable fillers, cover page and unit-divider art. The Typst template places one per page in the page `background:`, picked by page number so rebuilds look the same. Making the SVGs ahead of time is simpler and faster than drawing curves in Typst for each page, and easier to preview.
+- **Styles:** plants (vines, leaves, flowers), animal patterns, geometric shapes. For example, a **honeycomb** that fades into the margins and corners.
+- **Off by default.** A setting turns it on (e.g. `packet-decoration: honeycomb` in `_quarto.yml`), maybe per printable too.
+- **Rules:** stay out of the work area (answer lines, boxes, the name box). Use one light color from the brand. No decoration on quizzes and tests.
+- **Later, maybe:** grow into the empty space where a printable ends early, as florilegium does (Typst can find where the text stops with a hidden marker). Margins, covers and dividers come first.
+
 ## Classroom tools: next steps
 
 Every tool is now a web component in its own file (`_extensions/chalkline/toolbox/tools/`), with no title bar, and the content is the card. `toolbox.js` is only the frame (panels, menu, remembering). Ideas for later:
